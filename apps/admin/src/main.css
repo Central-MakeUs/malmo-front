@@ -1,0 +1,16 @@
+@import '@ui/tailwind/styles/admin.css';
+@import '@ui/tailwind/styles/themes.css';
+
+@source "../node_modules/@ui/admin";
+@source "../node_modules/@ui/common";
+
+@font-face {
+  font-family: 'SUIT Variable';
+  src: url('../public/fonts/SUIT.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@theme inline {
+  --font-suit: 'SUIT Variable', sans-serif;
+}

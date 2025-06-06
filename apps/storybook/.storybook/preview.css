@@ -1,0 +1,4 @@
+@import "@ui/tailwind/styles/admin.css";
+
+@source "../node_modules/@ui/admin";
+@source "../node_modules/@ui/common";
