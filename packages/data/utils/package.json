@@ -17,6 +17,7 @@
   "devDependencies": {
     "@system/eslint": "workspace:*",
     "@system/typescript": "workspace:*",
-    "@types/mime-types": "catalog:"
+    "@types/mime-types": "catalog:",
+    "msw": "^2.9.0"
   }
 }

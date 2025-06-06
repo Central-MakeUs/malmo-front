@@ -14,8 +14,6 @@
     "clean": "find . -type d -name .turbo -not -path '*/node_modules/*' -not -path '*/dist/*' -exec rm -rf {} +",
     "env": "turbo run env",
     "locale": "turbo run locale",
-    "notion": "turbo run notion",
-    "generate:api": "turbo run generate:api",
     "lint": "turbo run lint",
     "format": "turbo run format",
     "prune": "turbo prune"

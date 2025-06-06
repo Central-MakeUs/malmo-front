@@ -71,7 +71,7 @@
     "prettier": "catalog:",
     "prettier-plugin-tailwindcss": "catalog:",
     "tailwindcss": "catalog:react",
-    "tw-animate-css": "catalog:react",
-    "tsup": "catalog:"
+    "tsup": "catalog:",
+    "tw-animate-css": "catalog:react"
   }
 }

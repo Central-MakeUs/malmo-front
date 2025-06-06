@@ -1,5 +1,4 @@
 import { Editor } from '@tinymce/tinymce-react'
-import * as React from 'react'
 import { PropsWithChildren } from 'react'
 import { useTheme } from '@ui/common/contexts/theme.context'
 import { cn } from '../lib/utils'

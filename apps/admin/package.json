@@ -25,6 +25,7 @@
     "class-variance-authority": "catalog:react",
     "clsx": "catalog:react",
     "lucide-react": "catalog:react",
+    "msw": "^2.9.0",
     "path-to-regexp": "catalog:",
     "react": "catalog:react",
     "react-dom": "catalog:react",
@@ -36,11 +37,11 @@
   "devDependencies": {
     "@system/eslint": "workspace:*",
     "@system/typescript": "workspace:*",
+    "@tailwindcss/postcss": "catalog:react",
     "@tailwindcss/vite": "catalog:react",
     "@tanstack/react-query-devtools": "catalog:react",
     "@tanstack/react-router-devtools": "catalog:react",
     "@tanstack/router-plugin": "catalog:react",
-    "@tailwindcss/postcss": "catalog:react",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "@ui/tailwind": "workspace:*",
@@ -50,5 +51,10 @@
     "tailwindcss": "catalog:react",
     "vite": "catalog:",
     "vite-plugin-svgr": "catalog:"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
