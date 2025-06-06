@@ -1,24 +1,57 @@
 {
   "name": "project-template",
+  "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
+    "prepare": "husky || true",
+    "preinstall": "pnpm dlx only-allow pnpm",
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "dev:next": "turbo run dev --filter=next-web",
-    "dev:react": "turbo run dev --filter=react-web",
-    "dev:admin": "turbo run dev --filter=admin",
-    "dev:storybook": "turbo run dev --filter=storybook",
+    "clean": "find . -type d -name .turbo -not -path '*/node_modules/*' -not -path '*/dist/*' -exec rm -rf {} +",
+    "env": "turbo run env",
+    "locale": "turbo run locale",
+    "notion": "turbo run notion",
+    "generate:api": "turbo run generate:api",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "format": "turbo run format",
+    "prune": "turbo prune"
   },
   "devDependencies": {
-    "prettier": "^3.5.3",
-    "turbo": "^2.5.3",
-    "typescript": "5.8.2"
+    "eslint": "catalog:",
+    "husky": "^9",
+    "lint-staged": "^15",
+    "prettier": "catalog:",
+    "turbo": "^2",
+    "typescript": "catalog:"
   },
-  "packageManager": "pnpm@9.0.0",
-  "engines": {
-    "node": ">=18"
-  }
+  "lint-staged": {
+    "*.{js,mjs,ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{json,yaml,yml}": [
+      "prettier --write"
+    ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@swc/core",
+      "@tailwindcss/oxide",
+      "core-js-pure",
+      "esbuild",
+      "sharp"
+    ],
+    "packageExtensions": {
+      "@tinymce/tinymce-react": {
+        "peerDependencies": {
+          "react": ">=18",
+          "react-dom": ">=18"
+        }
+      }
+    }
+  },
+  "packageManager": "pnpm@10.9.0"
 }

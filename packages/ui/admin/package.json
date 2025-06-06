@@ -1,0 +1,50 @@
+{
+  "name": "@ui/admin",
+  "version": "0.1.0",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    "./components/*": "./src/components/*.tsx",
+    "./contexts/*": "./src/contexts/*.tsx",
+    "./hooks/*": "./src/hooks/*.ts",
+    "./lib/*": "./src/lib/*.ts",
+    "./styles/": "./src/styles/"
+  },
+  "scripts": {
+    "lint": "eslint . --fix",
+    "format": "prettier ./src --write"
+  },
+  "peerDependencies": {
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "react-hook-form": "catalog:react"
+  },
+  "optionalDependencies": {
+    "zod": "catalog:"
+  },
+  "dependencies": {
+    "@data/utils": "workspace:*",
+    "@hookform/resolvers": "catalog:react",
+    "@radix-ui/react-label": "catalog:ui",
+    "@radix-ui/react-slot": "catalog:ui",
+    "@tanstack/react-table": "catalog:react",
+    "@tinymce/tinymce-react": "^6",
+    "@ui/common": "workspace:*",
+    "class-variance-authority": "catalog:react",
+    "clsx": "catalog:react",
+    "lucide-react": "catalog:react",
+    "tailwind-merge": "catalog:react",
+    "tw-animate-css": "catalog:react"
+  },
+  "devDependencies": {
+    "@system/eslint": "workspace:*",
+    "@system/typescript": "workspace:*",
+    "@tailwindcss/postcss": "catalog:react",
+    "@types/react": "catalog:react",
+    "@ui/tailwind": "workspace:*",
+    "postcss": "catalog:react",
+    "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
+    "tailwindcss": "catalog:react"
+  }
+}

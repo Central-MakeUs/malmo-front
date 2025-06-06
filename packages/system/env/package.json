@@ -1,0 +1,14 @@
+{
+  "name": "@system/env",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "set-env": "src/env.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3",
+    "config": "^3",
+    "es-toolkit": "catalog:"
+  }
+}

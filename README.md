@@ -1,84 +1,66 @@
-# Turborepo starter
+# WEPLANET STARTER WEB
 
-This Turborepo starter is maintained by the Turborepo core team.
+### 개발 표준 정의서
 
-## Using this example
+- prettier, eslint로 정의해 commit 시 자동 검증하도록 함.
+- .prettierrc
+- .eslintrc.js
 
-Run the following command:
 
-```sh
-npx create-turbo@latest
-```
+# ✅ Boolean Naming Convention Guide
 
-## What's inside?
+## 📌 기본 원칙
 
-This Turborepo includes the following packages/apps:
+1. **상태를 나타내는 boolean 변수는 과거분사(past participle)를 사용한다.**
+    - 예: `liked`, `selected`, `subscribed`, `verified`, `muted`, `blocked`
 
-### Apps and Packages
+2. **동작 가능 여부나 조건 여부를 표현할 때는 `can`, `has`, `should` 등 동사형 prefix를 붙인다.**
+    - 예: `canEdit`, `hasAccess`, `shouldUpdate`
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+3. **의미가 애매하거나 명확하지 않을 경우에만 `is` prefix를 허용한다.**
+    - 예외적 사용 예: `isAvailable`, `isEmpty`, `isOpen`
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+---
 
-### Utilities
+## ✅ 올바른 예시
 
-This Turborepo has some additional tools already setup for you:
+| 의미          | 네이밍 추천              |
+|-------------|---------------------|
+| 좋아요 눌렀는가    | `liked`             |
+| 선택되었는가      | `selected`          |
+| 구독되었는가      | `subscribed`        |
+| 인증되었는가      | `verified`          |
+| 편집 가능 여부    | `canEdit`           |
+| 접근 권한 여부    | `hasAccess`         |
+| 업데이트 필요 여부  | `shouldUpdate`      |
+| 리스트가 비어 있는가 | `isEmpty` *(예외 허용)* |
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+---
 
-### Build
+## 🚫 피해야 할 예시
 
-To build all apps and packages, run the following command:
+| 잘못된 예         | 이유                                      |
+|------------------|-------------------------------------------|
+| `isLiked`        | 과거분사 `liked`만으로 충분함             |
+| `isSelected`     | `selected`로 상태를 충분히 표현 가능       |
+| `isSubscribed`   | redundant 표현                             |
+| `isVerified`     | 상태 표현에 굳이 `is` 불필요               |
 
-```
-cd my-turborepo
-pnpm build
-```
+---
 
-### Develop
+## 💡 일관된 네이밍 예시
 
-To develop all apps and packages, run the following command:
+```ts
+// 사용자 상태
+const blocked = true;
+const muted = false;
+const verified = true;
 
-```
-cd my-turborepo
-pnpm dev
-```
+// 권한 여부
+const canComment = true;
+const hasPermission = false;
+const shouldReload = true;
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+// UI 상태
+const selected = false;
+const expanded = true;

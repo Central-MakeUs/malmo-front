@@ -1,0 +1,27 @@
+{
+  "common": {
+    "main": "Xin chào"
+  },
+  "home": {
+    "header": {
+      "welcome": {
+        "message": "Rất vui được gặp bạn!"
+      },
+      "notification": {
+        "today": "Connected cũng sẽ ở bên bạn hôm nay!"
+      }
+    }
+  },
+  "auth": {
+    "title": "Giáo dục ở nước ngoài đối với tôi,",
+    "subtitle": "Đăng nhập và tìm chương trình giáo dục ở nước ngoài phù hợp với bạn.",
+    "login": {
+      "button": {
+        "kakao": "Đăng nhập Kakao",
+        "google": "Đăng nhập bằng Google",
+        "apple": "Đăng nhập Apple",
+        "facebook": "Đăng nhập Facebook"
+      }
+    }
+  }
+}

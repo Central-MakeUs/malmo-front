@@ -1,21 +1,42 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
-  "ui": "tui",
+  "$schema": "https://turbo.build/schema.json",
+  "ui": "stream",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "storybook-static/**"],
+      "dependsOn": ["^build"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "env": ["AWS_PROFILE", "NODE_CONFIG_ENV", "NODE_ENV"]
+    },
+    "env": {
+      "dependsOn": ["^env"],
+      "env": ["AWS_PROFILE", "NODE_CONFIG_ENV"]
+    },
+    "locale": {
+      "dependsOn": ["^locale"]
+    },
+    "notion": {
+      "dependsOn": ["^notion"]
+    },
+    "generate:api": {
+      "dependsOn": ["^generate:api"]
     },
     "lint": {
       "dependsOn": ["^lint"]
     },
-    "check-types": {
-      "dependsOn": ["^check-types"]
+    "format": {
+      "dependsOn": ["^format"]
     },
-    "dev": {
-      "cache": false,
-      "persistent": true
+    "clean": {
+      "cache": false
+    },
+    "preview-storybook": {
+      "dependsOn": ["^build"],
+      "cache": false
     }
   }
 }

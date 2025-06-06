@@ -1,0 +1,15 @@
+{
+  "name": "@ui/tailwind",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./styles/web.css": "./styles/web/globals.css",
+    "./styles/admin.css": "./styles/admin/globals.css",
+    "./styles/themes.css": "./styles/admin/themes.css"
+  },
+  "scripts": {},
+  "peerDependencies": {
+    "tailwindcss": "catalog:react",
+    "tw-animate-css": "catalog:react"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "@system/http-logger",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --fix",
+    "format": "prettier ./src --write"
+  },
+  "peerDependencies": {
+    "axios": "catalog:",
+    "es-toolkit": "catalog:"
+  },
+  "dependencies": {
+    "@system/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@system/eslint": "workspace:*",
+    "@system/typescript": "workspace:*"
+  }
+}

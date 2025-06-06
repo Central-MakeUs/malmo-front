@@ -1,0 +1,23 @@
+{
+  "name": "@system/logger",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --fix",
+    "format": "prettier ./src --write"
+  },
+  "dependencies": {
+    "es-toolkit": "catalog:",
+    "pino": "^9",
+    "pino-pretty": "^13"
+  },
+  "devDependencies": {
+    "@system/eslint": "workspace:*",
+    "@system/typescript": "workspace:*",
+    "@types/node": "catalog:"
+  }
+}
