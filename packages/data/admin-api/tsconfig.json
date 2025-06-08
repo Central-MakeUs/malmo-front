@@ -1,0 +1,14 @@
+{
+  "extends": "@system/typescript/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@api/admin/*": ["./apis/*"],
+      "@model/admin/*": ["./models/*"]
+    }
+  },
+  // 컴파일할 소스코드의 범위
+  "include": ["apis/*.ts", "models/*.ts"],
+  // 컴파일에서 제외할 폴더
+  "exclude": ["dist", "build", "node_modules"]
+}

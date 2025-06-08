@@ -1,4 +1,5 @@
-import { AuthApi } from '@data/admin-api/api'
+import { AuthApi } from '@data/admin-api/apis/auth'
+import { PostAuthReqDto } from '@data/admin-api/models/auth'
 import apiInstance, { initApi } from '../libs/api'
 
 class AuthService extends AuthApi {
@@ -18,10 +19,8 @@ class AuthService extends AuthApi {
 
   async login(options: { name: string; password: string }) {
     const { data } = await this.authControllerPostAuth({
-      postAuthReqDto: {
-        ...options,
-        remember: true,
-      },
+      ...options,
+      remember: true,
     })
     return data
   }
