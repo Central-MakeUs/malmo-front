@@ -13,7 +13,7 @@ interface ApiOptions {
   throwError?: boolean
 }
 
-const defaultOptions = {
+export const defaultOptions = {
   baseURL: BASE_URL,
   withCredentials: true,
   timeout: 200000,
