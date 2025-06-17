@@ -1,0 +1,97 @@
+@import '@ui/tailwind/styles/web.css';
+
+@source '../node_modules/@ui/common';
+
+@font-face {
+  font-family: 'SUIT Variable';
+  src: url('@public/fonts/SUIT-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  /* custom variable */
+  --auth-box-width: 452px;
+  --content-width: 1240px;
+
+  /* custom font */
+  --font-suit: 'SUIT Variable', sans-serif;
+
+  /* custom color */
+  --black: oklch(22.62% 0.0041 264.49);
+  --white: oklch(100% 0 0);
+
+  --gray-01: oklch(27.27% 0 0);
+  --gray-02: oklch(37.15% 0 0);
+  --gray-03: oklch(43.86% 0 0);
+  --gray-04: oklch(55.55% 0 0);
+  --gray-05: oklch(71.87% 0 0);
+  --gray-06: oklch(87.3% 0 0);
+  --gray-07: oklch(92.49% 0 0);
+  --gray-08: oklch(96.72% 0 0);
+  --gray-09: oklch(98.21% 0 0);
+
+  --key: oklch(47.83% 0.2603 267.02);
+  --key-02: oklch(47.83% 0.2603 267.02 / 0.8);
+  --key-03: oklch(47.83% 0.2603 267.02 / 0.6);
+  --key-04: oklch(47.83% 0.2603 267.02 / 0.4);
+  --key-05: oklch(47.83% 0.2603 267.02 / 0.2);
+  --key-06: oklch(47.83% 0.2603 267.02 / 0.1);
+  --key-07: oklch(47.83% 0.2603 267.02 / 0.06);
+
+  --key-02-noalpha: oklch(56.31% 0.2138 271.84);
+  --key-03-noalpha: oklch(66.73% 0.1583 275.25);
+  --key-04-noalpha: oklch(77.66% 0.1018 278.18);
+  --key-05-noalpha: oklch(88.95% 0.0484 278.95);
+  --key-06-noalpha: oklch(94.39% 0.0243 280.86);
+  --key-07-noalpha: oklch(96.66% 0.0147 281.96);
+
+  --error: oklch(65% 0.2035 23.91);
+  --okay: oklch(67.25% 0.1594 156.61);
+  --mainbg: oklch(97.92% 0.0041 271.37);
+
+  --sub: oklch(89.8% 0.159 173.35);
+  --sub-red: oklch(52.72% 0.2053 15.33);
+}
+
+@theme {
+  /* custom font */
+  --default-font-family: var(--font-suit);
+  --font-suit: var(--font-suit);
+
+  /* custom color */
+  --color-black: var(--black);
+  --color-white: var(--white);
+
+  --color-gray-01: var(--gray-01);
+  --color-gray-02: var(--gray-02);
+  --color-gray-03: var(--gray-03);
+  --color-gray-04: var(--gray-04);
+  --color-gray-05: var(--gray-05);
+  --color-gray-06: var(--gray-06);
+  --color-gray-07: var(--gray-07);
+  --color-gray-08: var(--gray-08);
+  --color-gray-09: var(--gray-09);
+
+  --color-key: var(--key);
+  --color-key-02: var(--key-02);
+  --color-key-03: var(--key-03);
+  --color-key-04: var(--key-04);
+  --color-key-05: var(--key-05);
+  --color-key-06: var(--key-06);
+  --color-key-07: var(--key-07);
+
+  --color-key-02-noalpha: var(--key-02-noalpha);
+  --color-key-03-noalpha: var(--key-03-noalpha);
+  --color-key-04-noalpha: var(--key-04-noalpha);
+  --color-key-05-noalpha: var(--key-05-noalpha);
+  --color-key-06-noalpha: var(--key-06-noalpha);
+  --color-key-07-noalpha: var(--key-07-noalpha);
+
+  --color-error: var(--error);
+  --color-okay: var(--okay);
+  --color-mainbg: var(--mainbg);
+
+  --color-sub: var(--sub);
+  --color-sub-red: var(--sub-red);
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@data/user-api-axios",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./api": "./api/index.ts"
+  },
+  "scripts": {
+    "generate:api": "sh src/start.sh"
+  },
+  "peerDependencies": {
+    "axios": "catalog:"
+  },
+  "dependencies": {
+    "@data/utils": "workspace:*",
+    "@system/logger": "workspace:*"
+  },
+  "devDependencies": {
+    "@system/typescript": "workspace:*",
+    "@types/node": "catalog:",
+    "dotenv": "catalog:",
+    "prettier": "catalog:"
+  }
+}

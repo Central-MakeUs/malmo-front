@@ -1,0 +1,53 @@
+{
+  "name": "react",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "dev": "vite --mode test",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint . --fix",
+    "format": "prettier ./src --write"
+  },
+  "dependencies": {
+    "@data/user-api-axios": "workspace:*",
+    "@hookform/resolvers": "catalog:react",
+    "@tanstack/react-query": "catalog:react",
+    "@tanstack/react-router": "catalog:react",
+    "@ui/common": "workspace:*",
+    "axios": "catalog:",
+    "class-variance-authority": "catalog:react",
+    "clsx": "catalog:react",
+    "lucide-react": "catalog:react",
+    "path-to-regexp": "catalog:",
+    "react": "catalog:react",
+    "react-dom": "catalog:react",
+    "react-hook-form": "catalog:react",
+    "tailwind-merge": "catalog:react",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@mdx-js/rollup": "catalog:react",
+    "@system/eslint": "workspace:*",
+    "@system/typescript": "workspace:*",
+    "@tailwindcss/postcss": "catalog:react",
+    "@tailwindcss/vite": "catalog:react",
+    "@tanstack/react-query-devtools": "catalog:react",
+    "@tanstack/react-router-devtools": "catalog:react",
+    "@tanstack/router-plugin": "catalog:react",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "@ui/tailwind": "workspace:*",
+    "@vitejs/plugin-react-swc": "catalog:react",
+    "postcss": "catalog:react",
+    "prettier": "catalog:",
+    "prettier-plugin-tailwindcss": "catalog:",
+    "tailwindcss": "catalog:react",
+    "tw-animate-css": "catalog:react",
+    "vite": "catalog:",
+    "vite-plugin-svgr": "catalog:"
+  }
+}

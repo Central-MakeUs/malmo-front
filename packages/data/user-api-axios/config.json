@@ -1,0 +1,29 @@
+{
+  "generatorName": "typescript-axios",
+  "inputSpec": "https://dev-api.care1.co.kr/api-docs/swagger-json",
+  "verbose": false,
+  "allowUnicodeIdentifiers": true,
+  "enablePostProcessFile": true,
+  "useSingleRequestParameter": true,
+  "skipOverwrite": false,
+  "supportsES6": true,
+  "skipOperationExample": true,
+  "withSeparateModelsAndApi": true,
+  "fileNaming": "kebab-case",
+  "apiPackage": "apis",
+  "modelPackage": "models",
+  "modelNameMappings": {},
+  "instantiationTypes": {},
+  "typeMappings": {},
+  "openapiNormalizer": {},
+  "additionalProperties": {},
+  "globalProperties": {
+    "apis": "",
+    "models": "",
+    "supportingFiles": "",
+    "apiDocs": false,
+    "modelDocs": false,
+    "apiTests": false,
+    "modelTests": false
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "extends": "@system/typescript/react-app.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "../next/routeTree.gen.ts"],
+  "exclude": ["dist", "build", "node_modules"]
+}
