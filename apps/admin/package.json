@@ -13,8 +13,8 @@
     "start": "vite"
   },
   "dependencies": {
-    "@data/utils": "workspace:*",
     "@data/admin-api": "workspace:*",
+    "@data/utils": "workspace:*",
     "@hookform/resolvers": "catalog:react",
     "@system/logger": "workspace:*",
     "@tanstack/react-query": "catalog:react",

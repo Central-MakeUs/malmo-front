@@ -1,0 +1,20 @@
+{
+  "인증": "auth",
+  "관리자": "administers",
+  "사용자 관리": "users",
+  "약관/정책 관리": "documents",
+  "버전 관리": "versions",
+  "디바이스 관리": "devices",
+  "멤버 관리": "members",
+  "아티스트 관리": "artists",
+  "공연 관리": "concerts",
+  "배너 관리": "banners",
+  "FAQ 타입 관리": "faq-types",
+  "FAQ 관리": "faqs",
+  "공지사항 관리": "notices",
+  "앱 푸시 관리": "pushs",
+  "파일": "files",
+  "금칙어 관리": "banned-words",
+  "오픈서치 재입력": "reset",
+  "토큰 관리": "tokens"
+}

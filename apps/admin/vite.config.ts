@@ -12,9 +12,9 @@ export default defineConfig(({ mode }) => {
     build: {
       terserOptions: {
         compress: {
-          drop_console: true
-        }
-      }
+          drop_console: true,
+        },
+      },
     },
     plugins: [
       TanStackRouterVite({
@@ -22,29 +22,29 @@ export default defineConfig(({ mode }) => {
         autoCodeSplitting: true,
         routesDirectory: 'src/app',
         indexToken: 'page',
-        routeToken: 'layout'
+        routeToken: 'layout',
       }),
       react(),
       tailwindcss(),
       svgr({
         svgrOptions: {
           icon: true,
-          titleProp: true
+          titleProp: true,
         },
-        include: '**/*.svg'
-      })
+        include: '**/*.svg',
+      }),
     ],
     resolve: {
       alias: [
         {
           find: '@ui/admin',
-          replacement: path.resolve(__dirname, '../../packages/ui/admin/src')
+          replacement: path.resolve(__dirname, '../../packages/ui/admin/src'),
         },
         {
           find: '@/',
-          replacement: `${path.resolve(__dirname, 'src')}/`
-        }
-      ]
+          replacement: `${path.resolve(__dirname, 'src')}/`,
+        },
+      ],
     },
     server: {
       port: 3002,
@@ -54,10 +54,10 @@ export default defineConfig(({ mode }) => {
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, ''),
           cookieDomainRewrite: {
-            '*': 'localhost'
+            '*': 'localhost',
           },
           cookiePathRewrite: {
-            '*': '/'
+            '*': '/',
           },
           configure: (proxy) => {
             proxy.on('proxyRes', (proxyRes) => {
@@ -68,9 +68,9 @@ export default defineConfig(({ mode }) => {
                 )
               }
             })
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    },
   }
 })

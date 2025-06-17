@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./apis/*": "./apis/*.ts",
-    "./models/*": "./models/*.ts"
+    "./api": "./api/index.ts"
+  },
+  "scripts": {
+    "generate:api": "sh src/start.sh"
   },
   "peerDependencies": {
     "axios": "catalog:"

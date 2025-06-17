@@ -21,7 +21,7 @@ class AdministratorService extends AdministersApi {
     return { id: data.id }
   }
 
-  async findAll(params: { search?: string; page: number; pageSize: number }) {
+  async findAll(params: { search?: string; groupId?: number; page: number; pageSize: number }) {
     try {
       const { page, pageSize, ...rest } = params
       const { data } = await this.administratorsControllerFindAll({
@@ -43,6 +43,11 @@ class AdministratorService extends AdministersApi {
   async update(id: number, body: AdministersApiAdministratorsControllerUpdateRequest['patchAdministratorReqDto']) {
     const { data } = await this.administratorsControllerUpdate({ id, patchAdministratorReqDto: body })
     return { id: data.id }
+  }
+
+  async delete(id: number) {
+    const { data } = await this.administratorsControllerDelete({ id })
+    return data
   }
 
   findAllQuery(...params: Parameters<typeof this.findAll>) {
