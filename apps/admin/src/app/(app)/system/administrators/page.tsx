@@ -1,4 +1,5 @@
 import { AdministratorModal } from '@/features/administrator/ui'
+import administratorService, { Administrator } from '@/shared/services/administrator.service'
 import { usePageFilters } from '@/widgets/page/hooks'
 import { pageSearchSchema } from '@/widgets/page/ui'
 import { formatDateTime } from '@data/utils/string'

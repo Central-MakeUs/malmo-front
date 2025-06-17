@@ -1,5 +1,6 @@
 import { worker } from '@data/utils/browser'
+const NODE_ENV = import.meta.env.VITE_NODE_ENV
 
-if (process.env.NODE_ENV === 'development') {
-  worker.start();
+if (NODE_ENV === 'development') {
+  worker.start()
 }

@@ -615,6 +615,9 @@ importers:
         specifier: ^4
         version: 4.0.7
     devDependencies:
+      '@data/admin-api':
+        specifier: workspace:*
+        version: link:../admin-api
       '@system/eslint':
         specifier: workspace:*
         version: link:../../system/eslint

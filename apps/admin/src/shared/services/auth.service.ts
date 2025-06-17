@@ -17,6 +17,7 @@ class AuthService extends AuthApi {
   }
 
   async login(options: { name: string; password: string }) {
+    console.log('login', options)
     const { data } = await this.authControllerPostAuth({
       postAuthReqDto: {
         ...options,
