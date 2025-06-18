@@ -1,13 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Button } from '@ui/common/components/button'
 import { useEffect } from 'react'
-
-declare global {
-  interface Window {
-    ReactNativeWebView: {
-      postMessage(message: string): void
-    }
-  }
-}
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -34,6 +27,9 @@ function HomePage() {
 
   return (
     <div>
+      <Button onClick={() => handleMessage({ data: JSON.stringify({ type: 'getData', payload: {} }) })}>
+        메시지 전송
+      </Button>
       <h1>React Web Inside WebView</h1>
     </div>
   )

@@ -11,19 +11,15 @@
 // Import Routes
 
 import { Route as rootRoute } from './app/__root'
-import { Route as AboutImport } from './app/about'
 import { Route as PageImport } from './app/page'
 import { Route as MypagePageImport } from './app/mypage/page'
+import { Route as MapPageImport } from './app/map/page'
+import { Route as ChatPageImport } from './app/chat/page'
+import { Route as CameraPageImport } from './app/camera/page'
 import { Route as authRegisterPageImport } from './app/(auth)/register/page'
 import { Route as authAuthPageImport } from './app/(auth)/auth/page'
 
 // Create/Update Routes
-
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const PageRoute = PageImport.update({
   id: '/',
@@ -34,6 +30,24 @@ const PageRoute = PageImport.update({
 const MypagePageRoute = MypagePageImport.update({
   id: '/mypage/',
   path: '/mypage/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MapPageRoute = MapPageImport.update({
+  id: '/map/',
+  path: '/map/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ChatPageRoute = ChatPageImport.update({
+  id: '/chat/',
+  path: '/chat/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CameraPageRoute = CameraPageImport.update({
+  id: '/camera/',
+  path: '/camera/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,11 +74,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PageImport
       parentRoute: typeof rootRoute
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
+    '/camera/': {
+      id: '/camera/'
+      path: '/camera'
+      fullPath: '/camera'
+      preLoaderRoute: typeof CameraPageImport
+      parentRoute: typeof rootRoute
+    }
+    '/chat/': {
+      id: '/chat/'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatPageImport
+      parentRoute: typeof rootRoute
+    }
+    '/map/': {
+      id: '/map/'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapPageImport
       parentRoute: typeof rootRoute
     }
     '/mypage/': {
@@ -95,7 +123,9 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof PageRoute
-  '/about': typeof AboutRoute
+  '/camera': typeof CameraPageRoute
+  '/chat': typeof ChatPageRoute
+  '/map': typeof MapPageRoute
   '/mypage': typeof MypagePageRoute
   '/auth': typeof authAuthPageRoute
   '/register': typeof authRegisterPageRoute
@@ -103,7 +133,9 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof PageRoute
-  '/about': typeof AboutRoute
+  '/camera': typeof CameraPageRoute
+  '/chat': typeof ChatPageRoute
+  '/map': typeof MapPageRoute
   '/mypage': typeof MypagePageRoute
   '/auth': typeof authAuthPageRoute
   '/register': typeof authRegisterPageRoute
@@ -112,7 +144,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof PageRoute
-  '/about': typeof AboutRoute
+  '/camera/': typeof CameraPageRoute
+  '/chat/': typeof ChatPageRoute
+  '/map/': typeof MapPageRoute
   '/mypage/': typeof MypagePageRoute
   '/(auth)/auth/': typeof authAuthPageRoute
   '/(auth)/register/': typeof authRegisterPageRoute
@@ -120,16 +154,33 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/mypage' | '/auth' | '/register'
+  fullPaths:
+    | '/'
+    | '/camera'
+    | '/chat'
+    | '/map'
+    | '/mypage'
+    | '/auth'
+    | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/mypage' | '/auth' | '/register'
-  id: '__root__' | '/' | '/about' | '/mypage/' | '/(auth)/auth/' | '/(auth)/register/'
+  to: '/' | '/camera' | '/chat' | '/map' | '/mypage' | '/auth' | '/register'
+  id:
+    | '__root__'
+    | '/'
+    | '/camera/'
+    | '/chat/'
+    | '/map/'
+    | '/mypage/'
+    | '/(auth)/auth/'
+    | '/(auth)/register/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   PageRoute: typeof PageRoute
-  AboutRoute: typeof AboutRoute
+  CameraPageRoute: typeof CameraPageRoute
+  ChatPageRoute: typeof ChatPageRoute
+  MapPageRoute: typeof MapPageRoute
   MypagePageRoute: typeof MypagePageRoute
   authAuthPageRoute: typeof authAuthPageRoute
   authRegisterPageRoute: typeof authRegisterPageRoute
@@ -137,13 +188,17 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   PageRoute: PageRoute,
-  AboutRoute: AboutRoute,
+  CameraPageRoute: CameraPageRoute,
+  ChatPageRoute: ChatPageRoute,
+  MapPageRoute: MapPageRoute,
   MypagePageRoute: MypagePageRoute,
   authAuthPageRoute: authAuthPageRoute,
   authRegisterPageRoute: authRegisterPageRoute,
 }
 
-export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -152,7 +207,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
+        "/camera/",
+        "/chat/",
+        "/map/",
         "/mypage/",
         "/(auth)/auth/",
         "/(auth)/register/"
@@ -161,8 +218,14 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/": {
       "filePath": "page.tsx"
     },
-    "/about": {
-      "filePath": "about.tsx"
+    "/camera/": {
+      "filePath": "camera/page.tsx"
+    },
+    "/chat/": {
+      "filePath": "chat/page.tsx"
+    },
+    "/map/": {
+      "filePath": "map/page.tsx"
     },
     "/mypage/": {
       "filePath": "mypage/page.tsx"

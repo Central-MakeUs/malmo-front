@@ -20,9 +20,7 @@ export default function App() {
   // Web에 메시지 전송
   const sendMessageToWeb = () => {
     const message = { type: 'getData', payload: {} }
-    if (webviewRef.current) {
-      webviewRef.current.postMessage(JSON.stringify(message))
-    }
+    if (webviewRef.current) webviewRef.current.postMessage(JSON.stringify(message))
   }
 
   return (
