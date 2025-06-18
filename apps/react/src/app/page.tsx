@@ -16,7 +16,6 @@ function HomePage() {
     try {
       const { type, payload } = JSON.parse(event.data)
       if (type === 'getData') {
-        // 예시 데이터 처리
         const response = { type: 'dataResponse', payload: { data: '반갑습니다.!' } }
         window.ReactNativeWebView.postMessage(JSON.stringify(response))
       }
