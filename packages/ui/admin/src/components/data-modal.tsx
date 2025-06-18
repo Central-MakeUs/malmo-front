@@ -31,7 +31,7 @@ interface DataModalProps<T extends Record<string, any>> extends React.ComponentP
   footer?: React.ReactNode
 }
 
-export type ModalType = 'create' | 'update' | 'show' | null
+export type ModalType = 'create' | 'update' | 'show' | 'version' | null
 
 type DataModalContextType = {
   type: ModalType
@@ -63,7 +63,17 @@ export function DataModal<T extends Record<string, any>>(props: DataModalProps<T
   return (
     <DataModalContext.Provider value={{ type }}>
       <Dialog {...rest}>
-        <DialogContent className="top-[20%] translate-y-[-20%] sm:max-w-xl md:max-w-2xl lg:max-w-4xl">
+        <DialogContent
+          onWheel={(event) => {
+            const target = event.target as HTMLElement
+            const popoverContent = target.closest('[role="dialog"]')
+
+            if (popoverContent && popoverContent !== event.currentTarget) {
+              event.stopPropagation()
+            }
+          }}
+          className="top-[20%] translate-y-[-20%] sm:max-w-xl md:max-w-2xl lg:max-w-4xl"
+        >
           <DialogHeader>
             {title && <DialogTitle>{title}</DialogTitle>}
             <DialogDescription>{description}</DialogDescription>
@@ -90,7 +100,7 @@ export function DataModalUpdate({ children }: { children: React.ReactNode }) {
 
 export function DataModalCreateOrUpdate({ children }: { children: React.ReactNode }) {
   const { type } = use(DataModalContext)
-  if (type !== 'create' && type !== 'update') return null
+  if (type !== 'create' && type !== 'update' && type !== 'version') return null
   return <>{children}</>
 }
 
