@@ -67,7 +67,7 @@ export default defineConfig({
     port: 3001,
     proxy: {
       '/api': {
-        target: 'https://dev-api.care1.co.kr',
+        target: 'https://example.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         cookieDomainRewrite: {

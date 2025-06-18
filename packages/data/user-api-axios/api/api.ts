@@ -14,6 +14,4 @@
 
 export * from './apis/auth-api'
 export * from './apis/verificatioins-api'
-export * from './apis/고객유형api'
 export * from './apis/파일업로드api'
-export * from './apis/회원정보관리api'

@@ -1,6 +1,6 @@
 {
   "generatorName": "typescript-axios",
-  "inputSpec": "https://dev-api.care1.co.kr/api-docs/swagger-json",
+  "inputSpec": "https://example.com/api-docs/swagger-json",
   "verbose": false,
   "allowUnicodeIdentifiers": true,
   "enablePostProcessFile": true,
