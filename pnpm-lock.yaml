@@ -498,6 +498,9 @@ importers:
       '@ui/common':
         specifier: workspace:*
         version: link:../../packages/ui/common
+      '@webview-bridge/react':
+        specifier: ^1.7.8
+        version: 1.7.8(@webview-bridge/web@1.7.8)(react@19.0.0)
       '@webview-bridge/web':
         specifier: ^1.7.8
         version: 1.7.8
@@ -3932,6 +3935,15 @@ packages:
     peerDependencies:
       react: '*'
       react-native-webview: '*'
+
+  '@webview-bridge/react@1.7.8':
+    resolution: {integrity: sha512-IDvabaJDquUZKf/BO6RkNKyg+aOMGS89esigwtZAD11zA/rIP9b3P4d3SHm0AZyv6gnCqFZl9kj7e7ujxS51Bw==}
+    peerDependencies:
+      '@webview-bridge/web': '*'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@webview-bridge/types@1.7.8':
     resolution: {integrity: sha512-xy4xi58Bgpq0WxwZUP2xPi/vNWTPNgXCvN4Xz0sEpAitH4VCgY8HqFrgJgwRQMyNgaJN8MSM/384/PvDRV0jeg==}
@@ -11771,6 +11783,14 @@ snapshots:
       react: 19.0.0
       react-native-webview: 13.13.5(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
       use-sync-external-store: 1.5.0(react@19.0.0)
+
+  '@webview-bridge/react@1.7.8(@webview-bridge/web@1.7.8)(react@19.0.0)':
+    dependencies:
+      '@webview-bridge/types': 1.7.8
+      '@webview-bridge/web': 1.7.8
+      use-sync-external-store: 1.5.0(react@19.0.0)
+    optionalDependencies:
+      react: 19.0.0
 
   '@webview-bridge/types@1.7.8': {}
 

@@ -18,6 +18,7 @@
     "@tanstack/react-query": "catalog:react",
     "@tanstack/react-router": "catalog:react",
     "@ui/common": "workspace:*",
+    "@webview-bridge/react": "^1.7.8",
     "@webview-bridge/web": "^1.7.8",
     "axios": "catalog:",
     "class-variance-authority": "catalog:react",

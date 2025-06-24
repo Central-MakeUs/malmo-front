@@ -51,7 +51,7 @@ function RootComponent() {
 
       <footer className="fixed bottom-0 z-10 w-full">
         <nav
-          className="mx-auto flex w-full max-w-[600px] justify-around rounded-t-4xl p-4"
+          className="mx-auto flex w-full max-w-[600px] justify-around rounded-t-4xl bg-white p-4"
           style={{
             boxShadow: '0px -5px 10px rgba(0, 0, 0, 0.03)',
             borderTop: '1px solid rgba(0, 0, 0, 0.03)',
