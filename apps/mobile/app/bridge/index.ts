@@ -4,41 +4,48 @@ import * as WebBrowser from 'expo-web-browser'
 import { z } from 'zod'
 import * as v from 'valibot'
 
-interface AppBridgeState extends Bridge {
+type BridgeStore = {
+  showNative: boolean
+  count: number
+  data: { text: string }
+}
+
+type BridgeActions = {
+  setShowNative(show: boolean): Promise<void>
   openInAppBrowser(url: string): Promise<void>
   getMessage(): Promise<"I'm from native">
-  count: number
   increase(): Promise<void>
-  data: {
-    text: string
-  }
   setDataText(text: string): Promise<void>
 }
 
-export const appBridge = bridge<AppBridgeState>(({ get, set }) => ({
-  async getMessage() {
-    return "I'm from native" as const
-  },
-  async openInAppBrowser(url: string) {
-    await WebBrowser.openBrowserAsync(url, {})
-  },
-  data: {
-    text: '',
-  },
-  count: 0,
-  async increase() {
-    set({
-      count: get().count + 1,
-    })
-  },
-  async setDataText(text) {
-    set({
-      data: {
-        text,
-      },
-    })
-  },
-}))
+export type AppBridgeState = Bridge & BridgeStore & BridgeActions
+
+export const appBridge = bridge<AppBridgeState>(({ set, get }) => {
+  const actions: BridgeActions = {
+    async setShowNative(show: boolean) {
+      set({ showNative: show })
+    },
+    async openInAppBrowser(url) {
+      await WebBrowser.openBrowserAsync(url, {})
+    },
+    async getMessage() {
+      return "I'm from native" as const
+    },
+    async increase() {
+      set({ count: get().count + 1 })
+    },
+    async setDataText(text) {
+      set({ data: { text } })
+    },
+  }
+
+  return {
+    showNative: true,
+    count: 0,
+    data: { text: '' },
+    ...actions,
+  }
+})
 
 export const appSchema = postMessageSchema({
   setWebMessage_zod: {

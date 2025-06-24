@@ -17,21 +17,26 @@ declare module '@tanstack/react-router' {
 export const bridge = linkBridge<AppBridge, AppPostMessageSchema>({
   throwOnError: true,
   initialBridge: {
+    /* ---------- state ---------- */
+    showNative: true,
     count: 10,
-    data: {
-      text: 'Test',
+    data: { text: 'Test' },
+
+    /* ---------- actions ---------- */
+    async setShowNative(show) {
+      console.warn('not support setShowNative:', show)
     },
-    increase: async () => {
+    async increase() {
       alert('not support increase')
     },
-    openInAppBrowser: async (url) => {
+    async openInAppBrowser(url) {
       alert('not support openInAppBrowser: ' + url)
     },
-    setDataText: async (text) => {
+    async setDataText(text) {
       alert('not support setDataText: ' + text)
     },
-    getMessage: async () => {
-      return "I'm from native"
+    async getMessage() {
+      return "I'm from native" as const
     },
   },
   onReady: () => {

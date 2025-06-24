@@ -23,17 +23,17 @@ export function NavgationIcon(props: NavigationIconProps) {
     : false
 
   return (
-    <Link to={url} className="flex h-20 w-20 items-center justify-center">
+    <Link to={url}>
       <div
+        onClick={onClick}
         className={cn(
-          'flex flex-col items-center justify-center gap-1',
+          'flex h-20 w-20 flex-col items-center justify-center',
           {
             'text-black': isActive,
             'text-gray-400': !isActive,
           },
           className
         )}
-        onClick={onClick}
       >
         <Icon />
         <p className="text-sm">{text}</p>

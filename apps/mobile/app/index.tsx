@@ -1,5 +1,5 @@
-import React from 'react'
-import { Text, Button, SafeAreaView, TextInput, View } from 'react-native'
+import React, { useRef } from 'react'
+import { Text, Button, SafeAreaView, TextInput, View, StyleSheet, StatusBar, ScrollView } from 'react-native'
 import { createWebView, useBridge, type BridgeWebView } from '@webview-bridge/react-native'
 import { appBridge, appSchema } from './bridge'
 
@@ -12,67 +12,140 @@ export const { WebView, postMessage } = createWebView({
   },
 })
 
-function Count() {
-  // render when count changed
-  const count = useBridge(appBridge, (state) => state.count)
-
-  return <Text>Native Count: {count}</Text>
-}
-
-function Input() {
-  const { data, setDataText } = useBridge(appBridge)
-
-  return (
-    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-      <Text
-        style={{
-          marginBottom: 10,
-          textAlign: 'center',
-        }}
-      >
-        Native Data Text: {data.text}
-      </Text>
-      <TextInput
-        value={data.text}
-        onChangeText={setDataText}
-        style={{ borderWidth: 1, minWidth: '50%', maxWidth: '50%' }}
-      />
-    </View>
-  )
-}
-
 export default function App() {
-  const webviewRef = React.useRef<BridgeWebView>(null)
+  const webviewRef = useRef<BridgeWebView>(null)
 
-  const increase = useBridge(appBridge, (state) => state.increase)
+  const { count, data, increase, setDataText, showNative, setShowNative } = useBridge(appBridge)
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <Text style={{ textAlign: 'center' }}>This is Native</Text>
-      <Button title="setWebMessage (zod)" onPress={() => postMessage('setWebMessage_zod', { message: 'zod !' })} />
-      <Button
-        title="setWebMessage (valibot)"
-        onPress={() => postMessage('setWebMessage_valibot', { message: 'valibot !' })}
-      />
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Count />
-        <Button onPress={() => increase()} title="Increase From Native" />
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle="dark-content" />
+      <View style={{ height: showNative ? '33%' : 0 }}>
+        <ScrollView contentContainerStyle={styles.nativeContentContainer}>
+          <Text style={styles.headerTitle}>React Native UI</Text>
 
-        <Input />
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Native → Web: 메시지 보내기</Text>
+            <View style={styles.buttonContainer}>
+              <Button
+                title="Set Web Message (zod)"
+                onPress={() => postMessage('setWebMessage_zod', { message: 'zod !' })}
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                title="Set Web Message (valibot)"
+                onPress={() => postMessage('setWebMessage_valibot', { message: 'valibot !' })}
+              />
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>공유 상태 관리</Text>
+
+            <View style={styles.stateItem}>
+              <Text style={styles.stateLabel}>
+                Webview Count: <Text style={styles.stateValue}>{count}</Text>
+              </Text>
+              <Button onPress={increase} title="Increase From Native" />
+            </View>
+
+            <View style={styles.stateItem}>
+              <Text style={styles.stateLabel}>
+                Webview Data Text: <Text style={styles.stateValue}>{data.text}</Text>
+              </Text>
+              <TextInput
+                value={data.text}
+                onChangeText={setDataText}
+                style={styles.input}
+                placeholder="여기에 입력하세요..."
+              />
+            </View>
+          </View>
+
+          <View style={styles.card}>
+            <Button onPress={() => setShowNative(false)} title="Close Native UI" />
+          </View>
+        </ScrollView>
       </View>
 
-      <WebView
-        ref={webviewRef}
-        source={{
-          uri: 'http://localhost:3001',
-        }}
-        style={{ height: '100%', flex: 1, width: '100%' }}
-      />
+      {/* 2. WebView 영역 */}
+      <View style={styles.webviewContainer}>
+        <WebView ref={webviewRef} source={{ uri: 'http://localhost:3001' }} style={styles.webview} />
+      </View>
     </SafeAreaView>
   )
 }
+
+// --- 스타일시트 ---
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F4F7FC',
+  },
+  nativeContentContainer: {
+    padding: 16,
+  },
+  nativeContainer: {
+    height: '33%',
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#1A202C',
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    // 그림자 (iOS)
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    // 그림자 (Android)
+    elevation: 3,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+    color: '#2D3748',
+  },
+  buttonContainer: {
+    marginVertical: 4,
+  },
+  stateItem: {
+    marginVertical: 10,
+  },
+  stateLabel: {
+    fontSize: 16,
+    color: '#4A5568',
+    marginBottom: 8,
+  },
+  stateValue: {
+    fontWeight: 'bold',
+    color: '#2B6CB0',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#CBD5E0',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 16,
+    backgroundColor: '#F7FAFC',
+  },
+  webviewContainer: {
+    flex: 2,
+    borderTopWidth: 1,
+    borderTopColor: '#E2E8F0',
+  },
+  webview: {
+    height: '100%',
+    width: '100%',
+  },
+})

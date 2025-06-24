@@ -12,29 +12,19 @@ export const Route = createFileRoute('/')({
   component: BridgeDemoPage,
 })
 
-// ----------------------------------------------------------------
-// 1. 브릿지 상태 표시 컴포넌트
-// ----------------------------------------------------------------
 function BridgeStatus() {
   return (
-    <div>
-      <p>
-        <strong>Bridge 연결 상태:</strong> {bridge.isWebViewBridgeAvailable ? '연결됨 ✅' : '연결되지 않음 ❌'}
-      </p>
-    </div>
+    <p>
+      <strong>Bridge 연결 상태:</strong> {bridge.isWebViewBridgeAvailable ? '연결됨 ✅' : '연결되지 않음 ❌'}
+    </p>
   )
 }
 
-// ----------------------------------------------------------------
-// 2. Native -> Web: 단방향 데이터 수신 및 표시 컴포넌트
-// - 네이티브 앱의 'count' 상태가 변경되면 웹뷰도 자동으로 업데이트됩니다.
-// ----------------------------------------------------------------
 function CounterDisplay() {
   const count = useBridge(bridge.store, (state) => state.count)
   const increase = useBridge(bridge.store, (state) => state.increase)
 
   const handleIncrease = () => {
-    // Web에서 Native로 상태 변경을 요청합니다.
     increase()
   }
 
@@ -47,16 +37,10 @@ function CounterDisplay() {
   )
 }
 
-// ----------------------------------------------------------------
-// 3. Native <-> Web: 양방향 데이터 바인딩 컴포넌트
-// - 네이티브 'text' 상태를 웹뷰 Input에 표시하고,
-// - 웹뷰 Input 변경 시 네이티브 상태를 업데이트합니다.
-// ----------------------------------------------------------------
 function DataEditor() {
   const text = useBridge(bridge.store, (state) => state.data.text)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Web의 Input 변경을 Native 상태에 즉시 반영합니다.
     bridge.setDataText(e.target.value)
   }
 
@@ -69,9 +53,6 @@ function DataEditor() {
   )
 }
 
-// ----------------------------------------------------------------
-// 4. Native -> Web: 이벤트 수신 및 비동기 함수 호출 컴포넌트
-// ----------------------------------------------------------------
 function MessageDisplay() {
   const [message, setMessage] = useState('메시지를 기다리는 중...')
 
@@ -114,9 +95,6 @@ function MessageDisplay() {
   )
 }
 
-// ----------------------------------------------------------------
-// 5. Web -> Native: 특정 기능 실행 요청 컴포넌트
-// ----------------------------------------------------------------
 function InAppBrowserButton() {
   const handleOpenBrowser = () => {
     if (bridge.isNativeMethodAvailable('openInAppBrowser')) {
@@ -134,19 +112,27 @@ function InAppBrowserButton() {
   )
 }
 
+function OpenNativeUIButton() {
+  const setShowNative = useBridge(bridge.store, (state) => state.setShowNative)
+  const showNative = useBridge(bridge.store, (state) => state.showNative)
+
+  return !showNative ? (
+    <Button className="w-fit" onClick={() => setShowNative(true)}>
+      Native UI 열기
+    </Button>
+  ) : null
+}
+
 function BridgeDemoPage() {
   return (
-    <div className="mb-[120px] flex flex-col gap-4 p-4">
+    <div className="mb-[120px] flex w-full flex-col gap-8 p-4">
       <h1>React WebView Bridge 데모</h1>
       <BridgeStatus />
-      <hr />
       <MessageDisplay />
-      <hr />
       <CounterDisplay />
-      <hr />
       <DataEditor />
-      <hr />
       <InAppBrowserButton />
+      <OpenNativeUIButton />
     </div>
   )
 }

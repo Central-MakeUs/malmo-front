@@ -1,11 +1,14 @@
+import { bridge } from '@/app'
 import { NavgationIcon } from '@/shared/components/navigation'
 import { AuthContext, useAuth } from '@/shared/libs/auth'
 import { QueryClient } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { createRootRouteWithContext, Link, Outlet, redirect, useRouter } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { useBridge } from '@webview-bridge/react'
 import { Bot, Camera, Home, Map, PersonStanding, User } from 'lucide-react'
 import { match } from 'path-to-regexp'
+import React from 'react'
 
 interface RouterContext {
   queryClient: QueryClient
