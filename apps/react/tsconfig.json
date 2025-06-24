@@ -2,7 +2,8 @@
   "extends": "@system/typescript/react-app.json",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@mobile/bridge": ["../mobile/app/bridge"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx", "../next/routeTree.gen.ts"],

@@ -1,35 +1,64 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Button } from '@ui/common/components/button'
-import { useEffect } from 'react'
+import { linkBridge } from '@webview-bridge/web'
+import { useState, useEffect } from 'react'
+import { AppBridge, AppPostMessageSchema } from '@mobile/bridge'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
 })
 
+const bridge = linkBridge<AppBridge, AppPostMessageSchema>({
+  throwOnError: true,
+  onReady: () => {
+    console.log('bridge is ready')
+  },
+  onFallback: (methodName, args) => {
+    console.log('fallback', methodName, args)
+  },
+})
+
 function HomePage() {
+  const [message, setMessage] = useState('')
+
   useEffect(() => {
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
+    async function init() {
+      const message = await bridge.getMessage()
+      setMessage(message)
+    }
+
+    init()
   }, [])
 
-  const handleMessage = (event) => {
-    try {
-      const { type, payload } = JSON.parse(event.data)
-      if (type === 'getData') {
-        const response = { type: 'dataResponse', payload: { data: '반갑습니다.!' } }
-        window.ReactNativeWebView.postMessage(JSON.stringify(response))
-      }
-    } catch (error) {
-      console.error('메시지 처리 오류', error)
-    }
-  }
+  useEffect(() => {
+    // Subscribe to events from react native.
+    return bridge.addEventListener('setWebMessage_zod', ({ message }) => {
+      setMessage(message)
+    })
+  }, [])
+
+  useEffect(() => {
+    // Subscribe to events from react native.
+    return bridge.addEventListener('setWebMessage_valibot', ({ message }) => {
+      setMessage(message)
+    })
+  }, [])
 
   return (
     <div>
-      <Button onClick={() => handleMessage({ data: JSON.stringify({ type: 'getData', payload: {} }) })}>
-        메시지 전송
-      </Button>
-      <h1>React Web Inside WebView</h1>
+      <h1>This is a web.</h1>
+      <h1>{message}</h1>
+      <button
+        style={{ border: '1px solid black', padding: '10px', margin: '10px' }}
+        onClick={() => {
+          if (bridge.isNativeMethodAvailable('openInAppBrowser') === true) {
+            bridge.openInAppBrowser('https://github.com/gronxb/webview-bridge')
+          }
+        }}
+      >
+        open InAppBrowser
+      </button>
+
+      <div>{`isWebViewBridgeAvailable: ${String(bridge.isWebViewBridgeAvailable)}`}</div>
     </div>
   )
 }

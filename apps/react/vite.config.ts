@@ -38,6 +38,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, '../../packages/ui/common/src'),
       },
       {
+        find: '@mobile/bridge',
+        replacement: path.resolve(__dirname, '../mobile/app/bridge'),
+      },
+      {
         find: '@/',
         replacement: `${path.resolve(__dirname, 'src')}/`,
       },

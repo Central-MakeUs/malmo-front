@@ -99,7 +99,7 @@ catalogs:
       version: 2.1.1
     lucide-react:
       specifier: latest
-      version: 0.516.0
+      version: 0.522.0
     next-themes:
       specifier: ^0.4
       version: 0.4.6
@@ -300,7 +300,7 @@ importers:
         version: 2.1.1
       lucide-react:
         specifier: catalog:react
-        version: 0.516.0(react@19.0.0)
+        version: 0.522.0(react@19.0.0)
       msw:
         specifier: ^2.9.0
         version: 2.9.0(@types/node@22.15.30)(typescript@5.8.3)
@@ -389,6 +389,9 @@ importers:
       '@react-navigation/native':
         specifier: ^7.1.6
         version: 7.1.9(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      '@webview-bridge/react-native':
+        specifier: ^1.7.8
+        version: 1.7.8(react-native-webview@13.13.5(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react@19.0.0)
       expo:
         specifier: ~53.0.12
         version: 53.0.12(@babel/core@7.27.1)(@expo/metro-runtime@5.0.4(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)))(graphql@16.11.0)(react-native-webview@13.13.5(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
@@ -455,6 +458,12 @@ importers:
       react-native-webview:
         specifier: 13.13.5
         version: 13.13.5(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      valibot:
+        specifier: ^1.1.0
+        version: 1.1.0(typescript@5.8.3)
+      zod:
+        specifier: 'catalog:'
+        version: 3.25.53
     devDependencies:
       '@babel/core':
         specifier: ^7.25.2
@@ -489,6 +498,9 @@ importers:
       '@ui/common':
         specifier: workspace:*
         version: link:../../packages/ui/common
+      '@webview-bridge/web':
+        specifier: ^1.7.8
+        version: 1.7.8
       axios:
         specifier: 'catalog:'
         version: 1.9.0
@@ -500,7 +512,7 @@ importers:
         version: 2.1.1
       lucide-react:
         specifier: catalog:react
-        version: 0.516.0(react@19.0.0)
+        version: 0.522.0(react@19.0.0)
       path-to-regexp:
         specifier: 'catalog:'
         version: 8.2.0
@@ -588,7 +600,7 @@ importers:
         version: link:../../packages/ui/common
       lucide-react:
         specifier: catalog:react
-        version: 0.516.0(react@19.0.0)
+        version: 0.522.0(react@19.0.0)
       react:
         specifier: catalog:react
         version: 19.0.0
@@ -885,7 +897,7 @@ importers:
         version: 2.1.1
       lucide-react:
         specifier: catalog:react
-        version: 0.516.0(react@19.0.0)
+        version: 0.522.0(react@19.0.0)
       react:
         specifier: catalog:react
         version: 19.0.0
@@ -1031,7 +1043,7 @@ importers:
         version: 1.12.9
       lucide-react:
         specifier: catalog:react
-        version: 0.516.0(react@19.0.0)
+        version: 0.522.0(react@19.0.0)
       next-themes:
         specifier: catalog:react
         version: 0.4.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -3915,6 +3927,21 @@ packages:
   '@webassemblyjs/wast-printer@1.14.1':
     resolution: {integrity: sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw==}
 
+  '@webview-bridge/react-native@1.7.8':
+    resolution: {integrity: sha512-VCGJrocTYZbi53yIHwqlmjKCvGHQUILf7cPWfrc3WZHg0jItyrUJ9JR6hiQjt7/KvRQ3CyoPa2f1iHczBq72ZQ==}
+    peerDependencies:
+      react: '*'
+      react-native-webview: '*'
+
+  '@webview-bridge/types@1.7.8':
+    resolution: {integrity: sha512-xy4xi58Bgpq0WxwZUP2xPi/vNWTPNgXCvN4Xz0sEpAitH4VCgY8HqFrgJgwRQMyNgaJN8MSM/384/PvDRV0jeg==}
+
+  '@webview-bridge/utils@1.7.8':
+    resolution: {integrity: sha512-e2lqfRud8tW6ydQ9p6cOsvtMIa22Tb+uOsdNPddFg24eRPz5ynoMS33jzqr/DWCBFwB21aHr91SzBW2M+yiG3A==}
+
+  '@webview-bridge/web@1.7.8':
+    resolution: {integrity: sha512-3fSEjBM43ZEIw8xO6GgUfHXM8IvilJAo7DULcqKt7qVuSzv2jGn9CSoeRQphMqobP77JDgdm1i3H+ScNon8c7w==}
+
   '@xmldom/xmldom@0.8.10':
     resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
     engines: {node: '>=10.0.0'}
@@ -6142,8 +6169,8 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
-  lucide-react@0.516.0:
-    resolution: {integrity: sha512-aybBJzLHcw1CIn3rUcRkztB37dsJATtpffLNX+0/w+ws2p21nYIlOwX/B5fqxq8F/BjqVemnJX8chKwRidvROg==}
+  lucide-react@0.522.0:
+    resolution: {integrity: sha512-jnJbw974yZ7rQHHEFKJOlWAefG3ATSCZHANZxIdx8Rk/16siuwjgA4fBULpXEAWx/RlTs3FzmKW/udWUuO0aRw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -8114,6 +8141,14 @@ packages:
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
+
+  valibot@1.1.0:
+    resolution: {integrity: sha512-Nk8lX30Qhu+9txPYTwM0cFlWLdPFsFr6LblzqIySfbZph9+BFsAHsNvHOymEviUepeIW6KFHzpX8TKhbptBXXw==}
+    peerDependencies:
+      typescript: '>=5'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
@@ -11729,6 +11764,23 @@ snapshots:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
 
+  '@webview-bridge/react-native@1.7.8(react-native-webview@13.13.5(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@webview-bridge/types': 1.7.8
+      '@webview-bridge/utils': 1.7.8
+      react: 19.0.0
+      react-native-webview: 13.13.5(react-native@0.79.4(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      use-sync-external-store: 1.5.0(react@19.0.0)
+
+  '@webview-bridge/types@1.7.8': {}
+
+  '@webview-bridge/utils@1.7.8': {}
+
+  '@webview-bridge/web@1.7.8':
+    dependencies:
+      '@webview-bridge/types': 1.7.8
+      '@webview-bridge/utils': 1.7.8
+
   '@xmldom/xmldom@0.8.10': {}
 
   '@xtuc/ieee754@1.2.0': {}
@@ -14249,7 +14301,7 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
-  lucide-react@0.516.0(react@19.0.0):
+  lucide-react@0.522.0(react@19.0.0):
     dependencies:
       react: 19.0.0
 
@@ -16648,6 +16700,10 @@ snapshots:
   uuid@7.0.3: {}
 
   uuid@9.0.1: {}
+
+  valibot@1.1.0(typescript@5.8.3):
+    optionalDependencies:
+      typescript: 5.8.3
 
   validate-npm-package-license@3.0.4:
     dependencies:
