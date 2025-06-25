@@ -18,6 +18,7 @@ export function DataDescriptions<T extends Record<string, any>>({
         const { items, ...props } = desc
         return (
           <Descriptions
+            className="whitespace-pre-wrap"
             key={i}
             {...props}
             items={items.map((item, i) => {
@@ -25,8 +26,13 @@ export function DataDescriptions<T extends Record<string, any>>({
               const value = record?.[item.accessorKey] ?? '-'
               return {
                 ...rest,
+                span: item.span || 2,
                 label: header || item.accessorKey,
-                children: item.render ? item.render(value, record as T, i) : value,
+                children: item.render ? (
+                  item.render(value, record as T, i)
+                ) : (
+                  <p className="whitespace-pre-wrap">{value}</p>
+                ),
               }
             })}
           />

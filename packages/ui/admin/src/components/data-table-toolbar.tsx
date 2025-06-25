@@ -19,6 +19,7 @@ export interface DataTableToolbarProps<TData> {
   viewOptionsTitle?: string
   viewOptionsMenuTitle?: string
   searchPlaceHolder?: string
+  searchProps?: Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange' | 'onKeyDown'>
   resetButtonTitle?: string
   topRightItems?: ReactNode[]
   onFilterChange?: (params: Record<string, any>) => void
@@ -37,6 +38,7 @@ export function DataTableToolbar<TData>(props: DataTableToolbarProps<TData>) {
     viewOptionsTitle,
     viewOptionsMenuTitle,
     searchPlaceHolder = '검색',
+    searchProps,
     resetButtonTitle = '초기화',
     manualSearch,
     filter,
@@ -107,6 +109,7 @@ export function DataTableToolbar<TData>(props: DataTableToolbarProps<TData>) {
                 const newValue = event.target.value
                 setTableSearchValue(newValue)
               }}
+              {...searchProps}
             />
           </div>
         )}

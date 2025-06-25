@@ -10,6 +10,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 
 export interface InputSearchProps<T extends Record<string, any>> {
+  initialOptions?: T[]
   value?: any
   onChange?: (value: any) => void
   idKey?: string
@@ -38,6 +39,7 @@ export interface InputSearchProps<T extends Record<string, any>> {
 
 export function InputApiSearch<T extends Record<string, any>>(props: InputSearchProps<T>) {
   const {
+    initialOptions,
     value,
     onChange,
     idKey = 'id',
@@ -64,8 +66,13 @@ export function InputApiSearch<T extends Record<string, any>>(props: InputSearch
 
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState<string>()
-  const [selectedItems, setSelectedItems] = useState<T[]>([])
-  const [data, setData] = useState<T[]>([])
+  const [selectedItems, setSelectedItems] = useState<T[]>(() => {
+    if (!value || !initialOptions) return []
+    const values = Array.isArray(value) ? value : [value]
+    return initialOptions.filter((item) => values.includes(item[idKey]))
+  })
+  const [data, setData] = useState<T[]>(initialOptions || [])
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [page, setPage] = useState(pageStartIndex)
@@ -150,22 +157,23 @@ export function InputApiSearch<T extends Record<string, any>>(props: InputSearch
         })
         const resultData = dataKey ? response[dataKey] : response
 
-        if (append) {
-          setData((prev) => [...prev, ...resultData])
-        } else {
-          setData(resultData)
-        }
+        setData((prevData) => {
+          const combinedData = append ? [...prevData, ...resultData] : [...(initialOptions || []), ...resultData]
+          const uniqueData = Array.from(new Map(combinedData.map((item) => [item[idKey], item])).values())
+
+          return uniqueData
+        })
 
         setHasMore(resultData.length === searchLimit)
         setPage(currentPage)
       } catch (e) {
         setError(errorMessage)
-        setData([])
+        setData(initialOptions || [])
       } finally {
         stateSetter(false)
       }
     },
-    [api, dataKey, searchLimit, errorMessage]
+    [api, dataKey, searchLimit, initialOptions, errorMessage]
   )
 
   const handleSearchChange = useDebounce((search?: string) => {
@@ -173,8 +181,8 @@ export function InputApiSearch<T extends Record<string, any>>(props: InputSearch
   }, 300)
 
   useEffect(() => {
-    if (open && data.length === 0) handleSearchChange(undefined)
-  }, [open])
+    if (open && data.length === (initialOptions?.length || 0)) handleSearchChange(undefined)
+  }, [open, initialOptions])
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (loading || isFetchingMore || !hasMore) return
