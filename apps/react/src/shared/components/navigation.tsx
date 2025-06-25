@@ -27,7 +27,7 @@ export function NavgationIcon(props: NavigationIconProps) {
       <div
         onClick={onClick}
         className={cn(
-          'flex h-20 w-20 flex-col items-center justify-center',
+          'flex h-16 w-16 flex-col items-center justify-center gap-1',
           {
             'text-black': isActive,
             'text-gray-400': !isActive,
@@ -36,7 +36,7 @@ export function NavgationIcon(props: NavigationIconProps) {
         )}
       >
         <Icon />
-        <p className="text-sm">{text}</p>
+        <p className="text-xs">{text}</p>
       </div>
     </Link>
   )

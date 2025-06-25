@@ -19,7 +19,6 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" />
       <View style={{ height: showNative ? '33%' : 0 }}>
         <ScrollView contentContainerStyle={styles.nativeContentContainer}>
           <Text style={styles.headerTitle}>React Native UI</Text>
@@ -71,7 +70,13 @@ export default function App() {
 
       {/* 2. WebView 영역 */}
       <View style={styles.webviewContainer}>
-        <WebView ref={webviewRef} source={{ uri: 'http://localhost:3001' }} style={styles.webview} />
+        <WebView
+          ref={webviewRef}
+          source={{ uri: 'http://localhost:3001' }}
+          style={styles.webview}
+          injectedJavaScript={`window.confirm = function(){ return true; }`}
+          hideKeyboardAccessoryView={true}
+        />
       </View>
     </SafeAreaView>
   )
@@ -81,7 +86,7 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#F4F7FC',
+    backgroundColor: 'white',
   },
   nativeContentContainer: {
     padding: 16,
