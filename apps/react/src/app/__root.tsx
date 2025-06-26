@@ -48,13 +48,13 @@ function RootComponent() {
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-gray-09">
-      <main className="mx-auto flex h-full w-full max-w-[600px] flex-1 bg-white">
+      <main className="mx-auto flex h-full w-full max-w-[600px] flex-1 bg-white pb-[86px]">
         <Outlet />
       </main>
 
-      <footer className="fixed bottom-0 z-10 w-full">
+      <footer className="fixed bottom-0 z-10 h-[86px] w-full">
         <nav
-          className="mx-auto flex w-full max-w-[600px] justify-around rounded-t-4xl bg-white p-4"
+          className="mx-auto flex w-full max-w-[600px] justify-around rounded-t-4xl bg-white px-4 py-4"
           style={{
             boxShadow: '0px -5px 10px rgba(0, 0, 0, 0.03)',
             borderTop: '1px solid rgba(0, 0, 0, 0.03)',
@@ -67,8 +67,8 @@ function RootComponent() {
           <NavgationIcon icon={User} text="마이페이지" url={'/mypage'} />
         </nav>
       </footer>
-      <TanStackRouterDevtools position="bottom-right" />
-      <ReactQueryDevtools buttonPosition="bottom-left" />
+      {/* <TanStackRouterDevtools position="top-right" /> */}
+      {/* <ReactQueryDevtools buttonPosition="top-left" /> */}
     </div>
   )
 }
