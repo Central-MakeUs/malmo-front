@@ -19,6 +19,8 @@
     "prune": "turbo prune"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "eslint": "catalog:",
     "husky": "^9",
     "lint-staged": "^15",

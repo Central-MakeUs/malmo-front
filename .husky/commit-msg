@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# commitlint를 실행하여 커밋 메시지 형식 검사
+npx --no -- commitlint --edit ${1} 
