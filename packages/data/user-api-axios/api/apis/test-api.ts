@@ -34,10 +34,10 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { SwaggerErrorResponse } from '../models'
 /**
- * 테스트APIApi - axios parameter creator
+ * TestApi - axios parameter creator
  * @export
  */
-export const 테스트APIApiAxiosParamCreator = function (configuration?: Configuration) {
+export const TestApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
     /**
      * 관리자 권한이 필요한 테스트 API입니다.
@@ -139,11 +139,11 @@ export const 테스트APIApiAxiosParamCreator = function (configuration?: Config
 }
 
 /**
- * 테스트APIApi - functional programming interface
+ * TestApi - functional programming interface
  * @export
  */
-export const 테스트APIApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = 테스트APIApiAxiosParamCreator(configuration)
+export const TestApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = TestApiAxiosParamCreator(configuration)
   return {
     /**
      * 관리자 권한이 필요한 테스트 API입니다.
@@ -157,7 +157,7 @@ export const 테스트APIApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.adminTest(options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
-        operationServerMap['테스트APIApi.adminTest']?.[localVarOperationServerIndex]?.url
+        operationServerMap['TestApi.adminTest']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -178,7 +178,7 @@ export const 테스트APIApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getMyInfo(options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
-        operationServerMap['테스트APIApi.getMyInfo']?.[localVarOperationServerIndex]?.url
+        operationServerMap['TestApi.getMyInfo']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -198,8 +198,7 @@ export const 테스트APIApiFp = function (configuration?: Configuration) {
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
       const localVarAxiosArgs = await localVarAxiosParamCreator.test(options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
-      const localVarOperationServerBasePath =
-        operationServerMap['테스트APIApi.test']?.[localVarOperationServerIndex]?.url
+      const localVarOperationServerBasePath = operationServerMap['TestApi.test']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -212,11 +211,11 @@ export const 테스트APIApiFp = function (configuration?: Configuration) {
 }
 
 /**
- * 테스트APIApi - factory interface
+ * TestApi - factory interface
  * @export
  */
-export const 테스트APIApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-  const localVarFp = 테스트APIApiFp(configuration)
+export const TestApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+  const localVarFp = TestApiFp(configuration)
   return {
     /**
      * 관리자 권한이 필요한 테스트 API입니다.
@@ -249,21 +248,21 @@ export const 테스트APIApiFactory = function (configuration?: Configuration, b
 }
 
 /**
- * 테스트APIApi - object-oriented interface
+ * TestApi - object-oriented interface
  * @export
- * @class 테스트APIApi
+ * @class TestApi
  * @extends {BaseAPI}
  */
-export class 테스트APIApi extends BaseAPI {
+export class TestApi extends BaseAPI {
   /**
    * 관리자 권한이 필요한 테스트 API입니다.
    * @summary 관리자 테스트
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof 테스트APIApi
+   * @memberof TestApi
    */
   public adminTest(options?: RawAxiosRequestConfig) {
-    return 테스트APIApiFp(this.configuration)
+    return TestApiFp(this.configuration)
       .adminTest(options)
       .then((request) => request(this.axios, this.basePath))
   }
@@ -273,10 +272,10 @@ export class 테스트APIApi extends BaseAPI {
    * @summary 내 정보 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof 테스트APIApi
+   * @memberof TestApi
    */
   public getMyInfo(options?: RawAxiosRequestConfig) {
-    return 테스트APIApiFp(this.configuration)
+    return TestApiFp(this.configuration)
       .getMyInfo(options)
       .then((request) => request(this.axios, this.basePath))
   }
@@ -286,10 +285,10 @@ export class 테스트APIApi extends BaseAPI {
    * @summary API 연결 테스트
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof 테스트APIApi
+   * @memberof TestApi
    */
   public test(options?: RawAxiosRequestConfig) {
-    return 테스트APIApiFp(this.configuration)
+    return TestApiFp(this.configuration)
       .test(options)
       .then((request) => request(this.axios, this.basePath))
   }

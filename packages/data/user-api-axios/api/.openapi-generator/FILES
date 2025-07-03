@@ -10,7 +10,7 @@ apis/questions-api.ts
 apis/refresh-api.ts
 apis/sign-ups-api.ts
 apis/temrs-api.ts
-apis/테스트apiapi.ts
+apis/test-api.ts
 base.ts
 common.ts
 configuration.ts

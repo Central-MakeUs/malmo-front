@@ -76,6 +76,20 @@ export function initApi(options?: ApiOptions): AxiosInstance {
   const refreshInstance = axios.create(defaultOptions)
 
   function setupAuthInterceptor() {
+    apiInstance.interceptors.request.use(
+      (config) => {
+        // TODO accessToken을 가져오는 로직을 구현해야 합니다.
+        // 또는 쿠키를 활용해서 자동으로 구현할수도 있을 것 같은데 서버에서 어떻게 받는지를 모르겠네요
+        const accessToken = ''
+        if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
+
+        return config
+      },
+      (error) => {
+        return Promise.reject(error)
+      }
+    )
+
     let isRefreshing = false
     let failedQueue: QueueItem[] = []
 

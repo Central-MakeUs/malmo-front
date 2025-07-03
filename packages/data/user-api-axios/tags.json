@@ -6,5 +6,6 @@
   "오늘의 질문 API": "questions",
   "커플 관리 API": "couples",
   "토큰 관리 API": "refresh",
+  "테스트 API": "test",
   "회원가입 API": "sign-ups"
 }
