@@ -12,12 +12,16 @@
  * Do not edit the class manually.
  */
 
-export * from './apis/couples-api'
-export * from './apis/logins-api'
-export * from './apis/love-types-api'
-export * from './apis/members-api'
-export * from './apis/questions-api'
-export * from './apis/refresh-api'
-export * from './apis/sign-ups-api'
-export * from './apis/temrs-api'
-export * from './apis/테스트apiapi'
+/**
+ * 멤버 탈퇴 응답 데이터
+ * @export
+ * @interface DeleteMemberData
+ */
+export interface DeleteMemberData {
+  /**
+   * 탈퇴한 멤버 ID
+   * @type {number}
+   * @memberof DeleteMemberData
+   */
+  memberId?: number
+}

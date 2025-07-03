@@ -1,5 +1,10 @@
 {
-  "인증": "auth",
-  "OTP 인증": "verificatioins",
-  "파일": "files"
+  "멤버 관리 API": "members",
+  "소셜 로그인 API": "logins",
+  "애착유형 검사 API": "love-types",
+  "약관 관리 API": "temrs",
+  "오늘의 질문 API": "questions",
+  "커플 관리 API": "couples",
+  "토큰 관리 API": "refresh",
+  "회원가입 API": "sign-ups"
 }

@@ -12,12 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from './apis/couples-api'
-export * from './apis/logins-api'
-export * from './apis/love-types-api'
-export * from './apis/members-api'
-export * from './apis/questions-api'
-export * from './apis/refresh-api'
-export * from './apis/sign-ups-api'
-export * from './apis/temrs-api'
-export * from './apis/테스트apiapi'
+/**
+ *
+ * @export
+ * @interface UpdateMemberRequestDto
+ */
+export interface UpdateMemberRequestDto {
+  /**
+   *
+   * @type {string}
+   * @memberof UpdateMemberRequestDto
+   */
+  nickname?: string
+  /**
+   *
+   * @type {string}
+   * @memberof UpdateMemberRequestDto
+   */
+  email?: string
+}

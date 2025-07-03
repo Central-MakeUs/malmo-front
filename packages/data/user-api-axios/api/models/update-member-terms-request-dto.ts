@@ -12,12 +12,20 @@
  * Do not edit the class manually.
  */
 
-export * from './apis/couples-api'
-export * from './apis/logins-api'
-export * from './apis/love-types-api'
-export * from './apis/members-api'
-export * from './apis/questions-api'
-export * from './apis/refresh-api'
-export * from './apis/sign-ups-api'
-export * from './apis/temrs-api'
-export * from './apis/테스트apiapi'
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TermsDto } from './terms-dto'
+
+/**
+ *
+ * @export
+ * @interface UpdateMemberTermsRequestDto
+ */
+export interface UpdateMemberTermsRequestDto {
+  /**
+   *
+   * @type {Array<TermsDto>}
+   * @memberof UpdateMemberTermsRequestDto
+   */
+  terms?: Array<TermsDto>
+}

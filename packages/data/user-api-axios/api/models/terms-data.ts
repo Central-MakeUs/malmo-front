@@ -12,12 +12,22 @@
  * Do not edit the class manually.
  */
 
-export * from './apis/couples-api'
-export * from './apis/logins-api'
-export * from './apis/love-types-api'
-export * from './apis/members-api'
-export * from './apis/questions-api'
-export * from './apis/refresh-api'
-export * from './apis/sign-ups-api'
-export * from './apis/temrs-api'
-export * from './apis/테스트apiapi'
+/**
+ * 약관 동의 정보 데이터
+ * @export
+ * @interface TermsData
+ */
+export interface TermsData {
+  /**
+   * 약관 ID
+   * @type {number}
+   * @memberof TermsData
+   */
+  termsId?: number
+  /**
+   * 약관 동의 여부
+   * @type {boolean}
+   * @memberof TermsData
+   */
+  isAgreed?: boolean
+}

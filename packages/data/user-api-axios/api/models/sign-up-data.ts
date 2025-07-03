@@ -12,12 +12,16 @@
  * Do not edit the class manually.
  */
 
-export * from './apis/couples-api'
-export * from './apis/logins-api'
-export * from './apis/love-types-api'
-export * from './apis/members-api'
-export * from './apis/questions-api'
-export * from './apis/refresh-api'
-export * from './apis/sign-ups-api'
-export * from './apis/temrs-api'
-export * from './apis/테스트apiapi'
+/**
+ * 회원가입 응답 데이터
+ * @export
+ * @interface SignUpData
+ */
+export interface SignUpData {
+  /**
+   * 생성된 커플 코드
+   * @type {string}
+   * @memberof SignUpData
+   */
+  coupleCode?: string
+}
