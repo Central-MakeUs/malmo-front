@@ -26,7 +26,7 @@ const redirectToAuth = () => {
 }
 
 const refreshToken = async (refreshInstance: AxiosInstance) => {
-  return refreshInstance.post('/auth/refresh-token')
+  return refreshInstance.post('/refresh')
 }
 
 const processQueue = (failedQueue: QueueItem[], apiInstance: AxiosInstance, error: any = null) => {
@@ -112,7 +112,7 @@ export function initApi(options?: ApiOptions): AxiosInstance {
 
       const { status, data } = response
 
-      if (status === 401 && data.message === 'invalid_access_token') {
+      if (status === 401 && data.message === '인증되지 않은 사용자입니다.') {
         return handleTokenRefresh(config)
       }
 
