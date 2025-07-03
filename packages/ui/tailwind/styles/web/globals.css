@@ -1,6 +1,6 @@
 @import "tailwindcss";
+@import "../fonts/Pretendard-Variable.css";
 @import "./theme.css";
-@import "./base.css";
 @import "./components.css";
 @import "./utilities.css";
 
@@ -10,35 +10,41 @@
     --color-black: oklch(0% 0 0);
     --color-white: oklch(100% 0 0);
 
-    --color-gray: oklch(55.55% 0 0);
-    --color-gray-50: oklch(98.21% 0 0);
-    --color-gray-100: oklch(96.72% 0 0);
-    --color-gray-200: oklch(92.49% 0 0);
-    --color-gray-300: oklch(87.3% 0 0);
-    --color-gray-400: oklch(71.87% 0 0);
-    --color-gray-500: oklch(55.55% 0 0);
-    --color-gray-600: oklch(43.86% 0 0);
-    --color-gray-700: oklch(37.15% 0 0);
-    --color-gray-800: oklch(27.27% 0 0);
-    --color-gray-900: oklch(22.62% 0.0041 264.49);
+    /* Gray Iron */
+    --gray-iron-25: #FCFCFC;
+    --gray-iron-50: #FAFAFA;
+    --gray-iron-100: #F4F4F5;
+    --gray-iron-200: #E4E4E7;
+    --gray-iron-300: #D1D1D6;
+    --gray-iron-400: #A0A0AB;
+    --gray-iron-500: #70707B;
+    --gray-iron-600: #51525C;
+    --gray-iron-700: #3F3F46;
+    --gray-iron-800: #26272B;
+    --gray-iron-900: #18181B;
+    --gray-iron-950: #131316;
 
-    --color-primary: oklch(58.52% 0.1976 274.93);
-    --color-primary-50: oklch(95.82% 0.0174 282.54);
-    --color-primary-100: oklch(91.65% 0.0367 282.28);
-    --color-primary-200: oklch(83.21% 0.0742 281.28);
-    --color-primary-300: oklch(74.75% 0.1153 279.38);
-    --color-primary-400: oklch(66.44% 0.1559 277.6);
-    --color-primary-500: var(--color-primary);
-    --color-primary-600: oklch(49.84% 0.1643 275.07);
-    --color-primary-700: oklch(40.84% 0.1307 275.24);
-    --color-primary-800: oklch(31.32% 0.0929 276.38);
-    --color-primary-900: oklch(21.04% 0.0527 277.65);
+    /* Malmo Raspberry */
+    --malmo-rasberry-25: #FDEDF0;
+    --malmo-rasberry-50: #FFDDE3;
+    --malmo-rasberry-100: #FFC9D3;
+    --malmo-rasberry-200: #FEB3C0;
+    --malmo-rasberry-300: #FA93A7;
+    --malmo-rasberry-400: #F06B84;
+    --malmo-rasberry-500: #EC4665;
+    --malmo-rasberry-600: #CB2D4A;
+    --malmo-rasberry-700: #912A3E;
+    --malmo-rasberry-800: #641D2A;
+    --malmo-rasberry-900: #360F17;
 
-    --color-sub-1: oklch(39.06% 0.123 270.92);
-    --color-sub-2: oklch(58.52% 0.1976 274.93);
-    --color-stroke: oklch(97.02% 0 0);
-    --color-success: oklch(67.25% 0.1594 156.61);
-    --color-destructive: oklch(65% 0.2035 23.91);
+    /* Font */
+    --font-pretendard: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    
+    /* Font Weight */
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
 
     --radius: 8px;
     --common-max-width: 560px;
