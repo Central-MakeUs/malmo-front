@@ -41,16 +41,17 @@ async function main() {
   const tagMapping = JSON.parse(tagData)
 
   if (isUrl(inputSpec)) {
-    const username = process.env.BASIC_AUTH_USER
-    const password = process.env.BASIC_AUTH_PASS
-    if (!username || !password) {
-      throw new Error('Auth information is not properly formatted.')
-    }
+    // const username = process.env.BASIC_AUTH_USER
+    // const password = process.env.BASIC_AUTH_PASS
+    // if (!username || !password) {
+    //   throw new Error('Auth information is not properly formatted.')
+    // }
 
-    const basicAuth = 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64')
+    // const basicAuth = 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64')
+
     const response = await fetch(inputSpec, {
       headers: {
-        Authorization: basicAuth,
+        // Authorization: basicAuth,
       },
     })
 
