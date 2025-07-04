@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+
+# 브랜치 이름에서 MM-XX 패턴을 추출하여 커밋 메시지에 추가
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+
+# MM-XX 패턴 추출
+ISSUE_ID=$(echo "$BRANCH_NAME" | grep -o 'MM-[0-9]\+' | head -n 1)
+
+# 이슈 ID가 추출되었는지 확인
+if [ -n "$ISSUE_ID" ]; then
+  # 커밋 메시지 파일 읽기
+  COMMIT_MSG=$(cat "$1")
+  
+  # 이미 이슈 ID가 포함되어 있는지 확인
+  if ! echo "$COMMIT_MSG" | grep -q "($ISSUE_ID)"; then
+    # 커밋 메시지 끝에 이슈 ID 추가
+    echo "$COMMIT_MSG ($ISSUE_ID)" > "$1"
+  fi
+fi 

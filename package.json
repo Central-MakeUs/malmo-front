@@ -19,6 +19,8 @@
     "prune": "turbo prune"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "eslint": "catalog:",
     "husky": "^9",
     "lint-staged": "^15",
@@ -27,7 +29,19 @@
     "typescript": "catalog:"
   },
   "lint-staged": {
-    "*.{js,mjs,ts,tsx}": [
+    "apps/react/**/*.{js,mjs,ts,tsx}": [
+      "eslint --fix --config apps/react/eslint.config.js",
+      "prettier --write"
+    ],
+    "apps/mobile/**/*.{js,mjs,ts,tsx}": [
+      "eslint --fix --config apps/mobile/eslint.config.js",
+      "prettier --write"
+    ],
+    "apps/storybook/**/*.{js,mjs,ts,tsx}": [
+      "eslint --fix --config apps/storybook/eslint.config.js",
+      "prettier --write"
+    ],
+    "packages/**/*.{js,mjs,ts,tsx}": [
       "prettier --write"
     ],
     "*.{json,yaml,yml}": [
