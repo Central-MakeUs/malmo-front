@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { BridgeStore, BridgeActions, SocialLoginType, SocialLoginResult } from '@bridge/types'
 import { kakaoLogin } from '../features/auth/social/kakao-login'
 import { appleLogin } from '../features/auth/social/apple-login'
+import { AuthStorage } from '../features/auth/lib/auth-storage'
 
 export type AppBridgeState = Bridge & BridgeStore & BridgeActions
 
@@ -43,11 +44,13 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
     },
 
     async getAuthStatus(): Promise<{ isLoggedIn: boolean }> {
-      return { isLoggedIn: false }
+      const isLoggedIn = await AuthStorage.isAuthenticated()
+      return { isLoggedIn }
     },
 
     async getAuthToken(): Promise<{ accessToken: string | null }> {
-      return { accessToken: null }
+      const accessToken = await AuthStorage.getAccessToken()
+      return { accessToken }
     },
   }
 

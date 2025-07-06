@@ -1,6 +1,7 @@
 import * as KakaoUser from '@react-native-kakao/user'
 import axios from 'axios'
 import { SocialLoginResult } from '@bridge/types'
+import { AuthStorage } from '../lib/auth-storage'
 
 export async function kakaoLogin(): Promise<SocialLoginResult> {
   try {
@@ -19,8 +20,8 @@ export async function kakaoLogin(): Promise<SocialLoginResult> {
       if (apiResponse.data && apiResponse.data.data) {
         const { accessToken, refreshToken } = apiResponse.data.data
 
-        console.log(accessToken)
-        console.log(refreshToken)
+        await AuthStorage.setAccessToken(accessToken)
+        await AuthStorage.setRefreshToken(refreshToken)
       }
 
       return {
