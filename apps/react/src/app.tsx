@@ -1,6 +1,6 @@
 import { RouterProvider } from '@tanstack/react-router'
 import { createRouter } from './router'
-import { AuthProvider, useAuth } from '@/shared/libs/auth'
+import { AuthProvider, useAuth } from '@/features/auth'
 import { ThemeProvider } from '@ui/common/contexts/theme.context'
 import { AlertDialogProvider } from '@ui/common/components/global-alert-dialog'
 
