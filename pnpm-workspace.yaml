@@ -3,6 +3,7 @@ packages:
   - packages/data/*
   - packages/system/*
   - packages/ui/*
+  - packages/bridge
 
 catalog:
   '@types/node': ^22
