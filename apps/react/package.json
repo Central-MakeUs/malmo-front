@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "check-types": "tsc --noEmit",
-    "dev": "vite --mode test",
+    "dev": "vite --host 0.0.0.0 --port 3001",
     "build": "vite build",
     "serve": "vite preview",
     "start": "vite",
@@ -13,6 +13,7 @@
     "format": "prettier ./src --write"
   },
   "dependencies": {
+    "@bridge/types": "workspace:*",
     "@data/user-api-axios": "workspace:*",
     "@hookform/resolvers": "catalog:react",
     "@tanstack/react-query": "catalog:react",
