@@ -1,0 +1,19 @@
+{
+  "name": "@bridge/types",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./types/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --fix",
+    "format": "prettier ./types --write"
+  },
+  "devDependencies": {
+    "@system/eslint": "workspace:*",
+    "@system/typescript": "workspace:*",
+    "@types/node": "catalog:",
+    "zod": "catalog:"
+  }
+}
