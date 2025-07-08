@@ -1,5 +1,5 @@
 import { SocialLoginResult } from '@bridge/types'
-import axios from 'axios'
+import axios, { isAxiosError } from 'axios'
 import * as AppleAuthentication from 'expo-apple-authentication'
 import { AuthStorage } from '../lib/auth-storage'
 
@@ -34,6 +34,19 @@ export async function appleLogin(): Promise<SocialLoginResult> {
         message: '로그인 성공',
       }
     } catch (apiError) {
+      if (isAxiosError(apiError)) {
+        if (apiError.response) {
+          console.error('백엔드 API 응답 오류:', apiError.response.data)
+          console.error('상태 코드:', apiError.response.status)
+
+          const backendErrorMessage = apiError.response.data?.message || '서버 응답 오류'
+
+          return {
+            success: false,
+            message: `[${apiError.response.status}] ${backendErrorMessage}`,
+          }
+        }
+      }
       console.error('백엔드 API 호출 오류:', apiError)
       return {
         success: false,
