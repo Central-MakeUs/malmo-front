@@ -32,6 +32,22 @@ class AuthClient {
     }
   }
 
+  async logout() {
+    if (isWebView()) {
+      try {
+        const result = await bridge.logout()
+        if (!result.success) {
+          throw new Error(result.message || '로그아웃에 실패했습니다.')
+        }
+        return result
+      } catch (error) {
+        throw error
+      }
+    } else {
+      throw new Error('웹 환경에서는 로그아웃이 지원되지 않습니다.')
+    }
+  }
+
   // 소셜 로그인 처리
   async socialLogin(type: SocialLoginType) {
     if (isWebView()) {

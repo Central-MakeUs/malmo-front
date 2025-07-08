@@ -42,6 +42,19 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
         }
       }
     },
+    async logout(): Promise<{ success: boolean; message?: string }> {
+      try {
+        await AuthStorage.clearAuth()
+        set({ isLoggedIn: false })
+        return { success: true, message: '로그아웃 성공' }
+      } catch (error) {
+        console.error('로그아웃 오류:', error)
+        return {
+          success: false,
+          message: `로그아웃 중 오류가 발생했습니다: ${error instanceof Error ? error.message : String(error)}`,
+        }
+      }
+    },
 
     async getAuthStatus(): Promise<{ isLoggedIn: boolean }> {
       const isLoggedIn = await AuthStorage.isAuthenticated()

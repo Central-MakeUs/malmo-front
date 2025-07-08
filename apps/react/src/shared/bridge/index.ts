@@ -10,6 +10,7 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   socialLogin(type: SocialLoginType): Promise<SocialLoginResult>
   getAuthStatus(): Promise<{ isLoggedIn: boolean }>
   getAuthToken(): Promise<{ accessToken: string | null }>
+  logout(): Promise<{ success: boolean; message?: string }>
 
   [key: string]: any
 }
@@ -23,6 +24,7 @@ export const bridge = linkBridge<WebBridge>({
     socialLogin: async () => ({ success: false }),
     getAuthStatus: async () => ({ isLoggedIn: false }),
     getAuthToken: async () => ({ accessToken: null }),
+    logout: async () => ({ success: false, message: '로그아웃 실패' }),
   },
 })
 
