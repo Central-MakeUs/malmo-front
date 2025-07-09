@@ -40,6 +40,10 @@ import type { MemberInfoSuccessResponse } from '../models'
 // @ts-ignore
 import type { PartnerMemberInfoSuccessResponse } from '../models'
 // @ts-ignore
+import type { RegisterLoveTypeRequestDto } from '../models'
+// @ts-ignore
+import type { RegisterLoveTypeSuccessResponse } from '../models'
+// @ts-ignore
 import type { SwaggerErrorResponse } from '../models'
 // @ts-ignore
 import type { UpdateMemberRequestDto } from '../models'
@@ -89,7 +93,7 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      * 현재 로그인된 멤버 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 멤버 정보 조회
+     * @summary 멤버 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -121,7 +125,7 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      * 현재 로그인된 사용자의 초대 코드를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 초대 코드 조회
+     * @summary 사용자 초대 코드 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -153,7 +157,7 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 커플 상대 정보 조회
+     * @summary 커플 상대 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -184,8 +188,53 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       }
     },
     /**
+     * 애착 유형 검사의 결과를 등록합니다. JWT 토큰이 필요합니다.
+     * @summary  애착 유형 검사 결과 등록
+     * @param {RegisterLoveTypeRequestDto} registerLoveTypeRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerLoveType: async (
+      registerLoveTypeRequestDto: RegisterLoveTypeRequestDto,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'registerLoveTypeRequestDto' is not null or undefined
+      assertParamExists('registerLoveType', 'registerLoveTypeRequestDto', registerLoveTypeRequestDto)
+      const localVarPath = `/members/love-type`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        registerLoveTypeRequestDto,
+        localVarRequestOptions,
+        configuration
+      )
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
      * 현재 로그인된 사용자의 정보를 수정합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 정보 수정
+     * @summary 사용자 정보 수정
      * @param {UpdateMemberRequestDto} updateMemberRequestDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -226,7 +275,7 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      * 현재 로그인된 사용자의 약관 동의 정보를 수정합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 약관 동의 수정
+     * @summary 사용자 약관 동의 수정
      * @param {UpdateMemberTermsRequestDto} updateMemberTermsRequestDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -302,7 +351,7 @@ export const MembersApiFp = function (configuration?: Configuration) {
     },
     /**
      * 현재 로그인된 멤버 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 멤버 정보 조회
+     * @summary 멤버 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -323,7 +372,7 @@ export const MembersApiFp = function (configuration?: Configuration) {
     },
     /**
      * 현재 로그인된 사용자의 초대 코드를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 초대 코드 조회
+     * @summary 사용자 초대 코드 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -344,7 +393,7 @@ export const MembersApiFp = function (configuration?: Configuration) {
     },
     /**
      * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 커플 상대 정보 조회
+     * @summary 커플 상대 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -364,8 +413,31 @@ export const MembersApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
+     * 애착 유형 검사의 결과를 등록합니다. JWT 토큰이 필요합니다.
+     * @summary  애착 유형 검사 결과 등록
+     * @param {RegisterLoveTypeRequestDto} registerLoveTypeRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async registerLoveType(
+      registerLoveTypeRequestDto: RegisterLoveTypeRequestDto,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RegisterLoveTypeSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.registerLoveType(registerLoveTypeRequestDto, options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['MembersApi.registerLoveType']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
      * 현재 로그인된 사용자의 정보를 수정합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 정보 수정
+     * @summary 사용자 정보 수정
      * @param {UpdateMemberRequestDto} updateMemberRequestDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -388,7 +460,7 @@ export const MembersApiFp = function (configuration?: Configuration) {
     },
     /**
      * 현재 로그인된 사용자의 약관 동의 정보를 수정합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 약관 동의 수정
+     * @summary 사용자 약관 동의 수정
      * @param {UpdateMemberTermsRequestDto} updateMemberTermsRequestDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -430,7 +502,7 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
     },
     /**
      * 현재 로그인된 멤버 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 멤버 정보 조회
+     * @summary 멤버 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -439,7 +511,7 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
     },
     /**
      * 현재 로그인된 사용자의 초대 코드를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 초대 코드 조회
+     * @summary 사용자 초대 코드 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -448,7 +520,7 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
     },
     /**
      * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 커플 상대 정보 조회
+     * @summary 커플 상대 정보 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -456,8 +528,23 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
       return localVarFp.getPartnerMemberInfo(options).then((request) => request(axios, basePath))
     },
     /**
+     * 애착 유형 검사의 결과를 등록합니다. JWT 토큰이 필요합니다.
+     * @summary  애착 유형 검사 결과 등록
+     * @param {MembersApiRegisterLoveTypeRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    registerLoveType(
+      requestParameters: MembersApiRegisterLoveTypeRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<RegisterLoveTypeSuccessResponse> {
+      return localVarFp
+        .registerLoveType(requestParameters.registerLoveTypeRequestDto, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
      * 현재 로그인된 사용자의 정보를 수정합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 정보 수정
+     * @summary 사용자 정보 수정
      * @param {MembersApiUpdateMemberRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -472,7 +559,7 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
     },
     /**
      * 현재 로그인된 사용자의 약관 동의 정보를 수정합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 약관 동의 수정
+     * @summary 사용자 약관 동의 수정
      * @param {MembersApiUpdateMemberTermsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -486,6 +573,20 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
         .then((request) => request(axios, basePath))
     },
   }
+}
+
+/**
+ * Request parameters for registerLoveType operation in MembersApi.
+ * @export
+ * @interface MembersApiRegisterLoveTypeRequest
+ */
+export interface MembersApiRegisterLoveTypeRequest {
+  /**
+   *
+   * @type {RegisterLoveTypeRequestDto}
+   * @memberof MembersApiRegisterLoveType
+   */
+  readonly registerLoveTypeRequestDto: RegisterLoveTypeRequestDto
 }
 
 /**
@@ -538,7 +639,7 @@ export class MembersApi extends BaseAPI {
 
   /**
    * 현재 로그인된 멤버 정보를 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 멤버 정보 조회
+   * @summary 멤버 정보 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MembersApi
@@ -551,7 +652,7 @@ export class MembersApi extends BaseAPI {
 
   /**
    * 현재 로그인된 사용자의 초대 코드를 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 사용자 초대 코드 조회
+   * @summary 사용자 초대 코드 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MembersApi
@@ -564,7 +665,7 @@ export class MembersApi extends BaseAPI {
 
   /**
    * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 커플 상대 정보 조회
+   * @summary 커플 상대 정보 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MembersApi
@@ -576,8 +677,22 @@ export class MembersApi extends BaseAPI {
   }
 
   /**
+   * 애착 유형 검사의 결과를 등록합니다. JWT 토큰이 필요합니다.
+   * @summary  애착 유형 검사 결과 등록
+   * @param {MembersApiRegisterLoveTypeRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof MembersApi
+   */
+  public registerLoveType(requestParameters: MembersApiRegisterLoveTypeRequest, options?: RawAxiosRequestConfig) {
+    return MembersApiFp(this.configuration)
+      .registerLoveType(requestParameters.registerLoveTypeRequestDto, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
    * 현재 로그인된 사용자의 정보를 수정합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 사용자 정보 수정
+   * @summary 사용자 정보 수정
    * @param {MembersApiUpdateMemberRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -591,7 +706,7 @@ export class MembersApi extends BaseAPI {
 
   /**
    * 현재 로그인된 사용자의 약관 동의 정보를 수정합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 사용자 약관 동의 수정
+   * @summary 사용자 약관 동의 수정
    * @param {MembersApiUpdateMemberTermsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}

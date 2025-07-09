@@ -19,17 +19,17 @@
  */
 export interface PartnerMemberData {
   /**
-   * 연애 시작일
-   * @type {string}
-   * @memberof PartnerMemberData
-   */
-  loveStartDate?: string
-  /**
    * 멤버 상태
    * @type {string}
    * @memberof PartnerMemberData
    */
   memberState?: PartnerMemberDataMemberStateEnum
+  /**
+   * 애착 유형 ID
+   * @type {number}
+   * @memberof PartnerMemberData
+   */
+  loveTypeId?: number
   /**
    * 애착 유형 제목
    * @type {string}

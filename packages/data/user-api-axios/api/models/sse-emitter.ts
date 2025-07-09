@@ -12,20 +12,16 @@
  * Do not edit the class manually.
  */
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { LoveTypeTestResult } from './love-type-test-result'
-
 /**
  *
  * @export
- * @interface RegisterLoveTypeRequestDto
+ * @interface SseEmitter
  */
-export interface RegisterLoveTypeRequestDto {
+export interface SseEmitter {
   /**
    *
-   * @type {Array<LoveTypeTestResult>}
-   * @memberof RegisterLoveTypeRequestDto
+   * @type {number}
+   * @memberof SseEmitter
    */
-  results?: Array<LoveTypeTestResult>
+  timeout?: number
 }

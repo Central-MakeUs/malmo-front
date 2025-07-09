@@ -25,6 +25,18 @@ export interface MemberData {
    */
   memberState?: MemberDataMemberStateEnum
   /**
+   * 연애 시작일
+   * @type {string}
+   * @memberof MemberData
+   */
+  loveStartDate?: string
+  /**
+   * 애착 유형 ID
+   * @type {number}
+   * @memberof MemberData
+   */
+  loveTypeId?: number
+  /**
    * 애착 유형 제목
    * @type {string}
    * @memberof MemberData

@@ -12,20 +12,22 @@
  * Do not edit the class manually.
  */
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { LoveTypeTestResult } from './love-type-test-result'
-
 /**
- *
+ * 애착유형 질문 조회 응답 데이터
  * @export
- * @interface RegisterLoveTypeRequestDto
+ * @interface LoveTypeQuestionData
  */
-export interface RegisterLoveTypeRequestDto {
+export interface LoveTypeQuestionData {
   /**
-   *
-   * @type {Array<LoveTypeTestResult>}
-   * @memberof RegisterLoveTypeRequestDto
+   * 질문 번호
+   * @type {number}
+   * @memberof LoveTypeQuestionData
    */
-  results?: Array<LoveTypeTestResult>
+  questionNumber?: number
+  /**
+   * 내용
+   * @type {string}
+   * @memberof LoveTypeQuestionData
+   */
+  content?: string
 }
