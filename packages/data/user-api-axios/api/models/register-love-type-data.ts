@@ -12,10 +12,6 @@
  * Do not edit the class manually.
  */
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { LoveType } from './love-type'
-
 /**
  * 애착유형 등록 응답 데이터
  * @export
@@ -23,9 +19,33 @@ import type { LoveType } from './love-type'
  */
 export interface RegisterLoveTypeData {
   /**
-   *
-   * @type {LoveType}
+   * 애착 유형 ID
+   * @type {number}
    * @memberof RegisterLoveTypeData
    */
-  loveType?: LoveType
+  loveTypeId?: number
+  /**
+   * 애착 유형
+   * @type {string}
+   * @memberof RegisterLoveTypeData
+   */
+  title?: string
+  /**
+   * 애착유형 요약
+   * @type {string}
+   * @memberof RegisterLoveTypeData
+   */
+  summary?: string
+  /**
+   * 애착유형 설명
+   * @type {string}
+   * @memberof RegisterLoveTypeData
+   */
+  content?: string
+  /**
+   * 이미지 URL
+   * @type {string}
+   * @memberof RegisterLoveTypeData
+   */
+  imageUrl?: string
 }

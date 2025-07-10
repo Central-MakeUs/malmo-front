@@ -6,6 +6,7 @@ import { SocialLoginType } from '@bridge/types'
 export interface AuthContext {
   authenticated: boolean
   socialLogin: (type: SocialLoginType) => Promise<{ success: boolean; message?: string }>
+  logout: () => Promise<{ success: boolean; message?: string }>
 }
 
 const AuthContext = createContext<AuthContext | null>(null)
@@ -26,6 +27,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const logout = useCallback(async () => {
+    try {
+      await authClient.logout()
+      setAuthenticated(false)
+      return { success: true }
+    } catch (e) {
+      throw e
+    }
+  }, [])
+
   useEffect(() => {
     authClient
       .getAuth()
@@ -41,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   if (loading) return <Skeleton />
 
-  return <AuthContext.Provider value={{ authenticated, socialLogin }}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={{ authenticated, socialLogin, logout }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

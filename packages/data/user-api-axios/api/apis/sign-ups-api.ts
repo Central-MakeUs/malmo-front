@@ -53,7 +53,7 @@ export const SignUpsApiAxiosParamCreator = function (configuration?: Configurati
     signUp: async (signUpRequestDto: SignUpRequestDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'signUpRequestDto' is not null or undefined
       assertParamExists('signUp', 'signUpRequestDto', signUpRequestDto)
-      const localVarPath = `/sign-up`
+      const localVarPath = `/members/onboarding`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
