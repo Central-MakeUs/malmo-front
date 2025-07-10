@@ -18,7 +18,6 @@ export async function appleLogin(): Promise<SocialLoginResult> {
 
     try {
       const apiResponse = await axios.post(`${process.env.EXPO_PUBLIC_API_BASE_URL}/login/apple`, {
-        accessToken: credential.authorizationCode,
         idToken: credential.identityToken,
       })
 
