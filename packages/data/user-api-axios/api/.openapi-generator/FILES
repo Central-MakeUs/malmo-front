@@ -9,6 +9,7 @@ apis/members-api.ts
 apis/questions-api.ts
 apis/refresh-api.ts
 apis/sign-ups-api.ts
+apis/sseconnection-apiapi.ts
 apis/temrs-api.ts
 apis/test-api.ts
 base.ts
@@ -20,6 +21,7 @@ models/answer-data.ts
 models/answer-request-dto.ts
 models/answer-success-response.ts
 models/apple-login-request-dto.ts
+models/base-list-swagger-response-love-type-question-data.ts
 models/base-list-swagger-response-question-list-data.ts
 models/base-list-swagger-response-terms-data.ts
 models/base-list-swagger-response-terms-response-data.ts
@@ -38,7 +40,9 @@ models/invite-code-response-data.ts
 models/kakao-login-request-dto.ts
 models/login-data.ts
 models/login-success-response.ts
-models/love-type.ts
+models/love-type-question-data.ts
+models/love-type-question-success-response.ts
+models/love-type-test-result.ts
 models/member-data.ts
 models/member-info-success-response.ts
 models/partner-member-data.ts
@@ -60,6 +64,7 @@ models/register-love-type-success-response.ts
 models/sign-up-data.ts
 models/sign-up-request-dto.ts
 models/sign-up-success-response.ts
+models/sse-emitter.ts
 models/swagger-error-response.ts
 models/terms-data.ts
 models/terms-dto.ts

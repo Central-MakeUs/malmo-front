@@ -12,10 +12,6 @@
  * Do not edit the class manually.
  */
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { LoveType } from './love-type'
-
 /**
  * 애착유형 조회 응답 데이터
  * @export
@@ -23,11 +19,17 @@ import type { LoveType } from './love-type'
  */
 export interface GetLoveTypeData {
   /**
-   *
-   * @type {LoveType}
+   * 애착 유형 ID
+   * @type {number}
    * @memberof GetLoveTypeData
    */
-  loveType?: LoveType
+  loveTypeId?: number
+  /**
+   * 애착 유형
+   * @type {string}
+   * @memberof GetLoveTypeData
+   */
+  title?: string
   /**
    * 애착유형 요약
    * @type {string}
@@ -39,7 +41,7 @@ export interface GetLoveTypeData {
    * @type {string}
    * @memberof GetLoveTypeData
    */
-  description?: string
+  content?: string
   /**
    * 이미지 URL
    * @type {string}

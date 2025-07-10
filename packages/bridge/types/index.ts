@@ -17,4 +17,6 @@ export interface BridgeActions {
   socialLogin(type: SocialLoginType): Promise<SocialLoginResult>
   getAuthStatus(): Promise<{ isLoggedIn: boolean }>
   getAuthToken(): Promise<{ accessToken: string | null }>
+  logout(): Promise<{ success: boolean; message?: string }>
+  notifyTokenExpired(): Promise<{ accessToken: string | null }>
 }

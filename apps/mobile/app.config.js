@@ -18,6 +18,7 @@ module.exports = () => {
     ios: {
       supportsTablet: true,
       bundleIdentifier: 'com.malmo.app',
+      usesAppleSignIn: true,
       infoPlist: {
         CFBundleURLTypes: [
           {
@@ -71,6 +72,7 @@ module.exports = () => {
           },
         },
       ],
+      'expo-apple-authentication',
       'expo-font',
       'expo-router',
     ],
