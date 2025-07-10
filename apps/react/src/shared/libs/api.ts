@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { isWebView } from '../utils/webview'
+import { bridge } from '../bridge'
 
-const BASE_URL = import.meta.env.VITE_API_URL
+const BASE_URL = '/api'
 const AUTH_ROUTE = '/auth'
 
 interface QueueItem {
@@ -77,11 +79,19 @@ export function initApi(options?: ApiOptions): AxiosInstance {
 
   function setupAuthInterceptor() {
     apiInstance.interceptors.request.use(
-      (config) => {
-        // TODO accessToken을 가져오는 로직을 구현해야 합니다.
-        // 또는 쿠키를 활용해서 자동으로 구현할수도 있을 것 같은데 서버에서 어떻게 받는지를 모르겠네요
-        const accessToken = ''
-        if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
+      async (config) => {
+        let accessToken: string | null = null
+
+        if (isWebView()) {
+          const tokenData = await bridge.getAuthToken()
+          accessToken = tokenData.accessToken
+        } else {
+          accessToken = localStorage.getItem('accessToken')
+        }
+
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`
+        }
 
         return config
       },
