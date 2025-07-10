@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { isWebView } from '../utils/webview'
 import { bridge } from '../bridge'
 
+// TODO: 동적으로 개발 환경에 따라 BASE_URL을 설정할 수 있도록 개선
 const BASE_URL = '/api'
 const AUTH_ROUTE = '/auth'
 
@@ -27,131 +28,92 @@ const redirectToAuth = () => {
   }
 }
 
-const refreshToken = async (refreshInstance: AxiosInstance) => {
-  return refreshInstance.post('/refresh')
-}
-
-const processQueue = (failedQueue: QueueItem[], apiInstance: AxiosInstance, error: any = null) => {
-  if (error) {
-    failedQueue.forEach((promise) => {
-      const errorObj = error instanceof Error ? error : new Error(error?.message ?? 'Unknown error')
-      promise.reject(errorObj)
-    })
-  } else {
-    failedQueue.forEach((promise) => {
-      apiInstance(promise.config)
-        .then((response) => promise.resolve(response))
-        .catch((err) => {
-          const errorObj = err instanceof Error ? err : new Error(err?.message ?? 'Request failed')
-          promise.reject(errorObj)
-        })
-    })
-  }
-  return []
-}
-
-const handleTokenRefreshFailure = (
-  apiInstance: AxiosInstance,
-  failedQueue: QueueItem[],
-  err: any,
-  options?: ApiOptions
-): QueueItem[] => {
-  return apiInstance.delete('/admin/auth').then(() => {
-    const newQueue = processQueue(failedQueue, apiInstance, err)
-
-    if (!options?.throwError) {
-      redirectToAuth()
-    } else {
-      throw err
-    }
-
-    return newQueue
-  }) as unknown as QueueItem[]
-}
-
-const handleTokenRefreshSuccess = (failedQueue: QueueItem[], apiInstance: AxiosInstance): QueueItem[] => {
-  return processQueue(failedQueue, apiInstance)
-}
-
-export function initApi(options?: ApiOptions): AxiosInstance {
+export function initApi(): AxiosInstance {
   const apiInstance = axios.create(defaultOptions)
-  const refreshInstance = axios.create(defaultOptions)
 
-  function setupAuthInterceptor() {
-    apiInstance.interceptors.request.use(
-      async (config) => {
-        let accessToken: string | null = null
+  apiInstance.interceptors.request.use(
+    async (config) => {
+      let accessToken: string | null = null
 
-        if (isWebView()) {
-          const tokenData = await bridge.getAuthToken()
-          accessToken = tokenData.accessToken
-        } else {
-          accessToken = localStorage.getItem('accessToken')
-        }
-
-        if (accessToken) {
-          config.headers.Authorization = `Bearer ${accessToken}`
-        }
-
-        return config
-      },
-      (error) => {
-        return Promise.reject(error)
+      if (isWebView()) {
+        const tokenData = await bridge.getAuthToken()
+        accessToken = tokenData.accessToken
+      } else {
+        accessToken = localStorage.getItem('accessToken')
       }
-    )
 
-    let isRefreshing = false
-    let failedQueue: QueueItem[] = []
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`
+      }
 
-    const handleTokenRefresh = (config: AxiosRequestConfig) => {
-      if (!isRefreshing) {
+      return config
+    },
+    (error) => {
+      return Promise.reject(error)
+    }
+  )
+
+  let isRefreshing = false
+  let failedQueue: QueueItem[] = []
+
+  const processQueue = (error: Error | null, token: string | null = null) => {
+    failedQueue.forEach((promise) => {
+      if (error) {
+        promise.reject(error)
+      } else if (token && promise.config.headers) {
+        promise.config.headers['Authorization'] = `Bearer ${token}`
+        apiInstance(promise.config)
+          .then((response) => promise.resolve(response))
+          .catch((err) => promise.reject(err))
+      }
+    })
+    failedQueue = []
+  }
+
+  apiInstance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config
+      const { response } = error
+
+      if (response?.status === 401 && isWebView() && !originalRequest._retry) {
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject, config: originalRequest })
+          })
+        }
+
+        originalRequest._retry = true
         isRefreshing = true
 
-        refreshToken(refreshInstance)
-          .then(() => {
-            isRefreshing = false
-            failedQueue = handleTokenRefreshSuccess(failedQueue, apiInstance)
-          })
-          .catch((err) => {
-            isRefreshing = false
-            failedQueue = handleTokenRefreshFailure(apiInstance, failedQueue, err, options)
-          })
+        try {
+          const { accessToken: newAccessToken } = await bridge.notifyTokenExpired()
+
+          if (!newAccessToken) {
+            throw new Error('Webview bridge: Failed to receive a new token.')
+          }
+          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+
+          processQueue(null, newAccessToken)
+
+          return apiInstance(originalRequest)
+        } catch (refreshError) {
+          processQueue(refreshError as Error, null)
+          redirectToAuth()
+          return Promise.reject(refreshError)
+        } finally {
+          isRefreshing = false
+        }
       }
 
-      return new Promise<AxiosResponse>((resolve, reject) => {
-        failedQueue.push({
-          resolve,
-          reject,
-          config: { ...config },
-        })
-      })
-    }
-
-    const handleAuthError = (error: any) => {
-      const { config, response } = error
-
-      const ensureErrorObject = (err: any) => (err instanceof Error ? err : new Error(err?.message ?? 'API Error'))
-
-      if (!response) return Promise.reject(ensureErrorObject(error))
-
-      const { status, data } = response
-
-      if (status === 401 && data.message === '인증되지 않은 사용자입니다.') {
-        return handleTokenRefresh(config)
-      }
-
-      if (status === 403 && data.message === 'forbidden') {
+      if (response?.status === 403 && response.data?.message === 'forbidden') {
         redirectToAuth()
-        return Promise.reject(ensureErrorObject(error))
       }
 
-      return Promise.reject(ensureErrorObject(error))
+      return Promise.reject(error)
     }
+  )
 
-    apiInstance.interceptors.response.use((response: AxiosResponse) => response, handleAuthError)
-  }
-
-  setupAuthInterceptor()
   return apiInstance
 }
 

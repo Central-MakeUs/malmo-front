@@ -4,6 +4,7 @@ import { BridgeStore, BridgeActions, SocialLoginType, SocialLoginResult } from '
 import { kakaoLogin } from '../features/auth/social/kakao-login'
 import { appleLogin } from '../features/auth/social/apple-login'
 import { AuthStorage } from '../features/auth/lib/auth-storage'
+import { refreshToken } from '../features/auth/token/refresh-token'
 
 export type AppBridgeState = Bridge & BridgeStore & BridgeActions
 
@@ -65,6 +66,11 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
       const accessToken = await AuthStorage.getAccessToken()
       return { accessToken }
     },
+
+    async notifyTokenExpired(): Promise<{ accessToken: string | null }> {
+      const { accessToken } = await refreshToken()
+      return { accessToken }
+    },
   }
 
   return {
@@ -93,6 +99,12 @@ export const appSchema = postMessageSchema({
   },
   // 인증 토큰 스키마
   getAuthToken: {
+    validate: () => {
+      return {}
+    },
+  },
+  // 토큰 만료 알림 스키마
+  notifyTokenExpired: {
     validate: () => {
       return {}
     },

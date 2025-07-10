@@ -18,4 +18,5 @@ export interface BridgeActions {
   getAuthStatus(): Promise<{ isLoggedIn: boolean }>
   getAuthToken(): Promise<{ accessToken: string | null }>
   logout(): Promise<{ success: boolean; message?: string }>
+  notifyTokenExpired(): Promise<{ accessToken: string | null }>
 }
