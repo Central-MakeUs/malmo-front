@@ -18,14 +18,14 @@ export function AiChatBubble(props: AiChatBubbleProps) {
       <img src={momoChat} alt={`${senderName} 캐릭터 이미지`} className="h-auto w-[50px] flex-shrink-0" />
       <div className="flex w-full min-w-0 items-end gap-2">
         <div className="w-full">
-          <p className="mb-[6px] text-body-3 font-semibold text-malmo-rasberry-500">{senderName}</p>
+          <p className="body3-semibold mb-[6px] text-malmo-rasberry-500">{senderName}</p>
           {messageGroups.map((group, index) => (
             <div
               key={index}
               className="w-fit max-w-full rounded-[10px] rounded-tl-none bg-gray-100 px-[14px] py-[10px]"
               style={{ marginBottom: index === messageGroups.length - 1 ? 0 : '8px' }}
             >
-              <p className="text-[15px] leading-[22px] text-[#26272B]">{group}</p>
+              <p className="body2-regular break-words break-keep text-gray-800">{group}</p>
             </div>
           ))}
         </div>
@@ -46,7 +46,7 @@ export function MyChatBubble({ message, timestamp }: MyChatBubbleProps) {
       <div className="flex items-end gap-2">
         <p className="flex-shrink-0 text-[11px] leading-[20px] text-gray-600">{timestamp}</p>
         <div className="w-fit max-w-full rounded-[10px] rounded-br-none bg-[#FFF2F4] px-[14px] py-[10px]">
-          <p className="text-[15px] leading-[22px] text-[#26272B]">{message}</p>
+          <p className="body2-regular break-words break-keep text-gray-800">{message}</p>
         </div>
       </div>
     </div>
