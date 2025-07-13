@@ -1,7 +1,7 @@
-import { AuthContext } from '@/shared/libs/auth'
 import { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-router'
 import { match } from 'path-to-regexp'
+import { AuthContext } from '@/features/auth/hooks/use-auth'
 
 interface RouterContext {
   queryClient: QueryClient
