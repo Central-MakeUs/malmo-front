@@ -9,7 +9,10 @@ function RouteComponent() {
   return (
     <div className="flex h-screen flex-col">
       <DetailHeaderBar right={<p className="text-body-2 font-medium text-malmo-rasberry-500">종료하기</p>} />
-      <Outlet />
+
+      <div className="min-h-0 flex-1">
+        <Outlet />
+      </div>
     </div>
   )
 }

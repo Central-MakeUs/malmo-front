@@ -40,27 +40,35 @@ function RouteComponent() {
   ]
 
   return (
-    <section className="flex h-full flex-col">
-      <div className="flex-1 space-y-6 overflow-y-auto px-5 py-6">
-        {chatExample.map((chat, index) => {
-          // 이전 메시지의 타임스탬프를 가져옵니다. 첫 번째 메시지인 경우 undefined입니다.
-          const previousTimestamp = index > 0 ? chatExample[index - 1]?.timestamp : undefined
+    <div className="flex h-full flex-col">
+      <section className="flex-1 overflow-y-auto">
+        <div className="bg-gray-iron-700 px-[20px] py-[9px]">
+          <p className="text-body-3 font-medium text-white">
+            상담 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!
+          </p>
+        </div>
 
-          return (
-            <React.Fragment key={chat.id}>
-              <DateDivider currentTimestamp={chat.timestamp} previousTimestamp={previousTimestamp} />
+        <div className="space-y-5 px-5 py-6">
+          {chatExample.map((chat, index) => {
+            // 이전 메시지의 타임스탬프를 가져옵니다. 첫 번째 메시지인 경우 undefined입니다.
+            const previousTimestamp = index > 0 ? chatExample[index - 1]?.timestamp : undefined
 
-              {chat.sendType === 'ai' ? (
-                <AiChatBubble message={chat.message} timestamp={formatTimestamp(chat.timestamp)} />
-              ) : (
-                <MyChatBubble message={chat.message} timestamp={formatTimestamp(chat.timestamp)} />
-              )}
-            </React.Fragment>
-          )
-        })}
-      </div>
+            return (
+              <React.Fragment key={chat.id}>
+                <DateDivider currentTimestamp={chat.timestamp} previousTimestamp={previousTimestamp} />
+
+                {chat.sendType === 'ai' ? (
+                  <AiChatBubble message={chat.message} timestamp={formatTimestamp(chat.timestamp)} />
+                ) : (
+                  <MyChatBubble message={chat.message} timestamp={formatTimestamp(chat.timestamp)} />
+                )}
+              </React.Fragment>
+            )
+          })}
+        </div>
+      </section>
 
       <ChatInput />
-    </section>
+    </div>
   )
 }
