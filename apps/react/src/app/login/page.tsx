@@ -5,6 +5,8 @@ import malmoLogo from '@/assets/images/malmo-logo.png'
 import { isWebView } from '@/shared/utils/webview'
 import { useAlertDialog } from '@ui/common/hooks/alert-dialog.hook'
 import { useAuth } from '@/features/auth'
+import memberService from '@/shared/services/member.service'
+import { MemberDataMemberStateEnum } from '@data/user-api-axios/api'
 
 export const Route = createFileRoute('/login/')({
   component: LoginPage,
@@ -15,13 +17,38 @@ export default function LoginPage() {
   const navigate = Route.useNavigate()
   const { open } = useAlertDialog()
 
+  // 멤버 상태에 따라 적절한 페이지로 라우팅
+  const navigateBasedOnMemberState = async () => {
+    try {
+      // 멤버 정보 조회
+      const memberInfo = await memberService.findOne()
+
+      // 멤버 상태에 따라 라우팅
+      if (memberInfo?.data?.memberState === MemberDataMemberStateEnum.BeforeOnboarding) {
+        // 온보딩이 필요한 경우 약관 동의 페이지로 이동
+        navigate({ to: '/onboarding/terms', replace: true })
+      } else {
+        // 온보딩이 완료된 경우 홈으로 이동
+        navigate({ to: '/', replace: true })
+      }
+    } catch (error: any) {
+      open({
+        title: '사용자 정보 조회 실패',
+        description: error?.message || '사용자 정보를 불러오는데 실패했습니다.',
+      })
+      // 에러 발생 시 기본적으로 온보딩 페이지로 이동
+      navigate({ to: '/onboarding/terms', replace: true })
+    }
+  }
+
   const handleAppleLogin = async () => {
     try {
       if (isWebView()) {
         const result = await auth.socialLogin('apple')
 
         if (result.success) {
-          navigate({ to: '/onboarding/term', replace: true })
+          // 로그인 성공 시 멤버 상태에 따라 라우팅
+          await navigateBasedOnMemberState()
         }
       } else {
         // ToDo
@@ -41,7 +68,8 @@ export default function LoginPage() {
         const result = await auth.socialLogin('kakao')
 
         if (result.success) {
-          navigate({ to: '/onboarding/term', replace: true })
+          // 로그인 성공 시 멤버 상태에 따라 라우팅
+          await navigateBasedOnMemberState()
         }
       } else {
         //ToDo
