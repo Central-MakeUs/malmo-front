@@ -8,7 +8,7 @@ export const Route = createFileRoute('/chat')({
 function RouteComponent() {
   return (
     <div className="flex h-screen flex-col">
-      <DetailHeaderBar right={<p className="text-body-2 font-medium text-malmo-rasberry-500">종료하기</p>} />
+      <DetailHeaderBar right={<p className="body2-medium text-malmo-rasberry-500">종료하기</p>} />
 
       <div className="min-h-0 flex-1">
         <Outlet />

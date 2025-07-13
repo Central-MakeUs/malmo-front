@@ -9,7 +9,7 @@ export function DateDivider({ currentTimestamp, previousTimestamp }: DateDivider
   if (!previousTimestamp) {
     return (
       <div className="mx-auto w-fit rounded-[30px] bg-gray-100 px-[14px] py-[6px]">
-        <p className="text-label-1 font-medium text-gray-500">{formatDate(currentTimestamp)}</p>
+        <p className="label1-medium text-gray-500">{formatDate(currentTimestamp)}</p>
       </div>
     )
   }
@@ -20,7 +20,7 @@ export function DateDivider({ currentTimestamp, previousTimestamp }: DateDivider
   if (currentDate !== previousDate) {
     return (
       <div className="mx-auto w-fit rounded-[30px] bg-gray-100 px-[14px] py-[6px]">
-        <p className="text-label-1 font-medium text-gray-500">{formatDate(currentTimestamp)}</p>
+        <p className="label1-medium font-medium text-gray-500">{formatDate(currentTimestamp)}</p>
       </div>
     )
   }

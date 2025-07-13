@@ -14,7 +14,7 @@ function RouteComponent() {
     {
       id: 1,
       message:
-        'OO아 안녕! 나는 연애 갈등 상담사 모모야. 나와의 대화를 마무리하고 싶다면 종료하기 버튼을 눌러줘! 오늘은 어떤 고민 때문에 나를 찾아왔어? 먼저 연인과 있었던 갈등 상황을 이야기해 주면 내가 같이 고민해볼게!',
+        'OO아 안녕! 나는 연애 갈등 상담사 모모야. 나와의 대화를 마무리하고 싶다면 종료하기 버튼을 눌러줘! 오늘은 어떤 고민 때문에 나를 찾아왔어? 먼저 연인과 있었던 갈등 상황을 이야기해주면 내가 같이 고민해볼게!',
       sendType: 'ai',
       timestamp: '2023-10-01T21:56:00Z',
     },
@@ -43,9 +43,7 @@ function RouteComponent() {
     <div className="flex h-full flex-col">
       <section className="flex-1 overflow-y-auto">
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
-          <p className="text-body-3 font-medium text-white">
-            상담 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!
-          </p>
+          <p className="body3-medium text-white">상담 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
         </div>
 
         <div className="space-y-5 px-5 py-6">

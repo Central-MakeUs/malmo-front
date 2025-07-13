@@ -55,7 +55,7 @@ function ChatInput() {
       {/* 포커스 시에만 글자 수 카운터를 표시합니다. */}
       {isFocused && (
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-[12px] border border-gray-200 bg-white px-2 py-[2px] shadow-[1px_2px_12px_0px_#00000014]">
-          <p className="text-label-1 font-medium text-gray-500">{text.length}/500자</p>
+          <p className="label1-medium text-gray-500">{text.length}/500자</p>
         </div>
       )}
 
@@ -76,7 +76,7 @@ function ChatInput() {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
-            className="flex-1 resize-none border-none bg-transparent py-[3px] text-body-2 outline-none placeholder:text-body-2"
+            className="body2-regular placeholder:body2-regular flex-1 resize-none border-none bg-transparent py-[3px] outline-none"
             placeholder="메시지를 입력해주세요"
             rows={1}
           />
