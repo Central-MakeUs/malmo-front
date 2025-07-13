@@ -1,0 +1,15 @@
+import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
+
+export const Route = createFileRoute('/chat')({
+  component: RouteComponent,
+})
+
+function RouteComponent() {
+  return (
+    <div className="flex h-screen flex-col">
+      <DetailHeaderBar right={<p className="text-body-2 font-medium text-malmo-rasberry-500">종료하기</p>} />
+      <Outlet />
+    </div>
+  )
+}
