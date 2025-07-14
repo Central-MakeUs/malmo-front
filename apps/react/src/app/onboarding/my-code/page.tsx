@@ -6,6 +6,7 @@ import { HeaderNavigation } from '@/shared/ui'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import memberService from '@/shared/services/member.service'
+import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 
 export const Route = createFileRoute('/onboarding/my-code/')({
   component: MyCodePage,
@@ -102,22 +103,7 @@ function MyCodePage() {
                   <span className="heading1-semibold text-gray-iron-950">{inviteCode}</span>
                 )}
                 <button onClick={handleCopyCode} className="ml-[10px]" disabled={isLoadingInviteCode}>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                      d="M13.3333 13.3333H16.6667V3.33333H6.66667V6.66667"
-                      stroke="#6E7179"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M13.3333 6.66667H3.33333V16.6667H13.3333V6.66667Z"
-                      stroke="#6E7179"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <ClipBoardIcon className="h-5 w-5" />
                 </button>
               </div>
             </div>
