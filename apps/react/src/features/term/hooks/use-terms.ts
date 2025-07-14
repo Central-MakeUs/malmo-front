@@ -20,7 +20,25 @@ export function useTerms(initialAgreements: TermAgreements = {}) {
       try {
         setIsLoading(true)
         const terms = await termsService.findAll()
-        setTermsData(convertToTerms(terms))
+        const convertedTerms = convertToTerms(terms)
+        setTermsData(convertedTerms)
+
+        // 약관 데이터가 로드되면 누락된 약관에 대한 기본값 설정
+        if (convertedTerms && convertedTerms.length > 0) {
+          const updatedAgreements = { ...agreements }
+          let hasUpdates = false
+
+          convertedTerms.forEach((term) => {
+            if (updatedAgreements[term.termsId] === undefined) {
+              updatedAgreements[term.termsId] = false
+              hasUpdates = true
+            }
+          })
+
+          if (hasUpdates) {
+            setAgreements(updatedAgreements)
+          }
+        }
       } catch {
         // TODO: 에러 처리
       } finally {
@@ -30,25 +48,6 @@ export function useTerms(initialAgreements: TermAgreements = {}) {
 
     fetchTerms()
   }, [])
-
-  // 약관 데이터가 로드되면 누락된 약관에 대한 기본값 설정
-  useEffect(() => {
-    if (termsData && termsData.length > 0) {
-      const updatedAgreements = { ...agreements }
-      let hasUpdates = false
-
-      termsData.forEach((term) => {
-        if (updatedAgreements[term.termsId] === undefined) {
-          updatedAgreements[term.termsId] = false
-          hasUpdates = true
-        }
-      })
-
-      if (hasUpdates) {
-        setAgreements(updatedAgreements)
-      }
-    }
-  }, [termsData])
 
   // 약관 내용 보기
   const handleShowTerms = (termsId: number) => {
