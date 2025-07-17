@@ -11,7 +11,7 @@ export function Button({ text, disabled = false, onClick, className = '' }: Butt
       onClick={onClick}
       disabled={disabled}
       className={`h-[54px] w-full rounded-lg font-semibold text-white ${
-        !disabled ? 'bg-malmo-rasberry-500' : 'bg-gray-iron-300'
+        !disabled ? 'bg-malmo-rasberry-500' : 'bg-gray-neutral-300'
       } ${className}`}
     >
       {text}
