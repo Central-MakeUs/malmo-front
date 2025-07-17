@@ -35,7 +35,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function RootComponent() {
   return (
     <div className="bg-gray-09 flex min-h-screen w-full flex-col">
-      <main className="mx-auto flex h-full w-full max-w-[600px] flex-1 bg-white pb-[86px]">
+      <main className="relative mx-auto flex min-h-screen w-full max-w-[600px] flex-col bg-white">
         <Outlet />
       </main>
     </div>
