@@ -18,7 +18,7 @@ function MyCodePage() {
 
   // 초대 코드 상태
   const [inviteCode, setInviteCode] = useState<string>('')
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [isLoadingInviteCode, setIsLoadingInviteCode] = useState(true)
 
   // 초대 코드 가져오기
@@ -53,7 +53,7 @@ function MyCodePage() {
   }
 
   const handleSkip = async () => {
-    setIsLoading(true)
+    setIsSubmitting(true)
 
     try {
       // 온보딩 종료 후 홈으로 이동
@@ -67,7 +67,7 @@ function MyCodePage() {
     } catch (error) {
       // ToDo
     } finally {
-      setIsLoading(false)
+      setIsSubmitting(false)
     }
   }
 
@@ -116,7 +116,7 @@ function MyCodePage() {
         <button
           onClick={handleConnectWithCode}
           className="body1-semibold flex h-[56px] w-full items-center justify-center rounded-[10px] border border-malmo-rasberry-500 text-malmo-rasberry-500"
-          disabled={isLoading || isLoadingInviteCode}
+          disabled={isSubmitting}
         >
           상대방 코드로 연결하기
         </button>
@@ -125,9 +125,9 @@ function MyCodePage() {
           <button
             onClick={handleSkip}
             className="body3-medium text-gray-iron-400 underline decoration-1"
-            disabled={isLoading || isLoadingInviteCode}
+            disabled={isSubmitting}
           >
-            {isLoading ? '처리 중...' : '일단 혼자 사용해볼게요'}
+            일단 혼자 사용해볼게요
           </button>
         </div>
       </div>
