@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { Button, HeaderNavigation } from '@/shared/ui'
+import { Button, HeaderNavigation, Input } from '@/shared/ui'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
@@ -60,13 +60,12 @@ function NicknamePage() {
       <div className="mt-[68px] px-5">
         <div className="flex flex-col">
           <div className="relative">
-            <input
-              id="nickname"
+            <Input
               type="text"
               value={nickname}
               onChange={handleNicknameChange}
               placeholder="닉네임을 입력해주세요"
-              className="body2-medium h-[54px] w-full rounded-lg border border-gray-iron-200 px-5 text-gray-iron-950 focus:border-malmo-rasberry-500 focus:outline-none"
+              className="body2-medium"
             />
             <div className="absolute top-1/2 right-5 -translate-y-1/2 text-[15px] font-medium text-gray-iron-500">
               {nickname.length}/{MAX_LENGTH}
