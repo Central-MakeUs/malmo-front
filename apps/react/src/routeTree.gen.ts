@@ -11,6 +11,7 @@
 // Import Routes
 
 import { Route as rootRoute } from './app/__root'
+import { Route as OnboardingLayoutImport } from './app/onboarding/layout'
 import { Route as ChatLayoutImport } from './app/chat/layout'
 import { Route as PageImport } from './app/page'
 import { Route as LoginPageImport } from './app/login/page'
@@ -25,6 +26,10 @@ import { Route as OnboardingAnniversaryPageImport } from './app/onboarding/anniv
 
 // Create/Update Routes
 
+const OnboardingLayoutRoute = OnboardingLayoutImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  
 const ChatLayoutRoute = ChatLayoutImport.update({
   id: '/chat',
   path: '/chat',
@@ -56,39 +61,39 @@ const ChatPageRoute = ChatPageImport.update({
 } as any)
 
 const OnboardingTermsPageRoute = OnboardingTermsPageImport.update({
-  id: '/onboarding/terms/',
-  path: '/onboarding/terms/',
-  getParentRoute: () => rootRoute,
+  id: '/terms/',
+  path: '/terms/',
+  getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
 const OnboardingPartnerCodePageRoute = OnboardingPartnerCodePageImport.update({
-  id: '/onboarding/partner-code/',
-  path: '/onboarding/partner-code/',
-  getParentRoute: () => rootRoute,
+  id: '/partner-code/',
+  path: '/partner-code/',
+  getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
 const OnboardingNicknamePageRoute = OnboardingNicknamePageImport.update({
-  id: '/onboarding/nickname/',
-  path: '/onboarding/nickname/',
-  getParentRoute: () => rootRoute,
+  id: '/nickname/',
+  path: '/nickname/',
+  getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
 const OnboardingMyCodePageRoute = OnboardingMyCodePageImport.update({
-  id: '/onboarding/my-code/',
-  path: '/onboarding/my-code/',
-  getParentRoute: () => rootRoute,
+  id: '/my-code/',
+  path: '/my-code/',
+  getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
 const OnboardingCompletePageRoute = OnboardingCompletePageImport.update({
-  id: '/onboarding/complete/',
-  path: '/onboarding/complete/',
-  getParentRoute: () => rootRoute,
+  id: '/complete/',
+  path: '/complete/',
+  getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
 const OnboardingAnniversaryPageRoute = OnboardingAnniversaryPageImport.update({
-  id: '/onboarding/anniversary/',
-  path: '/onboarding/anniversary/',
-  getParentRoute: () => rootRoute,
+  id: '/anniversary/',
+  path: '/anniversary/',
+  getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -100,6 +105,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof PageImport
+      parentRoute: typeof rootRoute
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingLayoutImport
       parentRoute: typeof rootRoute
     }
     '/chat': {
@@ -132,50 +144,75 @@ declare module '@tanstack/react-router' {
     }
     '/onboarding/anniversary/': {
       id: '/onboarding/anniversary/'
-      path: '/onboarding/anniversary'
+      path: '/anniversary'
       fullPath: '/onboarding/anniversary'
       preLoaderRoute: typeof OnboardingAnniversaryPageImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof OnboardingLayoutImport
     }
     '/onboarding/complete/': {
       id: '/onboarding/complete/'
-      path: '/onboarding/complete'
+      path: '/complete'
       fullPath: '/onboarding/complete'
       preLoaderRoute: typeof OnboardingCompletePageImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof OnboardingLayoutImport
     }
     '/onboarding/my-code/': {
       id: '/onboarding/my-code/'
-      path: '/onboarding/my-code'
+      path: '/my-code'
       fullPath: '/onboarding/my-code'
       preLoaderRoute: typeof OnboardingMyCodePageImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof OnboardingLayoutImport
     }
     '/onboarding/nickname/': {
       id: '/onboarding/nickname/'
-      path: '/onboarding/nickname'
+      path: '/nickname'
       fullPath: '/onboarding/nickname'
       preLoaderRoute: typeof OnboardingNicknamePageImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof OnboardingLayoutImport
     }
     '/onboarding/partner-code/': {
       id: '/onboarding/partner-code/'
-      path: '/onboarding/partner-code'
+      path: '/partner-code'
       fullPath: '/onboarding/partner-code'
       preLoaderRoute: typeof OnboardingPartnerCodePageImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof OnboardingLayoutImport
     }
     '/onboarding/terms/': {
       id: '/onboarding/terms/'
-      path: '/onboarding/terms'
+      path: '/terms'
       fullPath: '/onboarding/terms'
       preLoaderRoute: typeof OnboardingTermsPageImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof OnboardingLayoutImport
     }
   }
 }
 
 // Create and export the route tree
+
+
+interface OnboardingLayoutRouteChildren {
+  OnboardingAnniversaryPageRoute: typeof OnboardingAnniversaryPageRoute
+  OnboardingCompletePageRoute: typeof OnboardingCompletePageRoute
+  OnboardingMyCodePageRoute: typeof OnboardingMyCodePageRoute
+  OnboardingNicknamePageRoute: typeof OnboardingNicknamePageRoute
+  OnboardingPartnerCodePageRoute: typeof OnboardingPartnerCodePageRoute
+  OnboardingTermsPageRoute: typeof OnboardingTermsPageRoute
+}
+
+const OnboardingLayoutRouteChildren: OnboardingLayoutRouteChildren = {
+  OnboardingAnniversaryPageRoute: OnboardingAnniversaryPageRoute,
+  OnboardingCompletePageRoute: OnboardingCompletePageRoute,
+  OnboardingMyCodePageRoute: OnboardingMyCodePageRoute,
+  OnboardingNicknamePageRoute: OnboardingNicknamePageRoute,
+  OnboardingPartnerCodePageRoute: OnboardingPartnerCodePageRoute,
+  OnboardingTermsPageRoute: OnboardingTermsPageRoute,
+}
+
+const OnboardingLayoutRouteWithChildren = OnboardingLayoutRoute._addFileChildren(OnboardingLayoutRouteChildren)
+
+export interface FileRoutesByFullPath {
+  '/': typeof PageRoute
+  '/onboarding': typeof OnboardingLayoutRouteWithChildren
 
 interface ChatLayoutRouteChildren {
   ChatPageRoute: typeof ChatPageRoute
@@ -203,6 +240,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof PageRoute
+  '/onboarding': typeof OnboardingLayoutRouteWithChildren
   '/chat': typeof ChatPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
@@ -217,6 +255,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof PageRoute
+  '/onboarding': typeof OnboardingLayoutRouteWithChildren
   '/chat': typeof ChatLayoutRouteWithChildren
   '/chat/': typeof ChatPageRoute
   '/intro/': typeof IntroPageRoute
@@ -233,6 +272,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/onboarding'
     | '/chat'
     | '/chat/'
     | '/intro'
@@ -246,6 +286,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/onboarding'
     | '/chat'
     | '/intro'
     | '/login'
@@ -258,6 +299,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/onboarding'
     | '/chat'
     | '/chat/'
     | '/intro/'
@@ -273,28 +315,18 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   PageRoute: typeof PageRoute
+  OnboardingLayoutRoute: typeof OnboardingLayoutRouteWithChildren
   ChatLayoutRoute: typeof ChatLayoutRouteWithChildren
   IntroPageRoute: typeof IntroPageRoute
   LoginPageRoute: typeof LoginPageRoute
-  OnboardingAnniversaryPageRoute: typeof OnboardingAnniversaryPageRoute
-  OnboardingCompletePageRoute: typeof OnboardingCompletePageRoute
-  OnboardingMyCodePageRoute: typeof OnboardingMyCodePageRoute
-  OnboardingNicknamePageRoute: typeof OnboardingNicknamePageRoute
-  OnboardingPartnerCodePageRoute: typeof OnboardingPartnerCodePageRoute
-  OnboardingTermsPageRoute: typeof OnboardingTermsPageRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   PageRoute: PageRoute,
+  OnboardingLayoutRoute: OnboardingLayoutRouteWithChildren,
   ChatLayoutRoute: ChatLayoutRouteWithChildren,
   IntroPageRoute: IntroPageRoute,
   LoginPageRoute: LoginPageRoute,
-  OnboardingAnniversaryPageRoute: OnboardingAnniversaryPageRoute,
-  OnboardingCompletePageRoute: OnboardingCompletePageRoute,
-  OnboardingMyCodePageRoute: OnboardingMyCodePageRoute,
-  OnboardingNicknamePageRoute: OnboardingNicknamePageRoute,
-  OnboardingPartnerCodePageRoute: OnboardingPartnerCodePageRoute,
-  OnboardingTermsPageRoute: OnboardingTermsPageRoute,
 }
 
 export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
@@ -306,9 +338,18 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/onboarding",
         "/chat",
         "/intro/",
-        "/login/",
+        "/login/"
+      ]
+    },
+    "/": {
+      "filePath": "page.tsx"
+    },
+    "/onboarding": {
+      "filePath": "onboarding/layout.tsx",
+      "children": [
         "/onboarding/anniversary/",
         "/onboarding/complete/",
         "/onboarding/my-code/",
@@ -337,22 +378,28 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "login/page.tsx"
     },
     "/onboarding/anniversary/": {
-      "filePath": "onboarding/anniversary/page.tsx"
+      "filePath": "onboarding/anniversary/page.tsx",
+      "parent": "/onboarding"
     },
     "/onboarding/complete/": {
-      "filePath": "onboarding/complete/page.tsx"
+      "filePath": "onboarding/complete/page.tsx",
+      "parent": "/onboarding"
     },
     "/onboarding/my-code/": {
-      "filePath": "onboarding/my-code/page.tsx"
+      "filePath": "onboarding/my-code/page.tsx",
+      "parent": "/onboarding"
     },
     "/onboarding/nickname/": {
-      "filePath": "onboarding/nickname/page.tsx"
+      "filePath": "onboarding/nickname/page.tsx",
+      "parent": "/onboarding"
     },
     "/onboarding/partner-code/": {
-      "filePath": "onboarding/partner-code/page.tsx"
+      "filePath": "onboarding/partner-code/page.tsx",
+      "parent": "/onboarding"
     },
     "/onboarding/terms/": {
-      "filePath": "onboarding/terms/page.tsx"
+      "filePath": "onboarding/terms/page.tsx",
+      "parent": "/onboarding"
     }
   }
 }
