@@ -24,6 +24,20 @@
     --gray-iron-900: #18181B;
     --gray-iron-950: #131316;
 
+    /* Gray Neutral */
+    --gray-neutral-25: #FCFCFD;
+    --gray-neutral-50: #F9FAFB;
+    --gray-neutral-100: #F3F4F6;
+    --gray-neutral-200: #E5E7EB;
+    --gray-neutral-300: #D2D6DB;
+    --gray-neutral-400: #9DA4AE;
+    --gray-neutral-500: #6C737F;
+    --gray-neutral-600: #4D5761;
+    --gray-neutral-700: #384250;
+    --gray-neutral-800: #1F2A37;
+    --gray-neutral-900: #111927;
+    --gray-neutral-950: #0D121C;
+
     /* Malmo Raspberry */
     --malmo-rasberry-25: #FDEDF0;
     --malmo-rasberry-50: #FFDDE3;
