@@ -2,35 +2,113 @@ import { Skeleton } from '@ui/common/components/skeleton'
 import { createContext, ReactNode, useCallback, useEffect, useState, use } from 'react'
 import authClient from '../lib/auth-client'
 import { SocialLoginType } from '@bridge/types'
+import memberService from '@/shared/services/member.service'
+import { MemberData, MemberDataMemberStateEnum } from '@data/user-api-axios/api'
+
+// 멤버 상태 타입
+export type MemberState = MemberDataMemberStateEnum | null
+
+// 사용자 정보 타입
+export type UserInfo = {
+  memberState: MemberState
+  nickname?: string
+}
 
 export interface AuthContext {
   authenticated: boolean
-  socialLogin: (type: SocialLoginType) => Promise<{ success: boolean; message?: string }>
+  userInfo: UserInfo
+  needsOnboarding: boolean
+  socialLogin: (type: SocialLoginType) => Promise<{
+    success: boolean
+    message?: string
+    needsOnboarding?: boolean
+  }>
   logout: () => Promise<{ success: boolean; message?: string }>
+  refreshUserInfo: () => Promise<UserInfo | null>
 }
 
 const AuthContext = createContext<AuthContext | null>(null)
 
+// 초기 사용자 정보 상태
+const initialUserInfo: UserInfo = {
+  memberState: null,
+  nickname: undefined,
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [authenticated, setAuthenticated] = useState(false)
+  const [userInfo, setUserInfo] = useState<UserInfo>(initialUserInfo)
 
-  const socialLogin = useCallback(async (type: SocialLoginType) => {
-    try {
-      const result = await authClient.socialLogin(type)
-      if (result.success) {
-        setAuthenticated(true)
-      }
-      return result
-    } catch (e) {
-      throw e
+  // 멤버 상태가 온보딩이 필요한지 여부
+  const needsOnboarding = userInfo.memberState === MemberDataMemberStateEnum.BeforeOnboarding
+
+  // 사용자 정보 조회 함수
+  const fetchUserInfo = useCallback(async () => {
+    if (!authenticated) {
+      setUserInfo(initialUserInfo)
+      return null
     }
-  }, [])
+
+    try {
+      const memberInfo = await memberService.findOne()
+
+      if (memberInfo?.data) {
+        const newUserInfo: UserInfo = {
+          memberState: memberInfo.data.memberState || null,
+          nickname: memberInfo.data.nickname,
+        }
+
+        setUserInfo(newUserInfo)
+        return newUserInfo
+      }
+
+      return null
+    } catch (error) {
+      return null
+    }
+  }, [authenticated])
+
+  // 사용자 정보 갱신 함수
+  const refreshUserInfo = useCallback(async () => {
+    return await fetchUserInfo()
+  }, [fetchUserInfo])
+
+  const socialLogin = useCallback(
+    async (type: SocialLoginType) => {
+      try {
+        // 소셜 로그인 시도
+        const result = await authClient.socialLogin(type)
+
+        if (result.success) {
+          // 인증 상태 업데이트
+          setAuthenticated(true)
+
+          // 사용자 정보 조회
+          const currentUserInfo = await fetchUserInfo()
+
+          // 온보딩 필요 여부 확인
+          const needsOnboarding = currentUserInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
+
+          return {
+            ...result,
+            needsOnboarding,
+          }
+        }
+
+        return result
+      } catch (e) {
+        throw e
+      }
+    },
+    [fetchUserInfo]
+  )
 
   const logout = useCallback(async () => {
     try {
       await authClient.logout()
       setAuthenticated(false)
+      setUserInfo(initialUserInfo)
       return { success: true }
     } catch (e) {
       throw e
@@ -38,21 +116,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    authClient
-      .getAuth()
-      .then((result) => {
+    const initAuth = async () => {
+      try {
+        const result = await authClient.getAuth()
         if (result && 'authenticated' in result) {
           setAuthenticated(result.authenticated)
+          // 인증 상태 확인 후 사용자 정보 조회
+          if (result.authenticated) {
+            await fetchUserInfo()
+          }
         }
-      })
-      .finally(() => {
+      } catch (error) {
+        //TODO: 인증 상태 조회 실패 시 처리
+      } finally {
         setLoading(false)
-      })
-  }, [])
+      }
+    }
+
+    initAuth()
+  }, [fetchUserInfo])
 
   if (loading) return <Skeleton />
 
-  return <AuthContext.Provider value={{ authenticated, socialLogin, logout }}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider
+      value={{
+        authenticated,
+        userInfo,
+        needsOnboarding,
+        socialLogin,
+        logout,
+        refreshUserInfo,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {
