@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 import signUpService from '@/shared/services/sign-up.service'
 import { formatDate } from '@/shared/utils'
+import { useAuth } from '@/features/auth'
 
 // 온보딩 데이터 타입 정의
 interface OnboardingData {
@@ -55,6 +56,7 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 
 // 컨텍스트 프로바이더 컴포넌트
 export function OnboardingProvider({ children }: { children: ReactNode }) {
+  const { refreshUserInfo } = useAuth()
   const [data, setData] = useState<OnboardingData>(defaultOnboardingData)
 
   // 약관 동의 업데이트
@@ -112,6 +114,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
       // 회원가입 API 호출
       await signUpService.requestSignUp(requestBody)
+
+      // 멤버 상태 갱신
+      await refreshUserInfo()
 
       return true
     } catch (error) {

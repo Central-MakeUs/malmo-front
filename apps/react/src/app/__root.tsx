@@ -8,7 +8,18 @@ interface RouterContext {
   auth: AuthContext
 }
 
+// 인증이 필요 없는 공개 경로
 const publicRoutes = ['/login', '/intro']
+
+// 온보딩 경로
+const onboardingRoutes = [
+  '/onboarding/terms',
+  '/onboarding/nickname',
+  '/onboarding/anniversary',
+  '/onboarding/my-code',
+  '/onboarding/partner-code',
+  '/onboarding/complete',
+]
 
 function matchRoute(routes: string[], path: string) {
   return routes.some((route) => match(route)(path))
@@ -17,7 +28,7 @@ function matchRoute(routes: string[], path: string) {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
   beforeLoad: async ({ context, location }) => {
-    const authenticated = context.auth.authenticated
+    const { authenticated, refreshUserInfo } = context.auth
     const pathname = location.pathname
 
     // 인증되지 않은 사용자는 퍼블릭 경로만 접근 가능
@@ -25,9 +36,34 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       return redirect({ to: '/login' })
     }
 
-    // 인증된 사용자가 로그인 페이지로 접근하면 홈으로 리다이렉트
-    if (authenticated && pathname === '/login') {
-      return redirect({ to: '/' })
+    if (authenticated) {
+      // 최신 사용자 정보 조회
+      const userInfo = await refreshUserInfo()
+      const needsOnboarding = userInfo?.memberState === 'BEFORE_ONBOARDING'
+
+      // 인증된 사용자가 로그인 페이지에 접근하면 멤버 상태에 따라 리다이렉트
+      if (pathname === '/login') {
+        // 온보딩이 필요한 경우
+        if (needsOnboarding) {
+          return redirect({ to: '/onboarding/terms' })
+        } else {
+          // 온보딩이 완료된 경우
+          return redirect({ to: '/' })
+        }
+      }
+
+      // 인증된 사용자가 온보딩 경로가 아닌 페이지에 접근할 때 멤버 상태 확인
+      if (!matchRoute(onboardingRoutes, pathname)) {
+        // 온보딩이 필요한 상태인데 온보딩 경로가 아니면 온보딩으로 리다이렉트
+        if (needsOnboarding) {
+          return redirect({ to: '/onboarding/terms' })
+        }
+      }
+
+      // 온보딩 경로에 접근했는데 온보딩이 필요하지 않으면 홈으로 리다이렉트
+      if (matchRoute(onboardingRoutes, pathname) && !needsOnboarding) {
+        return redirect({ to: '/' })
+      }
     }
   },
 })
