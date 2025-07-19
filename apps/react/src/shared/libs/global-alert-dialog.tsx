@@ -16,24 +16,26 @@ import { useAlertDialog } from '../hook/alert-dialog.hook'
 import bridge from '../bridge'
 
 type AlertDialogOpenOptions = {
-  title?: string
-  description: string
+  title?: string | React.ReactNode
+  description: string | React.ReactNode
   cancelText?: string
   confirmText?: string
   destructive?: boolean
   onConfirm?: () => void
+  onCancel?: () => void
   overlayLevel?: 1 | 2
 }
 
 interface AlertDialogContextType {
   openAlertDialog: boolean
-  title?: string
-  description: string
+  title?: string | React.ReactNode
+  description: string | React.ReactNode
   cancelText?: string
   confirmText: string
   destructive?: boolean
   overlayLevel?: 1 | 2
   onConfirm?: () => void | Promise<void>
+  onCancel?: () => void | Promise<void>
   open: (options: AlertDialogOpenOptions) => void
   close: () => void
 }
@@ -82,8 +84,18 @@ export function AlertDialogProvider({
 }
 
 export function GlobalAlertDialog() {
-  const { openAlertDialog, title, description, cancelText, destructive, confirmText, onConfirm, close, overlayLevel } =
-    useAlertDialog()
+  const {
+    openAlertDialog,
+    title,
+    description,
+    cancelText,
+    destructive,
+    confirmText,
+    onConfirm,
+    onCancel,
+    close,
+    overlayLevel,
+  } = useAlertDialog()
 
   return (
     <AlertDialog open={openAlertDialog} onOpenChange={close}>
@@ -93,7 +105,16 @@ export function GlobalAlertDialog() {
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          {cancelText && <AlertDialogCancel onClick={close}>{cancelText}</AlertDialogCancel>}
+          {cancelText && (
+            <AlertDialogCancel
+              onClick={() => {
+                onCancel?.()
+                close()
+              }}
+            >
+              {cancelText}
+            </AlertDialogCancel>
+          )}
           {destructive && (
             <AlertDialogDestructive
               onClick={() => {

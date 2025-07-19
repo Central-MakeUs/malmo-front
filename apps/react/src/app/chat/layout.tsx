@@ -1,7 +1,7 @@
 import { ChattingProvider, useChatting } from '@/features/chat/context/chatting-context'
+import { useChattingModal } from '@/features/chat/hook/use-chatting-modal'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { useCallback } from 'react'
 
 export const Route = createFileRoute('/chat')({
   component: RouteComponent,
@@ -9,10 +9,16 @@ export const Route = createFileRoute('/chat')({
 
 function ChatLayout() {
   const { exitButton } = useChatting()
+  const { exitChattingModal } = useChattingModal()
 
   return (
     <div className="flex h-screen flex-col">
-      <DetailHeaderBar right={exitButton()} />
+      <DetailHeaderBar
+        right={exitButton()}
+        onBackClick={() => {
+          exitChattingModal()
+        }}
+      />
 
       <div className="min-h-0 flex-1">
         <Outlet />

@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react'
+import { useChattingModal } from '../hook/use-chatting-modal'
 
 interface ChattingData {
   chat: { id: number; message: string; sendType: 'ai' | 'me'; timestamp: string }[]
@@ -49,6 +50,7 @@ const ChattingContext = createContext<ChattingContextType | undefined>(undefined
 // 컨텍스트 프로바이더 컴포넌트
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<ChattingData>(defaultChattingData)
+  const { exitChattingModal } = useChattingModal()
   const navigate = useNavigate()
 
   const exitButton = useCallback(() => {
