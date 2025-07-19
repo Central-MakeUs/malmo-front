@@ -14,14 +14,12 @@ export const Route = createFileRoute('/chat/')({
 
 function RouteComponent() {
   const { data } = useChatting()
-  const { chattingTutorialModal, showChattingTutorial } = useChattingModal()
-  const { exitButton } = useChatting()
-  const { exitChattingModal } = useChattingModal()
+  const { exitButton, chattingModal } = useChatting()
 
   return (
     <div className="flex h-full flex-col">
-      <DetailHeaderBar right={exitButton()} onBackClick={() => exitChattingModal()} />
-      {showChattingTutorial && chattingTutorialModal()}
+      <DetailHeaderBar right={exitButton()} onBackClick={() => chattingModal.exitChattingModal()} />
+      {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
 
       <section className="flex-1 overflow-y-auto">
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">

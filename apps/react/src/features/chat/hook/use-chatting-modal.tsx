@@ -5,7 +5,14 @@ import { useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
-export function useChattingModal() {
+export interface UseChattingModalReturn {
+  testRequiredModal: () => void
+  exitChattingModal: () => void
+  chattingTutorialModal: () => React.ReactNode
+  showChattingTutorial: boolean
+}
+
+export function useChattingModal(): UseChattingModalReturn {
   const alertDialog = useAlertDialog()
   const router = useRouter()
 

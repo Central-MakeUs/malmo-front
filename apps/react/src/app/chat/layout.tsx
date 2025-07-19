@@ -9,10 +9,10 @@ export const Route = createFileRoute('/chat')({
 })
 
 function ChatLayout() {
-  const { showChattingTutorial } = useChattingModal()
+  const { chattingModal } = useChatting()
 
   return (
-    <div className={cn('flex h-screen flex-col', { 'mt-3': showChattingTutorial })}>
+    <div className={cn('flex h-screen flex-col', { 'mt-3': chattingModal.showChattingTutorial })}>
       <Outlet />
     </div>
   )
