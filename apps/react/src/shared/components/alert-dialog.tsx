@@ -17,13 +17,16 @@ function AlertDialogTrigger({ ...props }: React.ComponentProps<typeof AlertDialo
 function AlertDialogPortal({ ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Portal>) {
   return <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
 }
+type Props = React.ComponentProps<typeof AlertDialogPrimitive.Overlay> & {
+  alpha?: number
+}
 
-function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
+function AlertDialogOverlay({ alpha, className, ...props }: Props) {
   return (
     <AlertDialogPrimitive.Overlay
-      data-slot="alert-dialog-overlay"
       className={cn(
-        'fixed inset-0 z-50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0',
+        'fixed inset-0 z-50 bg-black transition-opacity data-[state=closed]:opacity-0 data-[state=closed]:duration-[100ms] data-[state=closed]:ease-in data-[state=open]:duration-[150ms] data-[state=open]:ease-out',
+        { 'opacity-40': alpha === 0.4, 'opacity-80': alpha === 0.8 },
         className
       )}
       {...props}
@@ -33,12 +36,12 @@ function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof
 
 function AlertDialogContent({
   className,
-  overlayClassName = 'bg-black/40',
+  alpha,
   ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Content> & { overlayClassName?: string }) {
+}: React.ComponentProps<typeof AlertDialogPrimitive.Content> & { alpha?: number }) {
   return (
     <AlertDialogPortal>
-      <AlertDialogOverlay className={overlayClassName} />
+      <AlertDialogOverlay alpha={alpha} />
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         className={cn(

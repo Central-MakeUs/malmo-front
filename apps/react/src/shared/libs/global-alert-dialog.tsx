@@ -87,7 +87,7 @@ export function GlobalAlertDialog() {
 
   return (
     <AlertDialog open={openAlertDialog} onOpenChange={close}>
-      <AlertDialogContent overlayClassName={overlayLevel === 1 ? 'bg-black/40' : 'bg-black/80'}>
+      <AlertDialogContent alpha={overlayLevel === 1 ? 0.4 : 0.8}>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
