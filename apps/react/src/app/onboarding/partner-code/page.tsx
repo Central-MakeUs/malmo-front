@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { Button, HeaderNavigation } from '@/shared/ui'
+import { Button, HeaderNavigation, Input } from '@/shared/ui'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
@@ -67,12 +67,11 @@ function PartnerCodePage() {
 
       {/* 코드 입력 */}
       <div className="mt-[68px] px-5">
-        <input
+        <Input
           type="text"
           value={partnerCode}
           onChange={(e) => setPartnerCode(e.target.value)}
           placeholder="코드를 입력해주세요"
-          className="h-[56px] w-full rounded-[8px] border border-gray-iron-300 px-4 text-gray-iron-950 placeholder:text-gray-iron-400 focus:border-malmo-rasberry-500 focus:outline-none"
         />
       </div>
 

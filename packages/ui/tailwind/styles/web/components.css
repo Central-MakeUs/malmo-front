@@ -108,11 +108,11 @@
     letter-spacing: -0.02em;
   }
 
-  /* Body 2 - 15px/24px */
+  /* Body 2 - 15px/22px */
   .body2-bold {
     font-family: var(--font-pretendard);
     font-size: 15px;
-    line-height: 24px;
+    line-height: 22px;
     font-weight: var(--font-weight-bold);
     letter-spacing: -0.02em;
   }
@@ -120,7 +120,7 @@
   .body2-medium {
     font-family: var(--font-pretendard);
     font-size: 15px;
-    line-height: 24px;
+    line-height: 22px;
     font-weight: var(--font-weight-medium);
     letter-spacing: -0.02em;
   }
@@ -128,12 +128,21 @@
   .body2-semibold {
     font-family: var(--font-pretendard);
     font-size: 15px;
-    line-height: 24px;
+    line-height: 22px;
     font-weight: var(--font-weight-semibold);
     letter-spacing: -0.02em;
   }
 
   .body2-regular {
+    font-family: var(--font-pretendard);
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: var(--font-weight-regular);
+    letter-spacing: -0.02em;
+  }
+
+  /* Body 2 Reading - 15px/24px */
+  .body2-reading-regular {
     font-family: var(--font-pretendard);
     font-size: 15px;
     line-height: 24px;

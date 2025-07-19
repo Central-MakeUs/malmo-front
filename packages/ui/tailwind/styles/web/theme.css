@@ -22,6 +22,20 @@
   --color-gray-iron-900: var(--gray-iron-900);
   --color-gray-iron-950: var(--gray-iron-950);
 
+  /* Gray Neutral */
+  --color-gray-neutral-25: var(--gray-neutral-25);
+  --color-gray-neutral-50: var(--gray-neutral-50);
+  --color-gray-neutral-100: var(--gray-neutral-100);
+  --color-gray-neutral-200: var(--gray-neutral-200);
+  --color-gray-neutral-300: var(--gray-neutral-300);
+  --color-gray-neutral-400: var(--gray-neutral-400);
+  --color-gray-neutral-500: var(--gray-neutral-500);
+  --color-gray-neutral-600: var(--gray-neutral-600);
+  --color-gray-neutral-700: var(--gray-neutral-700);
+  --color-gray-neutral-800: var(--gray-neutral-800);
+  --color-gray-neutral-900: var(--gray-neutral-900);
+  --color-gray-neutral-950: var(--gray-neutral-950);
+
   /* Malmo Raspberry */
   --color-malmo-rasberry-25: var(--malmo-rasberry-25);
   --color-malmo-rasberry-50: var(--malmo-rasberry-50);

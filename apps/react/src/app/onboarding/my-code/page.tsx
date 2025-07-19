@@ -92,7 +92,7 @@ function MyCodePage() {
 
       {/* 초대 코드 */}
       <div className="mt-[24px] px-5">
-        <div className="rounded-[10px] bg-gray-iron-100">
+        <div className="rounded-[10px] bg-gray-neutral-100">
           <div className="flex items-center justify-center px-[10px] py-[22px]">
             <div className="flex flex-col items-center">
               <p className="body3-medium text-gray-iron-500">나의 커플 초대 코드</p>
