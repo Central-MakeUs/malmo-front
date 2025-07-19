@@ -10,6 +10,10 @@ export interface SocialLoginResult {
 // 브릿지 스토어 타입 (상태)
 export interface BridgeStore {
   isLoggedIn: boolean
+  overlayState: {
+    visible: boolean
+    opacity: number
+  }
 }
 
 // 브릿지 액션 타입 (함수)
@@ -19,4 +23,5 @@ export interface BridgeActions {
   getAuthToken(): Promise<{ accessToken: string | null }>
   logout(): Promise<{ success: boolean; message?: string }>
   notifyTokenExpired(): Promise<{ accessToken: string | null }>
+  toggleOverlay(level: 0 | 1 | 2): Promise<void>
 }

@@ -1,10 +1,10 @@
 'use client'
 
-import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 import * as React from 'react'
+import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 
-import { cn } from '../lib/utils'
-import { buttonVariants } from './button'
+import { buttonVariants } from '@ui/common/components/button'
+import { cn } from '@ui/common/lib/utils'
 
 function AlertDialog({ ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
@@ -23,7 +23,7 @@ function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof
     <AlertDialogPrimitive.Overlay
       data-slot="alert-dialog-overlay"
       className={cn(
-        'fixed inset-0 z-50 bg-black/80 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0',
+        'fixed inset-0 z-50 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0',
         className
       )}
       {...props}
@@ -31,10 +31,14 @@ function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof
   )
 }
 
-function AlertDialogContent({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
+function AlertDialogContent({
+  className,
+  overlayClassName = 'bg-black/40',
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Content> & { overlayClassName?: string }) {
   return (
     <AlertDialogPortal>
-      <AlertDialogOverlay />
+      <AlertDialogOverlay className={overlayClassName} />
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         className={cn(

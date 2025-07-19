@@ -26,6 +26,7 @@ export const bridge = linkBridge<WebBridge>({
     getAuthToken: async () => ({ accessToken: null }),
     logout: async () => ({ success: false, message: '로그아웃 실패' }),
     notifyTokenExpired: async () => ({ accessToken: null }),
+    toggleOverlay: async (level?: number) => {},
   },
 })
 

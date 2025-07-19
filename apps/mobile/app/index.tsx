@@ -2,6 +2,7 @@ import React, { useRef, useCallback } from 'react'
 import { SafeAreaView, View, StyleSheet, StatusBar, Platform, KeyboardAvoidingView } from 'react-native'
 import { createWebView, type BridgeWebView } from '@webview-bridge/react-native'
 import { appBridge, appSchema } from './bridge'
+import { useOverlay } from './features/overlay/use-overlay'
 
 export const { WebView, postMessage } = createWebView({
   bridge: appBridge,
@@ -14,6 +15,7 @@ export const { WebView, postMessage } = createWebView({
 
 export default function App() {
   const webviewRef = useRef<BridgeWebView>(null)
+  const { OverlayComponent } = useOverlay()
 
   const webviewUrl =
     Platform.OS === 'android' ? process.env.EXPO_PUBLIC_ANDROID_WEB_VIEW_URL : process.env.EXPO_PUBLIC_IOS_WEB_VIEW_URL
@@ -22,48 +24,57 @@ export default function App() {
     throw new Error('Webview URL is not set')
   }
 
-  // 웹뷰 로드 완료 시 처리
   const handleLoadEnd = useCallback(() => {
     console.log('Webview load end')
   }, [])
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardAvoidingView}>
-        {/* WebView 영역 */}
-        <View style={styles.webviewContainer}>
-          <WebView
-            ref={webviewRef}
-            source={{ uri: webviewUrl }}
-            style={styles.webview}
-            domStorageEnabled={true}
-            javaScriptEnabled={true}
-            allowsFullscreenVideo={true}
-            allowsInlineMediaPlayback={true}
-            mediaPlaybackRequiresUserAction={false}
-            originWhitelist={['*']}
-            mixedContentMode="compatibility"
-            onLoadEnd={handleLoadEnd}
-            onError={(syntheticEvent) => {
-              const { nativeEvent } = syntheticEvent
-              console.error('WebView error: ', nativeEvent)
-            }}
-            onHttpError={(syntheticEvent) => {
-              const { nativeEvent } = syntheticEvent
-              console.error('WebView HTTP error: ', nativeEvent)
-            }}
-          />
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+      {OverlayComponent}
+
+      <SafeAreaView style={styles.safeArea}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardAvoidingView}
+        >
+          <View style={styles.webviewContainer}>
+            <WebView
+              ref={webviewRef}
+              source={{ uri: webviewUrl }}
+              style={styles.webview}
+              domStorageEnabled={true}
+              javaScriptEnabled={true}
+              allowsFullscreenVideo={true}
+              allowsInlineMediaPlayback={true}
+              mediaPlaybackRequiresUserAction={false}
+              originWhitelist={['*']}
+              mixedContentMode="compatibility"
+              onLoadEnd={handleLoadEnd}
+              onError={(syntheticEvent) => {
+                const { nativeEvent } = syntheticEvent
+                console.error('WebView error: ', nativeEvent)
+              }}
+              onHttpError={(syntheticEvent) => {
+                const { nativeEvent } = syntheticEvent
+                console.error('WebView HTTP error: ', nativeEvent)
+              }}
+            />
+          </View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    zIndex: 2,
   },
   keyboardAvoidingView: {
     flex: 1,
@@ -72,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   webview: {
-    height: '100%',
-    width: '100%',
+    flex: 1,
+    backgroundColor: 'transparent',
   },
 })

@@ -3,10 +3,10 @@ import AppleLogo from '@/assets/icons/apple-logo.svg'
 import KakaoLogo from '@/assets/icons/kakao-logo.svg'
 import malmoLogo from '@/assets/images/malmo-logo.png'
 import { isWebView } from '@/shared/utils/webview'
-import { useAlertDialog } from '@ui/common/hooks/alert-dialog.hook'
 import { useAuth } from '@/features/auth'
 import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
+import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 
 export const Route = createFileRoute('/login/')({
   component: LoginPage,

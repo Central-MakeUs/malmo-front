@@ -71,10 +71,16 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
       const { accessToken } = await refreshToken()
       return { accessToken }
     },
+
+    async toggleOverlay(level: 0 | 1 | 2): Promise<void> {
+      set({ overlayState: { visible: level > 0, opacity: level === 2 ? 0.8 : 0.4 } })
+      console.log('오버레이 상태 변경:', { visible: level > 0, opacity: level === 2 ? 0.8 : 0.4 })
+    },
   }
 
   return {
     isLoggedIn: false,
+    overlayState: { visible: false, opacity: 0 },
     ...actions,
   }
 })
@@ -106,6 +112,11 @@ export const appSchema = postMessageSchema({
   // 토큰 만료 알림 스키마
   notifyTokenExpired: {
     validate: () => {
+      return {}
+    },
+  },
+  toggleOverlay: {
+    validate: (value) => {
       return {}
     },
   },
