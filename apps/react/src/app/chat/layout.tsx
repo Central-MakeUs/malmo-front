@@ -12,7 +12,7 @@ function ChatLayout() {
   const { exitChattingModal } = useChattingModal()
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="mt-3 flex h-screen flex-col">
       <DetailHeaderBar
         right={exitButton()}
         onBackClick={() => {

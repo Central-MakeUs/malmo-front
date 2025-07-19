@@ -2,10 +2,11 @@ import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubb
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
 import { useChatting } from '@/features/chat/context/chatting-context'
+import { useChattingModal } from '@/features/chat/hook/use-chatting-modal'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
-import bridge from '@/shared/bridge'
-import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import { Button } from '@/shared/ui'
 import { createFileRoute } from '@tanstack/react-router'
+import { ChevronRightIcon } from 'lucide-react'
 import React from 'react'
 
 export const Route = createFileRoute('/chat/')({
@@ -14,9 +15,11 @@ export const Route = createFileRoute('/chat/')({
 
 function RouteComponent() {
   const { data } = useChatting()
+  const { chattingTutorialModal, showChattingTutorial } = useChattingModal()
 
   return (
     <div className="flex h-full flex-col">
+      {showChattingTutorial && chattingTutorialModal()}
       <section className="flex-1 overflow-y-auto">
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
           <p className="body3-medium text-white">상담 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>

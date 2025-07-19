@@ -1,9 +1,15 @@
+import bridge from '@/shared/bridge'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import { Button } from '@/shared/ui'
 import { useRouter } from '@tanstack/react-router'
+import { ChevronRightIcon } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 export function useChattingModal() {
   const alertDialog = useAlertDialog()
   const router = useRouter()
+
+  const [showChattingTutorial, setShowChattingTutorial] = useState(true)
 
   const testRequiredModal = () => {
     alertDialog.open({
@@ -47,5 +53,74 @@ export function useChattingModal() {
     })
   }
 
-  return { testRequiredModal, exitChattingModal }
+  useEffect(() => {
+    if (showChattingTutorial) {
+      bridge.toggleOverlay?.(2)
+    }
+  }, [showChattingTutorial])
+
+  const chattingTutorialModal = () => {
+    const highlightedText = 'body2-medium text-malmo-rasberry-400'
+    return (
+      <div className="body2-regular absolute top-0 right-0 bottom-0 left-0 z-10 flex flex-col items-center justify-center bg-black/80 text-white">
+        <div className="absolute top-0 right-2 flex h-[72px] w-[72px] items-center justify-center rounded-full border-[2px] border-malmo-rasberry-500 bg-white">
+          <p className="body2-semibold text-malmo-rasberry-500">종료하기</p>
+          <div className="absolute right-[72px] bottom-[-86px] h-[120px] w-[97px] border-t-2 border-l-2 border-dashed border-malmo-rasberry-400">
+            <div className="absolute bottom-0 left-[-5px] h-2 w-2 rounded-full bg-malmo-rasberry-300" />
+          </div>
+        </div>
+
+        <p className="absolute top-[160px] text-center">
+          1. 모모와 <span className={highlightedText}>대화를 종료</span>하고 싶다면
+          <span className={highlightedText}> 버튼</span>을 눌러주세요!
+          <br />
+          종료하지 않고 나가면, <span className={highlightedText}>1일 후에 자동 종료</span>돼요.
+        </p>
+
+        <div className="flex w-full flex-col items-center gap-[26px] px-5">
+          <div className="relative flex w-full items-center justify-center rounded-[10px] bg-white px-[18px] py-[26px]">
+            <div className="flex-1">
+              <p className="label1-medium mb-1 text-gray-iron-500">2025년 8월 23일</p>
+              <p className="font-bold text-gray-iron-950">
+                회피형 남자친구와의
+                <br />
+                연락문제
+              </p>
+            </div>
+
+            <div className="flex h-fit rounded-[7px] bg-gray-iron-700 py-[7px] pr-[10px] pl-[14px] text-white">
+              <p>대화보기</p>
+              <ChevronRightIcon />
+            </div>
+            <div className="absolute bottom-[-28px] left-[14px] h-[28px] border-l-2 border-dashed border-l-malmo-rasberry-400">
+              <div className="absolute bottom-0 left-[-5px] h-2 w-2 rounded-full bg-malmo-rasberry-300" />
+            </div>
+          </div>
+          <p>
+            2. 종료 후에는 모모와 나눈 <span className={highlightedText}>대화를 요약</span>해서 보여줘요.
+          </p>
+        </div>
+
+        <div className="absolute bottom-12 flex w-full gap-2 px-5">
+          <Button
+            text={'확인'}
+            type="secondary"
+            onClick={() => {
+              setShowChattingTutorial(false)
+              bridge.toggleOverlay?.(0)
+            }}
+          />
+          <Button
+            text={'다시 보지 않기'}
+            onClick={() => {
+              setShowChattingTutorial(false)
+              bridge.toggleOverlay?.(0)
+            }}
+          />
+        </div>
+      </div>
+    )
+  }
+
+  return { testRequiredModal, exitChattingModal, chattingTutorialModal, showChattingTutorial }
 }
