@@ -1,8 +1,9 @@
 import React, { useRef, useCallback } from 'react'
-import { SafeAreaView, View, StyleSheet, StatusBar, Platform, KeyboardAvoidingView } from 'react-native'
+import { SafeAreaView, View, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native'
 import { createWebView, type BridgeWebView } from '@webview-bridge/react-native'
 import { appBridge, appSchema } from './bridge'
 import { useOverlay } from './features/overlay/use-overlay'
+import { DynamicStatusBar } from './features/status-bar/dynamic-status-bar'
 
 export const { WebView, postMessage } = createWebView({
   bridge: appBridge,
@@ -30,16 +31,17 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <DynamicStatusBar />
       {OverlayComponent}
 
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={[styles.safeArea]}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.keyboardAvoidingView}
         >
           <View style={styles.webviewContainer}>
             <WebView
+              bounces={false}
               ref={webviewRef}
               source={{ uri: webviewUrl }}
               style={styles.webview}

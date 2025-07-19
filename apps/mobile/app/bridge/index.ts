@@ -75,11 +75,16 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
     async toggleOverlay(level: 0 | 1 | 2): Promise<void> {
       set({ overlayState: { visible: level > 0, opacity: level === 2 ? 0.8 : 0.4 } })
     },
+
+    async changeStatusBarColor(color: string): Promise<void> {
+      set({ statusBarColor: color })
+    },
   }
 
   return {
     isLoggedIn: false,
     overlayState: { visible: false, opacity: 0 },
+    statusBarColor: '#fff',
     ...actions,
   }
 })

@@ -14,6 +14,7 @@ export interface BridgeStore {
     visible: boolean
     opacity: number
   }
+  statusBarColor: string
 }
 
 // 브릿지 액션 타입 (함수)
@@ -24,4 +25,5 @@ export interface BridgeActions {
   logout(): Promise<{ success: boolean; message?: string }>
   notifyTokenExpired(): Promise<{ accessToken: string | null }>
   toggleOverlay(level: 0 | 1 | 2): Promise<void>
+  changeStatusBarColor(color: string): Promise<void>
 }

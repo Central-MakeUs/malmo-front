@@ -4,6 +4,8 @@ import { X } from 'lucide-react'
 import { useChatResult } from '@/features/chat-result/hooks/use-chat-result'
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { Button } from '@/shared/ui'
+import bridge from '@/shared/bridge'
+import { useEffect } from 'react'
 
 export const Route = createFileRoute('/chat/result/')({
   component: RouteComponent,
@@ -11,6 +13,14 @@ export const Route = createFileRoute('/chat/result/')({
 
 function RouteComponent() {
   const chatResult = useChatResult()
+
+  useEffect(() => {
+    bridge.changeStatusBarColor('#FDEDF0')
+
+    return () => {
+      bridge.changeStatusBarColor('#fff')
+    }
+  }, [])
 
   const exitButton = () => (
     <Link to="/">
