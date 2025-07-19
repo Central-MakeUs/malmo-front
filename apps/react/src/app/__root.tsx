@@ -2,6 +2,7 @@ import { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-router'
 import { match } from 'path-to-regexp'
 import { AuthContext } from '@/features/auth/hooks/use-auth'
+import { MemberDataMemberStateEnum } from '@data/user-api-axios/api'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -39,7 +40,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     if (authenticated) {
       // 최신 사용자 정보 조회
       const userInfo = await refreshUserInfo()
-      const needsOnboarding = userInfo?.memberState === 'BEFORE_ONBOARDING'
+      const needsOnboarding = userInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
 
       // 인증된 사용자가 로그인 페이지에 접근하면 멤버 상태에 따라 리다이렉트
       if (pathname === '/login') {
