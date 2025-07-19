@@ -50,7 +50,6 @@ const ChattingContext = createContext<ChattingContextType | undefined>(undefined
 // 컨텍스트 프로바이더 컴포넌트
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<ChattingData>(defaultChattingData)
-  const { exitChattingModal } = useChattingModal()
   const navigate = useNavigate()
 
   const exitButton = useCallback(() => {
@@ -60,7 +59,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       <p
         className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}
         onClick={() => {
-          if (actived) navigate({ to: '/chat/result', replace: true })
+          if (actived) navigate({ to: '/chat/loading', replace: true })
         }}
       >
         종료하기

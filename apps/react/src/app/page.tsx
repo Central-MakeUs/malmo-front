@@ -17,7 +17,6 @@ function HomePage() {
       <Button
         onClick={async () => {
           const data = await bridge.logout()
-          console.log('로그아웃 데이터:', data)
         }}
       >
         로그아웃
@@ -26,7 +25,6 @@ function HomePage() {
       <Button
         onClick={async () => {
           const data = await memberService.findOne()
-          console.log('멤버 데이터:', data)
         }}
       >
         멤버

@@ -24,6 +24,7 @@ import { Route as OnboardingMyCodePageImport } from './app/onboarding/my-code/pa
 import { Route as OnboardingCompletePageImport } from './app/onboarding/complete/page'
 import { Route as OnboardingAnniversaryPageImport } from './app/onboarding/anniversary/page'
 import { Route as ChatResultPageImport } from './app/chat/result/page'
+import { Route as ChatLoadingPageImport } from './app/chat/loading/page'
 
 // Create/Update Routes
 
@@ -105,6 +106,12 @@ const ChatResultPageRoute = ChatResultPageImport.update({
   getParentRoute: () => ChatLayoutRoute,
 } as any)
 
+const ChatLoadingPageRoute = ChatLoadingPageImport.update({
+  id: '/loading/',
+  path: '/loading/',
+  getParentRoute: () => ChatLayoutRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -150,6 +157,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof LoginPageImport
       parentRoute: typeof rootRoute
+    }
+    '/chat/loading/': {
+      id: '/chat/loading/'
+      path: '/loading'
+      fullPath: '/chat/loading'
+      preLoaderRoute: typeof ChatLoadingPageImport
+      parentRoute: typeof ChatLayoutImport
     }
     '/chat/result/': {
       id: '/chat/result/'
@@ -207,11 +221,13 @@ declare module '@tanstack/react-router' {
 
 interface ChatLayoutRouteChildren {
   ChatPageRoute: typeof ChatPageRoute
+  ChatLoadingPageRoute: typeof ChatLoadingPageRoute
   ChatResultPageRoute: typeof ChatResultPageRoute
 }
 
 const ChatLayoutRouteChildren: ChatLayoutRouteChildren = {
   ChatPageRoute: ChatPageRoute,
+  ChatLoadingPageRoute: ChatLoadingPageRoute,
   ChatResultPageRoute: ChatResultPageRoute,
 }
 
@@ -244,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/chat/': typeof ChatPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
+  '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
@@ -259,6 +276,7 @@ export interface FileRoutesByTo {
   '/chat': typeof ChatPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
+  '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
@@ -276,6 +294,7 @@ export interface FileRoutesById {
   '/chat/': typeof ChatPageRoute
   '/intro/': typeof IntroPageRoute
   '/login/': typeof LoginPageRoute
+  '/chat/loading/': typeof ChatLoadingPageRoute
   '/chat/result/': typeof ChatResultPageRoute
   '/onboarding/anniversary/': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete/': typeof OnboardingCompletePageRoute
@@ -294,6 +313,7 @@ export interface FileRouteTypes {
     | '/chat/'
     | '/intro'
     | '/login'
+    | '/chat/loading'
     | '/chat/result'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
@@ -308,6 +328,7 @@ export interface FileRouteTypes {
     | '/chat'
     | '/intro'
     | '/login'
+    | '/chat/loading'
     | '/chat/result'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
@@ -323,6 +344,7 @@ export interface FileRouteTypes {
     | '/chat/'
     | '/intro/'
     | '/login/'
+    | '/chat/loading/'
     | '/chat/result/'
     | '/onboarding/anniversary/'
     | '/onboarding/complete/'
@@ -371,6 +393,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "chat/layout.tsx",
       "children": [
         "/chat/",
+        "/chat/loading/",
         "/chat/result/"
       ]
     },
@@ -394,6 +417,10 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/login/": {
       "filePath": "login/page.tsx"
+    },
+    "/chat/loading/": {
+      "filePath": "chat/loading/page.tsx",
+      "parent": "/chat"
     },
     "/chat/result/": {
       "filePath": "chat/result/page.tsx",

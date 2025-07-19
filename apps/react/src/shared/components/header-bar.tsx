@@ -1,14 +1,17 @@
 import type { ReactNode } from 'react'
 import { LucideChevronLeft } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
+import { cn } from '@ui/common/lib/utils'
 
 interface DetailHeaderBarProps {
   title?: string
   right?: ReactNode
+  allowBack?: boolean
   onBackClick?: () => void
+  className?: string
 }
 
-export function DetailHeaderBar({ title, right, onBackClick }: DetailHeaderBarProps) {
+export function DetailHeaderBar({ title, right, onBackClick, allowBack = true, className }: DetailHeaderBarProps) {
   const router = useRouter()
 
   const handleBackClick = () => {
@@ -20,11 +23,20 @@ export function DetailHeaderBar({ title, right, onBackClick }: DetailHeaderBarPr
   }
 
   return (
-    <header className="relative flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white pr-5 pl-3">
+    <header
+      className={cn(
+        'relative flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white py-[13px] pr-5 pl-3',
+        className
+      )}
+    >
       {/* Left Area */}
-      <button type="button" onClick={handleBackClick} className="z-10 p-1">
-        <LucideChevronLeft className="h-[28px] w-[28px]" />
-      </button>
+      {allowBack ? (
+        <button type="button" onClick={handleBackClick} className="z-10 p-1">
+          <LucideChevronLeft className="h-[28px] w-[28px]" />
+        </button>
+      ) : (
+        <div />
+      )}
 
       {/* Title Area */}
       {title && (
