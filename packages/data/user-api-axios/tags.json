@@ -4,6 +4,8 @@
   "애착유형 검사 API": "love-types",
   "약관 관리 API": "temrs",
   "오늘의 질문 API": "questions",
+  "채팅 API": "chatroom",
+  "채팅방 API": "chatroom",
   "커플 관리 API": "couples",
   "토큰 관리 API": "refresh",
   "테스트 API": "test",

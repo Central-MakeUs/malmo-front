@@ -12,34 +12,38 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { ChatRoomStateData } from './chat-room-state-data'
+
 /**
- * 애착유형 등록 성공 응답
+ * 채팅방 상태 조회 성공 응답
  * @export
- * @interface RegisterLoveTypeSuccessResponse
+ * @interface ChatRoomStateResponse
  */
-export interface RegisterLoveTypeSuccessResponse {
+export interface ChatRoomStateResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof ChatRoomStateResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof ChatRoomStateResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof ChatRoomStateResponse
    */
   message?: string
   /**
-   * 응답 데이터
-   * @type {object}
-   * @memberof RegisterLoveTypeSuccessResponse
+   *
+   * @type {ChatRoomStateData}
+   * @memberof ChatRoomStateResponse
    */
-  data?: object
+  data?: ChatRoomStateData
 }

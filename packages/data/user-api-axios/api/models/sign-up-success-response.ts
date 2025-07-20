@@ -12,10 +12,6 @@
  * Do not edit the class manually.
  */
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { SignUpData } from './sign-up-data'
-
 /**
  * 회원가입 성공 응답
  * @export
@@ -41,9 +37,9 @@ export interface SignUpSuccessResponse {
    */
   message?: string
   /**
-   *
-   * @type {SignUpData}
+   * 응답 데이터
+   * @type {object}
    * @memberof SignUpSuccessResponse
    */
-  data?: SignUpData
+  data?: object
 }

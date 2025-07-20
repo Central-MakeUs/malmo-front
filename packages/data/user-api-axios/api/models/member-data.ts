@@ -29,19 +29,13 @@ export interface MemberData {
    * @type {string}
    * @memberof MemberData
    */
-  loveStartDate?: string
+  startLoveDate?: string
   /**
-   * 애착 유형 ID
-   * @type {number}
-   * @memberof MemberData
-   */
-  loveTypeId?: number
-  /**
-   * 애착 유형 제목
+   * 애착 유형
    * @type {string}
    * @memberof MemberData
    */
-  loveTypeTitle?: string
+  loveTypeCategory?: MemberDataLoveTypeCategoryEnum
   /**
    * 회피 비율
    * @type {number}
@@ -75,3 +69,12 @@ export const MemberDataMemberStateEnum = {
 } as const
 
 export type MemberDataMemberStateEnum = (typeof MemberDataMemberStateEnum)[keyof typeof MemberDataMemberStateEnum]
+export const MemberDataLoveTypeCategoryEnum = {
+  StableType: 'STABLE_TYPE',
+  AnxietyType: 'ANXIETY_TYPE',
+  AvoidanceType: 'AVOIDANCE_TYPE',
+  ConfusionType: 'CONFUSION_TYPE',
+} as const
+
+export type MemberDataLoveTypeCategoryEnum =
+  (typeof MemberDataLoveTypeCategoryEnum)[keyof typeof MemberDataLoveTypeCategoryEnum]

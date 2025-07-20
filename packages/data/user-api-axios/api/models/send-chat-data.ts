@@ -13,15 +13,15 @@
  */
 
 /**
- *
+ * 채팅 응답 데이터
  * @export
- * @interface SseEmitter
+ * @interface SendChatData
  */
-export interface SseEmitter {
+export interface SendChatData {
   /**
-   *
+   * 사용자가 보낸 메시지의 ID
    * @type {number}
-   * @memberof SseEmitter
+   * @memberof SendChatData
    */
-  timeout?: number
+  messageId?: number
 }

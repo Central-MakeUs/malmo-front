@@ -13,33 +13,33 @@
  */
 
 /**
- * 애착유형 등록 성공 응답
+ * 기본 응답 형식
  * @export
- * @interface RegisterLoveTypeSuccessResponse
+ * @interface BaseSwaggerResponse
  */
-export interface RegisterLoveTypeSuccessResponse {
+export interface BaseSwaggerResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof BaseSwaggerResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof BaseSwaggerResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof BaseSwaggerResponse
    */
   message?: string
   /**
    * 응답 데이터
    * @type {object}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof BaseSwaggerResponse
    */
   data?: object
 }

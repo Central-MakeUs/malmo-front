@@ -14,36 +14,36 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { GetLoveTypeData } from './get-love-type-data'
+import type { GetChatRoomSummaryData } from './get-chat-room-summary-data'
 
 /**
- * 애착유형 조회 성공 응답
+ * 채팅방 요약 조회 성공 응답
  * @export
- * @interface GetLoveTypeSuccessResponse
+ * @interface GetChatRoomSummaryResponse
  */
-export interface GetLoveTypeSuccessResponse {
+export interface GetChatRoomSummaryResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof GetLoveTypeSuccessResponse
+   * @memberof GetChatRoomSummaryResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof GetLoveTypeSuccessResponse
+   * @memberof GetChatRoomSummaryResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof GetLoveTypeSuccessResponse
+   * @memberof GetChatRoomSummaryResponse
    */
   message?: string
   /**
    *
-   * @type {GetLoveTypeData}
-   * @memberof GetLoveTypeSuccessResponse
+   * @type {GetChatRoomSummaryData}
+   * @memberof GetChatRoomSummaryResponse
    */
-  data?: GetLoveTypeData
+  data?: GetChatRoomSummaryData
 }

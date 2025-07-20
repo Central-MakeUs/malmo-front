@@ -12,34 +12,38 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { CompleteChatRoomData } from './complete-chat-room-data'
+
 /**
- * 애착유형 등록 성공 응답
+ * 채팅방 완료 성공 응답
  * @export
- * @interface RegisterLoveTypeSuccessResponse
+ * @interface CompleteChatRoomResponse
  */
-export interface RegisterLoveTypeSuccessResponse {
+export interface CompleteChatRoomResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof CompleteChatRoomResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof CompleteChatRoomResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof RegisterLoveTypeSuccessResponse
+   * @memberof CompleteChatRoomResponse
    */
   message?: string
   /**
-   * 응답 데이터
-   * @type {object}
-   * @memberof RegisterLoveTypeSuccessResponse
+   *
+   * @type {CompleteChatRoomData}
+   * @memberof CompleteChatRoomResponse
    */
-  data?: object
+  data?: CompleteChatRoomData
 }

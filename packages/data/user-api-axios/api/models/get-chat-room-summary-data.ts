@@ -13,39 +13,39 @@
  */
 
 /**
- * 애착유형 조회 응답 데이터
+ * 채팅 요약 조회 완료 응답 데이터
  * @export
- * @interface GetLoveTypeData
+ * @interface GetChatRoomSummaryData
  */
-export interface GetLoveTypeData {
+export interface GetChatRoomSummaryData {
   /**
-   * 애착 유형 ID
+   * 채팅방의 ID
    * @type {number}
-   * @memberof GetLoveTypeData
+   * @memberof GetChatRoomSummaryData
    */
-  loveTypeId?: number
+  chatRoomId?: number
   /**
-   * 애착 유형
+   * 채팅방 전체 요약
    * @type {string}
-   * @memberof GetLoveTypeData
+   * @memberof GetChatRoomSummaryData
    */
-  title?: string
+  totalSummary?: string
   /**
-   * 애착유형 요약
+   * 채팅방 상황 요약
    * @type {string}
-   * @memberof GetLoveTypeData
+   * @memberof GetChatRoomSummaryData
    */
-  summary?: string
+  firstSummary?: string
   /**
-   * 애착유형 설명
+   * 채팅방 관계 이해
    * @type {string}
-   * @memberof GetLoveTypeData
+   * @memberof GetChatRoomSummaryData
    */
-  content?: string
+  secondSummary?: string
   /**
-   * 이미지 URL
+   * 채팅방 해결 제안
    * @type {string}
-   * @memberof GetLoveTypeData
+   * @memberof GetChatRoomSummaryData
    */
-  imageUrl?: string
+  thirdSummary?: string
 }
