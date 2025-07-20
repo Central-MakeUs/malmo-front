@@ -13,10 +13,6 @@ export function AttachmentTestIntro({ nickname }: AttachmentTestIntroProps) {
     navigate({ to: '/' })
   }
 
-  const handleStartTest = () => {
-    navigate({ to: '/attachment-test/question' })
-  }
-
   return (
     <div className="bg-malmo-rasberry-25">
       <HeaderNavigation onBack={handleGoToHome} />
