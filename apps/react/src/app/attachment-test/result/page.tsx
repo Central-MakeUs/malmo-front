@@ -84,7 +84,7 @@ function AttachmentTestResultPage() {
       </div>
 
       {/* 결과 태도 섹션 */}
-      <div className="mt-[52px] px-[20px]">
+      <div className="mt-[52px] mb-[80px] px-[20px]">
         {/* 관계에 대한 태도 */}
         <ResultAttitudeSection
           icon={RelationshipIcon}
@@ -102,18 +102,16 @@ function AttachmentTestResultPage() {
         />
 
         {/* 정서적인 표현 */}
-        <div className="mb-[80px]">
-          <ResultAttitudeSection
-            icon={EmotionIcon}
-            title="정서적인 표현"
-            color={attachmentData.color}
-            items={attachmentData.emotionalExpressions}
-          />
-        </div>
+        <ResultAttitudeSection
+          icon={EmotionIcon}
+          title="정서적인 표현"
+          color={attachmentData.color}
+          items={attachmentData.emotionalExpressions}
+        />
       </div>
 
       {/* 바텀 버튼 */}
-      <div className="mt-[80px] px-[20px] pb-[20px]">
+      <div className="px-[20px] pb-[20px]">
         <Button text="완료" onClick={handleComplete} />
       </div>
     </div>
