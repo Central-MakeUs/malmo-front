@@ -11,6 +11,19 @@ interface Question {
   content: string
 }
 
+// 첫 번째 질문으로 스크롤하는 유틸 함수
+const scrollToFirstQuestion = (questionRefs: React.MutableRefObject<(HTMLDivElement | null)[]>) => {
+  setTimeout(() => {
+    const firstQuestionElement = questionRefs.current[0]
+    if (firstQuestionElement) {
+      firstQuestionElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+  }, 100)
+}
+
 export interface UseAttachmentQuestionsResult {
   // 질문 데이터
   questions: Question[]
@@ -69,21 +82,6 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   // 현재 페이지에 표시할 질문 목록
   const currentQuestions = questions.slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
 
-  // 페이지 변경 시 첫 번째 질문으로 스크롤
-  useEffect(() => {
-    if (currentQuestions.length > 0) {
-      setTimeout(() => {
-        const firstQuestionElement = questionRefs.current[0]
-        if (firstQuestionElement) {
-          firstQuestionElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          })
-        }
-      }, 100)
-    }
-  }, [currentPage, currentQuestions.length])
-
   // 질문 데이터 가져오기
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -122,6 +120,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const handleGoBack = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1)
+      scrollToFirstQuestion(questionRefs)
     } else {
       navigate({ to: '/attachment-test' })
     }
@@ -131,6 +130,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const handleNext = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1)
+      scrollToFirstQuestion(questionRefs)
     } else {
       // 마지막 페이지에서는 결과 제출
       handleSubmit()
