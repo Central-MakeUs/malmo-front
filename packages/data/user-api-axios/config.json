@@ -1,6 +1,6 @@
 {
   "generatorName": "typescript-axios",
-  "inputSpec": "https://example.com/api-docs/swagger-json",
+  "inputSpec": "https://malmo-api.duckdns.org/v3/api-docs",
   "verbose": false,
   "allowUnicodeIdentifiers": true,
   "enablePostProcessFile": true,

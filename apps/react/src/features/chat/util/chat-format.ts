@@ -1,7 +1,9 @@
 /**
  * ISO 8601 형식의 날짜 문자열을 'YYYY년 MM월 DD일' 형식으로 변환합니다.
  */
-export const formatDate = (isoString: string): string => {
+export const formatDate = (isoString?: string): string => {
+  if (!isoString) return ''
+
   const date = new Date(isoString)
   const year = date.getFullYear()
   const month = (date.getMonth() + 1).toString().padStart(2, '0')
@@ -12,7 +14,9 @@ export const formatDate = (isoString: string): string => {
 /**
  * ISO 8601 형식의 날짜 문자열을 'HH:mm' 형식으로 변환합니다.
  */
-export const formatTimestamp = (isoString: string): string => {
+export const formatTimestamp = (isoString?: string): string => {
+  if (!isoString) return ''
+
   const date = new Date(isoString)
   const hours = date.getHours().toString().padStart(2, '0')
   const minutes = date.getMinutes().toString().padStart(2, '0')

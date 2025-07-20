@@ -4,6 +4,7 @@ import { DateDivider } from '@/features/chat/components/date-divider'
 import { useChatting } from '@/features/chat/context/chatting-context'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import React from 'react'
 import { z } from 'zod'
@@ -23,7 +24,7 @@ export const Route = createFileRoute('/chat/')({
 })
 
 function RouteComponent() {
-  const { data } = useChatting()
+  const { chatData } = useChatting()
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const { exitButton, chattingModal } = useChatting()
@@ -42,17 +43,17 @@ function RouteComponent() {
         </div>
 
         <div className="space-y-5 px-5 py-6">
-          {data.chat.map((chat, index) => {
-            const previousTimestamp = index > 0 ? chat[index - 1]?.timestamp : undefined
+          {chatData?.map((chat, index) => {
+            const previousTimestamp = index > 0 ? chatData[index - 1]?.createdAt : undefined
 
             return (
-              <React.Fragment key={chat.id}>
-                <DateDivider currentTimestamp={chat.timestamp} previousTimestamp={previousTimestamp} />
+              <React.Fragment key={chat.messageId}>
+                <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
 
-                {chat.sendType === 'ai' ? (
-                  <AiChatBubble message={chat.message} timestamp={formatTimestamp(chat.timestamp)} />
+                {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
+                  <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
                 ) : (
-                  <MyChatBubble message={chat.message} timestamp={formatTimestamp(chat.timestamp)} />
+                  <MyChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
                 )}
               </React.Fragment>
             )
@@ -61,7 +62,6 @@ function RouteComponent() {
       </section>
 
       <ChatInput disabled={chatId !== undefined} />
-
       {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </div>
   )

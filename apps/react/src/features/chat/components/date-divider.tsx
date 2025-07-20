@@ -1,11 +1,12 @@
 import { formatDate } from '../util/chat-format'
 
 interface DateDividerProps {
-  currentTimestamp: string
+  currentTimestamp?: string
   previousTimestamp?: string
 }
 
 export function DateDivider({ currentTimestamp, previousTimestamp }: DateDividerProps) {
+  if (!currentTimestamp) return null
   if (!previousTimestamp) {
     return (
       <div className="mx-auto w-fit rounded-[30px] bg-gray-100 px-[14px] py-[6px]">

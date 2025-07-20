@@ -3,13 +3,13 @@ import { useMemo } from 'react'
 import { groupSentences } from '../util/chat-format'
 
 interface AiChatBubbleProps {
-  message: string
+  message?: string
   timestamp: string
   senderName?: string
 }
 
 export function AiChatBubble(props: AiChatBubbleProps) {
-  const { message, senderName = '모모', timestamp } = props
+  const { message = '', senderName = '모모', timestamp } = props
 
   const messageGroups = useMemo(() => groupSentences(message, 3), [message])
 
@@ -36,11 +36,11 @@ export function AiChatBubble(props: AiChatBubbleProps) {
 }
 
 interface MyChatBubbleProps {
-  message: string
+  message?: string
   timestamp: string
 }
 
-export function MyChatBubble({ message, timestamp }: MyChatBubbleProps) {
+export function MyChatBubble({ message = '', timestamp }: MyChatBubbleProps) {
   return (
     <div className="flex w-full justify-end">
       <div className="flex items-end gap-2">
