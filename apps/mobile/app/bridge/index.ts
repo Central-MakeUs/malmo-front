@@ -79,6 +79,15 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
     async changeStatusBarColor(color: string): Promise<void> {
       set({ statusBarColor: color })
     },
+
+    async saveChatTutorialSeen(): Promise<void> {
+      await AuthStorage.setChatTutorialSeen(true)
+    },
+
+    async getChatTutorialSeen(): Promise<boolean> {
+      const seen = await AuthStorage.getChatTutorialSeen()
+      return seen
+    },
   }
 
   return {

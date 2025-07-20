@@ -16,7 +16,7 @@ export function useChattingModal(): UseChattingModalReturn {
   const alertDialog = useAlertDialog()
   const router = useRouter()
 
-  const [showChattingTutorial, setShowChattingTutorial] = useState(true)
+  const [showChattingTutorial, setShowChattingTutorial] = useState(false)
 
   const testRequiredModal = () => {
     alertDialog.open({
@@ -61,10 +61,18 @@ export function useChattingModal(): UseChattingModalReturn {
   }
 
   useEffect(() => {
-    if (showChattingTutorial) {
+    const fetchTutorialSeen = async () => {
+      const seen = await bridge.getChatTutorialSeen()
+      if (seen) {
+        setShowChattingTutorial(false)
+        return
+      }
+
+      setShowChattingTutorial(true)
       bridge.toggleOverlay?.(2)
     }
-  }, [showChattingTutorial])
+    fetchTutorialSeen()
+  }, [])
 
   const chattingTutorialModal = () => {
     const highlightedText = 'body2-medium text-malmo-rasberry-400'
@@ -120,6 +128,7 @@ export function useChattingModal(): UseChattingModalReturn {
           <Button
             text={'다시 보지 않기'}
             onClick={() => {
+              bridge.saveChatTutorialSeen?.()
               setShowChattingTutorial(false)
               bridge.toggleOverlay?.(0)
             }}

@@ -26,4 +26,6 @@ export interface BridgeActions {
   notifyTokenExpired(): Promise<{ accessToken: string | null }>
   toggleOverlay(level: 0 | 1 | 2): Promise<void>
   changeStatusBarColor(color: string): Promise<void>
+  saveChatTutorialSeen(): Promise<void>
+  getChatTutorialSeen(): Promise<boolean>
 }

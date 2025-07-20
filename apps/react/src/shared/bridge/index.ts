@@ -14,6 +14,8 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   notifyTokenExpired(): Promise<{ accessToken: string | null }>
   toggleOverlay(level?: number): Promise<void>
   changeStatusBarColor(color?: string): Promise<void>
+  saveChatTutorialSeen(): Promise<void>
+  getChatTutorialSeen(): Promise<boolean>
   [key: string]: any
 }
 
@@ -30,6 +32,8 @@ export const bridge = linkBridge<WebBridge>({
     notifyTokenExpired: async () => ({ accessToken: null }),
     toggleOverlay: async (level?: number) => {},
     changeStatusBarColor: async (color?: string) => {},
+    saveChatTutorialSeen: async () => {},
+    getChatTutorialSeen: async () => false,
   },
 })
 
