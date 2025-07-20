@@ -1,10 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 import { Button, HeaderNavigation } from '@/shared/ui'
 import {
   useAttachmentQuestions,
   QuestionProgress,
   QuestionList,
   SubmissionLoading,
+  AttachmentTestGuide,
   QUESTION_CONFIG,
 } from '@/features/attachment'
 
@@ -13,6 +15,8 @@ export const Route = createFileRoute('/attachment-test/question/')({
 })
 
 function AttachmentTestQuestionPage() {
+  const [isGuideOpen, setIsGuideOpen] = useState(true)
+
   const {
     loading,
     error,
@@ -68,6 +72,9 @@ function AttachmentTestQuestionPage() {
           disabled={loading || !isCurrentPageComplete}
         />
       </div>
+
+      {/* 애착유형 검사 가이드 바텀 시트 */}
+      <AttachmentTestGuide isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
     </div>
   )
 }

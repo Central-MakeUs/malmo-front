@@ -1,5 +1,6 @@
 // 타입과 상수
 export * from './models/types'
+export * from './models/attachment-types'
 export * from './models/attachment-data'
 export * from './models/constants'
 
@@ -11,6 +12,7 @@ export * from './hooks/use-attachment-result'
 export * from './ui/info-box'
 export * from './ui/section-header'
 export * from './ui/attachment-type-tag'
+export * from './ui/attachment-test-guide'
 
 // 질문 관련 컴포넌트
 export * from './ui/question/question-progress'
