@@ -35,7 +35,6 @@ function RouteComponent() {
         title={chatId?.toString()}
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
-      {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
 
       <section className="flex-1 overflow-y-auto">
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
@@ -62,6 +61,8 @@ function RouteComponent() {
       </section>
 
       <ChatInput disabled={chatId !== undefined} />
+
+      {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </div>
   )
 }

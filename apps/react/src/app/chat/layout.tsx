@@ -1,6 +1,4 @@
 import { ChattingProvider, useChatting } from '@/features/chat/context/chatting-context'
-import { useChattingModal } from '@/features/chat/hook/use-chatting-modal'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
 
@@ -12,7 +10,7 @@ function ChatLayout() {
   const { chattingModal } = useChatting()
 
   return (
-    <div className={cn('flex h-screen flex-col', { 'mt-3': chattingModal.showChattingTutorial })}>
+    <div className={cn('flex h-screen flex-col', { 'pt-3': chattingModal.showChattingTutorial })}>
       <Outlet />
     </div>
   )

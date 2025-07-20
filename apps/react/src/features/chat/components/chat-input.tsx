@@ -1,10 +1,12 @@
-import { ArrowUp, PlusCircle, Send } from 'lucide-react'
+import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
+import { useChatting } from '../context/chatting-context'
 
 function ChatInput({ disabled = false }: { disabled?: boolean }) {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
+  const { chattingModal } = useChatting()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -66,7 +68,7 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
           )}
         >
           <textarea
-            autoFocus
+            autoFocus={chattingModal.showChattingTutorial}
             disabled={disabled}
             ref={textareaRef}
             value={text}
