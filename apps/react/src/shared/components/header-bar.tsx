@@ -6,9 +6,10 @@ interface DetailHeaderBarProps {
   title?: string
   right?: ReactNode
   onBackClick?: () => void
+  showBackButton?: boolean // 뒤로가기 버튼 표시 여부
 }
 
-export function DetailHeaderBar({ title, right, onBackClick }: DetailHeaderBarProps) {
+export function DetailHeaderBar({ title, right, onBackClick, showBackButton = true }: DetailHeaderBarProps) {
   const router = useRouter()
 
   const handleBackClick = () => {
@@ -22,9 +23,13 @@ export function DetailHeaderBar({ title, right, onBackClick }: DetailHeaderBarPr
   return (
     <header className="relative flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white pr-5 pl-3">
       {/* Left Area */}
-      <button type="button" onClick={handleBackClick} className="z-10 p-1">
-        <LucideChevronLeft className="h-[28px] w-[28px]" />
-      </button>
+      <div className="z-10 flex h-[30px] w-[30px] items-center justify-center">
+        {showBackButton && (
+          <button type="button" onClick={handleBackClick} className="p-1">
+            <LucideChevronLeft className="h-[28px] w-[28px]" />
+          </button>
+        )}
+      </div>
 
       {/* Title Area */}
       {title && (

@@ -49,6 +49,22 @@
   --color-malmo-rasberry-800: var(--malmo-rasberry-800);
   --color-malmo-rasberry-900: var(--malmo-rasberry-900);
 
+  /* Malmo Orange */
+  --color-malmo-orange-50: var(--malmo-orange-50);
+  --color-malmo-orange-100: var(--malmo-orange-100);
+  --color-malmo-orange-200: var(--malmo-orange-200);
+  --color-malmo-orange-300: var(--malmo-orange-300);
+  --color-malmo-orange-400: var(--malmo-orange-400);
+  --color-malmo-orange-500: var(--malmo-orange-500);
+
+  /* Malmo Purple */
+  --color-malmo-purple-50: var(--malmo-purple-50);
+  --color-malmo-purple-100: var(--malmo-purple-100);
+  --color-malmo-purple-200: var(--malmo-purple-200);
+  --color-malmo-purple-300: var(--malmo-purple-300);
+  --color-malmo-purple-400: var(--malmo-purple-400);
+  --color-malmo-purple-500: var(--malmo-purple-500);
+
   --color-background: var(--color-white);
   --color-foreground: var(--color-black);
   --color-card: var(--color-white);

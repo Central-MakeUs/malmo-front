@@ -19,33 +19,31 @@
  */
 export interface GetLoveTypeData {
   /**
-   * 애착 유형 ID
+   * 사용자 불안형 점수
    * @type {number}
    * @memberof GetLoveTypeData
    */
-  loveTypeId?: number
+  memberAnxietyScore?: number
   /**
-   * 애착 유형
+   * 사용자 회피형 점수
+   * @type {number}
+   * @memberof GetLoveTypeData
+   */
+  memberAvoidanceScore?: number
+  /**
+   * 사용자 애착유형
    * @type {string}
    * @memberof GetLoveTypeData
    */
-  title?: string
-  /**
-   * 애착유형 요약
-   * @type {string}
-   * @memberof GetLoveTypeData
-   */
-  summary?: string
-  /**
-   * 애착유형 설명
-   * @type {string}
-   * @memberof GetLoveTypeData
-   */
-  content?: string
-  /**
-   * 이미지 URL
-   * @type {string}
-   * @memberof GetLoveTypeData
-   */
-  imageUrl?: string
+  loveTypeCategory?: GetLoveTypeDataLoveTypeCategoryEnum
 }
+
+export const GetLoveTypeDataLoveTypeCategoryEnum = {
+  StableType: 'STABLE_TYPE',
+  AnxietyType: 'ANXIETY_TYPE',
+  AvoidanceType: 'AVOIDANCE_TYPE',
+  ConfusionType: 'CONFUSION_TYPE',
+} as const
+
+export type GetLoveTypeDataLoveTypeCategoryEnum =
+  (typeof GetLoveTypeDataLoveTypeCategoryEnum)[keyof typeof GetLoveTypeDataLoveTypeCategoryEnum]
