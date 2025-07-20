@@ -42,7 +42,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         종료하기
       </p>
     )
-  }, [])
+  }, [chatData])
 
   return (
     <ChattingContext.Provider

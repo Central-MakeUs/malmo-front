@@ -35,35 +35,29 @@ export default function App() {
       {OverlayComponent}
 
       <SafeAreaView style={[styles.safeArea]}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardAvoidingView}
-        >
-          <View style={styles.webviewContainer}>
-            <WebView
-              bounces={false}
-              ref={webviewRef}
-              source={{ uri: webviewUrl }}
-              style={styles.webview}
-              domStorageEnabled={true}
-              javaScriptEnabled={true}
-              allowsFullscreenVideo={true}
-              allowsInlineMediaPlayback={true}
-              mediaPlaybackRequiresUserAction={false}
-              originWhitelist={['*']}
-              mixedContentMode="compatibility"
-              onLoadEnd={handleLoadEnd}
-              onError={(syntheticEvent) => {
-                const { nativeEvent } = syntheticEvent
-                console.error('WebView error: ', nativeEvent)
-              }}
-              onHttpError={(syntheticEvent) => {
-                const { nativeEvent } = syntheticEvent
-                console.error('WebView HTTP error: ', nativeEvent)
-              }}
-            />
-          </View>
-        </KeyboardAvoidingView>
+        <WebView
+          ref={webviewRef}
+          source={{ uri: webviewUrl }}
+          style={styles.webview}
+          bounces={false}
+          domStorageEnabled
+          javaScriptEnabled
+          allowsFullscreenVideo
+          allowsInlineMediaPlayback
+          mediaPlaybackRequiresUserAction={false}
+          originWhitelist={['*']}
+          mixedContentMode="compatibility"
+          onLoadEnd={handleLoadEnd}
+          onError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent
+            console.error('WebView error: ', nativeEvent)
+          }}
+          onHttpError={(syntheticEvent) => {
+            const { nativeEvent } = syntheticEvent
+            console.error('WebView HTTP error: ', nativeEvent)
+          }}
+        />
+        <KeyboardAvoidingView behavior={'height'} />
       </SafeAreaView>
     </View>
   )
@@ -77,12 +71,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     zIndex: 2,
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  webviewContainer: {
-    flex: 1,
   },
   webview: {
     flex: 1,
