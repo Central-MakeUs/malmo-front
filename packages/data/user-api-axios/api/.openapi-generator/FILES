@@ -58,7 +58,6 @@ models/question-list-success-response.ts
 models/question-success-response.ts
 models/refresh-request-dto.ts
 models/refresh-token-success-response.ts
-models/register-love-type-data.ts
 models/register-love-type-request-dto.ts
 models/register-love-type-success-response.ts
 models/sign-up-data.ts

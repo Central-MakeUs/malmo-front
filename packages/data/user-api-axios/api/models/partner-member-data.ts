@@ -25,17 +25,11 @@ export interface PartnerMemberData {
    */
   memberState?: PartnerMemberDataMemberStateEnum
   /**
-   * 애착 유형 ID
-   * @type {number}
-   * @memberof PartnerMemberData
-   */
-  loveTypeId?: number
-  /**
-   * 애착 유형 제목
+   * 애착 유형
    * @type {string}
    * @memberof PartnerMemberData
    */
-  loveTypeTitle?: string
+  loveTypeCategory?: PartnerMemberDataLoveTypeCategoryEnum
   /**
    * 회피 비율
    * @type {number}
@@ -64,3 +58,12 @@ export const PartnerMemberDataMemberStateEnum = {
 
 export type PartnerMemberDataMemberStateEnum =
   (typeof PartnerMemberDataMemberStateEnum)[keyof typeof PartnerMemberDataMemberStateEnum]
+export const PartnerMemberDataLoveTypeCategoryEnum = {
+  StableType: 'STABLE_TYPE',
+  AnxietyType: 'ANXIETY_TYPE',
+  AvoidanceType: 'AVOIDANCE_TYPE',
+  ConfusionType: 'CONFUSION_TYPE',
+} as const
+
+export type PartnerMemberDataLoveTypeCategoryEnum =
+  (typeof PartnerMemberDataLoveTypeCategoryEnum)[keyof typeof PartnerMemberDataLoveTypeCategoryEnum]
