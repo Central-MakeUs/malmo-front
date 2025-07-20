@@ -31,7 +31,7 @@ function RouteComponent() {
   return (
     <div className="flex h-full flex-col">
       <DetailHeaderBar
-        right={exitButton()}
+        right={chatId ? undefined : exitButton()}
         title={chatId?.toString()}
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
