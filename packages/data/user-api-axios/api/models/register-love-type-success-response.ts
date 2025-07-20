@@ -12,10 +12,6 @@
  * Do not edit the class manually.
  */
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { RegisterLoveTypeData } from './register-love-type-data'
-
 /**
  * 애착유형 등록 성공 응답
  * @export
@@ -41,9 +37,9 @@ export interface RegisterLoveTypeSuccessResponse {
    */
   message?: string
   /**
-   *
-   * @type {RegisterLoveTypeData}
+   * 응답 데이터
+   * @type {object}
    * @memberof RegisterLoveTypeSuccessResponse
    */
-  data?: RegisterLoveTypeData
+  data?: object
 }

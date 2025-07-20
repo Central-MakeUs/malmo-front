@@ -1,6 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Button, HeaderNavigation } from '@/shared/ui'
-import { useAttachmentQuestions, QuestionProgress, QuestionList, QUESTION_CONFIG } from '@/features/attachment'
+import {
+  useAttachmentQuestions,
+  QuestionProgress,
+  QuestionList,
+  SubmissionLoading,
+  QUESTION_CONFIG,
+} from '@/features/attachment'
 
 export const Route = createFileRoute('/attachment-test/question/')({
   component: AttachmentTestQuestionPage,
@@ -24,7 +30,7 @@ function AttachmentTestQuestionPage() {
 
   // 로딩 페이지 렌더링
   if (isSubmitting) {
-    // TODO: 로딩 관리 필요
+    return <SubmissionLoading />
   }
 
   return (
