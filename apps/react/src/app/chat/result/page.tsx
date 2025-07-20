@@ -1,5 +1,5 @@
 import { DetailHeaderBar } from '@/shared/components/header-bar'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 import { useChatResult } from '@/features/chat-result/hooks/use-chat-result'
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
@@ -13,6 +13,7 @@ export const Route = createFileRoute('/chat/result/')({
 
 function RouteComponent() {
   const chatResult = useChatResult()
+  const navigate = useNavigate()
 
   useEffect(() => {
     bridge.changeStatusBarColor('#FDEDF0')
@@ -39,7 +40,11 @@ function RouteComponent() {
         />
 
         <div className="flex flex-col gap-7 rounded-t-[24px] bg-white px-5 py-10">
-          <ChatResultMainInfo date={chatResult.date} subject={chatResult.subject} onViewChat={() => {}} />
+          <ChatResultMainInfo
+            date={chatResult.date}
+            subject={chatResult.subject}
+            onViewChat={() => navigate({ to: '/chat', search: { chatId: chatResult.chatId } })}
+          />
 
           <hr className="border-gray-100" />
 

@@ -25,7 +25,7 @@ export function DetailHeaderBar({ title, right, onBackClick, allowBack = true, c
   return (
     <header
       className={cn(
-        'relative flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white py-[13px] pr-5 pl-3',
+        'relative flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white py-[14px] pr-5 pl-3',
         className
       )}
     >
@@ -39,9 +39,7 @@ export function DetailHeaderBar({ title, right, onBackClick, allowBack = true, c
       )}
 
       {/* Title Area */}
-      {title && (
-        <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold">{title}</h1>
-      )}
+      {title && <h1 className="body2-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{title}</h1>}
 
       {/* Right Area */}
       <div className="z-10">{right}</div>

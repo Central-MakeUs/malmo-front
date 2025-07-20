@@ -1,6 +1,7 @@
 import { useState } from 'react'
 
 export interface ChatResultData {
+  chatId: number
   date: string
   subject: string
   summary: string
@@ -9,6 +10,7 @@ export interface ChatResultData {
 }
 
 const DUMMY_CHAT_RESULT: ChatResultData = {
+  chatId: 12345,
   date: '2025년 7월 3일',
   subject: '회피형 남자친구의 연락두절 문제',
   summary:

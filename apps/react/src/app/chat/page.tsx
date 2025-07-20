@@ -2,23 +2,39 @@ import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubb
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
 import { useChatting } from '@/features/chat/context/chatting-context'
-import { useChattingModal } from '@/features/chat/hook/use-chatting-modal'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import React from 'react'
+import { z } from 'zod'
+
+const searchSchema = z.object({
+  chatId: z.number().optional(),
+})
 
 export const Route = createFileRoute('/chat/')({
   component: RouteComponent,
+  validateSearch: searchSchema,
+  loaderDeps: (search) => search,
+  loader: async ({ context, deps }) => {
+    const { chatId } = deps.search
+    return { chatId }
+  },
 })
 
 function RouteComponent() {
   const { data } = useChatting()
+  const { chatId } = Route.useLoaderData()
+  const router = useRouter()
   const { exitButton, chattingModal } = useChatting()
 
   return (
     <div className="flex h-full flex-col">
-      <DetailHeaderBar right={exitButton()} onBackClick={() => chattingModal.exitChattingModal()} />
+      <DetailHeaderBar
+        right={exitButton()}
+        title={chatId?.toString()}
+        onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
+      />
       {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
 
       <section className="flex-1 overflow-y-auto">
@@ -45,7 +61,7 @@ function RouteComponent() {
         </div>
       </section>
 
-      <ChatInput />
+      <ChatInput disabled={chatId !== undefined} />
     </div>
   )
 }

@@ -2,7 +2,7 @@ import { ArrowUp, PlusCircle, Send } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
 
-function ChatInput() {
+function ChatInput({ disabled = false }: { disabled?: boolean }) {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -66,6 +66,8 @@ function ChatInput() {
           )}
         >
           <textarea
+            autoFocus
+            disabled={disabled}
             ref={textareaRef}
             value={text}
             onChange={handleTextChange}
@@ -73,7 +75,7 @@ function ChatInput() {
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
             className="body2-regular placeholder:body2-regular flex-1 resize-none border-none bg-transparent py-[3px] pr-11 outline-none"
-            placeholder="메시지를 입력해주세요"
+            placeholder={disabled ? '대화가 불가능해요' : '메시지를 입력해주세요'}
             rows={1}
           />
 
@@ -83,7 +85,7 @@ function ChatInput() {
             className={cn('absolute right-[10px] rounded-full bg-malmo-rasberry-50 p-1 text-malmo-rasberry-500', {
               'cursor-not-allowed bg-malmo-rasberry-25 text-malmo-rasberry-100': !text.trim(),
             })}
-            disabled={!text.trim()}
+            disabled={!text.trim() || disabled}
           >
             <ArrowUp size={20} />
           </button>
