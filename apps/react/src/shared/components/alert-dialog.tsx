@@ -3,7 +3,6 @@
 import * as React from 'react'
 import * as AlertDialogPrimitive from '@radix-ui/react-alert-dialog'
 
-import { buttonVariants } from '@ui/common/components/button'
 import { cn } from '@ui/common/lib/utils'
 
 function AlertDialog({ ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
@@ -17,35 +16,24 @@ function AlertDialogTrigger({ ...props }: React.ComponentProps<typeof AlertDialo
 function AlertDialogPortal({ ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Portal>) {
   return <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />
 }
-type Props = React.ComponentProps<typeof AlertDialogPrimitive.Overlay> & {
-  alpha?: number
-}
 
-function AlertDialogOverlay({ alpha, className, ...props }: Props) {
+function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
   return (
     <AlertDialogPrimitive.Overlay
-      className={cn(
-        'fixed inset-0 z-50 bg-black transition-opacity data-[state=closed]:opacity-0 data-[state=closed]:duration-[100ms] data-[state=closed]:ease-in data-[state=open]:duration-[150ms] data-[state=open]:ease-out',
-        { 'opacity-40': alpha === 0.4, 'opacity-80': alpha === 0.8 },
-        className
-      )}
+      className={cn('fixed inset-0 z-50 bg-black/40', 'transition-opacity duration-150', className)}
       {...props}
     />
   )
 }
 
-function AlertDialogContent({
-  className,
-  alpha,
-  ...props
-}: React.ComponentProps<typeof AlertDialogPrimitive.Content> & { alpha?: number }) {
+function AlertDialogContent({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
   return (
     <AlertDialogPortal>
-      <AlertDialogOverlay alpha={alpha} />
+      <AlertDialogOverlay />
       <AlertDialogPrimitive.Content
         data-slot="alert-dialog-content"
         className={cn(
-          'fixed top-[50%] left-[50%] z-50 w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] rounded-[14px] bg-background px-[22px] pt-9 pb-5 shadow-lg duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95',
+          'fixed top-[50%] left-[50%] z-50 w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] rounded-[14px] bg-background px-[22px] pt-9 pb-5 shadow-lg',
           className
         )}
         {...props}
@@ -100,12 +88,6 @@ function AlertDialogAction({ className, ...props }: React.ComponentProps<typeof 
   )
 }
 
-function AlertDialogDestructive({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Action>) {
-  return (
-    <AlertDialogPrimitive.Action className={cn(buttonVariants({ variant: 'destructive' }), className)} {...props} />
-  )
-}
-
 function AlertDialogCancel({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>) {
   return (
     <AlertDialogPrimitive.Cancel
@@ -126,6 +108,5 @@ export {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogAction,
-  AlertDialogDestructive,
   AlertDialogCancel,
 }

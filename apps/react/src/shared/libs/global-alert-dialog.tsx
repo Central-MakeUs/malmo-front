@@ -7,7 +7,6 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogDestructive,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -20,7 +19,6 @@ type AlertDialogOpenOptions = {
   description: string | React.ReactNode
   cancelText?: string
   confirmText?: string
-  destructive?: boolean
   onConfirm?: () => void
   onCancel?: () => void
   overlayLevel?: 1 | 2
@@ -32,8 +30,6 @@ interface AlertDialogContextType {
   description: string | React.ReactNode
   cancelText?: string
   confirmText: string
-  destructive?: boolean
-  overlayLevel?: 1 | 2
   onConfirm?: () => void | Promise<void>
   onCancel?: () => void | Promise<void>
   open: (options: AlertDialogOpenOptions) => void
@@ -54,8 +50,8 @@ export function AlertDialogProvider({
 
   const open = (options: AlertDialogOpenOptions) => {
     bridge.toggleOverlay?.(options.overlayLevel ?? 1)
-    setState({ ...options })
     setOpenAlertDialog(true)
+    setState({ ...options })
   }
 
   const close = () => {
@@ -72,7 +68,6 @@ export function AlertDialogProvider({
         cancelText,
         confirmText: confirmText ?? defaultConfirmText,
         openAlertDialog,
-        overlayLevel: 1,
         open,
         close,
       }}
@@ -84,57 +79,18 @@ export function AlertDialogProvider({
 }
 
 export function GlobalAlertDialog() {
-  const {
-    openAlertDialog,
-    title,
-    description,
-    cancelText,
-    destructive,
-    confirmText,
-    onConfirm,
-    onCancel,
-    close,
-    overlayLevel,
-  } = useAlertDialog()
+  const { openAlertDialog, title, description, cancelText, confirmText, onConfirm, onCancel, close } = useAlertDialog()
 
   return (
     <AlertDialog open={openAlertDialog} onOpenChange={close}>
-      <AlertDialogContent alpha={overlayLevel === 1 ? 0.4 : 0.8}>
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          {cancelText && (
-            <AlertDialogCancel
-              onClick={() => {
-                onCancel?.()
-                close()
-              }}
-            >
-              {cancelText}
-            </AlertDialogCancel>
-          )}
-          {destructive && (
-            <AlertDialogDestructive
-              onClick={() => {
-                onConfirm?.()
-                close()
-              }}
-            >
-              {confirmText}
-            </AlertDialogDestructive>
-          )}
-          {!destructive && (
-            <AlertDialogAction
-              onClick={() => {
-                onConfirm?.()
-                close()
-              }}
-            >
-              {confirmText}
-            </AlertDialogAction>
-          )}
+          {cancelText && <AlertDialogCancel onClick={() => onCancel?.()}>{cancelText}</AlertDialogCancel>}
+          <AlertDialogAction onClick={() => onConfirm?.()}>{confirmText}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
