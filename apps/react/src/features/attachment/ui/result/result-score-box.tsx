@@ -24,7 +24,7 @@ export function ResultScoreBox({ loveTypeData }: ResultScoreBoxProps) {
       </div>
 
       {/* 구분선 */}
-      <div className="h-[38px] w-[1px] bg-gray-iron-300" />
+      <hr className="h-[38px] w-[1px] border-0 bg-gray-iron-300" />
 
       {/* 회피 점수 */}
       <div className="flex flex-1 items-center justify-between">

@@ -50,7 +50,7 @@ function AttachmentTestQuestionPage() {
       />
 
       {/* 구분선 */}
-      <div className="mt-[40px] mb-[16px] h-[1px] w-full bg-gray-iron-200"></div>
+      <hr className="mx-[20px] mt-[40px] mb-[16px] h-[1px] border-0 bg-gray-iron-200" />
 
       {/* 질문 목록 */}
       <div className="flex-1 overflow-y-auto">
