@@ -12,14 +12,16 @@
  * Do not edit the class manually.
  */
 
-export * from './apis/chatroom-api'
-export * from './apis/couples-api'
-export * from './apis/logins-api'
-export * from './apis/love-types-api'
-export * from './apis/members-api'
-export * from './apis/questions-api'
-export * from './apis/refresh-api'
-export * from './apis/sseconnection-apiapi'
-export * from './apis/sign-ups-api'
-export * from './apis/temrs-api'
-export * from './apis/test-api'
+/**
+ *
+ * @export
+ * @interface ChatRequest
+ */
+export interface ChatRequest {
+  /**
+   *
+   * @type {string}
+   * @memberof ChatRequest
+   */
+  message: string
+}

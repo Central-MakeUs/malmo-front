@@ -13,15 +13,15 @@
  */
 
 /**
- * 회원가입 응답 데이터
+ * 채팅 완료 응답 데이터
  * @export
- * @interface SignUpData
+ * @interface CompleteChatRoomData
  */
-export interface SignUpData {
+export interface CompleteChatRoomData {
   /**
-   * 생성된 커플 코드
-   * @type {string}
-   * @memberof SignUpData
+   * 채팅방의 ID
+   * @type {number}
+   * @memberof CompleteChatRoomData
    */
-  coupleCode?: string
+  chatRoomId?: number
 }

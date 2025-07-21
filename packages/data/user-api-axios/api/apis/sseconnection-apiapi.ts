@@ -32,7 +32,7 @@ import {
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base'
 // @ts-ignore
-import type { SseEmitter } from '../models'
+import type { SwaggerErrorResponse } from '../models'
 /**
  * SSEConnectionAPIApi - axios parameter creator
  * @export
@@ -89,7 +89,7 @@ export const SSEConnectionAPIApiFp = function (configuration?: Configuration) {
      */
     async connectSse(
       options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SseEmitter>> {
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
       const localVarAxiosArgs = await localVarAxiosParamCreator.connectSse(options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
@@ -122,7 +122,7 @@ export const SSEConnectionAPIApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    connectSse(options?: RawAxiosRequestConfig): AxiosPromise<SseEmitter> {
+    connectSse(options?: RawAxiosRequestConfig): AxiosPromise<void> {
       return localVarFp.connectSse(options).then((request) => request(axios, basePath))
     },
   }

@@ -122,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const initAuth = async () => {
       try {
         const result = await authClient.getAuth()
+        console.log('Auth status:', result)
         if (result && 'authenticated' in result) {
           setAuthenticated(result.authenticated)
           // 인증 상태 확인 후 사용자 정보 조회

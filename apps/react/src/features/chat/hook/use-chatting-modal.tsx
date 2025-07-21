@@ -18,6 +18,20 @@ export function useChattingModal(): UseChattingModalReturn {
 
   const [showChattingTutorial, setShowChattingTutorial] = useState(false)
 
+  useEffect(() => {
+    const fetchTutorialSeen = async () => {
+      const seen = await bridge.getChatTutorialSeen()
+      if (seen) {
+        setShowChattingTutorial(false)
+        return
+      }
+
+      setShowChattingTutorial(true)
+      bridge.toggleOverlay?.(2)
+    }
+    fetchTutorialSeen()
+  }, [])
+
   const testRequiredModal = () => {
     alertDialog.open({
       title: (
@@ -59,20 +73,6 @@ export function useChattingModal(): UseChattingModalReturn {
       },
     })
   }
-
-  useEffect(() => {
-    const fetchTutorialSeen = async () => {
-      const seen = await bridge.getChatTutorialSeen()
-      if (seen) {
-        setShowChattingTutorial(false)
-        return
-      }
-
-      setShowChattingTutorial(true)
-      bridge.toggleOverlay?.(2)
-    }
-    fetchTutorialSeen()
-  }, [])
 
   const chattingTutorialModal = () => {
     const highlightedText = 'body2-medium text-malmo-rasberry-400'

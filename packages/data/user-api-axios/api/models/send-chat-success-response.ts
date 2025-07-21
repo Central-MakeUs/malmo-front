@@ -12,34 +12,38 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { SendChatData } from './send-chat-data'
+
 /**
- * 회원가입 성공 응답
+ * 채팅 전송 성공 응답
  * @export
- * @interface SignUpSuccessResponse
+ * @interface SendChatSuccessResponse
  */
-export interface SignUpSuccessResponse {
+export interface SendChatSuccessResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof SignUpSuccessResponse
+   * @memberof SendChatSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof SignUpSuccessResponse
+   * @memberof SendChatSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof SignUpSuccessResponse
+   * @memberof SendChatSuccessResponse
    */
   message?: string
   /**
-   * 응답 데이터
-   * @type {object}
-   * @memberof SignUpSuccessResponse
+   *
+   * @type {SendChatData}
+   * @memberof SendChatSuccessResponse
    */
-  data?: object
+  data?: SendChatData
 }

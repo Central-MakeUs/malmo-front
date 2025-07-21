@@ -13,33 +13,33 @@
  */
 
 /**
- * 회원가입 성공 응답
+ * 기본 응답 형식
  * @export
- * @interface SignUpSuccessResponse
+ * @interface BaseSwaggerResponse
  */
-export interface SignUpSuccessResponse {
+export interface BaseSwaggerResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof SignUpSuccessResponse
+   * @memberof BaseSwaggerResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof SignUpSuccessResponse
+   * @memberof BaseSwaggerResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof SignUpSuccessResponse
+   * @memberof BaseSwaggerResponse
    */
   message?: string
   /**
    * 응답 데이터
    * @type {object}
-   * @memberof SignUpSuccessResponse
+   * @memberof BaseSwaggerResponse
    */
   data?: object
 }

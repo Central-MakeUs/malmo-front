@@ -12,34 +12,38 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { BaseListSwaggerResponseChatRoomMessageData } from './base-list-swagger-response-chat-room-message-data'
+
 /**
- * 회원가입 성공 응답
+ * 채팅 메시지 리스트 조회 성공 응답
  * @export
- * @interface SignUpSuccessResponse
+ * @interface ChatMessageListSuccessResponse
  */
-export interface SignUpSuccessResponse {
+export interface ChatMessageListSuccessResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof SignUpSuccessResponse
+   * @memberof ChatMessageListSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof SignUpSuccessResponse
+   * @memberof ChatMessageListSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof SignUpSuccessResponse
+   * @memberof ChatMessageListSuccessResponse
    */
   message?: string
   /**
-   * 응답 데이터
-   * @type {object}
-   * @memberof SignUpSuccessResponse
+   *
+   * @type {BaseListSwaggerResponseChatRoomMessageData}
+   * @memberof ChatMessageListSuccessResponse
    */
-  data?: object
+  data?: BaseListSwaggerResponseChatRoomMessageData
 }
