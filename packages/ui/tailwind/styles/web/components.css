@@ -83,11 +83,11 @@
     letter-spacing: -0.02em;
   }
 
-  /* Body 1 - 16px/26px */
+  /* Body 1 - 16px/24px */
   .body1-bold {
     font-family: var(--font-pretendard);
     font-size: 16px;
-    line-height: 26px;
+    line-height: 24px;
     font-weight: var(--font-weight-bold);
     letter-spacing: -0.02em;
   }
@@ -95,7 +95,7 @@
   .body1-semibold {
     font-family: var(--font-pretendard);
     font-size: 16px;
-    line-height: 26px;
+    line-height: 24px;
     font-weight: var(--font-weight-semibold);
     letter-spacing: -0.02em;
   }
@@ -103,7 +103,7 @@
   .body1-regular {
     font-family: var(--font-pretendard);
     font-size: 16px;
-    line-height: 26px;
+    line-height: 24px;
     font-weight: var(--font-weight-regular);
     letter-spacing: -0.02em;
   }
@@ -188,6 +188,13 @@
     font-size: 13px;
     line-height: 20px;
     font-weight: var(--font-weight-medium);
+  }
+
+  .body4-semibold {
+    font-family: var(--font-pretendard);
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: var(--font-weight-semibold);
     letter-spacing: -0.02em;
   }
 
@@ -196,6 +203,14 @@
     font-size: 13px;
     line-height: 20px;
     font-weight: var(--font-weight-regular);
+    letter-spacing: -0.02em;
+  }
+
+  .body4-medium {
+    font-family: var(--font-pretendard);
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: var(--font-weight-medium);
     letter-spacing: -0.02em;
   }
 

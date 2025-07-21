@@ -31,7 +31,7 @@ function RouteComponent() {
 
   return (
     <div className="flex h-full flex-col">
-      <DetailHeaderBar right={exitButton()} allowBack={false} className="bg-malmo-rasberry-25" />
+      <DetailHeaderBar right={exitButton()} showBackButton={false} className="bg-malmo-rasberry-25" />
 
       <div className="bg-malmo-rasberry-25 pt-3">
         <ChatResultHeader

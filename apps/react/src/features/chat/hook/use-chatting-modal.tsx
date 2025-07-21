@@ -107,13 +107,16 @@ export function useChattingModal(): UseChattingModalReturn {
               <p>대화보기</p>
               <ChevronRightIcon />
             </div>
-            <div className="absolute bottom-[-28px] left-[14px] h-[28px] border-l-2 border-dashed border-l-malmo-rasberry-400">
+          </div>
+
+          <div className="relative">
+            <div className="absolute top-[-25px] left-0 h-[24px] border-l-2 border-dashed border-l-malmo-rasberry-400">
               <div className="absolute bottom-0 left-[-5px] h-2 w-2 rounded-full bg-malmo-rasberry-300" />
             </div>
+            <p className="mt-1">
+              2. 종료 후에는 모모와 나눈 <span className={highlightedText}>대화를 요약</span>해서 보여줘요.
+            </p>
           </div>
-          <p>
-            2. 종료 후에는 모모와 나눈 <span className={highlightedText}>대화를 요약</span>해서 보여줘요.
-          </p>
         </div>
 
         <div className="absolute bottom-12 flex w-full gap-2 px-5">

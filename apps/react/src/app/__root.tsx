@@ -29,42 +29,39 @@ function matchRoute(routes: string[], path: string) {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
   beforeLoad: async ({ context, location }) => {
-    const { authenticated, refreshUserInfo } = context.auth
+    const { authenticated, userInfo } = context.auth
     const pathname = location.pathname
 
-    // 인증되지 않은 사용자는 퍼블릭 경로만 접근 가능
-    if (!authenticated && !matchRoute(publicRoutes, pathname)) {
-      return redirect({ to: '/login' })
+    // 1. 비인증 사용자 처리 (가드 클로즈)
+    // 인증되지 않은 경우, 공개된 경로가 아니면 로그인 페이지로 보냅니다.
+    if (!authenticated) {
+      if (!matchRoute(publicRoutes, pathname)) {
+        return redirect({ to: '/login' })
+      }
+      // 공개된 경로라면 아무 작업 없이 통과시킵니다.
+      return
     }
 
-    if (authenticated) {
-      // 최신 사용자 정보 조회
-      const userInfo = await refreshUserInfo()
-      const needsOnboarding = userInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
+    // --- 이하 로직은 모두 '인증된 사용자'만 해당 ---
+    // 2. 사용자 정보 및 현재 경로 상태 정의
+    const needsOnboarding = userInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
+    const isOnOnboardingRoute = matchRoute(onboardingRoutes, pathname)
+    const isOnLoginRoute = pathname === '/login'
+    // 3. 상태에 따른 리다이렉트 규칙 적용
 
-      // 인증된 사용자가 로그인 페이지에 접근하면 멤버 상태에 따라 리다이렉트
-      if (pathname === '/login') {
-        // 온보딩이 필요한 경우
-        if (needsOnboarding) {
-          return redirect({ to: '/onboarding/terms' })
-        } else {
-          // 온보딩이 완료된 경우
-          return redirect({ to: '/' })
-        }
-      }
+    // 규칙 1: 로그인한 사용자가 로그인 페이지에 접근하면 안 됩니다.
+    if (isOnLoginRoute) {
+      return redirect({ to: needsOnboarding ? '/onboarding/terms' : '/' })
+    }
 
-      // 인증된 사용자가 온보딩 경로가 아닌 페이지에 접근할 때 멤버 상태 확인
-      if (!matchRoute(onboardingRoutes, pathname)) {
-        // 온보딩이 필요한 상태인데 온보딩 경로가 아니면 온보딩으로 리다이렉트
-        if (needsOnboarding) {
-          return redirect({ to: '/onboarding/terms' })
-        }
-      }
+    // 규칙 2: 온보딩이 필요한 사용자는 온보딩 페이지만 접근해야 합니다.
+    if (needsOnboarding && !isOnOnboardingRoute) {
+      return redirect({ to: '/onboarding/terms' })
+    }
 
-      // 온보딩 경로에 접근했는데 온보딩이 필요하지 않으면 홈으로 리다이렉트
-      if (matchRoute(onboardingRoutes, pathname) && !needsOnboarding) {
-        return redirect({ to: '/' })
-      }
+    // 규칙 3: 온보딩을 마친 사용자는 온보딩 페이지에 접근하면 안 됩니다.
+    if (!needsOnboarding && isOnOnboardingRoute) {
+      return redirect({ to: '/' })
     }
   },
 })

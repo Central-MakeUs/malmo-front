@@ -51,6 +51,22 @@
     --malmo-rasberry-800: #641D2A;
     --malmo-rasberry-900: #360F17;
 
+    /* Malmo Orange */
+    --malmo-orange-50: #FFEDD5;
+    --malmo-orange-100: #FFE2BB;
+    --malmo-orange-200: #FFD797;
+    --malmo-orange-300: #FFCA7F;
+    --malmo-orange-400: #FFA126;
+    --malmo-orange-500: #FF8400;
+
+    /* Malmo Purple */
+    --malmo-purple-50: #EDE7FF;
+    --malmo-purple-100: #E1D7FF;
+    --malmo-purple-200: #D5CAF5;
+    --malmo-purple-300: #CBBEF4;
+    --malmo-purple-400: #9C81F1;
+    --malmo-purple-500: #7C59EA;
+
     /* Font */
     --font-pretendard: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     

@@ -1,6 +1,13 @@
 import { queryOptions } from '@tanstack/react-query'
 import apiInstance from '../libs/api'
-import { MemberData, MembersApi, UpdateMemberRequestDto, UpdateMemberTermsRequestDto } from '@data/user-api-axios/api'
+import {
+  MemberData,
+  MembersApi,
+  RegisterLoveTypeRequestDto,
+  UpdateMemberRequestDto,
+  UpdateMemberTermsRequestDto,
+  LoveTypeTestResult,
+} from '@data/user-api-axios/api'
 
 export const QUERY_KEY = 'members'
 
@@ -40,6 +47,18 @@ class MemberService extends MembersApi {
 
   async delete() {
     const { data } = await this.deleteMember({})
+    return data
+  }
+
+  async submitLoveTypeTest(results: LoveTypeTestResult[]) {
+    const { data } = await this.registerLoveType({
+      registerLoveTypeRequestDto: { results },
+    })
+    return data
+  }
+
+  async getLoveTypeInfo() {
+    const { data } = await super.getMemberLoveTypeInfo()
     return data
   }
 

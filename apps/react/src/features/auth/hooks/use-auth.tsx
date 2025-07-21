@@ -40,6 +40,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false)
   const [userInfo, setUserInfo] = useState<UserInfo>(initialUserInfo)
 
+  useEffect(() => {
+    refreshUserInfo()
+  }, [])
+
   // 멤버 상태가 온보딩이 필요한지 여부
   const needsOnboarding = userInfo.memberState === MemberDataMemberStateEnum.BeforeOnboarding
 
@@ -49,7 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUserInfo(initialUserInfo)
       return null
     }
-
     try {
       const memberInfo = await memberService.findOne()
 

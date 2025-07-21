@@ -35,17 +35,17 @@ export interface GetChatRoomSummaryData {
    * @type {string}
    * @memberof GetChatRoomSummaryData
    */
-  firstSummary?: string
+  summary?: string
   /**
-   * 채팅방 관계 이해
+   * 애착유형 설명
    * @type {string}
-   * @memberof GetChatRoomSummaryData
+   * @memberof GetLoveTypeData
    */
-  secondSummary?: string
+  content?: string
   /**
-   * 채팅방 해결 제안
+   * 이미지 URL
    * @type {string}
-   * @memberof GetChatRoomSummaryData
+   * @memberof GetLoveTypeData
    */
-  thirdSummary?: string
+  imageUrl?: string
 }
