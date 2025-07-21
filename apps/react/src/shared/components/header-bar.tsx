@@ -6,14 +6,12 @@ import { cn } from '@ui/common/lib/utils'
 interface DetailHeaderBarProps {
   title?: string
   right?: ReactNode
-  allowBack?: boolean
+  showBackButton?: boolean
   onBackClick?: () => void
   className?: string
 }
 
-export function DetailHeaderBar({ title, right, onBackClick, allowBack = true, className }: DetailHeaderBarProps) {
-  showBackButton?: boolean // 뒤로가기 버튼 표시 여부
-}
+export function DetailHeaderBar({ title, right, onBackClick, className, showBackButton = true }: DetailHeaderBarProps) {
   const router = useRouter()
 
   const handleBackClick = () => {
@@ -31,15 +29,6 @@ export function DetailHeaderBar({ title, right, onBackClick, allowBack = true, c
         className
       )}
     >
-      {/* Left Area */}
-      {allowBack ? (
-        <button type="button" onClick={handleBackClick} className="z-10 p-1">
-          <LucideChevronLeft className="h-[28px] w-[28px]" />
-        </button>
-      ) : (
-        <div />
-      )}
-      
       <div className="z-10 flex h-[30px] w-[30px] items-center justify-center">
         {showBackButton && (
           <button type="button" onClick={handleBackClick} className="p-1">
