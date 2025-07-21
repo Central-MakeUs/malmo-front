@@ -1,18 +1,25 @@
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { ChattingProvider, useChatting } from '@/features/chat/context/chatting-context'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { cn } from '@ui/common/lib/utils'
 
 export const Route = createFileRoute('/chat')({
   component: RouteComponent,
 })
 
+function ChatLayout() {
+  const { chattingModal } = useChatting()
+
+  return (
+    <div className={cn('flex h-screen flex-col', { 'pt-3': chattingModal.showChattingTutorial })}>
+      <Outlet />
+    </div>
+  )
+}
+
 function RouteComponent() {
   return (
-    <div className="flex h-screen flex-col">
-      <DetailHeaderBar right={<p className="body2-medium text-malmo-rasberry-500">종료하기</p>} />
-
-      <div className="min-h-0 flex-1">
-        <Outlet />
-      </div>
-    </div>
+    <ChattingProvider>
+      <ChatLayout />
+    </ChattingProvider>
   )
 }

@@ -16,6 +16,7 @@
     "@bridge/types": "workspace:*",
     "@data/user-api-axios": "workspace:*",
     "@hookform/resolvers": "catalog:react",
+    "@radix-ui/react-alert-dialog": "^1.1.14",
     "@tanstack/react-query": "catalog:react",
     "@tanstack/react-router": "catalog:react",
     "@ui/common": "workspace:*",

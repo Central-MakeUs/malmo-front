@@ -14,7 +14,7 @@ module.exports = defineConfig([
       },
     },
     rules: {
-      'import/no-unresolved': ['error', { ignore: ['@bridge/types'] }],
+      'import/no-unresolved': ['error', { ignore: ['@bridge/types', '@/app/bridge'] }],
       'typescript-eslint/no-unsafe-assignment': 'off',
     },
   },

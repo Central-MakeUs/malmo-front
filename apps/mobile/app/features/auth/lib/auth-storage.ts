@@ -4,6 +4,7 @@ export class AuthStorage {
   private static readonly ACCESS_TOKEN_KEY = 'auth_access_token'
   private static readonly REFRESH_TOKEN_KEY = 'auth_refresh_token'
   private static readonly USER_INFO_KEY = 'auth_user_info'
+  private static readonly CHAT_TUTORIAL_KEY = 'chat_tutorial_seen'
 
   // 액세스 토큰 저장
   static async setAccessToken(token: string): Promise<void> {
@@ -83,6 +84,25 @@ export class AuthStorage {
     } catch (error) {
       console.error('인증 정보 삭제 중 오류 발생:', error)
       throw error
+    }
+  }
+
+  static async setChatTutorialSeen(seen: boolean): Promise<void> {
+    try {
+      await SecureStore.setItemAsync(this.CHAT_TUTORIAL_KEY, JSON.stringify(seen))
+    } catch (error) {
+      console.error('채팅 튜토리얼 상태 저장 중 오류 발생:', error)
+      throw error
+    }
+  }
+
+  static async getChatTutorialSeen(): Promise<boolean> {
+    try {
+      const seen = await SecureStore.getItemAsync(this.CHAT_TUTORIAL_KEY)
+      return seen ? JSON.parse(seen) : false
+    } catch (error) {
+      console.error('채팅 튜토리얼 상태 조회 중 오류 발생:', error)
+      return false
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { initializeKakaoSDK } from '@react-native-kakao/core'
 
 export default function RootLayout() {

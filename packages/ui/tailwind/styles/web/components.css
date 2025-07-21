@@ -183,6 +183,13 @@
     letter-spacing: -0.02em;
   }
 
+  .body4-medium {
+    font-family: var(--font-pretendard);
+    font-size: 13px;
+    line-height: 20px;
+    font-weight: var(--font-weight-medium);
+  }
+
   .body4-semibold {
     font-family: var(--font-pretendard);
     font-size: 13px;

@@ -1,15 +1,17 @@
 import type { ReactNode } from 'react'
 import { LucideChevronLeft } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
+import { cn } from '@ui/common/lib/utils'
 
 interface DetailHeaderBarProps {
   title?: string
   right?: ReactNode
+  showBackButton?: boolean
   onBackClick?: () => void
-  showBackButton?: boolean // 뒤로가기 버튼 표시 여부
+  className?: string
 }
 
-export function DetailHeaderBar({ title, right, onBackClick, showBackButton = true }: DetailHeaderBarProps) {
+export function DetailHeaderBar({ title, right, onBackClick, className, showBackButton = true }: DetailHeaderBarProps) {
   const router = useRouter()
 
   const handleBackClick = () => {
@@ -21,8 +23,12 @@ export function DetailHeaderBar({ title, right, onBackClick, showBackButton = tr
   }
 
   return (
-    <header className="relative flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white pr-5 pl-3">
-      {/* Left Area */}
+    <header
+      className={cn(
+        'relative flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white py-[14px] pr-5 pl-3',
+        className
+      )}
+    >
       <div className="z-10 flex h-[30px] w-[30px] items-center justify-center">
         {showBackButton && (
           <button type="button" onClick={handleBackClick} className="p-1">
@@ -32,9 +38,7 @@ export function DetailHeaderBar({ title, right, onBackClick, showBackButton = tr
       </div>
 
       {/* Title Area */}
-      {title && (
-        <h1 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-lg font-semibold">{title}</h1>
-      )}
+      {title && <h1 className="body2-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{title}</h1>}
 
       {/* Right Area */}
       <div className="z-10">{right}</div>

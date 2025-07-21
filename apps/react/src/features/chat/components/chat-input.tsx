@@ -1,10 +1,12 @@
-import { ArrowUp, PlusCircle, Send } from 'lucide-react'
+import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
+import { useChatting } from '../context/chatting-context'
 
-function ChatInput() {
+function ChatInput({ disabled = false }: { disabled?: boolean }) {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
+  const { chattingModal } = useChatting()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -36,7 +38,6 @@ function ChatInput() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (text.trim()) {
-      console.log('Sending message:', text)
       // 실제 전송 로직 구현...
       setText('')
     }
@@ -60,37 +61,36 @@ function ChatInput() {
       )}
 
       <div className="flex w-full items-end gap-2">
-        <PlusCircle className="mb-2 h-6 w-6 flex-shrink-0 cursor-pointer text-gray-400" />
-
         {/* 커스텀 Textarea 컨테이너 */}
         <div
           className={cn(
-            'flex w-full items-end gap-4 rounded-[22px] border border-gray-300 bg-white py-2.5 pr-2.5 pl-3 transition-colors',
-            { 'border-malmo-rasberry-500': isFocused }
+            'relative flex w-full items-end gap-4 rounded-[22px] border border-gray-300 bg-white py-2.5 pr-2.5 pl-3 transition-colors'
           )}
         >
           <textarea
+            autoFocus={chattingModal.showChattingTutorial}
+            disabled={disabled}
             ref={textareaRef}
             value={text}
             onChange={handleTextChange}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
-            className="body2-regular placeholder:body2-regular flex-1 resize-none border-none bg-transparent py-[3px] outline-none"
-            placeholder="메시지를 입력해주세요"
+            className="body2-regular placeholder:body2-regular flex-1 resize-none border-none bg-transparent py-[3px] pr-11 outline-none"
+            placeholder={disabled ? '대화가 불가능해요' : '메시지를 입력해주세요'}
             rows={1}
           />
 
           {/* 텍스트가 있을 때만 전송 버튼을 표시합니다. */}
-          {text.length > 0 && (
-            <button
-              type="submit"
-              className="flex items-center justify-center rounded-full bg-malmo-rasberry-50 p-1 text-malmo-rasberry-500"
-              disabled={!text.trim()}
-            >
-              <ArrowUp size={20} />
-            </button>
-          )}
+          <button
+            type="submit"
+            className={cn('absolute right-[10px] rounded-full bg-malmo-rasberry-50 p-1 text-malmo-rasberry-500', {
+              'cursor-not-allowed bg-malmo-rasberry-25 text-malmo-rasberry-100': !text.trim(),
+            })}
+            disabled={!text.trim() || disabled}
+          >
+            <ArrowUp size={20} />
+          </button>
         </div>
       </div>
     </form>
