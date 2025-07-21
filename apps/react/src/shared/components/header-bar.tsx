@@ -12,6 +12,8 @@ interface DetailHeaderBarProps {
 }
 
 export function DetailHeaderBar({ title, right, onBackClick, allowBack = true, className }: DetailHeaderBarProps) {
+  showBackButton?: boolean // 뒤로가기 버튼 표시 여부
+}
   const router = useRouter()
 
   const handleBackClick = () => {
@@ -37,6 +39,14 @@ export function DetailHeaderBar({ title, right, onBackClick, allowBack = true, c
       ) : (
         <div />
       )}
+      
+      <div className="z-10 flex h-[30px] w-[30px] items-center justify-center">
+        {showBackButton && (
+          <button type="button" onClick={handleBackClick} className="p-1">
+            <LucideChevronLeft className="h-[28px] w-[28px]" />
+          </button>
+        )}
+      </div>
 
       {/* Title Area */}
       {title && <h1 className="body2-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{title}</h1>}

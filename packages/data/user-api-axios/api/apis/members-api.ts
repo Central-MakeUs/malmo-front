@@ -36,6 +36,8 @@ import type { DeleteMemberSuccessResponse } from '../models'
 // @ts-ignore
 import type { GetInviteCodeSuccessResponse } from '../models'
 // @ts-ignore
+import type { GetLoveTypeSuccessResponse } from '../models'
+// @ts-ignore
 import type { MemberInfoSuccessResponse } from '../models'
 // @ts-ignore
 import type { PartnerMemberInfoSuccessResponse } from '../models'
@@ -131,6 +133,70 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
      */
     getMemberInviteCode: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
       const localVarPath = `/members/invite-code`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * 애착 유형 검사의 결과를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 애착 유형 검사 결과 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getMemberLoveTypeInfo: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+      const localVarPath = `/members/love-type`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * 애착 유형 검사의 결과를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 파트너 애착 유형 검사 결과 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPartnerLoveTypeInfo: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+      const localVarPath = `/members/partner/love-type`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -392,6 +458,48 @@ export const MembersApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
+     * 애착 유형 검사의 결과를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 애착 유형 검사 결과 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getMemberLoveTypeInfo(
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetLoveTypeSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getMemberLoveTypeInfo(options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['MembersApi.getMemberLoveTypeInfo']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
+     * 애착 유형 검사의 결과를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 파트너 애착 유형 검사 결과 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getPartnerLoveTypeInfo(
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetLoveTypeSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getPartnerLoveTypeInfo(options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['MembersApi.getPartnerLoveTypeInfo']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
      * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
      * @summary 커플 상대 정보 조회
      * @param {*} [options] Override http request option.
@@ -517,6 +625,24 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
      */
     getMemberInviteCode(options?: RawAxiosRequestConfig): AxiosPromise<GetInviteCodeSuccessResponse> {
       return localVarFp.getMemberInviteCode(options).then((request) => request(axios, basePath))
+    },
+    /**
+     * 애착 유형 검사의 결과를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 애착 유형 검사 결과 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getMemberLoveTypeInfo(options?: RawAxiosRequestConfig): AxiosPromise<GetLoveTypeSuccessResponse> {
+      return localVarFp.getMemberLoveTypeInfo(options).then((request) => request(axios, basePath))
+    },
+    /**
+     * 애착 유형 검사의 결과를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 파트너 애착 유형 검사 결과 조회
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPartnerLoveTypeInfo(options?: RawAxiosRequestConfig): AxiosPromise<GetLoveTypeSuccessResponse> {
+      return localVarFp.getPartnerLoveTypeInfo(options).then((request) => request(axios, basePath))
     },
     /**
      * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
@@ -660,6 +786,32 @@ export class MembersApi extends BaseAPI {
   public getMemberInviteCode(options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
       .getMemberInviteCode(options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * 애착 유형 검사의 결과를 조회합니다. JWT 토큰이 필요합니다.
+   * @summary 애착 유형 검사 결과 조회
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof MembersApi
+   */
+  public getMemberLoveTypeInfo(options?: RawAxiosRequestConfig) {
+    return MembersApiFp(this.configuration)
+      .getMemberLoveTypeInfo(options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * 애착 유형 검사의 결과를 조회합니다. JWT 토큰이 필요합니다.
+   * @summary 파트너 애착 유형 검사 결과 조회
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof MembersApi
+   */
+  public getPartnerLoveTypeInfo(options?: RawAxiosRequestConfig) {
+    return MembersApiFp(this.configuration)
+      .getPartnerLoveTypeInfo(options)
       .then((request) => request(this.axios, this.basePath))
   }
 

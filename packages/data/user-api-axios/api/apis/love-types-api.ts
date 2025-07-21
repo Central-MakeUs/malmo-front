@@ -32,8 +32,6 @@ import {
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base'
 // @ts-ignore
-import type { GetLoveTypeSuccessResponse } from '../models'
-// @ts-ignore
 import type { LoveTypeQuestionSuccessResponse } from '../models'
 // @ts-ignore
 import type { SwaggerErrorResponse } from '../models'
@@ -43,44 +41,6 @@ import type { SwaggerErrorResponse } from '../models'
  */
 export const LoveTypesApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
-    /**
-     * 애착 유형의 내용을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 애착 유형 조회
-     * @param {number} loveTypeId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getLoveType: async (loveTypeId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      // verify required parameter 'loveTypeId' is not null or undefined
-      assertParamExists('getLoveType', 'loveTypeId', loveTypeId)
-      const localVarPath = `/love-types/{loveTypeId}`.replace(
-        `{${'loveTypeId'}}`,
-        encodeURIComponent(String(loveTypeId))
-      )
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
-      let baseOptions
-      if (configuration) {
-        baseOptions = configuration.baseOptions
-      }
-
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
-      const localVarHeaderParameter = {} as any
-      const localVarQueryParameter = {} as any
-
-      // authentication Bearer Authentication required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter)
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
-      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      }
-    },
     /**
      * 애착 유형 검사의 질문을 조회합니다. JWT 토큰이 필요합니다.
      * @summary 애착 유형 검사 질문 조회
@@ -124,29 +84,6 @@ export const LoveTypesApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = LoveTypesApiAxiosParamCreator(configuration)
   return {
     /**
-     * 애착 유형의 내용을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 애착 유형 조회
-     * @param {number} loveTypeId
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getLoveType(
-      loveTypeId: number,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetLoveTypeSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getLoveType(loveTypeId, options)
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
-      const localVarOperationServerBasePath =
-        operationServerMap['LoveTypesApi.getLoveType']?.[localVarOperationServerIndex]?.url
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath)
-    },
-    /**
      * 애착 유형 검사의 질문을 조회합니다. JWT 토큰이 필요합니다.
      * @summary 애착 유형 검사 질문 조회
      * @param {*} [options] Override http request option.
@@ -178,19 +115,6 @@ export const LoveTypesApiFactory = function (configuration?: Configuration, base
   const localVarFp = LoveTypesApiFp(configuration)
   return {
     /**
-     * 애착 유형의 내용을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 애착 유형 조회
-     * @param {LoveTypesApiGetLoveTypeRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getLoveType(
-      requestParameters: LoveTypesApiGetLoveTypeRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<GetLoveTypeSuccessResponse> {
-      return localVarFp.getLoveType(requestParameters.loveTypeId, options).then((request) => request(axios, basePath))
-    },
-    /**
      * 애착 유형 검사의 질문을 조회합니다. JWT 토큰이 필요합니다.
      * @summary 애착 유형 검사 질문 조회
      * @param {*} [options] Override http request option.
@@ -203,40 +127,12 @@ export const LoveTypesApiFactory = function (configuration?: Configuration, base
 }
 
 /**
- * Request parameters for getLoveType operation in LoveTypesApi.
- * @export
- * @interface LoveTypesApiGetLoveTypeRequest
- */
-export interface LoveTypesApiGetLoveTypeRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof LoveTypesApiGetLoveType
-   */
-  readonly loveTypeId: number
-}
-
-/**
  * LoveTypesApi - object-oriented interface
  * @export
  * @class LoveTypesApi
  * @extends {BaseAPI}
  */
 export class LoveTypesApi extends BaseAPI {
-  /**
-   * 애착 유형의 내용을 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 애착 유형 조회
-   * @param {LoveTypesApiGetLoveTypeRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof LoveTypesApi
-   */
-  public getLoveType(requestParameters: LoveTypesApiGetLoveTypeRequest, options?: RawAxiosRequestConfig) {
-    return LoveTypesApiFp(this.configuration)
-      .getLoveType(requestParameters.loveTypeId, options)
-      .then((request) => request(this.axios, this.basePath))
-  }
-
   /**
    * 애착 유형 검사의 질문을 조회합니다. JWT 토큰이 필요합니다.
    * @summary 애착 유형 검사 질문 조회
