@@ -42,7 +42,8 @@ function RouteComponent() {
   }, [chatData])
 
   const exitButton = useCallback(() => {
-    const actived = chatData && chatData.length > 0
+    const actived =
+      chatData && chatData.filter((chat) => chat.senderType === ChatRoomMessageDataSenderTypeEnum.User).length > 0
     return (
       <p
         className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}

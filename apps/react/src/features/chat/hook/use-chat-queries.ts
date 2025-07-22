@@ -1,6 +1,6 @@
-import { useQuery, useMutation, useQueryClient, queryOptions } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import chatService from '@/shared/services/chat.service'
-import { ChatRoomMessageData, ChatRoomMessageDataSenderTypeEnum, ChatRequest } from '@data/user-api-axios/api'
+import { ChatRoomMessageData, ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
 
 // 쿼리 키를 상수로 관리하여 오타를 방지하고 일관성을 유지합니다.
 export const chatKeys = {
