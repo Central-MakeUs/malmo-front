@@ -18,6 +18,8 @@ export async function refreshToken(): Promise<{ accessToken: string | null }> {
       accessToken: apiResponse.data.data?.accessToken || null,
     }
   } catch (apiError) {
+    await AuthStorage.clearAuth()
+
     if (isAxiosError(apiError)) {
       if (apiError.response) {
         console.error('백엔드 API 응답 오류:', apiError.response.data)
