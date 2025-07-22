@@ -26,7 +26,7 @@ export const Route = createFileRoute('/chat/')({
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
-  const { chatData, exitButton, chattingModal, chatRoomState } = useChatting()
+  const { chatData, exitButton, chattingModal } = useChatting()
 
   return (
     <div className="flex h-full flex-col">

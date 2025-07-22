@@ -8,7 +8,7 @@ import {
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
-import { useChatSSE } from '@/shared/hook/use-chat-sse'
+import { useChatSSE } from '@/features/chat/hook/use-chat-sse'
 
 interface ChattingContextType {
   chatData: ChatRoomMessageData[] | undefined
@@ -26,7 +26,7 @@ const ChattingContext = createContext<ChattingContextType | undefined>(undefined
 
 // 컨텍스트 프로바이더 컴포넌트
 export function ChattingProvider({ children }: { children: ReactNode }) {
-  const [chatData, setChatData] = useState<ChatRoomMessageData[] | undefined>(undefined)
+  const [chatData, setChatData] = useState<ChatRoomMessageData[]>([])
   const [chatRoomState, setChatRoomState] = useState<ChatRoomStateDataChatRoomStateEnum | undefined>(undefined)
   const chattingModal = useChattingModal()
   const navigate = useNavigate()
@@ -34,57 +34,69 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const sendMessage = async (message: string) => {
     if (!message.trim()) return
 
-    const { data } = await chatService.postChatroomSend({ message })
-    setChatData((prev) => [
-      ...(prev || []),
-      {
-        messageId: data?.messageId,
-        content: message,
-        createdAt: new Date().toISOString(),
-        senderType: ChatRoomMessageDataSenderTypeEnum.User,
-      },
-    ])
+    // 1. 임시 ID 메시지 객체를 미리 생성합니다.
+    const tempId = Date.now()
+    const optimisticMessage: ChatRoomMessageData = {
+      messageId: tempId,
+      content: message,
+      createdAt: new Date().toISOString(),
+      senderType: ChatRoomMessageDataSenderTypeEnum.User,
+    }
+
+    // 2. UI를 즉시 업데이트하여 사용자가 메시지를 바로 볼 수 있게 합니다.
+    setChatData((prev) => [...(prev || []), optimisticMessage])
+
+    try {
+      const { data } = await chatService.postChatroomSend({ message })
+
+      setChatData((prev) =>
+        prev.map((msg) => (msg.messageId === tempId ? { ...msg, messageId: data?.messageId } : msg))
+      )
+    } catch (error) {
+      setChatData((prev) => prev.filter((msg) => msg.messageId !== tempId))
+    }
   }
 
   useChatSSE({
     onChatResponse: (chunk) => {
       console.log('Received chunk:', chunk)
       setChatData((prev) => {
-        const lastMessage = prev?.[prev.length - 1]
+        if (!prev) return []
+        const lastMessage = prev[prev.length - 1]
 
-        // 마지막 메시지가 스트리밍 중인 Assistant 메시지인지 확인
         if (
           lastMessage &&
           lastMessage.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
-          !lastMessage.messageId
+          lastMessage.messageId === null
         ) {
-          // 있다면, 기존 메시지 내용에 새로운 청크를 추가
+          // 기존 메시지 내용에 새로운 청크를 추가
           const updatedMessage = {
             ...lastMessage,
             content: (lastMessage.content || '') + chunk,
           }
-          return [...prev!.slice(0, -1), updatedMessage]
+          return [...prev.slice(0, -1), updatedMessage]
         } else {
-          // 스트리밍 시작: 새로운 Assistant 메시지 객체를 생성하여 추가
           const newAssistantMessage: ChatRoomMessageData = {
-            messageId: new Date().getTime(),
+            messageId: null, // <--- 핵심 변경 사항
             content: chunk,
             createdAt: new Date().toISOString(),
             senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
           }
-          return [...(prev || []), newAssistantMessage]
+          return [...prev, newAssistantMessage]
         }
       })
     },
     onResponseId: (messageId) => {
       console.log('Received message ID:', messageId)
-      // 응답 완료 후 메시지 ID를 받아 상태를 업데이트하는 액션 호출
       setChatData((prev) => {
         if (!prev) return []
-
-        // messageId가 null인 마지막 Assistant 메시지를 찾아 실제 ID로 업데이트
-        return prev.map((msg) => {
-          if (msg.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant && msg.messageId === null) {
+        return prev.map((msg, index) => {
+          // 마지막 메시지가 ID가 없는 Assistant 메시지인 경우에만 ID 업데이트
+          if (
+            index === prev.length - 1 &&
+            msg.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
+            msg.messageId === null
+          ) {
             return { ...msg, messageId: Number(messageId) }
           }
           return msg
@@ -134,10 +146,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     })
 
     setChatData((prev) => {
-      if (!prev || prev.length === 0) {
-        return prev
-      }
-
       const lastMessage = prev[prev.length - 1]
       return [...prev, createAssistantMessage(lastMessage!)]
     })
