@@ -2,11 +2,13 @@ import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubb
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
 import { useChatting } from '@/features/chat/context/chatting-context'
+import { useChatMessagesQuery } from '@/features/chat/hook/use-chat-queries'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
-import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import React, { useEffect, useRef } from 'react'
+import { ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { cn } from '@ui/common/lib/utils'
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { z } from 'zod'
 
 const searchSchema = z.object({
@@ -26,15 +28,32 @@ export const Route = createFileRoute('/chat/')({
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
-  const { chatData, exitButton, chattingModal } = useChatting()
+  const navigate = useNavigate()
+  const { chattingModal } = useChatting()
+
+  const { data: chatData, isLoading } = useChatMessagesQuery()
 
   const scrollRef = useRef<HTMLElement>(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
   }, [chatData])
+
+  const exitButton = useCallback(() => {
+    const actived = chatData && chatData.length > 0
+    return (
+      <p
+        className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}
+        onClick={() => {
+          if (actived) navigate({ to: '/chat/loading', replace: true })
+        }}
+      >
+        종료하기
+      </p>
+    )
+  }, [chatData, navigate])
 
   return (
     <div className="flex h-full flex-col">
@@ -43,6 +62,12 @@ function RouteComponent() {
         title={chatId?.toString()}
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
+
+      {isLoading && (
+        <div className="flex flex-1 items-center justify-center">
+          <p className="body2-regular text-gray-500">채팅 데이터를 불러오는 중...</p>
+        </div>
+      )}
 
       <section className="flex-1 overflow-y-auto" ref={scrollRef}>
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">

@@ -1,134 +1,97 @@
-import { useNavigate } from '@tanstack/react-router'
-import { cn } from '@ui/common/lib/utils'
-import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react'
+import { createContext, useContext, ReactNode, useCallback, useEffect } from 'react'
 import { useChattingModal, UseChattingModalReturn } from '../hook/use-chatting-modal'
-import chatService from '@/shared/services/chat.service'
 import {
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
 import { useChatSSE } from '@/features/chat/hook/use-chat-sse'
+import { useQueryClient } from '@tanstack/react-query'
+import { chatKeys, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hook/use-chat-queries'
 
 interface ChattingContextType {
-  chatData: ChatRoomMessageData[] | undefined
-  exitButton: () => ReactNode
   chattingModal: UseChattingModalReturn
-  sendMessage: (message: string) => Promise<void>
-  chatRoomState: ChatRoomStateDataChatRoomStateEnum | undefined
 }
+
 const CONNECTED_REQUIRED_MESSAGE =
   '응응! 알려줘서 고마워! 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 상대방에게 공유해봐!'
 
 const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
 
 export function ChattingProvider({ children }: { children: ReactNode }) {
-  const [chatData, setChatData] = useState<ChatRoomMessageData[]>([])
-  const [chatRoomState, setChatRoomState] = useState<ChatRoomStateDataChatRoomStateEnum | undefined>()
   const chattingModal = useChattingModal()
-  const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
-  const sendMessage = useCallback(async (message: string) => {
-    if (!message.trim()) return
+  // Tanstack Query 훅을 사용하여 데이터와 상태를 가져옵니다.
+  const { data: chatStatus } = useChatRoomStatusQuery()
+  const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
 
-    const tempId = Date.now()
-    const optimisticMessage: ChatRoomMessageData = {
-      messageId: tempId,
-      content: message,
-      createdAt: new Date().toISOString(),
-      senderType: ChatRoomMessageDataSenderTypeEnum.User,
-    }
-
-    setChatData((prev) => [...(prev || []), optimisticMessage])
-
-    try {
-      const { data } = await chatService.postChatroomSend({ message })
-      setChatData((prev) =>
-        prev.map((msg) => (msg.messageId === tempId ? { ...msg, messageId: data?.messageId } : msg))
-      )
-    } catch (error) {
-      console.error('Failed to send message:', error)
-      setChatData((prev) => prev.filter((msg) => msg.messageId !== tempId))
-    }
-  }, [])
-
-  const connectedRequired = useCallback(() => {
-    const createAssistantMessage = (lastMessage: ChatRoomMessageData) => ({
-      messageId: Date.now(), // 고유 ID 부여
-      content: CONNECTED_REQUIRED_MESSAGE,
-      createdAt: lastMessage.createdAt,
-      senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
-    })
-    setChatData((prev) => {
-      if (!prev || prev.length === 0) return []
-      const lastMessage = prev[prev.length - 1]
-      return [...prev, createAssistantMessage(lastMessage!)]
-    })
-  }, [])
-
-  const fetchChatUpgrade = useCallback(async () => {
-    if (chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
-      const { data } = await chatService.postChatroomUpgrade()
-      console.log('Chat room upgraded:', data)
-      setChatRoomState(ChatRoomStateDataChatRoomStateEnum.Alive)
-    }
-  }, [chatRoomState])
-
-  const handleChatResponse = useCallback((chunk: string) => {
-    setChatData((prev) => {
-      if (!prev) return []
-      const lastMessage = prev[prev.length - 1]
-
-      if (
-        lastMessage &&
-        lastMessage.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
-        lastMessage.messageId === null
-      ) {
-        const updatedMessage = {
-          ...lastMessage,
-          content: (lastMessage.content || '') + chunk,
+  // SSE 이벤트 핸들러: 이제 queryClient.setQueryData를 사용하여 캐시를 직접 업데이트합니다.
+  const handleChatResponse = useCallback(
+    (chunk: string) => {
+      queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
+        const lastMessage = prev[prev.length - 1]
+        if (lastMessage?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant && lastMessage.messageId === null) {
+          const updatedMessage = { ...lastMessage, content: (lastMessage.content || '') + chunk }
+          return [...prev.slice(0, -1), updatedMessage]
+        } else {
+          const newAssistantMessage: ChatRoomMessageData = {
+            messageId: null,
+            content: chunk,
+            createdAt: new Date().toISOString(),
+            senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+          }
+          return [...prev, newAssistantMessage]
         }
-        return [...prev.slice(0, -1), updatedMessage]
-      } else {
-        const newAssistantMessage: ChatRoomMessageData = {
-          messageId: null, // 스트리밍 시작 시 ID는 null
-          content: chunk,
-          createdAt: new Date().toISOString(),
-          senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+      })
+    },
+    [queryClient]
+  )
+
+  const handleResponseId = useCallback(
+    (messageId: string) => {
+      queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
+        const lastIndex = prev.length - 1
+        if (prev[lastIndex]?.messageId === null) {
+          const updatedMessages = [...prev]
+          updatedMessages[lastIndex] = { ...updatedMessages[lastIndex]!, messageId: Number(messageId) }
+          return updatedMessages
         }
-        return [...prev, newAssistantMessage]
-      }
-    })
-  }, [])
-
-  const handleResponseId = useCallback((messageId: string) => {
-    setChatData((prev) => {
-      if (!prev) return []
-      const lastIndex = prev.length - 1
-      const lastMessage = prev[lastIndex]
-
-      if (
-        lastMessage &&
-        lastMessage.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
-        lastMessage.messageId === null
-      ) {
-        const updatedMessages = [...prev]
-        updatedMessages[lastIndex] = { ...lastMessage, messageId: Number(messageId) }
-        return updatedMessages
-      }
-      return prev
-    })
-  }, [])
+        return prev
+      })
+    },
+    [queryClient]
+  )
 
   const handleLevelFinished = useCallback(() => {
-    fetchChatUpgrade()
-  }, [fetchChatUpgrade])
+    upgradeChatRoom()
+  }, [upgradeChatRoom])
+
+  const addPausedMessage = useCallback(() => {
+    queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
+      if (!prev.length) return prev
+      // 이미 PAUSED 메시지가 있는지 확인하여 중복 추가 방지
+      if (prev.some((msg) => msg.content === CONNECTED_REQUIRED_MESSAGE)) {
+        return prev
+      }
+      const lastMessage = prev[prev.length - 1]!
+      const assistantMessage: ChatRoomMessageData = {
+        messageId: Date.now(),
+        content: CONNECTED_REQUIRED_MESSAGE,
+        createdAt: lastMessage.createdAt,
+        senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+      }
+      return [...prev, assistantMessage]
+    })
+  }, [queryClient])
 
   const handleChatPaused = useCallback(() => {
-    setChatRoomState(ChatRoomStateDataChatRoomStateEnum.Paused)
-    connectedRequired()
-  }, [connectedRequired])
+    // 상태를 직접 변경하는 대신, status 쿼리를 무효화하여 최신 상태를 가져오게 함
+    queryClient.invalidateQueries({ queryKey: chatKeys.status() })
+    addPausedMessage()
+  }, [queryClient, addPausedMessage])
 
+  // SSE 연결 훅
   useChatSSE({
     onChatResponse: handleChatResponse,
     onResponseId: handleResponseId,
@@ -139,48 +102,18 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     }, []),
   })
 
+  // 초기 상태 확인 및 처리
   useEffect(() => {
-    async function fetchChatStatus() {
-      try {
-        const { data: status } = await chatService.getChatroomStatus()
-        setChatRoomState(status?.chatRoomState)
-
-        if (status?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
-          await fetchChatUpgrade()
-        }
-
-        const { data: chatHistory } = await chatService.getCurrentChatRoomMessages()
-        setChatData(chatHistory?.data?.list?.reverse() ?? [])
-
-        if (status?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused) {
-          connectedRequired()
-        }
-      } catch (e) {
-        console.error('Failed to fetch initial chat status:', e)
-      }
+    if (chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
+      upgradeChatRoom()
     }
-    fetchChatStatus()
-  }, [connectedRequired, fetchChatUpgrade])
+    if (chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused) {
+      addPausedMessage()
+    }
+  }, [chatStatus, upgradeChatRoom, addPausedMessage])
 
-  const exitButton = useCallback(() => {
-    const actived = chatData && chatData.length > 0
-    return (
-      <p
-        className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}
-        onClick={() => {
-          if (actived) navigate({ to: '/chat/loading', replace: true })
-        }}
-      >
-        종료하기
-      </p>
-    )
-  }, [chatData, navigate])
-
-  return (
-    <ChattingContext.Provider value={{ chatData, exitButton, chattingModal, sendMessage, chatRoomState }}>
-      {children}
-    </ChattingContext.Provider>
-  )
+  // Context를 통해 제공하는 값에서 데이터 관련 로직은 모두 제거
+  return <ChattingContext.Provider value={{ chattingModal }}>{children}</ChattingContext.Provider>
 }
 
 export function useChatting() {
