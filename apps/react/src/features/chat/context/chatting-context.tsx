@@ -110,8 +110,8 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         await fetchChatUpgrade()
       }
 
-      const { data: chatData } = await chatService.getCurrentChatRoomMessages()
-      setChatData(chatData?.data?.list?.reverse() ?? [])
+      const { data: chatData } = await chatService.getChatMessageList()
+      setChatData(chatData?.list?.reverse() ?? [])
     }
 
     fetchChatStatus()
@@ -159,7 +159,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 export function useChatting() {
   const context = useContext(ChattingContext)
   if (context === undefined) {
-    throw new Error('useOnboarding must be used within an OnboardingProvider')
+    throw new Error('useChatting must be used within a ChattingProvider')
   }
   return context
 }

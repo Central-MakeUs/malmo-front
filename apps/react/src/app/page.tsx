@@ -14,6 +14,10 @@ function HomePage() {
         채팅화면
       </Link>
 
+      <Link to={'/history'} className="w-[200px]">
+        채팅 기록
+      </Link>
+
       <Button
         onClick={async () => {
           const data = await bridge.logout()

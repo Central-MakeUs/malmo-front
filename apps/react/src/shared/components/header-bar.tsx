@@ -45,3 +45,21 @@ export function DetailHeaderBar({ title, right, onBackClick, className, showBack
     </header>
   )
 }
+
+interface HomeHeaderBarProps {
+  title?: string
+  right?: ReactNode
+  className?: string
+}
+
+export function HomeHeaderBar({ title, right, className }: HomeHeaderBarProps) {
+  return (
+    <header
+      className={cn('flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white px-5', className)}
+    >
+      {title && <h1 className="heading2-bold">{title}</h1>}
+
+      <div>{right}</div>
+    </header>
+  )
+}
