@@ -6,7 +6,7 @@ import { set } from 'zod'
 
 const DUMMY_CHAT_RESULT: GetChatRoomSummaryData = {
   chatRoomId: 12345,
-  // date: '2025년 7월 3일',
+  createdAt: '2025년 7월 3일',
   totalSummary: '회피형 남자친구의 연락두절 문제',
   firstSummary:
     '남자친구는 여사친과 몰래 밥을 먹은 일에 대해 사과하길 회피했다. 이전에도 비슷한 상황이 반복되었고, 베리는 자신의 감정을 과한 것으로 여기며 소통에 어려움을 경험했다.',

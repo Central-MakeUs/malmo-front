@@ -13,33 +13,27 @@
  */
 
 /**
- * 질문 리스트 응답 데이터
+ *
  * @export
- * @interface QuestionListData
+ * @interface Pageable
  */
-export interface QuestionListData {
+export interface Pageable {
   /**
-   * 커플 질문 ID
+   *
    * @type {number}
-   * @memberof QuestionListData
+   * @memberof Pageable
    */
-  coupleQuestionId?: number
+  page?: number
   /**
-   * 질문 제목
-   * @type {string}
-   * @memberof QuestionListData
+   *
+   * @type {number}
+   * @memberof Pageable
    */
-  title?: string
+  size?: number
   /**
-   * 질문 내용
-   * @type {string}
-   * @memberof QuestionListData
+   *
+   * @type {Array<string>}
+   * @memberof Pageable
    */
-  content?: string
-  /**
-   * 생성일시
-   * @type {string}
-   * @memberof QuestionListData
-   */
-  createdAt?: string
+  sort?: Array<string>
 }

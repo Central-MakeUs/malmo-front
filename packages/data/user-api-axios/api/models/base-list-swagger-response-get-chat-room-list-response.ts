@@ -40,4 +40,10 @@ export interface BaseListSwaggerResponseGetChatRoomListResponse {
    * @memberof BaseListSwaggerResponseGetChatRoomListResponse
    */
   list?: Array<GetChatRoomListResponse>
+  /**
+   * 전체 데이터 개수
+   * @type {number}
+   * @memberof BaseListSwaggerResponseGetChatRoomListResponse
+   */
+  totalCount?: number
 }

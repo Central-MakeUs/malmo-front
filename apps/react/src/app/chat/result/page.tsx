@@ -43,8 +43,7 @@ function RouteComponent() {
 
         <div className="flex flex-col gap-7 rounded-t-[24px] bg-white px-5 py-10">
           <ChatResultMainInfo
-            // TODO : chatResult?.date로 변경
-            date={'2025년 7월 3일'}
+            date={chatResult?.createdAt}
             subject={chatResult.totalSummary}
             onViewChat={() => navigate({ to: '/chat', search: { chatId: chatResult.chatRoomId } })}
           />

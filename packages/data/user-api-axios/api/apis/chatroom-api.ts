@@ -50,6 +50,8 @@ import type { DeleteChatRoomRequestDto } from '../models'
 // @ts-ignore
 import type { GetChatRoomSummaryResponse } from '../models'
 // @ts-ignore
+import type { Pageable } from '../models'
+// @ts-ignore
 import type { SendChatSuccessResponse } from '../models'
 // @ts-ignore
 import type { SwaggerErrorResponse } from '../models'
@@ -139,18 +141,18 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
     /**
      * 조건에 부합하는 채팅방 리스트를 조회합니다. JWT 토큰이 필요합니다.
      * @summary 채팅방 리스트 조회
-     * @param {number} [page]
-     * @param {number} [size]
+     * @param {Pageable} pageable
      * @param {string} [keyword]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getChatRoomList: async (
-      page?: number,
-      size?: number,
+      pageable: Pageable,
       keyword?: string,
       options: RawAxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'pageable' is not null or undefined
+      assertParamExists('getChatRoomList', 'pageable', pageable)
       const localVarPath = `/chatroom`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
@@ -167,12 +169,10 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      if (page !== undefined) {
-        localVarQueryParameter['page'] = page
-      }
-
-      if (size !== undefined) {
-        localVarQueryParameter['size'] = size
+      if (pageable !== undefined) {
+        for (const [key, value] of Object.entries(pageable)) {
+          localVarQueryParameter[key] = value
+        }
       }
 
       if (keyword !== undefined) {
@@ -191,18 +191,18 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
     /**
      * 채팅방의 메시지를 페이지네이션으로 조회합니다. 현재 채팅방과 달리 시간 오름차순으로 전달됩니다. JWT 토큰이 필요합니다.
      * @summary 채팅방의 메시지 리스트 조회
+     * @param {Pageable} pageable
      * @param {number} chatRoomId
-     * @param {number} [page]
-     * @param {number} [size]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getChatRoomMessages: async (
+      pageable: Pageable,
       chatRoomId: number,
-      page?: number,
-      size?: number,
       options: RawAxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'pageable' is not null or undefined
+      assertParamExists('getChatRoomMessages', 'pageable', pageable)
       // verify required parameter 'chatRoomId' is not null or undefined
       assertParamExists('getChatRoomMessages', 'chatRoomId', chatRoomId)
       const localVarPath = `/chatroom/{chatRoomId}/messages`.replace(
@@ -224,12 +224,10 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      if (page !== undefined) {
-        localVarQueryParameter['page'] = page
-      }
-
-      if (size !== undefined) {
-        localVarQueryParameter['size'] = size
+      if (pageable !== undefined) {
+        for (const [key, value] of Object.entries(pageable)) {
+          localVarQueryParameter[key] = value
+        }
       }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
@@ -314,16 +312,16 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
     /**
      * 현재 채팅방의 메시지를 페이지네이션으로 조회합니다. JWT 토큰이 필요합니다.
      * @summary 현재 채팅방 메시지 조회
-     * @param {number} [page]
-     * @param {number} [size]
+     * @param {Pageable} pageable
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getCurrentChatRoomMessages: async (
-      page?: number,
-      size?: number,
+      pageable: Pageable,
       options: RawAxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
+      // verify required parameter 'pageable' is not null or undefined
+      assertParamExists('getCurrentChatRoomMessages', 'pageable', pageable)
       const localVarPath = `/chatroom/current/messages`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
@@ -340,12 +338,10 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      if (page !== undefined) {
-        localVarQueryParameter['page'] = page
-      }
-
-      if (size !== undefined) {
-        localVarQueryParameter['size'] = size
+      if (pageable !== undefined) {
+        for (const [key, value] of Object.entries(pageable)) {
+          localVarQueryParameter[key] = value
+        }
       }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
@@ -484,19 +480,17 @@ export const ChatroomApiFp = function (configuration?: Configuration) {
     /**
      * 조건에 부합하는 채팅방 리스트를 조회합니다. JWT 토큰이 필요합니다.
      * @summary 채팅방 리스트 조회
-     * @param {number} [page]
-     * @param {number} [size]
+     * @param {Pageable} pageable
      * @param {string} [keyword]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getChatRoomList(
-      page?: number,
-      size?: number,
+      pageable: Pageable,
       keyword?: string,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatRoomListSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getChatRoomList(page, size, keyword, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getChatRoomList(pageable, keyword, options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
         operationServerMap['ChatroomApi.getChatRoomList']?.[localVarOperationServerIndex]?.url
@@ -511,19 +505,17 @@ export const ChatroomApiFp = function (configuration?: Configuration) {
     /**
      * 채팅방의 메시지를 페이지네이션으로 조회합니다. 현재 채팅방과 달리 시간 오름차순으로 전달됩니다. JWT 토큰이 필요합니다.
      * @summary 채팅방의 메시지 리스트 조회
+     * @param {Pageable} pageable
      * @param {number} chatRoomId
-     * @param {number} [page]
-     * @param {number} [size]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getChatRoomMessages(
+      pageable: Pageable,
       chatRoomId: number,
-      page?: number,
-      size?: number,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatMessageListSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getChatRoomMessages(chatRoomId, page, size, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getChatRoomMessages(pageable, chatRoomId, options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
         operationServerMap['ChatroomApi.getChatRoomMessages']?.[localVarOperationServerIndex]?.url
@@ -582,17 +574,15 @@ export const ChatroomApiFp = function (configuration?: Configuration) {
     /**
      * 현재 채팅방의 메시지를 페이지네이션으로 조회합니다. JWT 토큰이 필요합니다.
      * @summary 현재 채팅방 메시지 조회
-     * @param {number} [page]
-     * @param {number} [size]
+     * @param {Pageable} pageable
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getCurrentChatRoomMessages(
-      page?: number,
-      size?: number,
+      pageable: Pageable,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatMessageListSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentChatRoomMessages(page, size, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentChatRoomMessages(pageable, options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
         operationServerMap['ChatroomApi.getCurrentChatRoomMessages']?.[localVarOperationServerIndex]?.url
@@ -690,11 +680,11 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
      * @throws {RequiredError}
      */
     getChatRoomList(
-      requestParameters: ChatroomApiGetChatRoomListRequest = {},
+      requestParameters: ChatroomApiGetChatRoomListRequest,
       options?: RawAxiosRequestConfig
     ): AxiosPromise<ChatRoomListSuccessResponse> {
       return localVarFp
-        .getChatRoomList(requestParameters.page, requestParameters.size, requestParameters.keyword, options)
+        .getChatRoomList(requestParameters.pageable, requestParameters.keyword, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -709,7 +699,7 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
       options?: RawAxiosRequestConfig
     ): AxiosPromise<ChatMessageListSuccessResponse> {
       return localVarFp
-        .getChatRoomMessages(requestParameters.chatRoomId, requestParameters.page, requestParameters.size, options)
+        .getChatRoomMessages(requestParameters.pageable, requestParameters.chatRoomId, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -744,11 +734,11 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
      * @throws {RequiredError}
      */
     getCurrentChatRoomMessages(
-      requestParameters: ChatroomApiGetCurrentChatRoomMessagesRequest = {},
+      requestParameters: ChatroomApiGetCurrentChatRoomMessagesRequest,
       options?: RawAxiosRequestConfig
     ): AxiosPromise<ChatMessageListSuccessResponse> {
       return localVarFp
-        .getCurrentChatRoomMessages(requestParameters.page, requestParameters.size, options)
+        .getCurrentChatRoomMessages(requestParameters.pageable, options)
         .then((request) => request(axios, basePath))
     },
     /**
@@ -800,17 +790,10 @@ export interface ChatroomApiDeleteChatRoomsRequest {
 export interface ChatroomApiGetChatRoomListRequest {
   /**
    *
-   * @type {number}
+   * @type {Pageable}
    * @memberof ChatroomApiGetChatRoomList
    */
-  readonly page?: number
-
-  /**
-   *
-   * @type {number}
-   * @memberof ChatroomApiGetChatRoomList
-   */
-  readonly size?: number
+  readonly pageable: Pageable
 
   /**
    *
@@ -828,24 +811,17 @@ export interface ChatroomApiGetChatRoomListRequest {
 export interface ChatroomApiGetChatRoomMessagesRequest {
   /**
    *
+   * @type {Pageable}
+   * @memberof ChatroomApiGetChatRoomMessages
+   */
+  readonly pageable: Pageable
+
+  /**
+   *
    * @type {number}
    * @memberof ChatroomApiGetChatRoomMessages
    */
   readonly chatRoomId: number
-
-  /**
-   *
-   * @type {number}
-   * @memberof ChatroomApiGetChatRoomMessages
-   */
-  readonly page?: number
-
-  /**
-   *
-   * @type {number}
-   * @memberof ChatroomApiGetChatRoomMessages
-   */
-  readonly size?: number
 }
 
 /**
@@ -870,17 +846,10 @@ export interface ChatroomApiGetCurrentChatRoomRequest {
 export interface ChatroomApiGetCurrentChatRoomMessagesRequest {
   /**
    *
-   * @type {number}
+   * @type {Pageable}
    * @memberof ChatroomApiGetCurrentChatRoomMessages
    */
-  readonly page?: number
-
-  /**
-   *
-   * @type {number}
-   * @memberof ChatroomApiGetCurrentChatRoomMessages
-   */
-  readonly size?: number
+  readonly pageable: Pageable
 }
 
 /**
@@ -939,9 +908,9 @@ export class ChatroomApi extends BaseAPI {
    * @throws {RequiredError}
    * @memberof ChatroomApi
    */
-  public getChatRoomList(requestParameters: ChatroomApiGetChatRoomListRequest = {}, options?: RawAxiosRequestConfig) {
+  public getChatRoomList(requestParameters: ChatroomApiGetChatRoomListRequest, options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
-      .getChatRoomList(requestParameters.page, requestParameters.size, requestParameters.keyword, options)
+      .getChatRoomList(requestParameters.pageable, requestParameters.keyword, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -958,7 +927,7 @@ export class ChatroomApi extends BaseAPI {
     options?: RawAxiosRequestConfig
   ) {
     return ChatroomApiFp(this.configuration)
-      .getChatRoomMessages(requestParameters.chatRoomId, requestParameters.page, requestParameters.size, options)
+      .getChatRoomMessages(requestParameters.pageable, requestParameters.chatRoomId, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -998,11 +967,11 @@ export class ChatroomApi extends BaseAPI {
    * @memberof ChatroomApi
    */
   public getCurrentChatRoomMessages(
-    requestParameters: ChatroomApiGetCurrentChatRoomMessagesRequest = {},
+    requestParameters: ChatroomApiGetCurrentChatRoomMessagesRequest,
     options?: RawAxiosRequestConfig
   ) {
     return ChatroomApiFp(this.configuration)
-      .getCurrentChatRoomMessages(requestParameters.page, requestParameters.size, options)
+      .getCurrentChatRoomMessages(requestParameters.pageable, options)
       .then((request) => request(this.axios, this.basePath))
   }
 

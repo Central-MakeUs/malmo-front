@@ -36,7 +36,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
           return [...prev.slice(0, -1), updatedMessage]
         } else {
           const newAssistantMessage: ChatRoomMessageData = {
-            messageId: null,
+            messageId: null as any, // 서버에서 number ID를 받기 전까지는 null로 설정
             content: chunk,
             createdAt: new Date().toISOString(),
             senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,

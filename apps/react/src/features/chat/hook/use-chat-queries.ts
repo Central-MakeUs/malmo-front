@@ -27,7 +27,13 @@ export const useChatMessagesQuery = () => {
   return useQuery({
     queryKey: chatKeys.messages(),
     queryFn: async () => {
-      const { data } = await chatService.getCurrentChatRoomMessages()
+      const { data } = await chatService.getCurrentChatRoomMessages({
+        pageable: {
+          page: 0,
+          size: 20,
+          sort: ['createdAt,desc'],
+        },
+      })
       return data?.data?.list?.reverse() ?? []
     },
   })

@@ -40,4 +40,10 @@ export interface BaseListSwaggerResponseTermsResponseData {
    * @memberof BaseListSwaggerResponseTermsResponseData
    */
   list?: Array<TermsResponseData>
+  /**
+   * 전체 데이터 개수
+   * @type {number}
+   * @memberof BaseListSwaggerResponseTermsResponseData
+   */
+  totalCount?: number
 }
