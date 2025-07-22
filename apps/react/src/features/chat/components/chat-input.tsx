@@ -49,7 +49,9 @@ function ChatInput(props: { disabled?: boolean }) {
   }
   // Shift+Enter는 줄바꿈, Enter는 전송으로 처리합니다.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+    if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
       e.preventDefault()
       handleSubmit(e as any)
     }
