@@ -63,16 +63,16 @@ function RouteComponent() {
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
 
-      {isLoading && (
-        <div className="flex flex-1 items-center justify-center">
-          <p className="body2-regular text-gray-500">채팅 데이터를 불러오는 중...</p>
-        </div>
-      )}
-
       <section className="flex-1 overflow-y-auto" ref={scrollRef}>
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
           <p className="body3-medium text-white">대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
         </div>
+
+        {isLoading && (
+          <div className="flex flex-1 items-center justify-center">
+            <p className="body2-regular text-gray-500">채팅 데이터를 불러오는 중...</p>
+          </div>
+        )}
 
         <div className="space-y-5 px-5 py-6">
           {chatData?.map((chat, index) => {
