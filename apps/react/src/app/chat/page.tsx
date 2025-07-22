@@ -6,7 +6,7 @@ import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { z } from 'zod'
 
 const searchSchema = z.object({
@@ -28,6 +28,14 @@ function RouteComponent() {
   const router = useRouter()
   const { chatData, exitButton, chattingModal } = useChatting()
 
+  const scrollRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [chatData])
+
   return (
     <div className="flex h-full flex-col">
       <DetailHeaderBar
@@ -36,7 +44,7 @@ function RouteComponent() {
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
 
-      <section className="flex-1 overflow-y-auto">
+      <section className="flex-1 overflow-y-auto" ref={scrollRef}>
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
           <p className="body3-medium text-white">대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
         </div>

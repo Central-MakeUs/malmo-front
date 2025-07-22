@@ -17,24 +17,20 @@ interface ChattingContextType {
   sendMessage: (message: string) => Promise<void>
   chatRoomState: ChatRoomStateDataChatRoomStateEnum | undefined
 }
-
 const CONNECTED_REQUIRED_MESSAGE =
   '응응! 알려줘서 고마워! 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 상대방에게 공유해봐!'
 
-// 컨텍스트 생성
 const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
 
-// 컨텍스트 프로바이더 컴포넌트
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const [chatData, setChatData] = useState<ChatRoomMessageData[]>([])
-  const [chatRoomState, setChatRoomState] = useState<ChatRoomStateDataChatRoomStateEnum | undefined>(undefined)
+  const [chatRoomState, setChatRoomState] = useState<ChatRoomStateDataChatRoomStateEnum | undefined>()
   const chattingModal = useChattingModal()
   const navigate = useNavigate()
 
-  const sendMessage = async (message: string) => {
+  const sendMessage = useCallback(async (message: string) => {
     if (!message.trim()) return
 
-    // 1. 임시 ID 메시지 객체를 미리 생성합니다.
     const tempId = Date.now()
     const optimisticMessage: ChatRoomMessageData = {
       messageId: tempId,
@@ -43,125 +39,131 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       senderType: ChatRoomMessageDataSenderTypeEnum.User,
     }
 
-    // 2. UI를 즉시 업데이트하여 사용자가 메시지를 바로 볼 수 있게 합니다.
     setChatData((prev) => [...(prev || []), optimisticMessage])
 
     try {
       const { data } = await chatService.postChatroomSend({ message })
-
       setChatData((prev) =>
         prev.map((msg) => (msg.messageId === tempId ? { ...msg, messageId: data?.messageId } : msg))
       )
     } catch (error) {
+      console.error('Failed to send message:', error)
       setChatData((prev) => prev.filter((msg) => msg.messageId !== tempId))
     }
-  }
-
-  useChatSSE({
-    onChatResponse: (chunk) => {
-      console.log('Received chunk:', chunk)
-      setChatData((prev) => {
-        if (!prev) return []
-        const lastMessage = prev[prev.length - 1]
-
-        if (
-          lastMessage &&
-          lastMessage.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
-          lastMessage.messageId === null
-        ) {
-          // 기존 메시지 내용에 새로운 청크를 추가
-          const updatedMessage = {
-            ...lastMessage,
-            content: (lastMessage.content || '') + chunk,
-          }
-          return [...prev.slice(0, -1), updatedMessage]
-        } else {
-          const newAssistantMessage: ChatRoomMessageData = {
-            messageId: null, // <--- 핵심 변경 사항
-            content: chunk,
-            createdAt: new Date().toISOString(),
-            senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
-          }
-          return [...prev, newAssistantMessage]
-        }
-      })
-    },
-    onResponseId: (messageId) => {
-      console.log('Received message ID:', messageId)
-      setChatData((prev) => {
-        if (!prev) return []
-        return prev.map((msg, index) => {
-          // 마지막 메시지가 ID가 없는 Assistant 메시지인 경우에만 ID 업데이트
-          if (
-            index === prev.length - 1 &&
-            msg.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
-            msg.messageId === null
-          ) {
-            return { ...msg, messageId: Number(messageId) }
-          }
-          return msg
-        })
-      })
-    },
-    onLevelFinished: () => {
-      // 다음 레벨로 업그레이드하는 API를 호출하는 액션
-      fetchChatUpgrade()
-    },
-    onChatPaused: () => {
-      // 채팅방을 PAUSED 상태로 변경하는 액션 호출
-      setChatRoomState(ChatRoomStateDataChatRoomStateEnum.Paused)
-      connectedRequired()
-    },
-    onError: (error) => {
-      console.error('SSE Error:', error)
-      // 필요 시 에러 처리 로직 (예: 사용자에게 에러 알림 표시)
-    },
-  })
-
-  useEffect(() => {
-    async function fetchChatStatus() {
-      const { data: status } = await chatService.getChatroomStatus()
-      setChatRoomState(status?.chatRoomState)
-
-      if (status?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
-        await fetchChatUpgrade()
-      }
-
-      const { data: chatData } = await chatService.getCurrentChatRoomMessages()
-      setChatData(chatData?.data?.list?.reverse() ?? [])
-
-      if (status?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused) {
-        connectedRequired()
-      }
-    }
-
-    fetchChatStatus()
   }, [])
 
-  const connectedRequired = () => {
+  const connectedRequired = useCallback(() => {
     const createAssistantMessage = (lastMessage: ChatRoomMessageData) => ({
+      messageId: Date.now(), // 고유 ID 부여
       content: CONNECTED_REQUIRED_MESSAGE,
       createdAt: lastMessage.createdAt,
       senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
     })
-
     setChatData((prev) => {
+      if (!prev || prev.length === 0) return []
       const lastMessage = prev[prev.length - 1]
       return [...prev, createAssistantMessage(lastMessage!)]
     })
-  }
+  }, [])
 
-  async function fetchChatUpgrade() {
+  const fetchChatUpgrade = useCallback(async () => {
     if (chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
       const { data } = await chatService.postChatroomUpgrade()
       console.log('Chat room upgraded:', data)
+      setChatRoomState(ChatRoomStateDataChatRoomStateEnum.Alive)
     }
+  }, [chatRoomState])
+
+  const handleChatResponse = useCallback((chunk: string) => {
+    setChatData((prev) => {
+      if (!prev) return []
+      const lastMessage = prev[prev.length - 1]
+
+      if (
+        lastMessage &&
+        lastMessage.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
+        lastMessage.messageId === null
+      ) {
+        const updatedMessage = {
+          ...lastMessage,
+          content: (lastMessage.content || '') + chunk,
+        }
+        return [...prev.slice(0, -1), updatedMessage]
+      } else {
+        const newAssistantMessage: ChatRoomMessageData = {
+          messageId: null, // 스트리밍 시작 시 ID는 null
+          content: chunk,
+          createdAt: new Date().toISOString(),
+          senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+        }
+        return [...prev, newAssistantMessage]
+      }
+    })
+  }, [])
+
+  const handleResponseId = useCallback((messageId: string) => {
+    setChatData((prev) => {
+      if (!prev) return []
+      const lastIndex = prev.length - 1
+      const lastMessage = prev[lastIndex]
+
+      if (
+        lastMessage &&
+        lastMessage.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
+        lastMessage.messageId === null
+      ) {
+        const updatedMessages = [...prev]
+        updatedMessages[lastIndex] = { ...lastMessage, messageId: Number(messageId) }
+        return updatedMessages
+      }
+      return prev
+    })
+  }, [])
+
+  const handleLevelFinished = useCallback(() => {
     fetchChatUpgrade()
-  }
+  }, [fetchChatUpgrade])
+
+  const handleChatPaused = useCallback(() => {
+    setChatRoomState(ChatRoomStateDataChatRoomStateEnum.Paused)
+    connectedRequired()
+  }, [connectedRequired])
+
+  useChatSSE({
+    onChatResponse: handleChatResponse,
+    onResponseId: handleResponseId,
+    onLevelFinished: handleLevelFinished,
+    onChatPaused: handleChatPaused,
+    onError: useCallback((error) => {
+      console.error('SSE Error Callback:', error)
+    }, []),
+  })
+
+  useEffect(() => {
+    async function fetchChatStatus() {
+      try {
+        const { data: status } = await chatService.getChatroomStatus()
+        setChatRoomState(status?.chatRoomState)
+
+        if (status?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
+          await fetchChatUpgrade()
+        }
+
+        const { data: chatHistory } = await chatService.getCurrentChatRoomMessages()
+        setChatData(chatHistory?.data?.list?.reverse() ?? [])
+
+        if (status?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused) {
+          connectedRequired()
+        }
+      } catch (e) {
+        console.error('Failed to fetch initial chat status:', e)
+      }
+    }
+    fetchChatStatus()
+  }, [connectedRequired, fetchChatUpgrade])
 
   const exitButton = useCallback(() => {
-    const actived = chatData && chatData?.length > 0
-
+    const actived = chatData && chatData.length > 0
     return (
       <p
         className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}
@@ -172,28 +174,19 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         종료하기
       </p>
     )
-  }, [chatData])
+  }, [chatData, navigate])
 
   return (
-    <ChattingContext.Provider
-      value={{
-        chatData,
-        exitButton,
-        chattingModal,
-        sendMessage,
-        chatRoomState,
-      }}
-    >
+    <ChattingContext.Provider value={{ chatData, exitButton, chattingModal, sendMessage, chatRoomState }}>
       {children}
     </ChattingContext.Provider>
   )
 }
 
-// 커스텀 훅
 export function useChatting() {
   const context = useContext(ChattingContext)
   if (context === undefined) {
-    throw new Error('useOnboarding must be used within an OnboardingProvider')
+    throw new Error('useChatting must be used within a ChattingProvider')
   }
   return context
 }

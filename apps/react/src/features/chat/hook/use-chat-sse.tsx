@@ -28,17 +28,14 @@ export const useChatSSE = (callbacks: ChatSSECallbacks) => {
   const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
 
   useEffect(() => {
-    // ✅ [수정] 비동기 로직을 처리하기 위한 함수를 useEffect 내부에 선언
     const connect = async () => {
       // 이미 연결이 존재하면 중복 생성을 방지
       if (eventSourceRef.current) return
 
       try {
-        // ✅ [수정] 토큰 요청 로직을 useEffect 안으로 이동
         const { accessToken } = await bridge.getAuthToken()
 
         if (!accessToken) {
-          console.error('SSE Error: Access token is missing.')
           callbacks.onError?.(new Error('Access token is missing.'))
           return
         }
@@ -52,7 +49,7 @@ export const useChatSSE = (callbacks: ChatSSECallbacks) => {
         eventSourceRef.current = sse
 
         sse.onopen = () => {
-          console.log('SSE connection opened.') // 이 메시지가 보여야 합니다.
+          console.log('SSE connection opened.')
           callbacks.onOpen?.()
         }
 
@@ -65,7 +62,7 @@ export const useChatSSE = (callbacks: ChatSSECallbacks) => {
 
         // 커스텀 이벤트 리스너들...
         sse.addEventListener('chat_response', (event: any) => {
-          callbacks.onChatResponse(JSON.parse(event.data))
+          callbacks.onChatResponse(event.data)
         })
 
         sse.addEventListener('ai_response_id', (event: any) => {
@@ -80,7 +77,6 @@ export const useChatSSE = (callbacks: ChatSSECallbacks) => {
           callbacks.onChatPaused()
         })
       } catch (error) {
-        console.error('Failed to get auth token for SSE:', error)
         callbacks.onError?.(error)
       }
     }
@@ -96,5 +92,12 @@ export const useChatSSE = (callbacks: ChatSSECallbacks) => {
         console.log('SSE connection closed.')
       }
     }
-  }, [callbacks])
+  }, [
+    callbacks.onOpen,
+    callbacks.onError,
+    callbacks.onChatResponse,
+    callbacks.onResponseId,
+    callbacks.onLevelFinished,
+    callbacks.onChatPaused,
+  ])
 }
