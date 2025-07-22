@@ -8,6 +8,7 @@ import { z } from 'zod'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
+  fromHistory: z.boolean().optional(),
 })
 
 export const Route = createFileRoute('/chat/result/')({
@@ -15,25 +16,27 @@ export const Route = createFileRoute('/chat/result/')({
   validateSearch: searchSchema,
   loaderDeps: (search) => search,
   loader: async ({ context, deps }) => {
-    const { chatId } = deps.search
-    return { chatId }
+    return deps.search
   },
 })
 
 function RouteComponent() {
-  const { chatId } = Route.useLoaderData()
+  const { chatId, fromHistory } = Route.useLoaderData()
   const { chatResult, summaryData } = useChatResult(chatId)
   const navigate = useNavigate()
 
-  const exitButton = () => (
-    <Link to="/">
-      <X className="h-[24px] w-[24px]" />
-    </Link>
-  )
+  const exitButton = () =>
+    fromHistory ? (
+      <p>삭제</p>
+    ) : (
+      <Link to="/">
+        <X className="h-[24px] w-[24px]" />
+      </Link>
+    )
 
   return (
     <div className="flex h-full flex-col">
-      <DetailHeaderBar right={exitButton()} showBackButton={false} className="bg-malmo-rasberry-25" />
+      <DetailHeaderBar right={exitButton()} showBackButton={fromHistory} className="bg-malmo-rasberry-25" />
 
       <div className="bg-malmo-rasberry-25 pt-3">
         <ChatResultHeader

@@ -1,8 +1,7 @@
 import bridge from '@/shared/bridge'
-import chatService from '@/shared/services/chat.service'
+import historyService from '@/shared/services/history.service'
 import { GetChatRoomSummaryData } from '@data/user-api-axios/api'
 import { useEffect, useState } from 'react'
-import { set } from 'zod'
 
 const DUMMY_CHAT_RESULT: GetChatRoomSummaryData = {
   chatRoomId: 12345,
@@ -22,7 +21,7 @@ export function useChatResult(chatId: number | undefined) {
   useEffect(() => {
     async function fetchData() {
       if (chatId) {
-        const { data } = await chatService.getChatroomSummary(chatId)
+        const { data } = await historyService.getChatroomSummary(chatId)
 
         if (data) {
           setData(data)

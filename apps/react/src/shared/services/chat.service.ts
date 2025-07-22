@@ -1,13 +1,5 @@
-import { queryOptions } from '@tanstack/react-query'
 import apiInstance from '../libs/api'
-import {
-  CouplesApi,
-  CoupleLinkRequestDto,
-  CoupleLinkSuccessResponse,
-  ChatroomApi,
-  ChatroomApiSendChatMessage1Request,
-  ChatRequest,
-} from '@data/user-api-axios/api'
+import { ChatroomApi, ChatRequest } from '@data/user-api-axios/api'
 
 export const QUERY_KEY = 'chatrooms'
 
@@ -21,10 +13,8 @@ class ChatService extends ChatroomApi {
     return data
   }
 
-  async getChatroomSummary(chatRoomId: number) {
-    const { data } = await this.getCurrentChatRoom({
-      chatRoomId,
-    })
+  async getChatMessageList() {
+    const { data } = await this.getCurrentChatRoomMessages()
     return data
   }
 
