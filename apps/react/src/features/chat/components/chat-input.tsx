@@ -6,7 +6,7 @@ import { useChatting } from '../context/chatting-context'
 function ChatInput({ disabled = false }: { disabled?: boolean }) {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { chattingModal } = useChatting()
+  const { chattingModal, sendMessage } = useChatting()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -38,7 +38,7 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (text.trim()) {
-      // 실제 전송 로직 구현...
+      sendMessage(text)
       setText('')
     }
   }

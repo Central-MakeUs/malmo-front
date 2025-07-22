@@ -17,7 +17,7 @@ class ChatService extends ChatroomApi {
   }
 
   async getChatroomStatus() {
-    const { data } = await this.getCurrentChatRoom1({})
+    const { data } = await this.getCurrentChatRoom1()
     return data
   }
 
@@ -29,19 +29,17 @@ class ChatService extends ChatroomApi {
   }
 
   async postChatroomComplete() {
-    const { data } = await this.completeChatRoom({})
+    const { data } = await this.completeChatRoom()
     return data
   }
 
   async postChatroomSend(body: ChatRequest) {
-    const { data } = await this.sendChatMessage1({
-      chatRequest: { ...body },
-    })
+    const { data } = await this.sendChatMessage1({ chatRequest: { ...body } })
     return data
   }
 
   async postChatroomUpgrade() {
-    const { data } = await this.sendChatMessage({})
+    const { data } = await this.sendChatMessage()
     return data
   }
 }

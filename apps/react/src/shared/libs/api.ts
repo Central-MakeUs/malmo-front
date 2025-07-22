@@ -33,6 +33,11 @@ export function initApi(): AxiosInstance {
 
   apiInstance.interceptors.request.use(
     async (config) => {
+      console.log('API Request:', {
+        url: config.url,
+        payload: config.data,
+      })
+
       let accessToken: string | null = null
 
       if (isWebView()) {
@@ -71,9 +76,13 @@ export function initApi(): AxiosInstance {
   }
 
   apiInstance.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      console.log('API Response:', response.data)
+      return response
+    },
     async (error) => {
       const originalRequest = error.config
+
       const { response } = error
 
       if (response?.status === 401 && isWebView() && !originalRequest._retry) {
