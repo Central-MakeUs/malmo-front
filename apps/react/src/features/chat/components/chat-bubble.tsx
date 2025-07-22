@@ -1,6 +1,7 @@
 import momoChat from '@/assets/images/momo-chat.png'
 import { useMemo } from 'react'
 import { groupSentences } from '../util/chat-format'
+import { cn } from '@ui/common/lib/utils'
 
 interface AiChatBubbleProps {
   message?: string
@@ -16,20 +17,22 @@ export function AiChatBubble(props: AiChatBubbleProps) {
   return (
     <div className="flex w-full items-start gap-3">
       <img src={momoChat} alt={`${senderName} 캐릭터 이미지`} className="h-auto w-[50px] flex-shrink-0" />
-      <div className="flex w-full min-w-0 items-end gap-2">
-        <div className="w-full">
+
+      <div className="flex flex-1 items-end gap-2">
+        <div className="flex-1">
           <p className="body3-semibold mb-[6px] text-malmo-rasberry-500">{senderName}</p>
           {messageGroups.map((group, index) => (
             <div
               key={index}
-              className="w-fit max-w-full rounded-[10px] rounded-tl-none bg-gray-100 px-[14px] py-[10px]"
-              style={{ marginBottom: index === messageGroups.length - 1 ? 0 : '8px' }}
+              className={cn('w-fit max-w-full rounded-[10px] rounded-tl-none bg-gray-100 px-[14px] py-[10px]', {
+                'mb-2': index < messageGroups.length - 1,
+              })}
             >
-              <p className="body2-regular break-words break-keep text-gray-800">{group}</p>
+              <p className="body2-regular break-words text-gray-800">{group}</p>
             </div>
           ))}
         </div>
-        <p className="flex-shrink-0 text-[11px] leading-[20px] text-gray-600">{timestamp}</p>
+        <p className="label2-regular text-gray-600">{timestamp}</p>
       </div>
     </div>
   )

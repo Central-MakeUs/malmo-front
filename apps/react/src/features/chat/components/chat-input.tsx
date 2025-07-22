@@ -2,11 +2,16 @@ import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
 import { useChatting } from '../context/chatting-context'
+import { useChatRoomStatusQuery, useSendMessageMutation } from '../hook/use-chat-queries'
 
-function ChatInput({ disabled = false }: { disabled?: boolean }) {
+function ChatInput(props: { disabled?: boolean }) {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { chattingModal, sendMessage } = useChatting()
+  const { chattingModal } = useChatting()
+
+  const { data: chatStatus } = useChatRoomStatusQuery()
+  const { mutate: sendMessage, isPending } = useSendMessageMutation()
+
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -37,12 +42,11 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
   // 메시지 전송 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (text.trim()) {
+    if (text.trim() && !isPending) {
       sendMessage(text)
       setText('')
     }
   }
-
   // Shift+Enter는 줄바꿈, Enter는 전송으로 처리합니다.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -50,6 +54,9 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
       handleSubmit(e as any)
     }
   }
+
+  const paused = chatStatus?.chatRoomState === 'PAUSED'
+  const disabled = props.disabled || paused || isPending
 
   return (
     <form onSubmit={handleSubmit} className="sticky bottom-0 w-full bg-white px-5 py-[10px]">
@@ -77,7 +84,13 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
             className="body2-regular placeholder:body2-regular flex-1 resize-none border-none bg-transparent py-[3px] pr-11 outline-none"
-            placeholder={disabled ? '대화가 불가능해요' : '메시지를 입력해주세요'}
+            placeholder={
+              props.disabled
+                ? '대화가 불가능해요'
+                : paused
+                  ? '커플 연동이 완료된 후에 채팅이 가능해요'
+                  : '메시지를 입력해주세요'
+            }
             rows={1}
           />
 
