@@ -7,7 +7,7 @@ import { useChatRoomStatusQuery, useSendMessageMutation } from '../hook/use-chat
 function ChatInput(props: { disabled?: boolean }) {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { chattingModal } = useChatting()
+  const { chattingModal, setSendingMessageTrue, sendingMessage } = useChatting()
 
   const { data: chatStatus } = useChatRoomStatusQuery()
   const { mutate: sendMessage, isPending } = useSendMessageMutation()
@@ -44,6 +44,7 @@ function ChatInput(props: { disabled?: boolean }) {
     e.preventDefault()
     if (text.trim() && !isPending) {
       sendMessage(text)
+      setSendingMessageTrue()
       setText('')
     }
   }
@@ -58,7 +59,7 @@ function ChatInput(props: { disabled?: boolean }) {
   }
 
   const paused = chatStatus?.chatRoomState === 'PAUSED'
-  const disabled = props.disabled || paused || isPending
+  const disabled = props.disabled || paused || isPending || sendingMessage
 
   return (
     <form onSubmit={handleSubmit} className="sticky bottom-0 w-full bg-white px-5 py-[10px]">
@@ -91,7 +92,9 @@ function ChatInput(props: { disabled?: boolean }) {
                 ? '대화가 불가능해요'
                 : paused
                   ? '커플 연동이 완료된 후에 채팅이 가능해요'
-                  : '메시지를 입력해주세요'
+                  : sendingMessage
+                    ? '모모의 답변이 완료된 후 채팅이 가능해요'
+                    : '메시지를 입력해주세요'
             }
             rows={1}
           />

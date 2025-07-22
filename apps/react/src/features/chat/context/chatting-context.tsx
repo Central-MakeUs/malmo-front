@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode, useCallback, useEffect } from 'react'
+import { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useChattingModal, UseChattingModalReturn } from '../hook/use-chatting-modal'
 import {
   ChatRoomMessageData,
@@ -11,6 +11,8 @@ import { chatKeys, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '..
 
 interface ChattingContextType {
   chattingModal: UseChattingModalReturn
+  sendingMessage: boolean
+  setSendingMessageTrue: () => void
 }
 
 const CONNECTED_REQUIRED_MESSAGE =
@@ -21,6 +23,7 @@ const ChattingContext = createContext<ChattingContextType | undefined>(undefined
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const chattingModal = useChattingModal()
   const queryClient = useQueryClient()
+  const [sendingMessage, setSendingMessage] = useState<boolean>(false)
 
   // Tanstack Query 훅을 사용하여 데이터와 상태를 가져옵니다.
   const { data: chatStatus } = useChatRoomStatusQuery()
@@ -59,6 +62,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         }
         return prev
       })
+      setSendingMessage(false)
     },
     [queryClient]
   )
@@ -112,8 +116,16 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     }
   }, [chatStatus, upgradeChatRoom, addPausedMessage])
 
+  const setSendingMessageTrue = useCallback(() => {
+    setSendingMessage(true)
+  }, [])
+
   // Context를 통해 제공하는 값에서 데이터 관련 로직은 모두 제거
-  return <ChattingContext.Provider value={{ chattingModal }}>{children}</ChattingContext.Provider>
+  return (
+    <ChattingContext.Provider value={{ chattingModal, sendingMessage, setSendingMessageTrue }}>
+      {children}
+    </ChattingContext.Provider>
+  )
 }
 
 export function useChatting() {

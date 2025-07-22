@@ -76,7 +76,7 @@ export const useSendMessageMutation = () => {
       // 6. 뮤테이션 성공 시, 임시 메시지를 실제 서버 데이터로 업데이트
       queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (old = []) =>
         old.map((msg) =>
-          msg.messageId === context?.optimisticMessage.messageId ? { ...msg, messageId: msg.messageId } : msg
+          msg.messageId === context?.optimisticMessage.messageId ? { ...msg, messageId: data.data?.messageId } : msg
         )
       )
     },
