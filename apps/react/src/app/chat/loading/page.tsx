@@ -11,8 +11,13 @@ function RouteComponent() {
   const navigate = useNavigate()
   useEffect(() => {
     async function completeChatRoom() {
-      const { data } = await chatService.completeChatRoom()
-      navigate({ to: '/chat/result', search: { chatId: data.data?.chatRoomId } })
+      try {
+        const { data } = await chatService.postChatroomComplete()
+        navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId } })
+      } catch (error) {
+        console.error('Error completing chat room:', error)
+        navigate({ to: '/' })
+      }
     }
     completeChatRoom()
   }, [])
