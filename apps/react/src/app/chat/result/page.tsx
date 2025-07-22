@@ -4,24 +4,26 @@ import { X } from 'lucide-react'
 import { useChatResult } from '@/features/chat-result/hooks/use-chat-result'
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { Button } from '@/shared/ui'
-import bridge from '@/shared/bridge'
-import { useEffect } from 'react'
+import { z } from 'zod'
+
+const searchSchema = z.object({
+  chatId: z.number().optional(),
+})
 
 export const Route = createFileRoute('/chat/result/')({
   component: RouteComponent,
+  validateSearch: searchSchema,
+  loaderDeps: (search) => search,
+  loader: async ({ context, deps }) => {
+    const { chatId } = deps.search
+    return { chatId }
+  },
 })
 
 function RouteComponent() {
-  const chatResult = useChatResult()
+  const { chatId } = Route.useLoaderData()
+  const { chatResult, summaryData } = useChatResult(chatId)
   const navigate = useNavigate()
-
-  useEffect(() => {
-    bridge.changeStatusBarColor('#FDEDF0')
-
-    return () => {
-      bridge.changeStatusBarColor('#fff')
-    }
-  }, [])
 
   const exitButton = () => (
     <Link to="/">
@@ -41,20 +43,19 @@ function RouteComponent() {
 
         <div className="flex flex-col gap-7 rounded-t-[24px] bg-white px-5 py-10">
           <ChatResultMainInfo
-            date={chatResult.date}
-            subject={chatResult.subject}
-            onViewChat={() => navigate({ to: '/chat', search: { chatId: chatResult.chatId } })}
+            // TODO : chatResult?.date로 변경
+            date={'2025년 7월 3일'}
+            subject={chatResult.totalSummary}
+            onViewChat={() => navigate({ to: '/chat', search: { chatId: chatResult.chatRoomId } })}
           />
 
           <hr className="border-gray-100" />
 
-          <ChatResultSummarySection title="상황 요약" content={chatResult.summary} />
-          <ChatResultSummarySection title="관계 이해" content={chatResult.relation} />
-          <ChatResultSummarySection title="해결 제안" content={chatResult.solution} />
+          {summaryData.map(({ title, content }) => (
+            <ChatResultSummarySection key={title} title={title} content={content} />
+          ))}
 
-          <Link to="/" className="mt-13">
-            <Button text="홈으로 이동하기" onClick={() => {}} />
-          </Link>
+          <Button className="mt-13" text="홈으로 이동하기" onClick={() => navigate({ to: '/' })} />
         </div>
       </div>
     </div>

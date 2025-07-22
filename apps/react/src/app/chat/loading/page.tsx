@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import note from '@/assets/images/note.png'
 import { useEffect } from 'react'
+import chatService from '@/shared/services/chat.service'
 
 export const Route = createFileRoute('/chat/loading/')({
   component: RouteComponent,
@@ -9,11 +10,11 @@ export const Route = createFileRoute('/chat/loading/')({
 function RouteComponent() {
   const navigate = useNavigate()
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate({ to: '/chat/result' })
-    }, 2000)
-
-    return () => clearTimeout(timer)
+    async function completeChatRoom() {
+      const { data } = await chatService.completeChatRoom()
+      navigate({ to: '/chat/result', search: { chatId: data.data?.chatRoomId } })
+    }
+    completeChatRoom()
   }, [])
 
   return (

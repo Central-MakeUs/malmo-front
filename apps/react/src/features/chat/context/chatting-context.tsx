@@ -15,6 +15,7 @@ interface ChattingContextType {
   exitButton: () => ReactNode
   chattingModal: UseChattingModalReturn
   sendMessage: (message: string) => Promise<void>
+  chatRoomState: ChatRoomStateDataChatRoomStateEnum | undefined
 }
 
 // 컨텍스트 생성
@@ -146,6 +147,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         exitButton,
         chattingModal,
         sendMessage,
+        chatRoomState,
       }}
     >
       {children}

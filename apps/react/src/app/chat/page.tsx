@@ -4,7 +4,7 @@ import { DateDivider } from '@/features/chat/components/date-divider'
 import { useChatting } from '@/features/chat/context/chatting-context'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
-import { ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
+import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import React from 'react'
 import { z } from 'zod'
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/chat/')({
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
-  const { chatData, exitButton, chattingModal } = useChatting()
+  const { chatData, exitButton, chattingModal, chatRoomState } = useChatting()
 
   return (
     <div className="flex h-full flex-col">
@@ -60,7 +60,7 @@ function RouteComponent() {
         </div>
       </section>
 
-      <ChatInput disabled={chatId !== undefined} />
+      <ChatInput disabled={chatId !== undefined || chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused} />
       {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </div>
   )

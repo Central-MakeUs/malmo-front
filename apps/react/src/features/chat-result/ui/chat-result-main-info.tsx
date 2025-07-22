@@ -1,8 +1,8 @@
 import { ChevronRight } from 'lucide-react'
 
 interface ChatResultMainInfoProps {
-  date: string
-  subject: string
+  date?: string
+  subject?: string
   onViewChat?: () => void
 }
 
