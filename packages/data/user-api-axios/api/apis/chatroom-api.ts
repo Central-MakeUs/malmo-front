@@ -38,9 +38,15 @@ import type { ChatMessageListSuccessResponse } from '../models'
 // @ts-ignore
 import type { ChatRequest } from '../models'
 // @ts-ignore
+import type { ChatRoomDeleteSuccessResponse } from '../models'
+// @ts-ignore
+import type { ChatRoomListSuccessResponse } from '../models'
+// @ts-ignore
 import type { ChatRoomStateResponse } from '../models'
 // @ts-ignore
 import type { CompleteChatRoomResponse } from '../models'
+// @ts-ignore
+import type { DeleteChatRoomRequestDto } from '../models'
 // @ts-ignore
 import type { GetChatRoomSummaryResponse } from '../models'
 // @ts-ignore
@@ -75,6 +81,156 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
       // authentication Bearer Authentication required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * 채팅방을 id 리스트를 통해 다건 동시 삭제합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 삭제
+     * @param {DeleteChatRoomRequestDto} deleteChatRoomRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteChatRooms: async (
+      deleteChatRoomRequestDto: DeleteChatRoomRequestDto,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'deleteChatRoomRequestDto' is not null or undefined
+      assertParamExists('deleteChatRooms', 'deleteChatRoomRequestDto', deleteChatRoomRequestDto)
+      const localVarPath = `/chatroom`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        deleteChatRoomRequestDto,
+        localVarRequestOptions,
+        configuration
+      )
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * 조건에 부합하는 채팅방 리스트를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 리스트 조회
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [keyword]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChatRoomList: async (
+      page?: number,
+      size?: number,
+      keyword?: string,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/chatroom`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (page !== undefined) {
+        localVarQueryParameter['page'] = page
+      }
+
+      if (size !== undefined) {
+        localVarQueryParameter['size'] = size
+      }
+
+      if (keyword !== undefined) {
+        localVarQueryParameter['keyword'] = keyword
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * 채팅방의 메시지를 페이지네이션으로 조회합니다. 현재 채팅방과 달리 시간 오름차순으로 전달됩니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방의 메시지 리스트 조회
+     * @param {number} chatRoomId
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChatRoomMessages: async (
+      chatRoomId: number,
+      page?: number,
+      size?: number,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'chatRoomId' is not null or undefined
+      assertParamExists('getChatRoomMessages', 'chatRoomId', chatRoomId)
+      const localVarPath = `/chatroom/{chatRoomId}/messages`.replace(
+        `{${'chatRoomId'}}`,
+        encodeURIComponent(String(chatRoomId))
+      )
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (page !== undefined) {
+        localVarQueryParameter['page'] = page
+      }
+
+      if (size !== undefined) {
+        localVarQueryParameter['size'] = size
+      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -303,6 +459,83 @@ export const ChatroomApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
+     * 채팅방을 id 리스트를 통해 다건 동시 삭제합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 삭제
+     * @param {DeleteChatRoomRequestDto} deleteChatRoomRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async deleteChatRooms(
+      deleteChatRoomRequestDto: DeleteChatRoomRequestDto,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatRoomDeleteSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.deleteChatRooms(deleteChatRoomRequestDto, options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['ChatroomApi.deleteChatRooms']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
+     * 조건에 부합하는 채팅방 리스트를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 리스트 조회
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {string} [keyword]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getChatRoomList(
+      page?: number,
+      size?: number,
+      keyword?: string,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatRoomListSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getChatRoomList(page, size, keyword, options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['ChatroomApi.getChatRoomList']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
+     * 채팅방의 메시지를 페이지네이션으로 조회합니다. 현재 채팅방과 달리 시간 오름차순으로 전달됩니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방의 메시지 리스트 조회
+     * @param {number} chatRoomId
+     * @param {number} [page]
+     * @param {number} [size]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getChatRoomMessages(
+      chatRoomId: number,
+      page?: number,
+      size?: number,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatMessageListSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getChatRoomMessages(chatRoomId, page, size, options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['ChatroomApi.getChatRoomMessages']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
      * 해당하는 채팅방의 요약를 조회합니다. JWT 토큰이 필요합니다.
      * @summary 채팅방 요약 조회
      * @param {number} chatRoomId
@@ -435,6 +668,51 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
       return localVarFp.completeChatRoom(options).then((request) => request(axios, basePath))
     },
     /**
+     * 채팅방을 id 리스트를 통해 다건 동시 삭제합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 삭제
+     * @param {ChatroomApiDeleteChatRoomsRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    deleteChatRooms(
+      requestParameters: ChatroomApiDeleteChatRoomsRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<ChatRoomDeleteSuccessResponse> {
+      return localVarFp
+        .deleteChatRooms(requestParameters.deleteChatRoomRequestDto, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * 조건에 부합하는 채팅방 리스트를 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 리스트 조회
+     * @param {ChatroomApiGetChatRoomListRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChatRoomList(
+      requestParameters: ChatroomApiGetChatRoomListRequest = {},
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<ChatRoomListSuccessResponse> {
+      return localVarFp
+        .getChatRoomList(requestParameters.page, requestParameters.size, requestParameters.keyword, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * 채팅방의 메시지를 페이지네이션으로 조회합니다. 현재 채팅방과 달리 시간 오름차순으로 전달됩니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방의 메시지 리스트 조회
+     * @param {ChatroomApiGetChatRoomMessagesRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getChatRoomMessages(
+      requestParameters: ChatroomApiGetChatRoomMessagesRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<ChatMessageListSuccessResponse> {
+      return localVarFp
+        .getChatRoomMessages(requestParameters.chatRoomId, requestParameters.page, requestParameters.size, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
      * 해당하는 채팅방의 요약를 조회합니다. JWT 토큰이 필요합니다.
      * @summary 채팅방 요약 조회
      * @param {ChatroomApiGetCurrentChatRoomRequest} requestParameters Request parameters.
@@ -498,6 +776,76 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
         .then((request) => request(axios, basePath))
     },
   }
+}
+
+/**
+ * Request parameters for deleteChatRooms operation in ChatroomApi.
+ * @export
+ * @interface ChatroomApiDeleteChatRoomsRequest
+ */
+export interface ChatroomApiDeleteChatRoomsRequest {
+  /**
+   *
+   * @type {DeleteChatRoomRequestDto}
+   * @memberof ChatroomApiDeleteChatRooms
+   */
+  readonly deleteChatRoomRequestDto: DeleteChatRoomRequestDto
+}
+
+/**
+ * Request parameters for getChatRoomList operation in ChatroomApi.
+ * @export
+ * @interface ChatroomApiGetChatRoomListRequest
+ */
+export interface ChatroomApiGetChatRoomListRequest {
+  /**
+   *
+   * @type {number}
+   * @memberof ChatroomApiGetChatRoomList
+   */
+  readonly page?: number
+
+  /**
+   *
+   * @type {number}
+   * @memberof ChatroomApiGetChatRoomList
+   */
+  readonly size?: number
+
+  /**
+   *
+   * @type {string}
+   * @memberof ChatroomApiGetChatRoomList
+   */
+  readonly keyword?: string
+}
+
+/**
+ * Request parameters for getChatRoomMessages operation in ChatroomApi.
+ * @export
+ * @interface ChatroomApiGetChatRoomMessagesRequest
+ */
+export interface ChatroomApiGetChatRoomMessagesRequest {
+  /**
+   *
+   * @type {number}
+   * @memberof ChatroomApiGetChatRoomMessages
+   */
+  readonly chatRoomId: number
+
+  /**
+   *
+   * @type {number}
+   * @memberof ChatroomApiGetChatRoomMessages
+   */
+  readonly page?: number
+
+  /**
+   *
+   * @type {number}
+   * @memberof ChatroomApiGetChatRoomMessages
+   */
+  readonly size?: number
 }
 
 /**
@@ -566,6 +914,51 @@ export class ChatroomApi extends BaseAPI {
   public completeChatRoom(options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
       .completeChatRoom(options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * 채팅방을 id 리스트를 통해 다건 동시 삭제합니다. JWT 토큰이 필요합니다.
+   * @summary 채팅방 삭제
+   * @param {ChatroomApiDeleteChatRoomsRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ChatroomApi
+   */
+  public deleteChatRooms(requestParameters: ChatroomApiDeleteChatRoomsRequest, options?: RawAxiosRequestConfig) {
+    return ChatroomApiFp(this.configuration)
+      .deleteChatRooms(requestParameters.deleteChatRoomRequestDto, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * 조건에 부합하는 채팅방 리스트를 조회합니다. JWT 토큰이 필요합니다.
+   * @summary 채팅방 리스트 조회
+   * @param {ChatroomApiGetChatRoomListRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ChatroomApi
+   */
+  public getChatRoomList(requestParameters: ChatroomApiGetChatRoomListRequest = {}, options?: RawAxiosRequestConfig) {
+    return ChatroomApiFp(this.configuration)
+      .getChatRoomList(requestParameters.page, requestParameters.size, requestParameters.keyword, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * 채팅방의 메시지를 페이지네이션으로 조회합니다. 현재 채팅방과 달리 시간 오름차순으로 전달됩니다. JWT 토큰이 필요합니다.
+   * @summary 채팅방의 메시지 리스트 조회
+   * @param {ChatroomApiGetChatRoomMessagesRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof ChatroomApi
+   */
+  public getChatRoomMessages(
+    requestParameters: ChatroomApiGetChatRoomMessagesRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return ChatroomApiFp(this.configuration)
+      .getChatRoomMessages(requestParameters.chatRoomId, requestParameters.page, requestParameters.size, options)
       .then((request) => request(this.axios, this.basePath))
   }
 

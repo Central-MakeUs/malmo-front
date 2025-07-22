@@ -11,7 +11,7 @@ apis/questions-api.ts
 apis/refresh-api.ts
 apis/sign-ups-api.ts
 apis/sseconnection-apiapi.ts
-apis/temrs-api.ts
+apis/terms-api.ts
 apis/test-api.ts
 base.ts
 common.ts
@@ -23,6 +23,7 @@ models/answer-request-dto.ts
 models/answer-success-response.ts
 models/apple-login-request-dto.ts
 models/base-list-swagger-response-chat-room-message-data.ts
+models/base-list-swagger-response-get-chat-room-list-response.ts
 models/base-list-swagger-response-love-type-question-data.ts
 models/base-list-swagger-response-question-list-data.ts
 models/base-list-swagger-response-terms-data.ts
@@ -30,6 +31,8 @@ models/base-list-swagger-response-terms-response-data.ts
 models/base-swagger-response.ts
 models/chat-message-list-success-response.ts
 models/chat-request.ts
+models/chat-room-delete-success-response.ts
+models/chat-room-list-success-response.ts
 models/chat-room-message-data.ts
 models/chat-room-state-data.ts
 models/chat-room-state-response.ts
@@ -40,8 +43,10 @@ models/couple-link-request-dto.ts
 models/couple-link-success-response.ts
 models/couple-unlink-data.ts
 models/couple-unlink-success-response.ts
+models/delete-chat-room-request-dto.ts
 models/delete-member-data.ts
 models/delete-member-success-response.ts
+models/get-chat-room-list-response.ts
 models/get-chat-room-summary-data.ts
 models/get-chat-room-summary-response.ts
 models/get-invite-code-success-response.ts

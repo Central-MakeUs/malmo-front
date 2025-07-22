@@ -13,39 +13,39 @@
  */
 
 /**
- * 채팅 요약 조회 완료 응답 데이터
+ * 채팅 리스트 조회 완료 응답 데이터
  * @export
- * @interface GetChatRoomSummaryData
+ * @interface GetChatRoomListResponse
  */
-export interface GetChatRoomSummaryData {
+export interface GetChatRoomListResponse {
   /**
    * 채팅방의 ID
    * @type {number}
-   * @memberof GetChatRoomSummaryData
+   * @memberof GetChatRoomListResponse
    */
   chatRoomId?: number
   /**
    * 채팅방 전체 요약
    * @type {string}
-   * @memberof GetChatRoomSummaryData
+   * @memberof GetChatRoomListResponse
    */
   totalSummary?: string
   /**
-   * 채팅방 상황 요약
+   * 채팅방 상황 키워드
    * @type {string}
-   * @memberof GetChatRoomSummaryData
+   * @memberof GetChatRoomListResponse
    */
-  firstSummary?: string
+  situationKeyword?: string
   /**
-   * 채팅방 관계 이해
+   * 채팅방 해결 키워드
    * @type {string}
-   * @memberof GetChatRoomSummaryData
+   * @memberof GetChatRoomListResponse
    */
-  secondSummary?: string
+  solutionKeyword?: string
   /**
-   * 채팅방 해결 제안
+   * 채팅방 생성 시간
    * @type {string}
-   * @memberof GetChatRoomSummaryData
+   * @memberof GetChatRoomListResponse
    */
-  thirdSummary?: string
+  createdAt?: string
 }
