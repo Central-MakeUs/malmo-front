@@ -2,11 +2,12 @@ import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
 import { useChatting } from '../context/chatting-context'
+import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 
 function ChatInput({ disabled = false }: { disabled?: boolean }) {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { chattingModal, sendMessage } = useChatting()
+  const { chattingModal, sendMessage, chatRoomState } = useChatting()
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -69,7 +70,7 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
         >
           <textarea
             autoFocus={chattingModal.showChattingTutorial}
-            disabled={disabled}
+            disabled={disabled || chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused}
             ref={textareaRef}
             value={text}
             onChange={handleTextChange}
@@ -77,7 +78,13 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
             className="body2-regular placeholder:body2-regular flex-1 resize-none border-none bg-transparent py-[3px] pr-11 outline-none"
-            placeholder={disabled ? '대화가 불가능해요' : '메시지를 입력해주세요'}
+            placeholder={
+              disabled
+                ? '대화가 불가능해요'
+                : chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused
+                  ? '커플 연동이 완료된 후에 채팅이 가능해요'
+                  : '메시지를 입력해주세요'
+            }
             rows={1}
           />
 
@@ -87,7 +94,7 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
             className={cn('absolute right-[10px] rounded-full bg-malmo-rasberry-50 p-1 text-malmo-rasberry-500', {
               'cursor-not-allowed bg-malmo-rasberry-25 text-malmo-rasberry-100': !text.trim(),
             })}
-            disabled={!text.trim() || disabled}
+            disabled={!text.trim() || disabled || chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused}
           >
             <ArrowUp size={20} />
           </button>

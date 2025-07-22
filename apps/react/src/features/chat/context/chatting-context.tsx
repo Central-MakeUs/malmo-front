@@ -18,6 +18,9 @@ interface ChattingContextType {
   chatRoomState: ChatRoomStateDataChatRoomStateEnum | undefined
 }
 
+const CONNECTED_REQUIRED_MESSAGE =
+  '응응! 알려줘서 고마워! 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 상대방에게 공유해봐!'
+
 // 컨텍스트 생성
 const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
 
@@ -28,11 +31,10 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const chattingModal = useChattingModal()
   const navigate = useNavigate()
 
-  const sendMessage = useCallback(async (message: string) => {
+  const sendMessage = async (message: string) => {
     if (!message.trim()) return
 
     const { data } = await chatService.postChatroomSend({ message })
-
     setChatData((prev) => [
       ...(prev || []),
       {
@@ -42,10 +44,11 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         senderType: ChatRoomMessageDataSenderTypeEnum.User,
       },
     ])
-  }, [])
+  }
 
   useChatSSE({
     onChatResponse: (chunk) => {
+      console.log('Received chunk:', chunk)
       setChatData((prev) => {
         const lastMessage = prev?.[prev.length - 1]
 
@@ -74,6 +77,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       })
     },
     onResponseId: (messageId) => {
+      console.log('Received message ID:', messageId)
       // 응답 완료 후 메시지 ID를 받아 상태를 업데이트하는 액션 호출
       setChatData((prev) => {
         if (!prev) return []
@@ -94,6 +98,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     onChatPaused: () => {
       // 채팅방을 PAUSED 상태로 변경하는 액션 호출
       setChatRoomState(ChatRoomStateDataChatRoomStateEnum.Paused)
+      connectedRequired()
     },
     onError: (error) => {
       console.error('SSE Error:', error)
@@ -112,10 +117,31 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
       const { data: chatData } = await chatService.getCurrentChatRoomMessages()
       setChatData(chatData?.data?.list?.reverse() ?? [])
+
+      if (status?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused) {
+        connectedRequired()
+      }
     }
 
     fetchChatStatus()
   }, [])
+
+  const connectedRequired = () => {
+    const createAssistantMessage = (lastMessage: ChatRoomMessageData) => ({
+      content: CONNECTED_REQUIRED_MESSAGE,
+      createdAt: lastMessage.createdAt,
+      senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+    })
+
+    setChatData((prev) => {
+      if (!prev || prev.length === 0) {
+        return prev
+      }
+
+      const lastMessage = prev[prev.length - 1]
+      return [...prev, createAssistantMessage(lastMessage!)]
+    })
+  }
 
   async function fetchChatUpgrade() {
     if (chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {

@@ -38,7 +38,7 @@ function RouteComponent() {
 
       <section className="flex-1 overflow-y-auto">
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
-          <p className="body3-medium text-white">상담 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
+          <p className="body3-medium text-white">대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
         </div>
 
         <div className="space-y-5 px-5 py-6">
@@ -60,7 +60,7 @@ function RouteComponent() {
         </div>
       </section>
 
-      <ChatInput disabled={chatId !== undefined || chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused} />
+      <ChatInput disabled={chatId !== undefined} />
       {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </div>
   )
