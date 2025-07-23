@@ -23,7 +23,7 @@ export interface ChatRoomMessageData {
    * @type {number}
    * @memberof ChatRoomMessageData
    */
-  messageId?: number | null
+  messageId?: number
   /**
    * 채팅 전송자(유저, 모모)
    * @type {string}

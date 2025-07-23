@@ -25,7 +25,6 @@ models/apple-login-request-dto.ts
 models/base-list-swagger-response-chat-room-message-data.ts
 models/base-list-swagger-response-get-chat-room-list-response.ts
 models/base-list-swagger-response-love-type-question-data.ts
-models/base-list-swagger-response-question-list-data.ts
 models/base-list-swagger-response-terms-data.ts
 models/base-list-swagger-response-terms-response-data.ts
 models/base-swagger-response.ts
@@ -60,6 +59,7 @@ models/love-type-question-success-response.ts
 models/love-type-test-result.ts
 models/member-data.ts
 models/member-info-success-response.ts
+models/pageable.ts
 models/partner-member-data.ts
 models/partner-member-info-success-response.ts
 models/past-answer-data.ts
@@ -68,8 +68,6 @@ models/past-answer-success-response.ts
 models/past-question-data.ts
 models/past-question-success-response.ts
 models/question-data.ts
-models/question-list-data.ts
-models/question-list-success-response.ts
 models/question-success-response.ts
 models/refresh-request-dto.ts
 models/refresh-token-success-response.ts

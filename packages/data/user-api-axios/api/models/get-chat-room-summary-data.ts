@@ -25,6 +25,12 @@ export interface GetChatRoomSummaryData {
    */
   chatRoomId?: number
   /**
+   * 채팅방 생성 시간
+   * @type {string}
+   * @memberof GetChatRoomSummaryData
+   */
+  createdAt?: string
+  /**
    * 채팅방 전체 요약
    * @type {string}
    * @memberof GetChatRoomSummaryData

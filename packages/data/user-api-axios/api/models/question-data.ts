@@ -25,6 +25,12 @@ export interface QuestionData {
    */
   coupleQuestionId?: number
   /**
+   * 질문 단계
+   * @type {number}
+   * @memberof QuestionData
+   */
+  level?: number
+  /**
    * 질문 제목
    * @type {string}
    * @memberof QuestionData
@@ -36,4 +42,22 @@ export interface QuestionData {
    * @memberof QuestionData
    */
   content?: string
+  /**
+   * 나의 답변 여부
+   * @type {boolean}
+   * @memberof QuestionData
+   */
+  meAnswered?: boolean
+  /**
+   * 상대방 답변 여부
+   * @type {boolean}
+   * @memberof QuestionData
+   */
+  partnerAnswered?: boolean
+  /**
+   * 생성일시
+   * @type {string}
+   * @memberof QuestionData
+   */
+  createdAt?: string
 }

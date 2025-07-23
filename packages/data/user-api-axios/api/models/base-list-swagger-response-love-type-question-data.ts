@@ -40,4 +40,10 @@ export interface BaseListSwaggerResponseLoveTypeQuestionData {
    * @memberof BaseListSwaggerResponseLoveTypeQuestionData
    */
   list?: Array<LoveTypeQuestionData>
+  /**
+   * 전체 데이터 개수
+   * @type {number}
+   * @memberof BaseListSwaggerResponseLoveTypeQuestionData
+   */
+  totalCount?: number
 }

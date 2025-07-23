@@ -19,9 +19,9 @@
  */
 export interface AnswerData {
   /**
-   * 멤버 답변 ID
+   * 답변이 달린 질문의 ID
    * @type {number}
    * @memberof AnswerData
    */
-  memberAnswerId?: number
+  coupleQuestionId?: number
 }
