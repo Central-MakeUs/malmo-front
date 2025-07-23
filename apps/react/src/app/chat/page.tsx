@@ -1,3 +1,5 @@
+// page.tsx
+
 import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubble'
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
@@ -8,7 +10,7 @@ import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { z } from 'zod'
 
 const searchSchema = z.object({
@@ -29,16 +31,18 @@ function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const navigate = useNavigate()
-  const { chattingModal } = useChatting()
+  const { chattingModal, streamingMessage, isChatStatusSuccess } = useChatting()
 
-  // useInfiniteQuery에서 반환하는 값들을 모두 가져옵니다.
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery()
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(isChatStatusSuccess)
 
   const scrollRef = useRef<HTMLElement>(null)
   const scrollHeightRef = useRef(0)
+  const topMessageIdRef = useRef<number | string | null>(null)
 
-  // 메시지 목록을 단일 배열로 가공합니다.
-  const messages = data?.pages.flatMap((page) => page.list ?? []) ?? []
+  const messages = useMemo(() => {
+    if (!data) return []
+    return data.pages.flatMap((page) => page.list ?? []).reverse()
+  }, [data])
 
   const observerRef = useRef<IntersectionObserver>(null)
   const sentinelRef = useCallback(
@@ -61,20 +65,19 @@ function RouteComponent() {
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
-    // 이전 대화 기록 로드 시 스크롤 위치 유지
-    if (scrollHeightRef.current) {
+    const newTopMessageId = messages[0]?.messageId ?? null
+
+    if (newTopMessageId !== topMessageIdRef.current && scrollContainer.scrollHeight > scrollHeightRef.current) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight - scrollHeightRef.current
     } else {
-      // 컴포넌트 첫 마운트 또는 새 메시지 추가 시 맨 아래로 스크롤
       scrollContainer.scrollTop = scrollContainer.scrollHeight
     }
 
-    // 다음 렌더링을 위해 현재 스크롤 높이를 저장합니다.
     scrollHeightRef.current = scrollContainer.scrollHeight
+    topMessageIdRef.current = newTopMessageId
   })
 
   const exitButton = useCallback(() => {
-    // 새로운 데이터 구조에 맞게 수정
     const actived = messages.some((chat) => chat.senderType === ChatRoomMessageDataSenderTypeEnum.User)
     return (
       <p
@@ -101,14 +104,12 @@ function RouteComponent() {
           <p className="body3-medium text-white">대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
         </div>
 
-        {/* 이전 데이터 로딩 UI */}
         {isFetchingNextPage && (
           <div className="flex justify-center py-4">
             <p className="body2-regular text-gray-500">이전 대화를 불러오는 중...</p>
           </div>
         )}
 
-        {/* 무한 스크롤 트리거 */}
         <div ref={sentinelRef} style={{ height: '1px' }} />
 
         {isLoading && (
@@ -131,6 +132,11 @@ function RouteComponent() {
               </React.Fragment>
             )
           })}
+
+          {/* 스트리밍 중인 AI 메시지를 별도로 렌더링합니다. */}
+          {streamingMessage && (
+            <AiChatBubble message={streamingMessage.content} timestamp={formatTimestamp(streamingMessage.createdAt)} />
+          )}
         </div>
       </section>
 
