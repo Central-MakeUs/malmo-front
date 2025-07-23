@@ -7,6 +7,7 @@ import {
   ChatroomApi,
   ChatroomApiSendChatMessage1Request,
   ChatRequest,
+  Pageable,
 } from '@data/user-api-axios/api'
 
 export const QUERY_KEY = 'chatrooms'
@@ -18,6 +19,13 @@ class ChatService extends ChatroomApi {
 
   async getChatroomStatus() {
     const { data } = await this.getCurrentChatRoom1()
+    return data
+  }
+
+  async getChatroomMessagesList(params?: Pageable) {
+    const { data } = await this.getCurrentChatRoomMessages({
+      pageable: params || { page: 0, size: 20 },
+    })
     return data
   }
 

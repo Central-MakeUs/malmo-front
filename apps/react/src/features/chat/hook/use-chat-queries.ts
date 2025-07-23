@@ -1,12 +1,18 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery, InfiniteData } from '@tanstack/react-query'
 import chatService from '@/shared/services/chat.service'
-import { ChatRoomMessageData, ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
+import {
+  BaseListSwaggerResponseChatRoomMessageData,
+  BaseListSwaggerResponseGetChatRoomListResponse,
+  ChatRoomListSuccessResponse,
+  ChatRoomMessageData,
+  ChatRoomMessageDataSenderTypeEnum,
+} from '@data/user-api-axios/api'
 
 // 쿼리 키를 상수로 관리하여 오타를 방지하고 일관성을 유지합니다.
 export const chatKeys = {
   all: ['chat'] as const,
   status: () => [...chatKeys.all, 'status'] as const,
-  messages: () => [...chatKeys.all, 'messages'] as const,
+  messages: (sort?: string[]) => [...chatKeys.all, 'messages', sort] as const, // sort 파라미터를 키에 추가
   summary: (chatRoomId: number) => [...chatKeys.all, 'summary', chatRoomId] as const,
 }
 
@@ -23,18 +29,27 @@ export const useChatRoomStatusQuery = () => {
 }
 
 // 2. 현재 채팅 메시지 목록 조회를 위한 useQuery 훅
-export const useChatMessagesQuery = () => {
-  return useQuery({
-    queryKey: chatKeys.messages(),
-    queryFn: async () => {
-      const { data } = await chatService.getCurrentChatRoomMessages({
-        pageable: {
-          page: 0,
-          size: 20,
-          sort: ['createdAt,desc'],
-        },
+export const useChatMessagesQuery = (sort: string[] = ['createdAt']) => {
+  const PAGE_SIZE = 5
+
+  return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
+    queryKey: chatKeys.messages(sort),
+    queryFn: async ({ pageParam = 0 }) => {
+      const response = await chatService.getChatroomMessagesList({
+        page: pageParam as number,
+        size: PAGE_SIZE,
+        sort: sort,
       })
-      return data?.data?.list?.reverse() ?? []
+      return response.data as BaseListSwaggerResponseChatRoomMessageData
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const lastPageList = lastPage.list ?? []
+      if (lastPageList.length < PAGE_SIZE) {
+        return undefined
+      }
+      // 다음 페이지 번호를 현재 페이지 번호 + 1로 계산
+      return (lastPage.page ?? 0) + 1
     },
   })
 }
@@ -44,45 +59,61 @@ export const useChatMessagesQuery = () => {
 // 3. 메시지 전송을 위한 useMutation 훅 (Optimistic Update 포함)
 export const useSendMessageMutation = () => {
   const queryClient = useQueryClient()
+  const queryKey = chatKeys.messages() // 정렬 옵션이 있다면 포함해야 합니다.
 
   return useMutation({
     mutationFn: (message: string) => chatService.postChatroomSend({ message }),
     onMutate: async (newMessageText) => {
-      // 1. 진행중인 messages 쿼리를 취소하여 이전 서버 데이터가 덮어쓰는 것을 방지
-      await queryClient.cancelQueries({ queryKey: chatKeys.messages() })
+      await queryClient.cancelQueries({ queryKey })
 
-      // 2. 이전 메시지 목록을 스냅샷
-      const previousMessages = queryClient.getQueryData<ChatRoomMessageData[]>(chatKeys.messages())
-
-      // 3. 새로운 메시지를 낙관적으로 UI에 반영
       const optimisticMessage: ChatRoomMessageData = {
-        messageId: Date.now(), // 임시 ID
+        messageId: Date.now(),
         content: newMessageText,
         createdAt: new Date().toISOString(),
         senderType: ChatRoomMessageDataSenderTypeEnum.User,
       }
-      queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (old = []) => [...old, optimisticMessage])
 
-      // 4. 롤백을 위해 스냅샷된 값과 임시 메시지를 context에 반환
-      return { previousMessages, optimisticMessage }
+      // setQueryData를 InfiniteData 구조에 맞게 수정
+      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+        if (!oldData) {
+          // 캐시가 없는 경우 초기 구조를 만들어줍니다.
+          return {
+            pages: [{ list: [optimisticMessage] }],
+            pageParams: [0],
+          }
+        }
+
+        const newData = { ...oldData }
+        const lastPageIndex = newData.pages.length - 1
+        const lastPage = { ...newData.pages[lastPageIndex] }
+
+        // 마지막 페이지의 list에 새로운 메시지를 추가합니다.
+        lastPage.list = [...(lastPage.list ?? []), optimisticMessage]
+        newData.pages[lastPageIndex] = lastPage
+
+        return newData
+      })
+
+      return { optimisticMessage }
     },
-    onError: (err, newMessage, context) => {
-      // 5. 뮤테이션 실패 시, onMutate에서 반환된 context를 사용하여 데이터 롤백
-      if (context?.previousMessages) {
-        queryClient.setQueryData(chatKeys.messages(), context.previousMessages)
-      }
+    onError: (_err, _newMessage, context) => {
+      // 에러 발생 시 롤백 (필요 시 이전 데이터로 복원)
+      queryClient.invalidateQueries({ queryKey })
     },
     onSuccess: (data, variables, context) => {
-      // 6. 뮤테이션 성공 시, 임시 메시지를 실제 서버 데이터로 업데이트
-      queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (old = []) =>
-        old.map((msg) =>
-          msg.messageId === context?.optimisticMessage.messageId ? { ...msg, messageId: data.data?.messageId } : msg
-        )
-      )
-    },
-    onSettled: () => {
-      // 7. 성공/실패 여부와 관계없이 messages 쿼리를 항상 최신화
-      queryClient.invalidateQueries({ queryKey: chatKeys.messages() })
+      // 성공 시 임시 ID를 실제 서버 ID로 교체
+      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+        if (!oldData) return oldData
+
+        oldData.pages.forEach((page) => {
+          page.list?.forEach((msg) => {
+            if (msg.messageId === context?.optimisticMessage.messageId) {
+              msg.messageId = data.data?.messageId
+            }
+          })
+        })
+        return oldData
+      })
     },
   })
 }

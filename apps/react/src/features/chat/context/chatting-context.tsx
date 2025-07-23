@@ -1,12 +1,13 @@
 import { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useChattingModal, UseChattingModalReturn } from '../hook/use-chatting-modal'
 import {
+  BaseListSwaggerResponseChatRoomMessageData,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
 import { useChatSSE } from '@/features/chat/hook/use-chat-sse'
-import { useQueryClient } from '@tanstack/react-query'
+import { InfiniteData, useQueryClient } from '@tanstack/react-query'
 import { chatKeys, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hook/use-chat-queries'
 
 interface ChattingContextType {
@@ -29,39 +30,69 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const { data: chatStatus } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
 
-  // SSE 이벤트 핸들러: 이제 queryClient.setQueryData를 사용하여 캐시를 직접 업데이트합니다.
+  // 채팅 상태가 변경될 때마다 쿼리를 무효화하여 최신 상태를 유지합니다.
   const handleChatResponse = useCallback(
     (chunk: string) => {
-      queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
-        const lastMessage = prev[prev.length - 1]
-        if (lastMessage?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant && lastMessage.messageId === null) {
-          const updatedMessage = { ...lastMessage, content: (lastMessage.content || '') + chunk }
-          return [...prev.slice(0, -1), updatedMessage]
-        } else {
-          const newAssistantMessage: ChatRoomMessageData = {
-            messageId: null as any, // 서버에서 number ID를 받기 전까지는 null로 설정
-            content: chunk,
-            createdAt: new Date().toISOString(),
-            senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(
+        chatKeys.messages(),
+        (oldData) => {
+          if (!oldData) return oldData
+
+          const newData = { ...oldData }
+          const lastPageIndex = newData.pages.length - 1
+          const lastPage = { ...newData.pages[lastPageIndex] }
+          const messages = [...(lastPage.list ?? [])]
+          const lastMessage = messages[messages.length - 1]
+
+          if (
+            lastMessage?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
+            lastMessage.messageId === null
+          ) {
+            // AI 응답 스트리밍 중: 마지막 메시지에 내용 추가
+            const updatedMessage = { ...lastMessage, content: (lastMessage.content || '') + chunk }
+            messages[messages.length - 1] = updatedMessage
+          } else {
+            // AI 응답 시작: 새로운 메시지 객체 추가
+            const newAssistantMessage: ChatRoomMessageData = {
+              messageId: null as any,
+              content: chunk,
+              createdAt: new Date().toISOString(),
+              senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+            }
+            messages.push(newAssistantMessage)
           }
-          return [...prev, newAssistantMessage]
+
+          lastPage.list = messages
+          newData.pages[lastPageIndex] = lastPage
+          return newData
         }
-      })
+      )
     },
     [queryClient]
   )
 
   const handleResponseId = useCallback(
     (messageId: string) => {
-      queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
-        const lastIndex = prev.length - 1
-        if (prev[lastIndex]?.messageId === null) {
-          const updatedMessages = [...prev]
-          updatedMessages[lastIndex] = { ...updatedMessages[lastIndex]!, messageId: Number(messageId) }
-          return updatedMessages
+      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(
+        chatKeys.messages(),
+        (oldData) => {
+          if (!oldData) return oldData
+
+          const newData = { ...oldData }
+          const lastPageIndex = newData.pages.length - 1
+          const lastPage = { ...newData.pages[lastPageIndex] }
+          const messages = [...(lastPage.list ?? [])]
+          const lastMessageIndex = messages.length - 1
+
+          if (messages[lastMessageIndex]?.messageId === null) {
+            messages[lastMessageIndex] = { ...messages[lastMessageIndex]!, messageId: Number(messageId) }
+          }
+
+          lastPage.list = messages
+          newData.pages[lastPageIndex] = lastPage
+          return newData
         }
-        return prev
-      })
+      )
       setSendingMessage(false)
     },
     [queryClient]
@@ -72,21 +103,34 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   }, [upgradeChatRoom])
 
   const addPausedMessage = useCallback(() => {
-    queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
-      if (!prev.length) return prev
-      // 이미 PAUSED 메시지가 있는지 확인하여 중복 추가 방지
-      if (prev.some((msg) => msg.content === CONNECTED_REQUIRED_MESSAGE)) {
-        return prev
+    queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(
+      chatKeys.messages(),
+      (oldData) => {
+        if (!oldData || oldData.pages.length === 0) return oldData
+
+        const lastPageMessages = oldData?.pages?.[oldData.pages.length - 1]?.list ?? []
+        if (lastPageMessages.some((msg) => msg.content === CONNECTED_REQUIRED_MESSAGE)) {
+          return oldData // 이미 메시지가 있으면 추가하지 않음
+        }
+
+        const newData = { ...oldData }
+        const lastPageIndex = newData.pages.length - 1
+        const lastPage = { ...newData.pages[lastPageIndex] }
+        const messages = [...(lastPage.list ?? [])]
+
+        const assistantMessage: ChatRoomMessageData = {
+          messageId: Date.now(),
+          content: CONNECTED_REQUIRED_MESSAGE,
+          createdAt: new Date().toISOString(),
+          senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+        }
+        messages.push(assistantMessage)
+
+        lastPage.list = messages
+        newData.pages[lastPageIndex] = lastPage
+        return newData
       }
-      const lastMessage = prev[prev.length - 1]!
-      const assistantMessage: ChatRoomMessageData = {
-        messageId: Date.now(),
-        content: CONNECTED_REQUIRED_MESSAGE,
-        createdAt: lastMessage.createdAt,
-        senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
-      }
-      return [...prev, assistantMessage]
-    })
+    )
   }, [queryClient])
 
   const handleChatPaused = useCallback(() => {
