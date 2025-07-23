@@ -9,8 +9,14 @@ class HistoryService extends ChatroomApi {
     super(undefined, '', apiInstance)
   }
 
-  async getHistoryList() {
-    const { data } = await this.getChatRoomList()
+  async getHistoryList(keyword?: string) {
+    const { data } = await this.getChatRoomList({
+      pageable: {
+        page: 0,
+        size: 10,
+      },
+      keyword,
+    })
     return data
   }
 
@@ -24,7 +30,13 @@ class HistoryService extends ChatroomApi {
   }
 
   async getHistory(chatRoomId: number) {
-    const { data } = await this.getChatRoomMessages({ chatRoomId })
+    const { data } = await this.getChatRoomMessages({
+      pageable: {
+        page: 0,
+        size: 10,
+      },
+      chatRoomId,
+    })
     return data
   }
 

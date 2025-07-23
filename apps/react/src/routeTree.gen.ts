@@ -12,12 +12,10 @@
 
 import { Route as rootRoute } from './app/__root'
 import { Route as OnboardingLayoutImport } from './app/onboarding/layout'
-import { Route as HistoryLayoutImport } from './app/history/layout'
 import { Route as ChatLayoutImport } from './app/chat/layout'
 import { Route as PageImport } from './app/page'
 import { Route as LoginPageImport } from './app/login/page'
 import { Route as IntroPageImport } from './app/intro/page'
-import { Route as HistoryPageImport } from './app/history/page'
 import { Route as ChatPageImport } from './app/chat/page'
 import { Route as AttachmentTestPageImport } from './app/attachment-test/page'
 import { Route as OnboardingTermsPageImport } from './app/onboarding/terms/page'
@@ -28,6 +26,7 @@ import { Route as OnboardingCompletePageImport } from './app/onboarding/complete
 import { Route as OnboardingAnniversaryPageImport } from './app/onboarding/anniversary/page'
 import { Route as ChatResultPageImport } from './app/chat/result/page'
 import { Route as ChatLoadingPageImport } from './app/chat/loading/page'
+import { Route as ChatHistoryPageImport } from './app/chat/history/page'
 import { Route as AttachmentTestResultPageImport } from './app/attachment-test/result/page'
 import { Route as AttachmentTestQuestionPageImport } from './app/attachment-test/question/page'
 
@@ -36,12 +35,6 @@ import { Route as AttachmentTestQuestionPageImport } from './app/attachment-test
 const OnboardingLayoutRoute = OnboardingLayoutImport.update({
   id: '/onboarding',
   path: '/onboarding',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const HistoryLayoutRoute = HistoryLayoutImport.update({
-  id: '/history',
-  path: '/history',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,12 +60,6 @@ const IntroPageRoute = IntroPageImport.update({
   id: '/intro/',
   path: '/intro/',
   getParentRoute: () => rootRoute,
-} as any)
-
-const HistoryPageRoute = HistoryPageImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => HistoryLayoutRoute,
 } as any)
 
 const ChatPageRoute = ChatPageImport.update({
@@ -135,6 +122,12 @@ const ChatLoadingPageRoute = ChatLoadingPageImport.update({
   getParentRoute: () => ChatLayoutRoute,
 } as any)
 
+const ChatHistoryPageRoute = ChatHistoryPageImport.update({
+  id: '/history/',
+  path: '/history/',
+  getParentRoute: () => ChatLayoutRoute,
+} as any)
+
 const AttachmentTestResultPageRoute = AttachmentTestResultPageImport.update({
   id: '/attachment-test/result/',
   path: '/attachment-test/result/',
@@ -165,13 +158,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatLayoutImport
       parentRoute: typeof rootRoute
     }
-    '/history': {
-      id: '/history'
-      path: '/history'
-      fullPath: '/history'
-      preLoaderRoute: typeof HistoryLayoutImport
-      parentRoute: typeof rootRoute
-    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -192,13 +178,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/chat/'
       preLoaderRoute: typeof ChatPageImport
       parentRoute: typeof ChatLayoutImport
-    }
-    '/history/': {
-      id: '/history/'
-      path: '/'
-      fullPath: '/history/'
-      preLoaderRoute: typeof HistoryPageImport
-      parentRoute: typeof HistoryLayoutImport
     }
     '/intro/': {
       id: '/intro/'
@@ -227,6 +206,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/attachment-test/result'
       preLoaderRoute: typeof AttachmentTestResultPageImport
       parentRoute: typeof rootRoute
+    }
+    '/chat/history/': {
+      id: '/chat/history/'
+      path: '/history'
+      fullPath: '/chat/history'
+      preLoaderRoute: typeof ChatHistoryPageImport
+      parentRoute: typeof ChatLayoutImport
     }
     '/chat/loading/': {
       id: '/chat/loading/'
@@ -291,27 +277,19 @@ declare module '@tanstack/react-router' {
 
 interface ChatLayoutRouteChildren {
   ChatPageRoute: typeof ChatPageRoute
+  ChatHistoryPageRoute: typeof ChatHistoryPageRoute
   ChatLoadingPageRoute: typeof ChatLoadingPageRoute
   ChatResultPageRoute: typeof ChatResultPageRoute
 }
 
 const ChatLayoutRouteChildren: ChatLayoutRouteChildren = {
   ChatPageRoute: ChatPageRoute,
+  ChatHistoryPageRoute: ChatHistoryPageRoute,
   ChatLoadingPageRoute: ChatLoadingPageRoute,
   ChatResultPageRoute: ChatResultPageRoute,
 }
 
 const ChatLayoutRouteWithChildren = ChatLayoutRoute._addFileChildren(ChatLayoutRouteChildren)
-
-interface HistoryLayoutRouteChildren {
-  HistoryPageRoute: typeof HistoryPageRoute
-}
-
-const HistoryLayoutRouteChildren: HistoryLayoutRouteChildren = {
-  HistoryPageRoute: HistoryPageRoute,
-}
-
-const HistoryLayoutRouteWithChildren = HistoryLayoutRoute._addFileChildren(HistoryLayoutRouteChildren)
 
 interface OnboardingLayoutRouteChildren {
   OnboardingAnniversaryPageRoute: typeof OnboardingAnniversaryPageRoute
@@ -336,15 +314,14 @@ const OnboardingLayoutRouteWithChildren = OnboardingLayoutRoute._addFileChildren
 export interface FileRoutesByFullPath {
   '/': typeof PageRoute
   '/chat': typeof ChatLayoutRouteWithChildren
-  '/history': typeof HistoryLayoutRouteWithChildren
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
   '/attachment-test': typeof AttachmentTestPageRoute
   '/chat/': typeof ChatPageRoute
-  '/history/': typeof HistoryPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/attachment-test/result': typeof AttachmentTestResultPageRoute
+  '/chat/history': typeof ChatHistoryPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
@@ -360,11 +337,11 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
   '/attachment-test': typeof AttachmentTestPageRoute
   '/chat': typeof ChatPageRoute
-  '/history': typeof HistoryPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/attachment-test/result': typeof AttachmentTestResultPageRoute
+  '/chat/history': typeof ChatHistoryPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
@@ -379,15 +356,14 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof PageRoute
   '/chat': typeof ChatLayoutRouteWithChildren
-  '/history': typeof HistoryLayoutRouteWithChildren
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
   '/attachment-test/': typeof AttachmentTestPageRoute
   '/chat/': typeof ChatPageRoute
-  '/history/': typeof HistoryPageRoute
   '/intro/': typeof IntroPageRoute
   '/login/': typeof LoginPageRoute
   '/attachment-test/question/': typeof AttachmentTestQuestionPageRoute
   '/attachment-test/result/': typeof AttachmentTestResultPageRoute
+  '/chat/history/': typeof ChatHistoryPageRoute
   '/chat/loading/': typeof ChatLoadingPageRoute
   '/chat/result/': typeof ChatResultPageRoute
   '/onboarding/anniversary/': typeof OnboardingAnniversaryPageRoute
@@ -403,15 +379,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/chat'
-    | '/history'
     | '/onboarding'
     | '/attachment-test'
     | '/chat/'
-    | '/history/'
     | '/intro'
     | '/login'
     | '/attachment-test/question'
     | '/attachment-test/result'
+    | '/chat/history'
     | '/chat/loading'
     | '/chat/result'
     | '/onboarding/anniversary'
@@ -426,11 +401,11 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/attachment-test'
     | '/chat'
-    | '/history'
     | '/intro'
     | '/login'
     | '/attachment-test/question'
     | '/attachment-test/result'
+    | '/chat/history'
     | '/chat/loading'
     | '/chat/result'
     | '/onboarding/anniversary'
@@ -443,15 +418,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/chat'
-    | '/history'
     | '/onboarding'
     | '/attachment-test/'
     | '/chat/'
-    | '/history/'
     | '/intro/'
     | '/login/'
     | '/attachment-test/question/'
     | '/attachment-test/result/'
+    | '/chat/history/'
     | '/chat/loading/'
     | '/chat/result/'
     | '/onboarding/anniversary/'
@@ -466,7 +440,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   PageRoute: typeof PageRoute
   ChatLayoutRoute: typeof ChatLayoutRouteWithChildren
-  HistoryLayoutRoute: typeof HistoryLayoutRouteWithChildren
   OnboardingLayoutRoute: typeof OnboardingLayoutRouteWithChildren
   AttachmentTestPageRoute: typeof AttachmentTestPageRoute
   IntroPageRoute: typeof IntroPageRoute
@@ -478,7 +451,6 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   PageRoute: PageRoute,
   ChatLayoutRoute: ChatLayoutRouteWithChildren,
-  HistoryLayoutRoute: HistoryLayoutRouteWithChildren,
   OnboardingLayoutRoute: OnboardingLayoutRouteWithChildren,
   AttachmentTestPageRoute: AttachmentTestPageRoute,
   IntroPageRoute: IntroPageRoute,
@@ -497,7 +469,6 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "children": [
         "/",
         "/chat",
-        "/history",
         "/onboarding",
         "/attachment-test/",
         "/intro/",
@@ -513,14 +484,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "chat/layout.tsx",
       "children": [
         "/chat/",
+        "/chat/history/",
         "/chat/loading/",
         "/chat/result/"
-      ]
-    },
-    "/history": {
-      "filePath": "history/layout.tsx",
-      "children": [
-        "/history/"
       ]
     },
     "/onboarding": {
@@ -541,10 +507,6 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "chat/page.tsx",
       "parent": "/chat"
     },
-    "/history/": {
-      "filePath": "history/page.tsx",
-      "parent": "/history"
-    },
     "/intro/": {
       "filePath": "intro/page.tsx"
     },
@@ -556,6 +518,10 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/attachment-test/result/": {
       "filePath": "attachment-test/result/page.tsx"
+    },
+    "/chat/history/": {
+      "filePath": "chat/history/page.tsx",
+      "parent": "/chat"
     },
     "/chat/loading/": {
       "filePath": "chat/loading/page.tsx",

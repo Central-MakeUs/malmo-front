@@ -5,15 +5,20 @@ import emptyImage from '@/assets/images/onboarding-end.png'
 import ChatBubble from '@/assets/icons/chat.svg'
 import { cn } from '@ui/common/lib/utils'
 import { useChatHistory } from '@/features/history/context/chat-history-context'
-import { GetChatRoomListResponse } from '@data/user-api-axios/api'
+import { ChatRoomStateDataChatRoomStateEnum, GetChatRoomListResponse } from '@data/user-api-axios/api'
 import { formatDate } from '@/shared/utils'
+import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
 
-export const Route = createFileRoute('/history/')({
+export const Route = createFileRoute('/chat/history/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
   const { chatHistory } = useChatHistory()
+  const { data: chatStatus } = useChatRoomStatusQuery()
+  const activeChat =
+    chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion ||
+    chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Alive
 
   const ChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => (
     <Link
@@ -71,17 +76,21 @@ function RouteComponent() {
           <EmptyItem />
         )}
 
-        <div className="absolute right-5 bottom-6 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
-          <div
-            className={cn(
-              'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',
-              "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']"
-            )}
-          >
-            <p className="label1-medium text-gray-iron-200">모모와 고민 상담하러 가기</p>
+        <Link to={'/chat'}>
+          <div className="absolute right-5 bottom-6 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
+            <div
+              className={cn(
+                'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',
+                "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']"
+              )}
+            >
+              <p className="label1-medium text-gray-iron-200">
+                {activeChat ? '진행 중인 대화가 있어요!' : '모모와 고민 상담하러 가기'}
+              </p>
+            </div>
+            <ChatBubble className="h-6 w-6" />
           </div>
-          <ChatBubble className="h-6 w-6" />
-        </div>
+        </Link>
       </section>
     </div>
   )
