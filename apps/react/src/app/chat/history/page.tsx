@@ -17,8 +17,8 @@ function RouteComponent() {
   const { chatHistory } = useChatHistory()
   const { data: chatStatus } = useChatRoomStatusQuery()
   const activeChat =
-    chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion ||
-    chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Alive
+    chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion ||
+    chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
   const ChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => (
     <Link
@@ -77,7 +77,7 @@ function RouteComponent() {
         )}
 
         <Link to={'/chat'}>
-          <div className="absolute right-5 bottom-6 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
+          <div className="fixed right-5 bottom-6 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
             <div
               className={cn(
                 'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',

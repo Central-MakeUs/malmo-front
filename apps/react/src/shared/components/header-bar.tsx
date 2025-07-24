@@ -55,7 +55,7 @@ interface HomeHeaderBarProps {
 export function HomeHeaderBar({ title, right, className }: HomeHeaderBarProps) {
   return (
     <header
-      className={cn('flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white px-5', className)}
+      className={cn('flex h-[50px] w-screen max-w-[600px] items-center justify-between bg-white px-5 py-4', className)}
     >
       {title && <h1 className="heading2-bold">{title}</h1>}
 

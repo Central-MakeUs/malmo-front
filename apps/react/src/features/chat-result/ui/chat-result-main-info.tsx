@@ -1,3 +1,4 @@
+import { formatDate } from '@/shared/utils'
 import { ChevronRight } from 'lucide-react'
 
 interface ChatResultMainInfoProps {
@@ -10,7 +11,7 @@ export function ChatResultMainInfo({ date, subject, onViewChat }: ChatResultMain
   return (
     <div className="flex items-center gap-6">
       <div className="flex-1">
-        <p className="body4-medium mb-1 text-gray-iron-500">{date}</p>
+        <p className="body4-medium mb-1 text-gray-iron-500">{formatDate(date, 'YYYY년 MM월 DD일')}</p>
         <h1 className="heading1-bold break-keep">{subject}</h1>
       </div>
       <button

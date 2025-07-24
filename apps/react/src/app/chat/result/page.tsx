@@ -5,6 +5,7 @@ import { useChatResult } from '@/features/chat-result/hooks/use-chat-result'
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { Button } from '@/shared/ui'
 import { z } from 'zod'
+import { useChatting } from '@/features/chat/context/chatting-context'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -19,11 +20,19 @@ export const Route = createFileRoute('/chat/result/')({
 function RouteComponent() {
   const { chatId, fromHistory } = Route.useSearch()
   const { chatResult, summaryData, isLoading } = useChatResult(chatId)
+  const { chattingModal } = useChatting()
   const navigate = useNavigate()
 
   const exitButton = () =>
     fromHistory ? (
-      <p>삭제</p>
+      <div
+        onClick={() => {
+          if (!chatId) return
+          chattingModal.deleteChatHistoryModal(chatId)
+        }}
+      >
+        <p className="body2-medium text-gray-iron-700">{chatId ? '삭제' : '로딩중'}</p>
+      </div>
     ) : (
       <Link to="/">
         <X className="h-[24px] w-[24px]" />

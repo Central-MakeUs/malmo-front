@@ -68,7 +68,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
      * @throws {RequiredError}
      */
     completeChatRoom: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      const localVarPath = `/chatroom/current/complete`
+      const localVarPath = `/chatrooms/current/complete`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -106,7 +106,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
     ): Promise<RequestArgs> => {
       // verify required parameter 'deleteChatRoomRequestDto' is not null or undefined
       assertParamExists('deleteChatRooms', 'deleteChatRoomRequestDto', deleteChatRoomRequestDto)
-      const localVarPath = `/chatroom`
+      const localVarPath = `/chatrooms`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -153,7 +153,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
     ): Promise<RequestArgs> => {
       // verify required parameter 'pageable' is not null or undefined
       assertParamExists('getChatRoomList', 'pageable', pageable)
-      const localVarPath = `/chatroom`
+      const localVarPath = `/chatrooms`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -205,7 +205,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
       assertParamExists('getChatRoomMessages', 'pageable', pageable)
       // verify required parameter 'chatRoomId' is not null or undefined
       assertParamExists('getChatRoomMessages', 'chatRoomId', chatRoomId)
-      const localVarPath = `/chatroom/{chatRoomId}/messages`.replace(
+      const localVarPath = `/chatrooms/{chatRoomId}/messages`.replace(
         `{${'chatRoomId'}}`,
         encodeURIComponent(String(chatRoomId))
       )
@@ -249,7 +249,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
     getCurrentChatRoom: async (chatRoomId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'chatRoomId' is not null or undefined
       assertParamExists('getCurrentChatRoom', 'chatRoomId', chatRoomId)
-      const localVarPath = `/chatroom/{chatRoomId}/summary`.replace(
+      const localVarPath = `/chatrooms/{chatRoomId}/summary`.replace(
         `{${'chatRoomId'}}`,
         encodeURIComponent(String(chatRoomId))
       )
@@ -284,7 +284,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
      * @throws {RequiredError}
      */
     getCurrentChatRoom1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      const localVarPath = `/chatroom/current`
+      const localVarPath = `/chatrooms/current`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -322,7 +322,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
     ): Promise<RequestArgs> => {
       // verify required parameter 'pageable' is not null or undefined
       assertParamExists('getCurrentChatRoomMessages', 'pageable', pageable)
-      const localVarPath = `/chatroom/current/messages`
+      const localVarPath = `/chatrooms/current/messages`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -360,7 +360,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
      * @throws {RequiredError}
      */
     sendChatMessage: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      const localVarPath = `/chatroom/current/upgrade`
+      const localVarPath = `/chatrooms/current/upgrade`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -395,7 +395,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
     sendChatMessage1: async (chatRequest: ChatRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'chatRequest' is not null or undefined
       assertParamExists('sendChatMessage1', 'chatRequest', chatRequest)
-      const localVarPath = `/chatroom/current/send`
+      const localVarPath = `/chatrooms/current/send`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
