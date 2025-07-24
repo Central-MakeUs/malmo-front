@@ -10,7 +10,7 @@ import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 import { z } from 'zod'
 
 const searchSchema = z.object({

@@ -17,7 +17,10 @@ function RouteComponent() {
     async function completeChatRoom() {
       try {
         const { data } = await chatService.postChatroomComplete()
-        queryClient.invalidateQueries({ queryKey: chatKeys.all })
+        queryClient.invalidateQueries({
+          queryKey: chatKeys.all,
+          refetchType: 'none',
+        })
 
         navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId } })
       } catch (error) {

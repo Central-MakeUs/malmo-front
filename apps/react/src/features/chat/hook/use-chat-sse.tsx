@@ -14,7 +14,7 @@ interface ChatSSECallbacks {
   onOpen?: () => void
 }
 
-export const useChatSSE = (callbacks: ChatSSECallbacks) => {
+export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean) => {
   const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
   // 콜백 함수들을 저장하기 위한 ref를 생성합니다.
   const callbacksRef = useRef(callbacks)
@@ -27,6 +27,15 @@ export const useChatSSE = (callbacks: ChatSSECallbacks) => {
 
   // 이 useEffect는 의존성 배열이 비어있어, 오직 컴포넌트가 마운트될 때 "한 번"만 실행됩니다.
   useEffect(() => {
+    if (!enabled) {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close()
+        eventSourceRef.current = null
+        console.log('SSE connection closed due to being disabled.')
+      }
+      return
+    }
+
     const connect = async () => {
       if (eventSourceRef.current) return
 
@@ -91,5 +100,5 @@ export const useChatSSE = (callbacks: ChatSSECallbacks) => {
         console.log('SSE connection closed.')
       }
     }
-  }, []) // 빈 의존성 배열이 핵심입니다.
+  }, [enabled]) // 빈 의존성 배열이 핵심입니다.
 }

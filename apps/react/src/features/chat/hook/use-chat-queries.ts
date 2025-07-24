@@ -19,7 +19,9 @@ export const useChatRoomStatusQuery = () => {
   return useQuery({
     queryKey: chatKeys.status(),
     queryFn: () => chatService.getChatroomStatus(),
-    select: (data) => data.data?.chatRoomState,
+    select: (data) => {
+      return data.data?.chatRoomState
+    },
   })
 }
 

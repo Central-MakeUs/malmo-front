@@ -18,8 +18,15 @@ class ChatService extends ChatroomApi {
   }
 
   async getChatroomStatus() {
-    const { data } = await this.getCurrentChatRoom1()
-    return data
+    try {
+      console.log('Fetching chat room status...')
+      const { data } = await this.getCurrentChatRoom1()
+      console.log('Chatroom status fetched:', data)
+      return data
+    } catch (error) {
+      console.error('Error fetching chat room status:', error)
+      throw error
+    }
   }
 
   async getChatroomMessagesList(params?: Pageable) {

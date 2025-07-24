@@ -103,21 +103,22 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     addPausedMessage()
   }, [queryClient, addPausedMessage])
 
-  useChatSSE({
-    onChatResponse: handleChatResponse,
-    onResponseId: handleResponseId,
-    onLevelFinished: handleLevelFinished,
-    onChatPaused: handleChatPaused,
-    onError: useCallback((error) => {
-      console.error('SSE Error Callback:', error)
-      setSendingMessage(false)
-      setStreamingMessage(null)
-    }, []),
-  })
+  useChatSSE(
+    {
+      onChatResponse: handleChatResponse,
+      onResponseId: handleResponseId,
+      onLevelFinished: handleLevelFinished,
+      onChatPaused: handleChatPaused,
+      onError: useCallback((error) => {
+        console.error('SSE Error Callback:', error)
+        setSendingMessage(false)
+        setStreamingMessage(null)
+      }, []),
+    },
+    isChatStatusSuccess
+  )
 
   useEffect(() => {
-    console.log('Chat status changed:', chatStatus)
-
     if (chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
       upgradeChatRoom()
     }
