@@ -2,14 +2,17 @@ import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
 import { useChatting } from '../context/chatting-context'
-import { useChatRoomStatusQuery, useSendMessageMutation } from '../hook/use-chat-queries'
+import { chatKeys, useChatRoomStatusQuery, useSendMessageMutation } from '../hook/use-chat-queries'
+import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
+import { useQueryClient } from '@tanstack/react-query'
 
 function ChatInput(props: { disabled?: boolean }) {
+  const queryClient = useQueryClient()
+
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { chattingModal } = useChatting()
+  const { chattingModal, setSendingMessageTrue, sendingMessage } = useChatting()
 
-  const { data: chatStatus } = useChatRoomStatusQuery()
   const { mutate: sendMessage, isPending } = useSendMessageMutation()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -44,19 +47,22 @@ function ChatInput(props: { disabled?: boolean }) {
     e.preventDefault()
     if (text.trim() && !isPending) {
       sendMessage(text)
+      setSendingMessageTrue()
       setText('')
     }
   }
   // Shift+Enter는 줄바꿈, Enter는 전송으로 처리합니다.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+    if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
       e.preventDefault()
       handleSubmit(e as any)
     }
   }
 
-  const paused = chatStatus?.chatRoomState === 'PAUSED'
-  const disabled = props.disabled || paused || isPending
+  const paused = queryClient.getQueryData(chatKeys.status()) === ChatRoomStateDataChatRoomStateEnum.Paused
+  const disabled = props.disabled || paused || isPending || sendingMessage
 
   return (
     <form onSubmit={handleSubmit} className="sticky bottom-0 w-full bg-white px-5 py-[10px]">
@@ -89,7 +95,9 @@ function ChatInput(props: { disabled?: boolean }) {
                 ? '대화가 불가능해요'
                 : paused
                   ? '커플 연동이 완료된 후에 채팅이 가능해요'
-                  : '메시지를 입력해주세요'
+                  : sendingMessage
+                    ? '모모의 답변이 완료된 후 채팅이 가능해요'
+                    : '메시지를 입력해주세요'
             }
             rows={1}
           />

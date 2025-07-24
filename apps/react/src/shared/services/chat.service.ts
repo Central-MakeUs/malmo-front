@@ -1,5 +1,5 @@
 import apiInstance from '../libs/api'
-import { ChatroomApi, ChatRequest } from '@data/user-api-axios/api'
+import { ChatroomApi, ChatRequest, Pageable } from '@data/user-api-axios/api'
 
 export const QUERY_KEY = 'chatrooms'
 
@@ -9,12 +9,21 @@ class ChatService extends ChatroomApi {
   }
 
   async getChatroomStatus() {
-    const { data } = await this.getCurrentChatRoom1()
-    return data
+    try {
+      console.log('Fetching chat room status...')
+      const { data } = await this.getCurrentChatRoom1()
+      console.log('Chatroom status fetched:', data)
+      return data
+    } catch (error) {
+      console.error('Error fetching chat room status:', error)
+      throw error
+    }
   }
 
-  async getChatMessageList() {
-    const { data } = await this.getCurrentChatRoomMessages()
+  async getChatroomMessagesList(params?: Pageable) {
+    const { data } = await this.getCurrentChatRoomMessages({
+      pageable: params || { page: 0, size: 20 },
+    })
     return data
   }
 

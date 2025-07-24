@@ -1,16 +1,23 @@
-import { createContext, useContext, ReactNode, useCallback, useEffect } from 'react'
+// chat/context/chatting-context.tsx
+
+import { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useChattingModal, UseChattingModalReturn } from '../hook/use-chatting-modal'
 import {
+  BaseListSwaggerResponseChatRoomMessageData,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
 import { useChatSSE } from '@/features/chat/hook/use-chat-sse'
-import { useQueryClient } from '@tanstack/react-query'
+import { InfiniteData, useQueryClient } from '@tanstack/react-query'
 import { chatKeys, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hook/use-chat-queries'
 
 interface ChattingContextType {
   chattingModal: UseChattingModalReturn
+  sendingMessage: boolean
+  setSendingMessageTrue: () => void
+  streamingMessage: ChatRoomMessageData | null
+  isChatStatusSuccess: boolean
 }
 
 const CONNECTED_REQUIRED_MESSAGE =
@@ -21,44 +28,37 @@ const ChattingContext = createContext<ChattingContextType | undefined>(undefined
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const chattingModal = useChattingModal()
   const queryClient = useQueryClient()
+  const [sendingMessage, setSendingMessage] = useState<boolean>(false)
+  const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
 
-  // Tanstack Query 훅을 사용하여 데이터와 상태를 가져옵니다.
-  const { data: chatStatus } = useChatRoomStatusQuery()
+  const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
 
-  // SSE 이벤트 핸들러: 이제 queryClient.setQueryData를 사용하여 캐시를 직접 업데이트합니다.
-  const handleChatResponse = useCallback(
-    (chunk: string) => {
-      queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
-        const lastMessage = prev[prev.length - 1]
-        if (lastMessage?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant && lastMessage.messageId === null) {
-          const updatedMessage = { ...lastMessage, content: (lastMessage.content || '') + chunk }
-          return [...prev.slice(0, -1), updatedMessage]
-        } else {
-          const newAssistantMessage: ChatRoomMessageData = {
-            messageId: null,
-            content: chunk,
-            createdAt: new Date().toISOString(),
-            senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
-          }
-          return [...prev, newAssistantMessage]
-        }
-      })
-    },
-    [queryClient]
-  )
+  // 한 글자씩 오는 AI 답변을 처리하는 함수
+  const handleChatResponse = useCallback((chunk: string) => {
+    setStreamingMessage((prev) => {
+      if (prev) {
+        // 기존 스트리밍 메시지에 내용 추가
+        return { ...prev, content: (prev.content || '') + chunk }
+      }
+      // 새로운 스트리밍 시작
+      return {
+        messageId: null as any,
+        content: chunk,
+        createdAt: new Date().toISOString(),
+        senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+      }
+    })
+  }, [])
 
+  // AI 답변이 완료되었을 때 호출되는 함수
   const handleResponseId = useCallback(
     (messageId: string) => {
-      queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
-        const lastIndex = prev.length - 1
-        if (prev[lastIndex]?.messageId === null) {
-          const updatedMessages = [...prev]
-          updatedMessages[lastIndex] = { ...updatedMessages[lastIndex]!, messageId: Number(messageId) }
-          return updatedMessages
-        }
-        return prev
-      })
+      // 스트리밍 상태를 비우고
+      setStreamingMessage(null)
+      // 서버와 데이터 동기화를 위해 쿼리를 무효화하여 최신 데이터를 다시 불러옵니다.
+      queryClient.invalidateQueries({ queryKey: chatKeys.messages() })
+      setSendingMessage(false)
     },
     [queryClient]
   )
@@ -68,52 +68,76 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   }, [upgradeChatRoom])
 
   const addPausedMessage = useCallback(() => {
-    queryClient.setQueryData<ChatRoomMessageData[]>(chatKeys.messages(), (prev = []) => {
-      if (!prev.length) return prev
-      // 이미 PAUSED 메시지가 있는지 확인하여 중복 추가 방지
-      if (prev.some((msg) => msg.content === CONNECTED_REQUIRED_MESSAGE)) {
-        return prev
+    queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(
+      chatKeys.messages(),
+      (oldData) => {
+        if (!oldData || oldData.pages.length === 0) return oldData
+
+        const lastPageMessages = oldData?.pages?.[oldData.pages.length - 1]?.list ?? []
+        if (lastPageMessages.some((msg) => msg.content === CONNECTED_REQUIRED_MESSAGE)) {
+          return oldData // 이미 메시지가 있으면 추가하지 않음
+        }
+
+        const newData = { ...oldData }
+        const lastPageIndex = newData.pages.length - 1
+        const lastPage = { ...newData.pages[lastPageIndex] }
+        const messages = [...(lastPage.list ?? [])]
+
+        const assistantMessage: ChatRoomMessageData = {
+          messageId: Date.now(),
+          content: CONNECTED_REQUIRED_MESSAGE,
+          createdAt: new Date().toISOString(),
+          senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+        }
+        messages.push(assistantMessage)
+
+        lastPage.list = messages
+        newData.pages[lastPageIndex] = lastPage
+        return newData
       }
-      const lastMessage = prev[prev.length - 1]!
-      const assistantMessage: ChatRoomMessageData = {
-        messageId: Date.now(),
-        content: CONNECTED_REQUIRED_MESSAGE,
-        createdAt: lastMessage.createdAt,
-        senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
-      }
-      return [...prev, assistantMessage]
-    })
+    )
   }, [queryClient])
 
   const handleChatPaused = useCallback(() => {
-    // 상태를 직접 변경하는 대신, status 쿼리를 무효화하여 최신 상태를 가져오게 함
     queryClient.invalidateQueries({ queryKey: chatKeys.status() })
     addPausedMessage()
   }, [queryClient, addPausedMessage])
 
-  // SSE 연결 훅
-  useChatSSE({
-    onChatResponse: handleChatResponse,
-    onResponseId: handleResponseId,
-    onLevelFinished: handleLevelFinished,
-    onChatPaused: handleChatPaused,
-    onError: useCallback((error) => {
-      console.error('SSE Error Callback:', error)
-    }, []),
-  })
+  useChatSSE(
+    {
+      onChatResponse: handleChatResponse,
+      onResponseId: handleResponseId,
+      onLevelFinished: handleLevelFinished,
+      onChatPaused: handleChatPaused,
+      onError: useCallback((error) => {
+        console.error('SSE Error Callback:', error)
+        setSendingMessage(false)
+        setStreamingMessage(null)
+      }, []),
+    },
+    isChatStatusSuccess
+  )
 
-  // 초기 상태 확인 및 처리
   useEffect(() => {
-    if (chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
+    if (chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
       upgradeChatRoom()
     }
-    if (chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused) {
+    if (chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused) {
       addPausedMessage()
     }
-  }, [chatStatus, upgradeChatRoom, addPausedMessage])
+  }, [chatStatus])
 
-  // Context를 통해 제공하는 값에서 데이터 관련 로직은 모두 제거
-  return <ChattingContext.Provider value={{ chattingModal }}>{children}</ChattingContext.Provider>
+  const setSendingMessageTrue = useCallback(() => {
+    setSendingMessage(true)
+  }, [])
+
+  return (
+    <ChattingContext.Provider
+      value={{ chattingModal, sendingMessage, setSendingMessageTrue, streamingMessage, isChatStatusSuccess }}
+    >
+      {children}
+    </ChattingContext.Provider>
+  )
 }
 
 export function useChatting() {

@@ -1,3 +1,5 @@
+// page.tsx
+
 import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubble'
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
@@ -8,7 +10,7 @@ import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 import { z } from 'zod'
 
 const searchSchema = z.object({
@@ -29,20 +31,54 @@ function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const navigate = useNavigate()
-  const { chattingModal } = useChatting()
+  const { chattingModal, streamingMessage, isChatStatusSuccess } = useChatting()
 
-  const { data: chatData, isLoading } = useChatMessagesQuery()
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(isChatStatusSuccess)
 
   const scrollRef = useRef<HTMLElement>(null)
+  const scrollHeightRef = useRef(0)
+  const topMessageIdRef = useRef<number | string | null>(null)
+
+  const messages = useMemo(() => {
+    if (!data) return []
+    return data.pages.flatMap((page) => page.list ?? []).reverse()
+  }, [data])
+
+  const observerRef = useRef<IntersectionObserver>(null)
+  const sentinelRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (isFetchingNextPage) return
+      if (observerRef.current) observerRef.current.disconnect()
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        if (entries[0]?.isIntersecting && hasNextPage) {
+          fetchNextPage()
+        }
+      })
+
+      if (node) observerRef.current.observe(node)
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage]
+  )
 
   useLayoutEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    const scrollContainer = scrollRef.current
+    if (!scrollContainer) return
+
+    const newTopMessageId = messages[0]?.messageId ?? null
+
+    if (newTopMessageId !== topMessageIdRef.current && scrollContainer.scrollHeight > scrollHeightRef.current) {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight - scrollHeightRef.current
+    } else {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight
     }
-  }, [chatData])
+
+    scrollHeightRef.current = scrollContainer.scrollHeight
+    topMessageIdRef.current = newTopMessageId
+  })
 
   const exitButton = useCallback(() => {
-    const actived = chatData && chatData.length > 0
+    const actived = messages.some((chat) => chat.senderType === ChatRoomMessageDataSenderTypeEnum.User)
     return (
       <p
         className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}
@@ -53,7 +89,7 @@ function RouteComponent() {
         종료하기
       </p>
     )
-  }, [chatData, navigate])
+  }, [messages, navigate])
 
   return (
     <div className="flex h-full flex-col">
@@ -68,6 +104,14 @@ function RouteComponent() {
           <p className="body3-medium text-white">대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
         </div>
 
+        {isFetchingNextPage && (
+          <div className="flex justify-center py-4">
+            <p className="body2-regular text-gray-500">이전 대화를 불러오는 중...</p>
+          </div>
+        )}
+
+        <div ref={sentinelRef} style={{ height: '1px' }} />
+
         {isLoading && (
           <div className="flex flex-1 items-center justify-center">
             <p className="body2-regular text-gray-500">채팅 데이터를 불러오는 중...</p>
@@ -75,13 +119,11 @@ function RouteComponent() {
         )}
 
         <div className="space-y-5 px-5 py-6">
-          {chatData?.map((chat, index) => {
-            const previousTimestamp = index > 0 ? chatData[index - 1]?.createdAt : undefined
-
+          {messages.map((chat, index) => {
+            const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
             return (
-              <React.Fragment key={chat.messageId}>
+              <React.Fragment key={`${chat.messageId}-${index}`}>
                 <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
-
                 {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
                   <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
                 ) : (
@@ -90,6 +132,11 @@ function RouteComponent() {
               </React.Fragment>
             )
           })}
+
+          {/* 스트리밍 중인 AI 메시지를 별도로 렌더링합니다. */}
+          {streamingMessage && (
+            <AiChatBubble message={streamingMessage.content} timestamp={formatTimestamp(streamingMessage.createdAt)} />
+          )}
         </div>
       </section>
 
