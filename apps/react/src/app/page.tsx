@@ -14,7 +14,7 @@ function HomePage() {
         채팅화면
       </Link>
 
-      <Link to={'/chat/history'} className="w-[200px]">
+      <Link to={'/history'} className="w-[200px]">
         채팅 기록
       </Link>
 

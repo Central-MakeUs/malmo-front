@@ -38,7 +38,7 @@ export function DetailHeaderBar({ title, right, onBackClick, className, showBack
       </div>
 
       {/* Title Area */}
-      {title && <h1 className="body2-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{title}</h1>}
+      {title && <h1 className="body1-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{title}</h1>}
 
       {/* Right Area */}
       <div className="z-10">{right}</div>

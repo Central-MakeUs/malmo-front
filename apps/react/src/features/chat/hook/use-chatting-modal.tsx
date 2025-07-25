@@ -2,6 +2,7 @@ import bridge from '@/shared/bridge'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 import historyService from '@/shared/services/history.service'
 import { Button } from '@/shared/ui'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -11,12 +12,14 @@ export interface UseChattingModalReturn {
   exitChattingModal: () => void
   chattingTutorialModal: () => React.ReactNode
   deleteChatHistoryModal: (id: number) => void
+  deleteChatHistoriesModal: (ids: number[]) => void
   showChattingTutorial: boolean
 }
 
 export function useChattingModal(): UseChattingModalReturn {
   const alertDialog = useAlertDialog()
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [showChattingTutorial, setShowChattingTutorial] = useState(false)
 
@@ -85,7 +88,28 @@ export function useChattingModal(): UseChattingModalReturn {
       onCancel: async () => {
         alertDialog.close()
         await historyService.deleteHistory([id])
+        await queryClient.invalidateQueries({ queryKey: ['histories'] })
         router.history.back()
+      },
+    })
+  }
+
+  const deleteChatHistoriesModal = (ids: number[]) => {
+    alertDialog.open({
+      title: '대화 기록을 삭제할까요?',
+      description: (
+        <>
+          삭제하면 기록을 되돌릴 수 없고
+          <br />
+          모모가 이 기록을 상담에 반영하지 않아요.
+        </>
+      ),
+      cancelText: '삭제하기',
+      confirmText: '취소하기',
+      onCancel: async () => {
+        alertDialog.close()
+        await historyService.deleteHistory(ids)
+        await queryClient.invalidateQueries({ queryKey: ['histories'] })
       },
     })
   }
@@ -157,5 +181,12 @@ export function useChattingModal(): UseChattingModalReturn {
     )
   }
 
-  return { testRequiredModal, exitChattingModal, chattingTutorialModal, showChattingTutorial, deleteChatHistoryModal }
+  return {
+    testRequiredModal,
+    exitChattingModal,
+    chattingTutorialModal,
+    showChattingTutorial,
+    deleteChatHistoryModal,
+    deleteChatHistoriesModal,
+  }
 }

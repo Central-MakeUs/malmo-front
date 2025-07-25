@@ -12,7 +12,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import historyService from '@/shared/services/history.service'
 import { useInView } from 'react-intersection-observer'
 
-export const Route = createFileRoute('/chat/history/')({
+export const Route = createFileRoute('/history/')({
   component: RouteComponent,
 })
 
@@ -97,7 +97,14 @@ function RouteComponent() {
 
   return (
     <div className="flex h-screen flex-col">
-      <HomeHeaderBar title="대화 기록" right={<p className="body2-medium text-gray-iron-700">삭제</p>} />
+      <HomeHeaderBar
+        title="대화 기록"
+        right={
+          <Link to={'/history/delete'}>
+            <p className="body2-medium text-gray-iron-700">삭제</p>
+          </Link>
+        }
+      />
 
       <div className="px-5 pb-3">
         <div className="flex items-center gap-3 rounded-[42px] bg-gray-neutral-100 px-4 py-[13px]">
