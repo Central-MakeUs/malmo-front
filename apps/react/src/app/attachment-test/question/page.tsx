@@ -9,6 +9,7 @@ import {
   AttachmentTestGuide,
   QUESTION_CONFIG,
 } from '@/features/attachment'
+import { useAuth } from '@/features/auth'
 
 export const Route = createFileRoute('/attachment-test/question/')({
   component: AttachmentTestQuestionPage,
@@ -16,7 +17,7 @@ export const Route = createFileRoute('/attachment-test/question/')({
 
 function AttachmentTestQuestionPage() {
   const [isGuideOpen, setIsGuideOpen] = useState(true)
-
+  const { userInfo } = useAuth()
   const {
     loading,
     error,
@@ -34,7 +35,7 @@ function AttachmentTestQuestionPage() {
 
   // 로딩 페이지 렌더링
   if (isSubmitting) {
-    return <SubmissionLoading />
+    return <SubmissionLoading nickname={userInfo.nickname || '사용자'} />
   }
 
   return (
