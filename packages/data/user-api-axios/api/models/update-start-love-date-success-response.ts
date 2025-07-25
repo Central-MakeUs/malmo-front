@@ -12,34 +12,38 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { UpdateStartLoveDateData } from './update-start-love-date-data'
+
 /**
- * 멤버 탈퇴 성공 응답
+ * 연애 시작일 갱신 성공 응답
  * @export
- * @interface DeleteMemberSuccessResponse
+ * @interface UpdateStartLoveDateSuccessResponse
  */
-export interface DeleteMemberSuccessResponse {
+export interface UpdateStartLoveDateSuccessResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof DeleteMemberSuccessResponse
+   * @memberof UpdateStartLoveDateSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof DeleteMemberSuccessResponse
+   * @memberof UpdateStartLoveDateSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof DeleteMemberSuccessResponse
+   * @memberof UpdateStartLoveDateSuccessResponse
    */
   message?: string
   /**
-   * 멤버 탈퇴 응답 데이터
-   * @type {object}
-   * @memberof DeleteMemberSuccessResponse
+   *
+   * @type {UpdateStartLoveDateData}
+   * @memberof UpdateStartLoveDateSuccessResponse
    */
-  data?: object
+  data?: UpdateStartLoveDateData
 }

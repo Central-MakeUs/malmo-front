@@ -88,7 +88,7 @@ export const CouplesApiAxiosParamCreator = function (configuration?: Configurati
     },
     /**
      * 연결된 커플을 끊습니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 커플 연결 끊기
+     * @summary 커플 연결 끊기
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -153,7 +153,7 @@ export const CouplesApiFp = function (configuration?: Configuration) {
     },
     /**
      * 연결된 커플을 끊습니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 커플 연결 끊기
+     * @summary 커플 연결 끊기
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -199,7 +199,7 @@ export const CouplesApiFactory = function (configuration?: Configuration, basePa
     },
     /**
      * 연결된 커플을 끊습니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 커플 연결 끊기
+     * @summary 커플 연결 끊기
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -246,7 +246,7 @@ export class CouplesApi extends BaseAPI {
 
   /**
    * 연결된 커플을 끊습니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 커플 연결 끊기
+   * @summary 커플 연결 끊기
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof CouplesApi

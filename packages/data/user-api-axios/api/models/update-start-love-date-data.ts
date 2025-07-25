@@ -13,15 +13,15 @@
  */
 
 /**
- *
+ * 연애 시작일 갱신 응답 데이터
  * @export
- * @interface UpdateMemberRequestDto
+ * @interface UpdateStartLoveDateData
  */
-export interface UpdateMemberRequestDto {
+export interface UpdateStartLoveDateData {
   /**
-   *
+   * 변경된 연애 시작일
    * @type {string}
-   * @memberof UpdateMemberRequestDto
+   * @memberof UpdateStartLoveDateData
    */
-  nickname?: string
+  startLoveDate?: string
 }
