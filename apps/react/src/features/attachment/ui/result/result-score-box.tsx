@@ -1,12 +1,12 @@
 import AnxietyIcon from '@/assets/icons/anxiety.svg'
 import AvoidanceIcon from '@/assets/icons/avoidance.svg'
-import type { GetLoveTypeData } from '@data/user-api-axios/api'
 
 interface ResultScoreBoxProps {
-  loveTypeData: GetLoveTypeData
+  anxietyRate: number | null
+  avoidanceRate: number | null
 }
 
-export function ResultScoreBox({ loveTypeData }: ResultScoreBoxProps) {
+export function ResultScoreBox({ anxietyRate, avoidanceRate }: ResultScoreBoxProps) {
   return (
     <div className="flex h-[70px] items-center gap-[20px] rounded-[12px] bg-gray-neutral-100 px-[20px]">
       {/* 불안 점수 */}
@@ -16,9 +16,7 @@ export function ResultScoreBox({ loveTypeData }: ResultScoreBoxProps) {
           <span className="body3-medium ml-[8px] text-gray-iron-950">불안</span>
         </div>
         <div className="flex items-center">
-          <span className="heading1-bold text-gray-iron-950">
-            {loveTypeData.memberAnxietyScore?.toFixed(2) || '0.00'}
-          </span>
+          <span className="heading1-bold text-gray-iron-950">{anxietyRate?.toFixed(2) || '0.00'}</span>
           <span className="label1-medium mt-[2px] ml-[4px] text-gray-iron-400">/ 5</span>
         </div>
       </div>
@@ -33,9 +31,7 @@ export function ResultScoreBox({ loveTypeData }: ResultScoreBoxProps) {
           <span className="body3-medium ml-[8px] text-gray-iron-950">회피</span>
         </div>
         <div className="flex items-center">
-          <span className="heading1-bold text-gray-iron-950">
-            {loveTypeData.memberAvoidanceScore?.toFixed(2) || '0.00'}
-          </span>
+          <span className="heading1-bold text-gray-iron-950">{avoidanceRate?.toFixed(2) || '0.00'}</span>
           <span className="label1-medium mt-[2px] ml-[4px] text-gray-iron-400">/ 5</span>
         </div>
       </div>

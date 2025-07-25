@@ -14,7 +14,8 @@ export const Route = createFileRoute('/attachment-test/result/')({
 
 function AttachmentTestResultPage() {
   const { userInfo } = useAuth()
-  const { loveTypeData, attachmentData, loading, error, handleClose, handleComplete, retryLoad } = useAttachmentResult()
+  const { loveTypeCategory, anxietyRate, avoidanceRate, attachmentData, loading, error, handleClose, handleComplete } =
+    useAttachmentResult()
 
   // 로딩 상태
   if (loading) {
@@ -27,14 +28,11 @@ function AttachmentTestResultPage() {
   }
 
   // 에러 상태
-  if (error || !loveTypeData || !attachmentData) {
+  if (error || !loveTypeCategory || !attachmentData) {
     // TODO: 에러 처리 필요
     return (
       <div className="flex h-screen w-full items-center justify-center bg-white">
-        <div className="text-center">
-          <p className="text-red-500">{error || '데이터를 불러올 수 없습니다.'}</p>
-          <Button text="다시 시도" onClick={retryLoad} className="mt-4" />
-        </div>
+        <p>에러가 발생했습니다.</p>
       </div>
     )
   }
@@ -77,7 +75,7 @@ function AttachmentTestResultPage() {
       {/* 결과 정보 섹션 */}
       <div className="mt-[52px] px-[20px]">
         {/* 점수 박스 */}
-        <ResultScoreBox loveTypeData={loveTypeData} />
+        <ResultScoreBox anxietyRate={anxietyRate} avoidanceRate={avoidanceRate} />
 
         {/* 상세 정보 박스 */}
         <ResultDetailBox attachmentData={attachmentData} />
