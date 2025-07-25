@@ -1,5 +1,4 @@
 import { ChattingProvider, useChatting } from '@/features/chat/context/chatting-context'
-import { ChatHistoryProvider } from '@/features/history/context/chat-history-context'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
 
@@ -19,10 +18,8 @@ function ChatLayout() {
 
 function RouteComponent() {
   return (
-    <ChatHistoryProvider>
-      <ChattingProvider>
-        <ChatLayout />
-      </ChattingProvider>
-    </ChatHistoryProvider>
+    <ChattingProvider>
+      <ChatLayout />
+    </ChattingProvider>
   )
 }

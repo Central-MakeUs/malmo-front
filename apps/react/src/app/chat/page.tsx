@@ -110,7 +110,7 @@ function RouteComponent() {
           </div>
         )}
 
-        <div ref={sentinelRef} style={{ height: '1px' }} />
+        <div ref={sentinelRef} className="h-[1px]" />
 
         {isLoading && (
           <div className="flex flex-1 items-center justify-center">

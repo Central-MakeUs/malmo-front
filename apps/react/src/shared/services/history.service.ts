@@ -1,6 +1,5 @@
-import { queryOptions } from '@tanstack/react-query'
 import apiInstance from '../libs/api'
-import { ChatroomApi, ChatRequest } from '@data/user-api-axios/api'
+import { ChatroomApi, ChatroomApiGetChatRoomListRequest, ChatRoomListSuccessResponse } from '@data/user-api-axios/api'
 
 export const QUERY_KEY = 'histories'
 
@@ -9,11 +8,14 @@ class HistoryService extends ChatroomApi {
     super(undefined, '', apiInstance)
   }
 
-  async getHistoryList(keyword?: string) {
+  async getHistoryList({
+    pageable: { page, size },
+    keyword,
+  }: ChatroomApiGetChatRoomListRequest): Promise<ChatRoomListSuccessResponse> {
     const { data } = await this.getChatRoomList({
       pageable: {
-        page: 0,
-        size: 10,
+        page,
+        size,
       },
       keyword,
     })
