@@ -3,7 +3,7 @@ import { createContext, ReactNode, useCallback, useEffect, useState, use } from 
 import authClient from '../lib/auth-client'
 import { SocialLoginType } from '@bridge/types'
 import memberService from '@/shared/services/member.service'
-import { MemberData, MemberDataMemberStateEnum } from '@data/user-api-axios/api'
+import { MemberData, MemberDataMemberStateEnum, MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
 // 멤버 상태 타입
 export type MemberState = MemberDataMemberStateEnum | null
@@ -12,6 +12,10 @@ export type MemberState = MemberDataMemberStateEnum | null
 export type UserInfo = {
   memberState: MemberState
   nickname?: string
+  // 애착 유형 관련 필드
+  loveTypeCategory?: MemberDataLoveTypeCategoryEnum
+  anxietyRate?: number
+  avoidanceRate?: number
 }
 
 export interface AuthContext {
@@ -33,6 +37,9 @@ const AuthContext = createContext<AuthContext | null>(null)
 const initialUserInfo: UserInfo = {
   memberState: null,
   nickname: undefined,
+  loveTypeCategory: undefined,
+  anxietyRate: undefined,
+  avoidanceRate: undefined,
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -60,6 +67,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const newUserInfo: UserInfo = {
           memberState: memberInfo.data.memberState || null,
           nickname: memberInfo.data.nickname,
+          loveTypeCategory: memberInfo.data.loveTypeCategory || undefined,
+          anxietyRate: memberInfo.data.anxietyRate || undefined,
+          avoidanceRate: memberInfo.data.avoidanceRate || undefined,
         }
 
         setUserInfo(newUserInfo)
@@ -122,7 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const initAuth = async () => {
       try {
         const result = await authClient.getAuth()
-        console.log('Auth status:', result)
+
         if (result && 'authenticated' in result) {
           setAuthenticated(result.authenticated)
           // 인증 상태 확인 후 사용자 정보 조회
