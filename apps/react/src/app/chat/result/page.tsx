@@ -1,11 +1,13 @@
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { X } from 'lucide-react'
-import { useChatResult } from '@/features/chat-result/hooks/use-chat-result'
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { Button } from '@/shared/ui'
 import { z } from 'zod'
 import { useChatting } from '@/features/chat/context/chatting-context'
+import historyService from '@/shared/services/history.service'
+import { useEffect } from 'react'
+import bridge from '@/shared/bridge'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -15,13 +17,34 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/chat/result/')({
   component: RouteComponent,
   validateSearch: searchSchema,
+  loaderDeps: (search) => search,
+  loader: async ({ context, deps }) => {
+    const { data } = await historyService.getChatroomSummary(deps.search.chatId ?? 0)
+
+    return { chatResult: data }
+  },
 })
 
 function RouteComponent() {
+  const { chatResult } = Route.useLoaderData()
   const { chatId, fromHistory } = Route.useSearch()
-  const { chatResult, summaryData, isLoading } = useChatResult(chatId)
   const { chattingModal } = useChatting()
+
   const navigate = useNavigate()
+
+  useEffect(() => {
+    bridge.changeStatusBarColor('#FDEDF0')
+
+    return () => {
+      bridge.changeStatusBarColor('#fff')
+    }
+  }, [])
+
+  const summaryData = [
+    { title: '상황 요약', content: chatResult?.firstSummary },
+    { title: '관계 이해', content: chatResult?.secondSummary },
+    { title: '해결 제안', content: chatResult?.thirdSummary },
+  ]
 
   const exitButton = () =>
     fromHistory ? (
@@ -39,7 +62,7 @@ function RouteComponent() {
       </Link>
     )
 
-  if (isLoading || !chatResult) {
+  if (!chatResult) {
     return (
       <div className="flex h-full flex-col">
         <DetailHeaderBar right={exitButton()} showBackButton={fromHistory} className="bg-malmo-rasberry-25" />
