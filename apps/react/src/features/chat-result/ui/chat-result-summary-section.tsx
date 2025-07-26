@@ -2,7 +2,7 @@ import Summary from '@/assets/icons/summary.svg'
 
 interface ChatResultSummarySectionProps {
   title: string
-  content: string
+  content?: string
 }
 
 export function ChatResultSummarySection({ title, content }: ChatResultSummarySectionProps) {

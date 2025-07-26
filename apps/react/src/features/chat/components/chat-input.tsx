@@ -2,11 +2,19 @@ import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
 import { useChatting } from '../context/chatting-context'
+import { chatKeys, useSendMessageMutation } from '../hook/use-chat-queries'
+import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
+import { useQueryClient } from '@tanstack/react-query'
 
-function ChatInput({ disabled = false }: { disabled?: boolean }) {
+function ChatInput(props: { disabled?: boolean }) {
+  const queryClient = useQueryClient()
+
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { chattingModal } = useChatting()
+  const { chattingModal, setSendingMessageTrue, sendingMessage } = useChatting()
+
+  const { mutate: sendMessage, isPending } = useSendMessageMutation()
+
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -37,19 +45,24 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
   // 메시지 전송 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (text.trim()) {
-      // 실제 전송 로직 구현...
+    if (text.trim() && !isPending) {
+      sendMessage(text)
+      setSendingMessageTrue()
       setText('')
     }
   }
-
   // Shift+Enter는 줄바꿈, Enter는 전송으로 처리합니다.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+    if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
       e.preventDefault()
       handleSubmit(e as any)
     }
   }
+
+  const paused = queryClient.getQueryData(chatKeys.status()) === ChatRoomStateDataChatRoomStateEnum.Paused
+  const disabled = props.disabled || paused || isPending || sendingMessage
 
   return (
     <form onSubmit={handleSubmit} className="sticky bottom-0 w-full bg-white px-5 py-[10px]">
@@ -77,7 +90,15 @@ function ChatInput({ disabled = false }: { disabled?: boolean }) {
             onBlur={() => setIsFocused(false)}
             onKeyDown={handleKeyDown}
             className="body2-regular placeholder:body2-regular flex-1 resize-none border-none bg-transparent py-[3px] pr-11 outline-none"
-            placeholder={disabled ? '대화가 불가능해요' : '메시지를 입력해주세요'}
+            placeholder={
+              props.disabled
+                ? '대화가 불가능해요'
+                : paused
+                  ? '커플 연동이 완료된 후에 채팅이 가능해요'
+                  : sendingMessage
+                    ? '모모의 답변이 완료된 후 채팅이 가능해요'
+                    : '메시지를 입력해주세요'
+            }
             rows={1}
           />
 

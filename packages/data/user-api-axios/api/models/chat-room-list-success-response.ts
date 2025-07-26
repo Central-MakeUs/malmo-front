@@ -14,36 +14,36 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { BaseListSwaggerResponseQuestionListData } from './base-list-swagger-response-question-list-data'
+import type { BaseListSwaggerResponseGetChatRoomListResponse } from './base-list-swagger-response-get-chat-room-list-response'
 
 /**
- * 질문 리스트 조회 성공 응답
+ * 채팅방 리스트 조회 성공 응답
  * @export
- * @interface QuestionListSuccessResponse
+ * @interface ChatRoomListSuccessResponse
  */
-export interface QuestionListSuccessResponse {
+export interface ChatRoomListSuccessResponse {
   /**
    * 요청 ID
    * @type {string}
-   * @memberof QuestionListSuccessResponse
+   * @memberof ChatRoomListSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
    * @type {boolean}
-   * @memberof QuestionListSuccessResponse
+   * @memberof ChatRoomListSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
    * @type {string}
-   * @memberof QuestionListSuccessResponse
+   * @memberof ChatRoomListSuccessResponse
    */
   message?: string
   /**
    *
-   * @type {BaseListSwaggerResponseQuestionListData}
-   * @memberof QuestionListSuccessResponse
+   * @type {BaseListSwaggerResponseGetChatRoomListResponse}
+   * @memberof ChatRoomListSuccessResponse
    */
-  data?: BaseListSwaggerResponseQuestionListData
+  data?: BaseListSwaggerResponseGetChatRoomListResponse
 }

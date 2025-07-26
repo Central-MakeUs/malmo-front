@@ -13,15 +13,15 @@
  */
 
 /**
- * 답변 등록 응답 데이터
+ *
  * @export
- * @interface AnswerData
+ * @interface DeleteChatRoomRequestDto
  */
-export interface AnswerData {
+export interface DeleteChatRoomRequestDto {
   /**
-   * 답변이 달린 질문의 ID
-   * @type {number}
-   * @memberof AnswerData
+   *
+   * @type {Array<number>}
+   * @memberof DeleteChatRoomRequestDto
    */
-  coupleQuestionId?: number
+  chatRoomIdList?: Array<number>
 }

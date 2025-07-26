@@ -40,8 +40,6 @@ import type { PastAnswerSuccessResponse } from '../models'
 // @ts-ignore
 import type { PastQuestionSuccessResponse } from '../models'
 // @ts-ignore
-import type { QuestionListSuccessResponse } from '../models'
-// @ts-ignore
 import type { QuestionSuccessResponse } from '../models'
 // @ts-ignore
 import type { SwaggerErrorResponse } from '../models'
@@ -52,16 +50,16 @@ import type { SwaggerErrorResponse } from '../models'
 export const QuestionsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
     /**
-     * 커플 과거 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 질문 답변 조회
-     * @param {string} coupleQuestionId
+     * 커플 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 질문 답변 조회
+     * @param {number} coupleQuestionId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAnswer: async (coupleQuestionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+    getAnswers: async (coupleQuestionId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'coupleQuestionId' is not null or undefined
-      assertParamExists('getAnswer', 'coupleQuestionId', coupleQuestionId)
-      const localVarPath = `/questions/answers/{coupleQuestionId}`.replace(
+      assertParamExists('getAnswers', 'coupleQuestionId', coupleQuestionId)
+      const localVarPath = `/questions/{coupleQuestionId}/answers`.replace(
         `{${'coupleQuestionId'}}`,
         encodeURIComponent(String(coupleQuestionId))
       )
@@ -91,18 +89,15 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
     },
     /**
      * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 질문 내용 조회
-     * @param {string} coupleQuestionId
+     * @summary 과거 질문 조회
+     * @param {number} level
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getQuestion: async (coupleQuestionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      // verify required parameter 'coupleQuestionId' is not null or undefined
-      assertParamExists('getQuestion', 'coupleQuestionId', coupleQuestionId)
-      const localVarPath = `/questions/{coupleQuestionId}`.replace(
-        `{${'coupleQuestionId'}}`,
-        encodeURIComponent(String(coupleQuestionId))
-      )
+    getQuestion: async (level: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+      // verify required parameter 'level' is not null or undefined
+      assertParamExists('getQuestion', 'level', level)
+      const localVarPath = `/questions/{level}`.replace(`{${'level'}}`, encodeURIComponent(String(level)))
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -117,52 +112,6 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       // authentication Bearer Authentication required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter)
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
-      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      }
-    },
-    /**
-     * 여태까지 등록된 커플 오늘의 질문 리스트를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 리스트 조회
-     * @param {number} [page]
-     * @param {number} [size]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getQuestionList: async (
-      page?: number,
-      size?: number,
-      options: RawAxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/questions`
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
-      let baseOptions
-      if (configuration) {
-        baseOptions = configuration.baseOptions
-      }
-
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
-      const localVarHeaderParameter = {} as any
-      const localVarQueryParameter = {} as any
-
-      // authentication Bearer Authentication required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      if (page !== undefined) {
-        localVarQueryParameter['page'] = page
-      }
-
-      if (size !== undefined) {
-        localVarQueryParameter['size'] = size
-      }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -175,7 +124,7 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
     },
     /**
      * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 조회
+     * @summary 오늘의 질문 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -207,25 +156,18 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
     },
     /**
      * 커플 오늘의 질문에 답변을 등록합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 답변 등록
-     * @param {number} coupleQuestionId
+     * @summary 오늘의 질문 답변 등록
      * @param {AnswerRequestDto} answerRequestDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     postAnswer: async (
-      coupleQuestionId: number,
       answerRequestDto: AnswerRequestDto,
       options: RawAxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'coupleQuestionId' is not null or undefined
-      assertParamExists('postAnswer', 'coupleQuestionId', coupleQuestionId)
       // verify required parameter 'answerRequestDto' is not null or undefined
       assertParamExists('postAnswer', 'answerRequestDto', answerRequestDto)
-      const localVarPath = `/questions/answers/{coupleQuestionId}`.replace(
-        `{${'coupleQuestionId'}}`,
-        encodeURIComponent(String(coupleQuestionId))
-      )
+      const localVarPath = `/questions/today/answers`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -234,6 +176,47 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       }
 
       const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+      localVarRequestOptions.data = serializeDataIfNeeded(answerRequestDto, localVarRequestOptions, configuration)
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * 커플 오늘의 질문에 답변을 수정합니다. JWT 토큰이 필요합니다.
+     * @summary 오늘의 질문 답변 수정
+     * @param {AnswerRequestDto} answerRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateAnswer: async (
+      answerRequestDto: AnswerRequestDto,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'answerRequestDto' is not null or undefined
+      assertParamExists('updateAnswer', 'answerRequestDto', answerRequestDto)
+      const localVarPath = `/questions/today/answers`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options }
       const localVarHeaderParameter = {} as any
       const localVarQueryParameter = {} as any
 
@@ -264,20 +247,20 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = QuestionsApiAxiosParamCreator(configuration)
   return {
     /**
-     * 커플 과거 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 질문 답변 조회
-     * @param {string} coupleQuestionId
+     * 커플 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 질문 답변 조회
+     * @param {number} coupleQuestionId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async getAnswer(
-      coupleQuestionId: string,
+    async getAnswers(
+      coupleQuestionId: number,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PastAnswerSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getAnswer(coupleQuestionId, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getAnswers(coupleQuestionId, options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
-        operationServerMap['QuestionsApi.getAnswer']?.[localVarOperationServerIndex]?.url
+        operationServerMap['QuestionsApi.getAnswers']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -288,16 +271,16 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
     },
     /**
      * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 질문 내용 조회
-     * @param {string} coupleQuestionId
+     * @summary 과거 질문 조회
+     * @param {number} level
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getQuestion(
-      coupleQuestionId: string,
+      level: number,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PastQuestionSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestion(coupleQuestionId, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestion(level, options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
         operationServerMap['QuestionsApi.getQuestion']?.[localVarOperationServerIndex]?.url
@@ -310,33 +293,8 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 여태까지 등록된 커플 오늘의 질문 리스트를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 리스트 조회
-     * @param {number} [page]
-     * @param {number} [size]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getQuestionList(
-      page?: number,
-      size?: number,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuestionListSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestionList(page, size, options)
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
-      const localVarOperationServerBasePath =
-        operationServerMap['QuestionsApi.getQuestionList']?.[localVarOperationServerIndex]?.url
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath)
-    },
-    /**
      * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 조회
+     * @summary 오늘의 질문 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -357,21 +315,42 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
     },
     /**
      * 커플 오늘의 질문에 답변을 등록합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 답변 등록
-     * @param {number} coupleQuestionId
+     * @summary 오늘의 질문 답변 등록
      * @param {AnswerRequestDto} answerRequestDto
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async postAnswer(
-      coupleQuestionId: number,
       answerRequestDto: AnswerRequestDto,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AnswerSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.postAnswer(coupleQuestionId, answerRequestDto, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.postAnswer(answerRequestDto, options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
         operationServerMap['QuestionsApi.postAnswer']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
+     * 커플 오늘의 질문에 답변을 수정합니다. JWT 토큰이 필요합니다.
+     * @summary 오늘의 질문 답변 수정
+     * @param {AnswerRequestDto} answerRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateAnswer(
+      answerRequestDto: AnswerRequestDto,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AnswerSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateAnswer(answerRequestDto, options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['QuestionsApi.updateAnswer']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -391,23 +370,23 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
   const localVarFp = QuestionsApiFp(configuration)
   return {
     /**
-     * 커플 과거 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 질문 답변 조회
-     * @param {QuestionsApiGetAnswerRequest} requestParameters Request parameters.
+     * 커플 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
+     * @summary 질문 답변 조회
+     * @param {QuestionsApiGetAnswersRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getAnswer(
-      requestParameters: QuestionsApiGetAnswerRequest,
+    getAnswers(
+      requestParameters: QuestionsApiGetAnswersRequest,
       options?: RawAxiosRequestConfig
     ): AxiosPromise<PastAnswerSuccessResponse> {
       return localVarFp
-        .getAnswer(requestParameters.coupleQuestionId, options)
+        .getAnswers(requestParameters.coupleQuestionId, options)
         .then((request) => request(axios, basePath))
     },
     /**
      * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 질문 내용 조회
+     * @summary 과거 질문 조회
      * @param {QuestionsApiGetQuestionRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -416,28 +395,11 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
       requestParameters: QuestionsApiGetQuestionRequest,
       options?: RawAxiosRequestConfig
     ): AxiosPromise<PastQuestionSuccessResponse> {
-      return localVarFp
-        .getQuestion(requestParameters.coupleQuestionId, options)
-        .then((request) => request(axios, basePath))
-    },
-    /**
-     * 여태까지 등록된 커플 오늘의 질문 리스트를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 리스트 조회
-     * @param {QuestionsApiGetQuestionListRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getQuestionList(
-      requestParameters: QuestionsApiGetQuestionListRequest = {},
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<QuestionListSuccessResponse> {
-      return localVarFp
-        .getQuestionList(requestParameters.page, requestParameters.size, options)
-        .then((request) => request(axios, basePath))
+      return localVarFp.getQuestion(requestParameters.level, options).then((request) => request(axios, basePath))
     },
     /**
      * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 조회
+     * @summary 오늘의 질문 조회
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -446,7 +408,7 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
     },
     /**
      * 커플 오늘의 질문에 답변을 등록합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 오늘의 질문 답변 등록
+     * @summary 오늘의 질문 답변 등록
      * @param {QuestionsApiPostAnswerRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -456,24 +418,39 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
       options?: RawAxiosRequestConfig
     ): AxiosPromise<AnswerSuccessResponse> {
       return localVarFp
-        .postAnswer(requestParameters.coupleQuestionId, requestParameters.answerRequestDto, options)
+        .postAnswer(requestParameters.answerRequestDto, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * 커플 오늘의 질문에 답변을 수정합니다. JWT 토큰이 필요합니다.
+     * @summary 오늘의 질문 답변 수정
+     * @param {QuestionsApiUpdateAnswerRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateAnswer(
+      requestParameters: QuestionsApiUpdateAnswerRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<AnswerSuccessResponse> {
+      return localVarFp
+        .updateAnswer(requestParameters.answerRequestDto, options)
         .then((request) => request(axios, basePath))
     },
   }
 }
 
 /**
- * Request parameters for getAnswer operation in QuestionsApi.
+ * Request parameters for getAnswers operation in QuestionsApi.
  * @export
- * @interface QuestionsApiGetAnswerRequest
+ * @interface QuestionsApiGetAnswersRequest
  */
-export interface QuestionsApiGetAnswerRequest {
+export interface QuestionsApiGetAnswersRequest {
   /**
    *
-   * @type {string}
-   * @memberof QuestionsApiGetAnswer
+   * @type {number}
+   * @memberof QuestionsApiGetAnswers
    */
-  readonly coupleQuestionId: string
+  readonly coupleQuestionId: number
 }
 
 /**
@@ -484,31 +461,10 @@ export interface QuestionsApiGetAnswerRequest {
 export interface QuestionsApiGetQuestionRequest {
   /**
    *
-   * @type {string}
+   * @type {number}
    * @memberof QuestionsApiGetQuestion
    */
-  readonly coupleQuestionId: string
-}
-
-/**
- * Request parameters for getQuestionList operation in QuestionsApi.
- * @export
- * @interface QuestionsApiGetQuestionListRequest
- */
-export interface QuestionsApiGetQuestionListRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof QuestionsApiGetQuestionList
-   */
-  readonly page?: number
-
-  /**
-   *
-   * @type {number}
-   * @memberof QuestionsApiGetQuestionList
-   */
-  readonly size?: number
+  readonly level: number
 }
 
 /**
@@ -519,15 +475,22 @@ export interface QuestionsApiGetQuestionListRequest {
 export interface QuestionsApiPostAnswerRequest {
   /**
    *
-   * @type {number}
+   * @type {AnswerRequestDto}
    * @memberof QuestionsApiPostAnswer
    */
-  readonly coupleQuestionId: number
+  readonly answerRequestDto: AnswerRequestDto
+}
 
+/**
+ * Request parameters for updateAnswer operation in QuestionsApi.
+ * @export
+ * @interface QuestionsApiUpdateAnswerRequest
+ */
+export interface QuestionsApiUpdateAnswerRequest {
   /**
    *
    * @type {AnswerRequestDto}
-   * @memberof QuestionsApiPostAnswer
+   * @memberof QuestionsApiUpdateAnswer
    */
   readonly answerRequestDto: AnswerRequestDto
 }
@@ -540,22 +503,22 @@ export interface QuestionsApiPostAnswerRequest {
  */
 export class QuestionsApi extends BaseAPI {
   /**
-   * 커플 과거 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 질문 답변 조회
-   * @param {QuestionsApiGetAnswerRequest} requestParameters Request parameters.
+   * 커플 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
+   * @summary 질문 답변 조회
+   * @param {QuestionsApiGetAnswersRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof QuestionsApi
    */
-  public getAnswer(requestParameters: QuestionsApiGetAnswerRequest, options?: RawAxiosRequestConfig) {
+  public getAnswers(requestParameters: QuestionsApiGetAnswersRequest, options?: RawAxiosRequestConfig) {
     return QuestionsApiFp(this.configuration)
-      .getAnswer(requestParameters.coupleQuestionId, options)
+      .getAnswers(requestParameters.coupleQuestionId, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
   /**
    * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 질문 내용 조회
+   * @summary 과거 질문 조회
    * @param {QuestionsApiGetQuestionRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -563,27 +526,13 @@ export class QuestionsApi extends BaseAPI {
    */
   public getQuestion(requestParameters: QuestionsApiGetQuestionRequest, options?: RawAxiosRequestConfig) {
     return QuestionsApiFp(this.configuration)
-      .getQuestion(requestParameters.coupleQuestionId, options)
-      .then((request) => request(this.axios, this.basePath))
-  }
-
-  /**
-   * 여태까지 등록된 커플 오늘의 질문 리스트를 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 오늘의 질문 리스트 조회
-   * @param {QuestionsApiGetQuestionListRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof QuestionsApi
-   */
-  public getQuestionList(requestParameters: QuestionsApiGetQuestionListRequest = {}, options?: RawAxiosRequestConfig) {
-    return QuestionsApiFp(this.configuration)
-      .getQuestionList(requestParameters.page, requestParameters.size, options)
+      .getQuestion(requestParameters.level, options)
       .then((request) => request(this.axios, this.basePath))
   }
 
   /**
    * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 오늘의 질문 조회
+   * @summary 오늘의 질문 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof QuestionsApi
@@ -596,7 +545,7 @@ export class QuestionsApi extends BaseAPI {
 
   /**
    * 커플 오늘의 질문에 답변을 등록합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 오늘의 질문 답변 등록
+   * @summary 오늘의 질문 답변 등록
    * @param {QuestionsApiPostAnswerRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
@@ -604,7 +553,21 @@ export class QuestionsApi extends BaseAPI {
    */
   public postAnswer(requestParameters: QuestionsApiPostAnswerRequest, options?: RawAxiosRequestConfig) {
     return QuestionsApiFp(this.configuration)
-      .postAnswer(requestParameters.coupleQuestionId, requestParameters.answerRequestDto, options)
+      .postAnswer(requestParameters.answerRequestDto, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * 커플 오늘의 질문에 답변을 수정합니다. JWT 토큰이 필요합니다.
+   * @summary 오늘의 질문 답변 수정
+   * @param {QuestionsApiUpdateAnswerRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof QuestionsApi
+   */
+  public updateAnswer(requestParameters: QuestionsApiUpdateAnswerRequest, options?: RawAxiosRequestConfig) {
+    return QuestionsApiFp(this.configuration)
+      .updateAnswer(requestParameters.answerRequestDto, options)
       .then((request) => request(this.axios, this.basePath))
   }
 }

@@ -36,10 +36,10 @@ import type { SwaggerErrorResponse } from '../models'
 // @ts-ignore
 import type { TermsListSuccessResponse } from '../models'
 /**
- * TemrsApi - axios parameter creator
+ * TermsApi - axios parameter creator
  * @export
  */
-export const TemrsApiAxiosParamCreator = function (configuration?: Configuration) {
+export const TermsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
     /**
      * 서비스 이용약관 목록을 조회합니다. 회원가입 시 동의가 필요한 약관들이 포함됩니다.
@@ -77,11 +77,11 @@ export const TemrsApiAxiosParamCreator = function (configuration?: Configuration
 }
 
 /**
- * TemrsApi - functional programming interface
+ * TermsApi - functional programming interface
  * @export
  */
-export const TemrsApiFp = function (configuration?: Configuration) {
-  const localVarAxiosParamCreator = TemrsApiAxiosParamCreator(configuration)
+export const TermsApiFp = function (configuration?: Configuration) {
+  const localVarAxiosParamCreator = TermsApiAxiosParamCreator(configuration)
   return {
     /**
      * 서비스 이용약관 목록을 조회합니다. 회원가입 시 동의가 필요한 약관들이 포함됩니다.
@@ -95,7 +95,7 @@ export const TemrsApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getTerms(options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
-        operationServerMap['TemrsApi.getTerms']?.[localVarOperationServerIndex]?.url
+        operationServerMap['TermsApi.getTerms']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -108,11 +108,11 @@ export const TemrsApiFp = function (configuration?: Configuration) {
 }
 
 /**
- * TemrsApi - factory interface
+ * TermsApi - factory interface
  * @export
  */
-export const TemrsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-  const localVarFp = TemrsApiFp(configuration)
+export const TermsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+  const localVarFp = TermsApiFp(configuration)
   return {
     /**
      * 서비스 이용약관 목록을 조회합니다. 회원가입 시 동의가 필요한 약관들이 포함됩니다.
@@ -127,21 +127,21 @@ export const TemrsApiFactory = function (configuration?: Configuration, basePath
 }
 
 /**
- * TemrsApi - object-oriented interface
+ * TermsApi - object-oriented interface
  * @export
- * @class TemrsApi
+ * @class TermsApi
  * @extends {BaseAPI}
  */
-export class TemrsApi extends BaseAPI {
+export class TermsApi extends BaseAPI {
   /**
    * 서비스 이용약관 목록을 조회합니다. 회원가입 시 동의가 필요한 약관들이 포함됩니다.
    * @summary 약관 목록 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof TemrsApi
+   * @memberof TermsApi
    */
   public getTerms(options?: RawAxiosRequestConfig) {
-    return TemrsApiFp(this.configuration)
+    return TermsApiFp(this.configuration)
       .getTerms(options)
       .then((request) => request(this.axios, this.basePath))
   }

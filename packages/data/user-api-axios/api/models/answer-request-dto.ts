@@ -20,12 +20,6 @@
 export interface AnswerRequestDto {
   /**
    *
-   * @type {number}
-   * @memberof AnswerRequestDto
-   */
-  coupleQuestionId?: number
-  /**
-   *
    * @type {string}
    * @memberof AnswerRequestDto
    */

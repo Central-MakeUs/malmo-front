@@ -1,6 +1,9 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import note from '@/assets/images/note.png'
 import { useEffect } from 'react'
+import chatService from '@/shared/services/chat.service'
+import { useQueryClient } from '@tanstack/react-query'
+import { chatKeys } from '@/features/chat/hook/use-chat-queries'
 
 export const Route = createFileRoute('/chat/loading/')({
   component: RouteComponent,
@@ -8,13 +11,24 @@ export const Route = createFileRoute('/chat/loading/')({
 
 function RouteComponent() {
   const navigate = useNavigate()
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate({ to: '/chat/result' })
-    }, 2000)
+  const queryClient = useQueryClient()
 
-    return () => clearTimeout(timer)
-  }, [])
+  useEffect(() => {
+    async function completeChatRoom() {
+      try {
+        const { data } = await chatService.postChatroomComplete()
+
+        queryClient.removeQueries({ queryKey: chatKeys.messages() })
+        await queryClient.invalidateQueries({ queryKey: chatKeys.status() })
+
+        navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId } })
+      } catch (error) {
+        console.error('Error completing chat room:', error)
+        navigate({ to: '/' })
+      }
+    }
+    completeChatRoom()
+  }, [navigate, queryClient])
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-[47px]">

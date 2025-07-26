@@ -25,6 +25,12 @@ export interface PastQuestionData {
    */
   coupleQuestionId?: number
   /**
+   * 질문 단계
+   * @type {number}
+   * @memberof PastQuestionData
+   */
+  level?: number
+  /**
    * 질문 제목
    * @type {string}
    * @memberof PastQuestionData
@@ -36,6 +42,18 @@ export interface PastQuestionData {
    * @memberof PastQuestionData
    */
   content?: string
+  /**
+   * 나의 답변 여부
+   * @type {boolean}
+   * @memberof PastQuestionData
+   */
+  meAnswered?: boolean
+  /**
+   * 상대방 답변 여부
+   * @type {boolean}
+   * @memberof PastQuestionData
+   */
+  partnerAnswered?: boolean
   /**
    * 생성일시
    * @type {string}

@@ -14,30 +14,36 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { QuestionListData } from './question-list-data'
+import type { GetChatRoomListResponse } from './get-chat-room-list-response'
 
 /**
  * 기본 리스트 응답 형식
  * @export
- * @interface BaseListSwaggerResponseQuestionListData
+ * @interface BaseListSwaggerResponseGetChatRoomListResponse
  */
-export interface BaseListSwaggerResponseQuestionListData {
+export interface BaseListSwaggerResponseGetChatRoomListResponse {
   /**
    * 응답 데이터 크기
    * @type {number}
-   * @memberof BaseListSwaggerResponseQuestionListData
+   * @memberof BaseListSwaggerResponseGetChatRoomListResponse
    */
   size?: number
   /**
    * 페이지 번호
    * @type {number}
-   * @memberof BaseListSwaggerResponseQuestionListData
+   * @memberof BaseListSwaggerResponseGetChatRoomListResponse
    */
   page?: number
   /**
    * 응답 데이터 리스트
-   * @type {Array<QuestionListData>}
-   * @memberof BaseListSwaggerResponseQuestionListData
+   * @type {Array<GetChatRoomListResponse>}
+   * @memberof BaseListSwaggerResponseGetChatRoomListResponse
    */
-  list?: Array<QuestionListData>
+  list?: Array<GetChatRoomListResponse>
+  /**
+   * 전체 데이터 개수
+   * @type {number}
+   * @memberof BaseListSwaggerResponseGetChatRoomListResponse
+   */
+  totalCount?: number
 }

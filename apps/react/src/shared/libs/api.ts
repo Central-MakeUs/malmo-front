@@ -4,7 +4,7 @@ import { bridge } from '../bridge'
 
 // TODO: 동적으로 개발 환경에 따라 BASE_URL을 설정할 수 있도록 개선
 const BASE_URL = '/api'
-const AUTH_ROUTE = '/auth'
+const AUTH_ROUTE = '/login'
 
 interface QueueItem {
   resolve: (value: any) => void
@@ -33,6 +33,11 @@ export function initApi(): AxiosInstance {
 
   apiInstance.interceptors.request.use(
     async (config) => {
+      console.log('API Request:', {
+        url: config.url,
+        payload: config.data,
+      })
+
       let accessToken: string | null = null
 
       if (isWebView()) {
@@ -71,9 +76,13 @@ export function initApi(): AxiosInstance {
   }
 
   apiInstance.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      console.log('API Response:', response.data)
+      return response
+    },
     async (error) => {
       const originalRequest = error.config
+
       const { response } = error
 
       if (response?.status === 401 && isWebView() && !originalRequest._retry) {
@@ -106,9 +115,9 @@ export function initApi(): AxiosInstance {
         }
       }
 
-      if (response?.status === 403 && response.data?.message === 'forbidden') {
-        redirectToAuth()
-      }
+      // if (response?.status === 403 && response.data?.message === 'forbidden') {
+      //   redirectToAuth()
+      // }
 
       return Promise.reject(error)
     }
