@@ -1,5 +1,5 @@
 import { DetailHeaderBar } from '@/shared/components/header-bar'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import emptyImage from '@/assets/images/onboarding-end.png'
 import { GetChatRoomListResponse } from '@data/user-api-axios/api'
 import { formatDate } from '@/shared/utils'
@@ -78,9 +78,9 @@ function RouteComponent() {
       className="mb-[6px] flex cursor-pointer items-center justify-between bg-white px-5 py-6"
       onClick={() => onToggleSelect(history.chatRoomId)}
     >
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-5 pr-[40px]">
         <CheckIcon isChecked={isSelected} />
-        <div>
+        <div className="flex-1">
           <div className="mb-[10px] flex gap-1">
             <div className="rounded-[8px] bg-malmo-rasberry-25 px-[9px] py-[1px]">
               <p className="label1-semibold text-malmo-rasberry-500">{history.situationKeyword}</p>
@@ -91,7 +91,7 @@ function RouteComponent() {
           </div>
           <div className="pl-1">
             <p className="label1-medium text-gray-iron-500">{formatDate(history.createdAt, 'YYYY년 MM월 DD일')}</p>
-            <h1 className="body1-semibold">{history.totalSummary}</h1>
+            <h1 className="body1-semibold break-keep">{history.totalSummary}</h1>
           </div>
         </div>
       </div>

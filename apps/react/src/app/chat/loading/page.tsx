@@ -21,7 +21,7 @@ function RouteComponent() {
         queryClient.removeQueries({ queryKey: chatKeys.messages() })
         await queryClient.invalidateQueries({ queryKey: chatKeys.status() })
 
-        navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId } })
+        navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId, fromHistory: false } })
       } catch (error) {
         console.error('Error completing chat room:', error)
         navigate({ to: '/' })

@@ -8,7 +8,7 @@ import { ChatRoomStateDataChatRoomStateEnum, GetChatRoomListResponse } from '@da
 import { formatDate } from '@/shared/utils'
 import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import historyService from '@/shared/services/history.service'
 import { useInView } from 'react-intersection-observer'
 
@@ -17,7 +17,7 @@ export const Route = createFileRoute('/history/')({
 })
 
 function RouteComponent() {
-  const { data: chatStatus } = useChatRoomStatusQuery()
+  const { data: chatStatus, isSuccess } = useChatRoomStatusQuery()
   const [keyword, setKeyword] = useState('')
   const { ref, inView } = useInView()
 
@@ -47,6 +47,7 @@ function RouteComponent() {
 
       return allPages.length
     },
+    enabled: isSuccess,
   })
 
   useEffect(() => {
@@ -63,11 +64,11 @@ function RouteComponent() {
 
   const ChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => (
     <Link
-      className="mb-[6px] flex items-center justify-between bg-white px-5 py-6"
+      className="mb-[6px] flex items-center justify-between gap-16 bg-white px-5 py-6"
       to={'/chat/result'}
       search={{ chatId: history.chatRoomId, fromHistory: true }}
     >
-      <div>
+      <div className="flex-1">
         <div className="mb-[10px] flex gap-1">
           <div className="rounded-[8px] bg-malmo-rasberry-25 px-[9px] py-[1px]">
             <p className="label1-semibold text-malmo-rasberry-500">{history.situationKeyword}</p>
@@ -78,7 +79,7 @@ function RouteComponent() {
         </div>
         <div className="pl-1">
           <p className="label1-medium text-gray-iron-500">{formatDate(history.createdAt, 'YYYY년 MM월 DD일')}</p>
-          <h1 className="body1-semibold">{history.totalSummary}</h1>
+          <p className="body1-semibold break-keep">{history.totalSummary}</p>
         </div>
       </div>
       <ChevronRight size={24} />
@@ -140,7 +141,8 @@ function RouteComponent() {
           <div
             className={cn(
               'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',
-              "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']"
+              "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']",
+              { hidden: histories.length > 0 && !activeChat }
             )}
           >
             <p className="label1-medium text-gray-iron-200">

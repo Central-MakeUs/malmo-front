@@ -1,5 +1,3 @@
-// page.tsx
-
 import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubble'
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
@@ -44,6 +42,8 @@ function RouteComponent() {
 
   const messages = useMemo(() => {
     if (!data) return []
+    if (chatId) return data.pages.flatMap((page) => page.list ?? [])
+
     return data.pages.flatMap((page) => page.list ?? []).reverse()
   }, [data])
 
@@ -104,7 +104,9 @@ function RouteComponent() {
 
       <section className="flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
-          <p className="body3-medium text-white">대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
+          <p className="body3-medium text-center text-white">
+            대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!
+          </p>
         </div>
 
         {isFetchingNextPage && (
