@@ -37,6 +37,18 @@ export interface MemberData {
    */
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
   /**
+   * 완료된 채팅방 개수
+   * @type {number}
+   * @memberof MemberData
+   */
+  totalChatRoomCount?: number
+  /**
+   * 총 할당된 오늘의 질문 개수
+   * @type {number}
+   * @memberof MemberData
+   */
+  totalCoupleQuestionCount?: number
+  /**
    * 회피 비율
    * @type {number}
    * @memberof MemberData

@@ -4,7 +4,7 @@ interface SubmissionLoadingProps {
   nickname?: string
 }
 
-export function SubmissionLoading({ nickname = '베리' }: SubmissionLoadingProps) {
+export function SubmissionLoading({ nickname = '사용자' }: SubmissionLoadingProps) {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center bg-white px-[20px]">
       <Note className="h-[236px] w-[320px]" />
