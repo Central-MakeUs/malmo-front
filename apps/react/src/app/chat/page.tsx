@@ -99,7 +99,7 @@ function RouteComponent() {
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
 
-      <section className="flex-1 overflow-y-auto" ref={scrollRef}>
+      <section className="flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
           <p className="body3-medium text-white">대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!</p>
         </div>
@@ -112,7 +112,7 @@ function RouteComponent() {
 
         <div ref={sentinelRef} style={{ height: '1px' }} />
 
-        {isLoading && (
+        {(isLoading || !isChatStatusSuccess) && (
           <div className="flex flex-1 items-center justify-center">
             <p className="body2-regular text-gray-500">채팅 데이터를 불러오는 중...</p>
           </div>

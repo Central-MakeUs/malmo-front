@@ -53,11 +53,9 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
   // AI 답변이 완료되었을 때 호출되는 함수
   const handleResponseId = useCallback(
-    (messageId: string) => {
-      // 스트리밍 상태를 비우고
+    async (messageId: string) => {
+      await queryClient.invalidateQueries({ queryKey: chatKeys.messages() })
       setStreamingMessage(null)
-      // 서버와 데이터 동기화를 위해 쿼리를 무효화하여 최신 데이터를 다시 불러옵니다.
-      queryClient.invalidateQueries({ queryKey: chatKeys.messages() })
       setSendingMessage(false)
     },
     [queryClient]

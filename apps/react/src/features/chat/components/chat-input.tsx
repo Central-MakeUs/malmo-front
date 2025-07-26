@@ -2,7 +2,7 @@ import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
 import { useChatting } from '../context/chatting-context'
-import { chatKeys, useChatRoomStatusQuery, useSendMessageMutation } from '../hook/use-chat-queries'
+import { chatKeys, useSendMessageMutation } from '../hook/use-chat-queries'
 import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useQueryClient } from '@tanstack/react-query'
 
