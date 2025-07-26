@@ -1,40 +1,100 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useLoaderData, redirect } from '@tanstack/react-router'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { Button } from '@/shared/ui'
 import { X } from 'lucide-react'
 import RelationshipIcon from '@/assets/icons/relationship.svg'
 import ConflictIcon from '@/assets/icons/conflict.svg'
 import EmotionIcon from '@/assets/icons/emotion.svg'
-import { useAuth } from '@/features/auth'
-import { useAttachmentResult, ResultScoreBox, ResultDetailBox, ResultAttitudeSection } from '@/features/attachment'
+import { ResultScoreBox, ResultDetailBox, ResultAttitudeSection } from '@/features/attachment'
+import { ATTACHMENT_TYPE_DATA } from '@/features/attachment/models/attachment-data'
+import type { AttachmentTypeData } from '@/features/attachment/models/types'
+
+// 로더 데이터 타입 정의
+interface AttachmentResultLoaderData {
+  nickname: string
+  anxietyRate: number
+  avoidanceRate: number
+  attachmentData: AttachmentTypeData
+}
 
 export const Route = createFileRoute('/attachment-test/result/')({
+  beforeLoad: async ({ context }) => {
+    // 인증되지 않은 경우 로그인 페이지로 리다이렉트
+    if (!context.auth?.authenticated) {
+      throw redirect({
+        to: '/login',
+      })
+    }
+  },
+
+  // 데이터 로더
+  loader: async ({ context }) => {
+    try {
+      let userInfo = context.auth.userInfo
+
+      // 애착 데이터가 없으면 새로고침해서 최신 데이터 가져오기
+      if (!userInfo.loveTypeCategory) {
+        const refreshedUserInfo = await context.auth.refreshUserInfo()
+        userInfo = refreshedUserInfo || userInfo
+      }
+
+      const loveTypeCategory = userInfo.loveTypeCategory
+
+      if (!loveTypeCategory) {
+        throw new Error('애착 검사 결과를 찾을 수 없습니다.')
+      }
+
+      // 애착 유형 데이터 매핑
+      const attachmentData = ATTACHMENT_TYPE_DATA[loveTypeCategory as keyof typeof ATTACHMENT_TYPE_DATA]
+      if (!attachmentData) {
+        throw new Error('애착 유형 데이터를 찾을 수 없습니다.')
+      }
+
+      return {
+        nickname: userInfo.nickname,
+        anxietyRate: userInfo.anxietyRate,
+        avoidanceRate: userInfo.avoidanceRate,
+        attachmentData,
+      } satisfies AttachmentResultLoaderData
+    } catch (error) {
+      console.error('애착 결과 로드 실패:', error)
+      throw error
+    }
+  },
+
+  // 에러 컴포넌트
+  errorComponent: ({ error }) => (
+    <div className="flex h-screen w-full items-center justify-center bg-white">
+      <div className="text-center">
+        <p className="mb-4 text-red-500">{error.message || '데이터를 불러오는데 실패했습니다.'}</p>
+        <Button text="다시 시도" onClick={() => window.location.reload()} />
+      </div>
+    </div>
+  ),
+
+  // 로딩 컴포넌트
+  pendingComponent: () => (
+    <div className="flex h-screen w-full items-center justify-center bg-white">
+      <p>결과를 불러오는 중...</p>
+    </div>
+  ),
+
   component: AttachmentTestResultPage,
 })
 
 function AttachmentTestResultPage() {
-  const { userInfo } = useAuth()
-  const { loveTypeCategory, anxietyRate, avoidanceRate, attachmentData, loading, error, handleClose, handleComplete } =
-    useAttachmentResult()
+  const { nickname, anxietyRate, avoidanceRate, attachmentData } = useLoaderData({
+    from: '/attachment-test/result/',
+  }) as AttachmentResultLoaderData
 
-  // 로딩 상태
-  if (loading) {
-    // TODO: 로딩 관리 필요
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-white">
-        <p>결과를 불러오는 중...</p>
-      </div>
-    )
+  const handleClose = () => {
+    // 홈으로 이동
+    window.location.href = '/'
   }
 
-  // 에러 상태
-  if (error || !loveTypeCategory || !attachmentData) {
-    // TODO: 에러 처리 필요
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-white">
-        <p>에러가 발생했습니다.</p>
-      </div>
-    )
+  const handleComplete = () => {
+    // 홈으로 이동
+    window.location.href = '/'
   }
 
   return (
@@ -60,7 +120,7 @@ function AttachmentTestResultPage() {
 
         {/* 애착유형 텍스트 */}
         <div className="mt-[10px] text-center">
-          <h1 className="heading1-semibold text-gray-iron-950">{userInfo.nickname || '사용자'}님의 애착유형은</h1>
+          <h1 className="heading1-semibold text-gray-iron-950">{nickname || '사용자'}님의 애착유형은</h1>
           <h2
             className="title2-bold"
             style={{
