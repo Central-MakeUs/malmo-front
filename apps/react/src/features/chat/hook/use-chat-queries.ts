@@ -5,6 +5,7 @@ import {
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
 } from '@data/user-api-axios/api'
+import historyService from '@/shared/services/history.service'
 
 export const chatKeys = {
   all: ['chat'] as const,
@@ -14,7 +15,6 @@ export const chatKeys = {
 }
 
 // === QUERIES ===
-
 export const useChatRoomStatusQuery = () => {
   return useQuery({
     queryKey: chatKeys.status(),
@@ -26,9 +26,35 @@ export const useChatRoomStatusQuery = () => {
 }
 
 // 2. 채팅 메시지 목록 조회를 위한 useInfiniteQuery 훅 (수정)
-// 비효율적인 select 옵션을 제거하여 원본 데이터를 그대로 반환합니다.
-export const useChatMessagesQuery = (enabled: boolean) => {
+export const useChatMessagesQuery = (enabled: boolean, chatId?: number) => {
   const PAGE_SIZE = 20
+
+  if (chatId) {
+    return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
+      queryKey: chatKeys.messages(),
+      queryFn: async ({ pageParam = 0 }) => {
+        const response = await historyService.getHistory({
+          chatRoomId: chatId,
+          params: {
+            page: pageParam as number,
+            size: PAGE_SIZE,
+            sort: [],
+          },
+        })
+        return response.data as BaseListSwaggerResponseChatRoomMessageData
+      },
+      initialPageParam: 0,
+      getNextPageParam: (lastPage, allPages) => {
+        const totalCount = lastPage.totalCount ?? 0
+        const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
+
+        if (fetchedMessagesCount >= totalCount) {
+          return undefined
+        }
+        return (lastPage.page ?? 0) + 1
+      },
+    })
+  }
 
   return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
     queryKey: chatKeys.messages(),

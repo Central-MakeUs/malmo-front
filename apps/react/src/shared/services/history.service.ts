@@ -1,5 +1,10 @@
 import apiInstance from '../libs/api'
-import { ChatroomApi, ChatroomApiGetChatRoomListRequest, ChatRoomListSuccessResponse } from '@data/user-api-axios/api'
+import {
+  ChatroomApi,
+  ChatroomApiGetChatRoomListRequest,
+  ChatRoomListSuccessResponse,
+  Pageable,
+} from '@data/user-api-axios/api'
 
 export const QUERY_KEY = 'histories'
 
@@ -31,12 +36,9 @@ class HistoryService extends ChatroomApi {
     return data
   }
 
-  async getHistory(chatRoomId: number) {
+  async getHistory({ chatRoomId, params }: { chatRoomId: number; params: Pageable }) {
     const { data } = await this.getChatRoomMessages({
-      pageable: {
-        page: 0,
-        size: 10,
-      },
+      pageable: params,
       chatRoomId,
     })
     return data

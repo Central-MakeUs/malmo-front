@@ -33,7 +33,10 @@ function RouteComponent() {
   const navigate = useNavigate()
   const { chattingModal, streamingMessage, isChatStatusSuccess } = useChatting()
 
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(isChatStatusSuccess)
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
+    isChatStatusSuccess,
+    chatId
+  )
 
   const scrollRef = useRef<HTMLElement>(null)
   const scrollHeightRef = useRef(0)
