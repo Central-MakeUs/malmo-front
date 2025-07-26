@@ -17,10 +17,9 @@ function RouteComponent() {
     async function completeChatRoom() {
       try {
         const { data } = await chatService.postChatroomComplete()
-        queryClient.invalidateQueries({
-          queryKey: chatKeys.all,
-          refetchType: 'none',
-        })
+
+        queryClient.removeQueries({ queryKey: chatKeys.messages() })
+        await queryClient.invalidateQueries({ queryKey: chatKeys.status() })
 
         navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId } })
       } catch (error) {
@@ -29,7 +28,7 @@ function RouteComponent() {
       }
     }
     completeChatRoom()
-  }, [])
+  }, [navigate, queryClient])
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-[47px]">
