@@ -25,6 +25,12 @@ export interface MemberData {
    */
   memberState?: MemberDataMemberStateEnum
   /**
+   * 로그인한 Provider
+   * @type {string}
+   * @memberof MemberData
+   */
+  provider?: MemberDataProviderEnum
+  /**
    * 연애 시작일
    * @type {string}
    * @memberof MemberData
@@ -81,6 +87,12 @@ export const MemberDataMemberStateEnum = {
 } as const
 
 export type MemberDataMemberStateEnum = (typeof MemberDataMemberStateEnum)[keyof typeof MemberDataMemberStateEnum]
+export const MemberDataProviderEnum = {
+  Kakao: 'KAKAO',
+  Apple: 'APPLE',
+} as const
+
+export type MemberDataProviderEnum = (typeof MemberDataProviderEnum)[keyof typeof MemberDataProviderEnum]
 export const MemberDataLoveTypeCategoryEnum = {
   StableType: 'STABLE_TYPE',
   AnxietyType: 'ANXIETY_TYPE',
