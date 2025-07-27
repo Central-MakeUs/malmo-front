@@ -23,7 +23,7 @@ function RouteComponent() {
   const debouncedKeyword = useDebounce(keyword, 500)
   const { ref, inView } = useInView()
 
-  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useChatHistoryQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useChatHistoryQuery({
     keyword: debouncedKeyword,
     isSuccess,
   })
@@ -39,6 +39,7 @@ function RouteComponent() {
     chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
+  const showEmpty = !isFetchingNextPage && histories.length === 0
 
   return (
     <div className="flex h-screen flex-col">
@@ -65,9 +66,13 @@ function RouteComponent() {
       </div>
 
       <section className="flex-1 overflow-y-auto bg-gray-neutral-100">
-        {isLoading ? (
-          <EmptyState image={noResultImage} title="로딩중" description="대화를 불러오고 있어요" />
-        ) : histories.length > 0 ? (
+        {showEmpty ? (
+          <EmptyState
+            image={keyword || !isFetching ? noResultImage : emptyImage}
+            title={keyword || !isFetching ? '검색어와 일치하는 대화 기록이 없어요' : '아직 대화 기록이 없어요'}
+            description={keyword || !isFetching ? '다른 검색어를 입력해보세요!' : '모모에게 고민을 이야기해 보세요!'}
+          />
+        ) : (
           <>
             {histories.map((history) => (
               <LinkedChatHistoryItem key={history.chatRoomId} history={history} />
@@ -75,12 +80,6 @@ function RouteComponent() {
             <div ref={ref} className="h-[1px]" />
             {isFetchingNextPage && <p className="p-5 text-center">더 불러오는 중...</p>}
           </>
-        ) : (
-          <EmptyState
-            image={keyword ? noResultImage : emptyImage}
-            title={keyword ? '검색어와 일치하는 대화 기록이 없어요' : '아직 대화 기록이 없어요'}
-            description={keyword ? '다른 검색어를 입력해보세요!' : '모모에게 고민을 이야기해 보세요!'}
-          />
         )}
       </section>
 

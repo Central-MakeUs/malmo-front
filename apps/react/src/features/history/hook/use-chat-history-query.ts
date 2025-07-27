@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 import historyService from '@/shared/services/history.service'
 
 interface UseChatHistoryQueryProps {
@@ -28,5 +28,6 @@ export function useChatHistoryQuery({ keyword = '', isSuccess }: UseChatHistoryQ
       return allPages.length
     },
     enabled: isSuccess,
+    placeholderData: keepPreviousData,
   })
 }

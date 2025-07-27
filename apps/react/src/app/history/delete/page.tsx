@@ -16,7 +16,7 @@ export const Route = createFileRoute('/history/delete/')({
 function RouteComponent() {
   const { ref, inView } = useInView()
 
-  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useChatHistoryQuery({})
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatHistoryQuery({})
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
 
   const { selectedIds, isAllSelected, handleToggleSelect, handleSelectAll, handleDelete, backButton } =
@@ -27,6 +27,8 @@ function RouteComponent() {
       fetchNextPage()
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  const showEmpty = !isFetchingNextPage && histories.length === 0
 
   return (
     <div className="flex h-screen flex-col">
@@ -40,9 +42,13 @@ function RouteComponent() {
       )}
 
       <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pb-20">
-        {isLoading ? (
-          <EmptyState image={noResultImage} title="로딩중" description="대화를 불러오고 있어요" />
-        ) : histories.length > 0 ? (
+        {showEmpty ? (
+          <EmptyState
+            image={noResultImage}
+            title="삭제할 대화 기록이 없어요"
+            description="모모에게 고민을 이야기해 보세요!"
+          />
+        ) : (
           <>
             {histories.map((history) => (
               <SelectableChatHistoryItem
@@ -55,12 +61,6 @@ function RouteComponent() {
             <div ref={ref} className="h-[1px]" />
             {isFetchingNextPage && <p className="p-5 text-center">더 불러오는 중...</p>}
           </>
-        ) : (
-          <EmptyState
-            image={noResultImage}
-            title="삭제할 대화 기록이 없어요"
-            description="모모에게 고민을 이야기해 보세요!"
-          />
         )}
       </section>
 
