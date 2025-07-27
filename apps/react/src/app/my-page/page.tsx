@@ -53,7 +53,7 @@ function MyPageComponent() {
     {
       label: '애착유형 검사하기',
       group: MenuGroup.BASIC,
-      onClick: () => console.log('Navigate to /attachment-test'),
+      onClick: () => navigate({ to: '/attachment-test' }),
     },
     {
       label: '문의하기',
@@ -63,7 +63,7 @@ function MyPageComponent() {
     {
       label: '계정 관리',
       group: MenuGroup.BASIC,
-      onClick: () => console.log('Navigate to /account'),
+      onClick: () => navigate({ to: '/account-settings' }),
     },
     // 약관
     ...myPageTerms.map((term) => ({

@@ -19,6 +19,7 @@ import { Route as LoginPageImport } from './app/login/page'
 import { Route as IntroPageImport } from './app/intro/page'
 import { Route as ChatPageImport } from './app/chat/page'
 import { Route as AttachmentTestPageImport } from './app/attachment-test/page'
+import { Route as AccountSettingsPageImport } from './app/account-settings/page'
 import { Route as OnboardingTermsPageImport } from './app/onboarding/terms/page'
 import { Route as OnboardingPartnerCodePageImport } from './app/onboarding/partner-code/page'
 import { Route as OnboardingNicknamePageImport } from './app/onboarding/nickname/page'
@@ -78,6 +79,12 @@ const ChatPageRoute = ChatPageImport.update({
 const AttachmentTestPageRoute = AttachmentTestPageImport.update({
   id: '/attachment-test/',
   path: '/attachment-test/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AccountSettingsPageRoute = AccountSettingsPageImport.update({
+  id: '/account-settings/',
+  path: '/account-settings/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -170,6 +177,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingLayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/account-settings/': {
+      id: '/account-settings/'
+      path: '/account-settings'
+      fullPath: '/account-settings'
+      preLoaderRoute: typeof AccountSettingsPageImport
       parentRoute: typeof rootRoute
     }
     '/attachment-test/': {
@@ -327,6 +341,7 @@ export interface FileRoutesByFullPath {
   '/': typeof PageRoute
   '/chat': typeof ChatLayoutRouteWithChildren
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
+  '/account-settings': typeof AccountSettingsPageRoute
   '/attachment-test': typeof AttachmentTestPageRoute
   '/chat/': typeof ChatPageRoute
   '/intro': typeof IntroPageRoute
@@ -348,6 +363,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof PageRoute
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
+  '/account-settings': typeof AccountSettingsPageRoute
   '/attachment-test': typeof AttachmentTestPageRoute
   '/chat': typeof ChatPageRoute
   '/intro': typeof IntroPageRoute
@@ -371,6 +387,7 @@ export interface FileRoutesById {
   '/': typeof PageRoute
   '/chat': typeof ChatLayoutRouteWithChildren
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
+  '/account-settings/': typeof AccountSettingsPageRoute
   '/attachment-test/': typeof AttachmentTestPageRoute
   '/chat/': typeof ChatPageRoute
   '/intro/': typeof IntroPageRoute
@@ -395,6 +412,7 @@ export interface FileRouteTypes {
     | '/'
     | '/chat'
     | '/onboarding'
+    | '/account-settings'
     | '/attachment-test'
     | '/chat/'
     | '/intro'
@@ -415,6 +433,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/onboarding'
+    | '/account-settings'
     | '/attachment-test'
     | '/chat'
     | '/intro'
@@ -436,6 +455,7 @@ export interface FileRouteTypes {
     | '/'
     | '/chat'
     | '/onboarding'
+    | '/account-settings/'
     | '/attachment-test/'
     | '/chat/'
     | '/intro/'
@@ -459,6 +479,7 @@ export interface RootRouteChildren {
   PageRoute: typeof PageRoute
   ChatLayoutRoute: typeof ChatLayoutRouteWithChildren
   OnboardingLayoutRoute: typeof OnboardingLayoutRouteWithChildren
+  AccountSettingsPageRoute: typeof AccountSettingsPageRoute
   AttachmentTestPageRoute: typeof AttachmentTestPageRoute
   IntroPageRoute: typeof IntroPageRoute
   LoginPageRoute: typeof LoginPageRoute
@@ -472,6 +493,7 @@ const rootRouteChildren: RootRouteChildren = {
   PageRoute: PageRoute,
   ChatLayoutRoute: ChatLayoutRouteWithChildren,
   OnboardingLayoutRoute: OnboardingLayoutRouteWithChildren,
+  AccountSettingsPageRoute: AccountSettingsPageRoute,
   AttachmentTestPageRoute: AttachmentTestPageRoute,
   IntroPageRoute: IntroPageRoute,
   LoginPageRoute: LoginPageRoute,
@@ -492,6 +514,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/",
         "/chat",
         "/onboarding",
+        "/account-settings/",
         "/attachment-test/",
         "/intro/",
         "/login/",
@@ -522,6 +545,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/onboarding/partner-code/",
         "/onboarding/terms/"
       ]
+    },
+    "/account-settings/": {
+      "filePath": "account-settings/page.tsx"
     },
     "/attachment-test/": {
       "filePath": "attachment-test/page.tsx"
