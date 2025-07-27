@@ -17,6 +17,9 @@ export type UserInfo = {
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
   anxietyRate?: number
   avoidanceRate?: number
+  // 통계 데이터
+  totalChatRoomCount?: number
+  totalCoupleQuestionCount?: number
 }
 
 export interface AuthContext {
@@ -42,6 +45,8 @@ const initialUserInfo: UserInfo = {
   loveTypeCategory: undefined,
   anxietyRate: undefined,
   avoidanceRate: undefined,
+  totalChatRoomCount: undefined,
+  totalCoupleQuestionCount: undefined,
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -73,6 +78,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           loveTypeCategory: memberInfo.data.loveTypeCategory || undefined,
           anxietyRate: memberInfo.data.anxietyRate || undefined,
           avoidanceRate: memberInfo.data.avoidanceRate || undefined,
+          totalChatRoomCount: memberInfo.data.totalChatRoomCount || 5, // 임시 기본값
+          totalCoupleQuestionCount: memberInfo.data.totalCoupleQuestionCount || 10, // 임시 기본값
         }
 
         setUserInfo(newUserInfo)

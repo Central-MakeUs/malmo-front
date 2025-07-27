@@ -5,6 +5,8 @@ import HeartIcon from '@/assets/icons/heart.svg'
 import ChatIcon from '@/assets/icons/chat.svg'
 import LikeIcon from '@/assets/icons/like.svg'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
+import { useAuth } from '@/features/auth'
+import { calculateDDay } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/my-page/')({
   component: MyPageComponent,
@@ -17,13 +19,11 @@ interface MenuItem {
 }
 
 function MyPageComponent() {
-  // 임시 데이터
-  const userInfo = {
-    nickname: '사용자',
-    dDay: 100,
-    counselingCount: 12,
-    heartCount: 8,
-  }
+  // 사용자 데이터
+  const { userInfo } = useAuth()
+
+  // D-day 계산
+  const dDay = calculateDDay(userInfo.startLoveDate)
 
   const menuItems: MenuItem[] = [
     { label: '애착유형 검사하기', path: '/attachment-test', group: 1 },
@@ -50,7 +50,7 @@ function MyPageComponent() {
         {/* 닉네임 */}
         <div className="mt-3 flex justify-center">
           <div className="relative">
-            <h2 className="heading1-bold text-center text-gray-iron-950">{userInfo.nickname}</h2>
+            <h2 className="heading1-bold text-center text-gray-iron-950">{userInfo.nickname || '사용자'}</h2>
             <ChevronRight
               className="absolute top-1/2 ml-1 h-6 w-6 -translate-y-1/2 text-gray-iron-700"
               style={{ left: 'calc(100% + 4px)' }}
@@ -63,7 +63,7 @@ function MyPageComponent() {
           <div className="flex items-center rounded-[30px] border border-gray-iron-200 px-4">
             <span className="body2-semibold text-gray-iron-950">연인과</span>
             <HeartIcon className="mx-[9px] h-4 w-4" />
-            <span className="body2-semibold text-gray-iron-950">D+{userInfo.dDay}</span>
+            <span className="body2-semibold text-gray-iron-950">D+{dDay}</span>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@ function MyPageComponent() {
               <p className="body4-medium text-gray-iron-500">지금까지 모은 대화</p>
               <div className="mt-2 flex items-center">
                 <ChatIcon className="h-6 w-6" />
-                <span className="heading1-bold ml-1 text-gray-iron-950">{userInfo.counselingCount}</span>
+                <span className="heading1-bold ml-1 text-gray-iron-950">{userInfo.totalChatRoomCount || 0}</span>
               </div>
             </div>
 
@@ -89,7 +89,9 @@ function MyPageComponent() {
               <p className="body4-medium text-gray-iron-500">지금까지 모은 마음</p>
               <div className="mt-2 flex items-center">
                 <LikeIcon className="h-6 w-6" />
-                <span className="heading1-bold ml-1 text-gray-iron-950">{userInfo.heartCount}</span>
+                <span className="heading1-bold ml-1 text-gray-iron-950">
+                  {userInfo.totalCoupleQuestionCount ? userInfo.totalCoupleQuestionCount - 1 : 0}
+                </span>
               </div>
             </div>
           </div>
@@ -106,7 +108,7 @@ function MyPageComponent() {
           return (
             <div key={item.label}>
               {isNewGroup && <div className="h-[6px] bg-gray-neutral-50"></div>}
-              {needsDivider && <div className="mx-5 h-px bg-gray-iron-100"></div>}
+              {needsDivider && <hr className="mx-5 h-px border-0 bg-gray-iron-100" />}
               <div className="flex h-16 items-center justify-between pr-6 pl-5">
                 <span className="body1-medium text-gray-iron-950">{item.label}</span>
                 <ChevronRight className="h-5 w-5 text-gray-iron-500" />
