@@ -12,7 +12,7 @@ export interface UseChattingModalReturn {
   exitChattingModal: () => void
   chattingTutorialModal: () => React.ReactNode
   deleteChatHistoryModal: (id: number) => void
-  deleteChatHistoriesModal: (ids: number[]) => void
+  deleteChatHistoriesModal: (ids: number[], onFinish: () => void) => void
   showChattingTutorial: boolean
 }
 
@@ -94,7 +94,7 @@ export function useChattingModal(): UseChattingModalReturn {
     })
   }
 
-  const deleteChatHistoriesModal = (ids: number[]) => {
+  const deleteChatHistoriesModal = (ids: number[], onFinish: () => void) => {
     alertDialog.open({
       title: '대화 기록을 삭제할까요?',
       description: (
@@ -110,6 +110,7 @@ export function useChattingModal(): UseChattingModalReturn {
         alertDialog.close()
         await historyService.deleteHistory(ids)
         await queryClient.invalidateQueries({ queryKey: ['histories'] })
+        onFinish()
       },
     })
   }
