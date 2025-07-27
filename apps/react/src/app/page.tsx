@@ -8,6 +8,7 @@ import { calculateDDay } from '@/shared/utils/date'
 import { ChatEntryCard } from '@/features/chat/components/chat-entry-card'
 import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
 import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
+import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -15,6 +16,8 @@ export const Route = createFileRoute('/')({
 
 function HomePage() {
   const { userInfo } = useAuth()
+
+  const { data: todayQuestion } = useTodayQuestion()
 
   // D-day 계산
   const dDay = calculateDDay(userInfo.startLoveDate)
@@ -46,6 +49,9 @@ function HomePage() {
 
         {/* 애착유형 테스트 섹션 */}
         {!hasAttachmentType && <AttachmentTestBanner />}
+
+        {/* 오늘의 마음 질문 섹션 */}
+        <TodayQuestionSection todayQuestion={todayQuestion} />
       </div>
 
       {/* 하단 네비게이션 */}
