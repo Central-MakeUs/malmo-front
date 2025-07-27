@@ -9,6 +9,9 @@ import { ChatEntryCard } from '@/features/chat/components/chat-entry-card'
 import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
 import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
 import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
+import { AttachmentTypeCards } from '@/features/attachment/ui/attachment-type-cards'
+import { getAttachmentType } from '@/features/attachment'
+import { usePartnerInfo } from '@/features/member'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -18,6 +21,7 @@ function HomePage() {
   const { userInfo } = useAuth()
 
   const { data: todayQuestion } = useTodayQuestion()
+  const { data: partnerInfo, error: partnerError } = usePartnerInfo()
 
   // D-day 계산
   const dDay = calculateDDay(userInfo.startLoveDate)
@@ -28,6 +32,15 @@ function HomePage() {
 
   // 애착유형이 있는지 확인
   const hasAttachmentType = !!userInfo.loveTypeCategory
+
+  // 파트너 연동 상태 확인
+  const isPartnerConnected = !partnerError || (partnerError as any)?.status !== 403
+
+  const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
+  const partnerAttachmentData = getAttachmentType(partnerInfo?.loveTypeCategory)
+
+  const myAttachmentType = myAttachmentData?.character
+  const partnerAttachmentType = partnerAttachmentData?.character
 
   return (
     <div className="min-h-screen bg-white">
@@ -52,6 +65,15 @@ function HomePage() {
 
         {/* 오늘의 마음 질문 섹션 */}
         <TodayQuestionSection todayQuestion={todayQuestion} />
+
+        {/* 애착유형 카드 섹션 */}
+        <AttachmentTypeCards
+          myAttachmentData={myAttachmentData}
+          partnerAttachmentData={partnerAttachmentData}
+          myAttachmentType={myAttachmentType}
+          partnerAttachmentType={partnerAttachmentType}
+          isPartnerConnected={isPartnerConnected}
+        />
       </div>
 
       {/* 하단 네비게이션 */}

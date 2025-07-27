@@ -14,7 +14,7 @@ export function Badge({ children, variant = 'default', className }: BadgeProps) 
   }
 
   return (
-    <div className={cn('flex items-center rounded-[8px] px-[9px] py-[1px]', variants[variant], className)}>
+    <div className={cn('inline-flex items-center rounded-[8px] px-[9px] py-[1px]', variants[variant], className)}>
       <span className="label1-semibold">{children}</span>
     </div>
   )

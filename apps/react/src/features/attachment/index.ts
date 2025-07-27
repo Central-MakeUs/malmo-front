@@ -4,8 +4,8 @@ export * from './models/attachment-types'
 export * from './models/attachment-data'
 export * from './models/constants'
 
-// 훅
-export * from './hooks/use-attachment-questions'
+export { useAttachmentQuestions } from './hooks/use-attachment-questions'
+export { getAttachmentType } from './lib/get-attachment-type'
 
 // 공용 컴포넌트
 export * from './ui/info-box'
