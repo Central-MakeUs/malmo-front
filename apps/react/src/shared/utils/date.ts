@@ -5,3 +5,10 @@ export function formatDate(date: Date, separator: string = '-'): string {
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}${separator}${month}${separator}${day}`
 }
+
+// D-day 계산
+export function calculateDDay(startLoveDate: string | undefined | null): number {
+  if (!startLoveDate) return 0
+
+  return Math.floor((Date.now() - new Date(startLoveDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
+}

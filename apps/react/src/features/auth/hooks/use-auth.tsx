@@ -12,6 +12,7 @@ export type MemberState = MemberDataMemberStateEnum | null
 export type UserInfo = {
   memberState: MemberState
   nickname?: string
+  startLoveDate?: string
   // 애착 유형 관련 필드
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
   anxietyRate?: number
@@ -37,6 +38,7 @@ const AuthContext = createContext<AuthContext | null>(null)
 const initialUserInfo: UserInfo = {
   memberState: null,
   nickname: undefined,
+  startLoveDate: undefined,
   loveTypeCategory: undefined,
   anxietyRate: undefined,
   avoidanceRate: undefined,
@@ -67,6 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const newUserInfo: UserInfo = {
           memberState: memberInfo.data.memberState || null,
           nickname: memberInfo.data.nickname,
+          startLoveDate: memberInfo.data.startLoveDate || undefined,
           loveTypeCategory: memberInfo.data.loveTypeCategory || undefined,
           anxietyRate: memberInfo.data.anxietyRate || undefined,
           avoidanceRate: memberInfo.data.avoidanceRate || undefined,
