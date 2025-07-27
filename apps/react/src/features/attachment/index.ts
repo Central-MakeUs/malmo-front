@@ -20,9 +20,7 @@ export * from './ui/question/question-list'
 export * from './ui/question/submission-loading'
 
 // 결과 관련 컴포넌트
-export * from './ui/result/result-score-box'
-export * from './ui/result/result-detail-box'
-export * from './ui/result/result-attitude-section'
+export * from './ui/result/attachment-result-content'
 
 // 메인 페이지 컴포넌트
 export * from './ui/main/attachment-test-intro'
