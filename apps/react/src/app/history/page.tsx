@@ -1,16 +1,17 @@
 import { HomeHeaderBar } from '@/shared/components/header-bar'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { ChevronRight, LucideSearch } from 'lucide-react'
-import emptyImage from '@/assets/images/onboarding-end.png'
+import { LucideSearch } from 'lucide-react'
 import ChatBubble from '@/assets/icons/chat.svg'
 import { cn } from '@ui/common/lib/utils'
-import { ChatRoomStateDataChatRoomStateEnum, GetChatRoomListResponse } from '@data/user-api-axios/api'
-import { formatDate } from '@/shared/utils'
+import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
-import { useInfiniteQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import historyService from '@/shared/services/history.service'
 import { useInView } from 'react-intersection-observer'
+import { useChatHistoryQuery } from '@/features/history/hook/use-chat-history-query'
+import { useDebounce } from '@/shared/hook/use-deboucne'
+import { EmptyState, LinkedChatHistoryItem } from '@/features/history/ui/chat-history-item'
+import noResultImage from '@/assets/images/characters/no-result.png'
+import emptyImage from '@/assets/images/characters/empty.png'
 
 export const Route = createFileRoute('/history/')({
   component: RouteComponent,
@@ -19,35 +20,12 @@ export const Route = createFileRoute('/history/')({
 function RouteComponent() {
   const { data: chatStatus, isSuccess } = useChatRoomStatusQuery()
   const [keyword, setKeyword] = useState('')
+  const debouncedKeyword = useDebounce(keyword, 500)
   const { ref, inView } = useInView()
 
-  const {
-    data: chatHistoryData,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ['histories', keyword],
-    queryFn: async ({ pageParam = 0 }) => {
-      const response = await historyService.getHistoryList({ pageable: { page: pageParam, size: 10 }, keyword })
-      return response.data
-    },
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage || lastPage.totalCount == null) {
-        return undefined
-      }
-
-      const fetchedItemsCount = allPages.flatMap((page) => page?.list || []).length
-
-      if (fetchedItemsCount >= lastPage.totalCount) {
-        return undefined
-      }
-
-      return allPages.length
-    },
-    enabled: isSuccess,
+  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useChatHistoryQuery({
+    keyword: debouncedKeyword,
+    isSuccess,
   })
 
   useEffect(() => {
@@ -60,41 +38,7 @@ function RouteComponent() {
     chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion ||
     chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
-  const histories = chatHistoryData?.pages.flatMap((page) => page?.list || []) ?? []
-
-  const ChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => (
-    <Link
-      className="mb-[6px] flex items-center justify-between gap-16 bg-white px-5 py-6"
-      to={'/chat/result'}
-      search={{ chatId: history.chatRoomId, fromHistory: true }}
-    >
-      <div className="flex-1">
-        <div className="mb-[10px] flex gap-1">
-          <div className="rounded-[8px] bg-malmo-rasberry-25 px-[9px] py-[1px]">
-            <p className="label1-semibold text-malmo-rasberry-500">{history.situationKeyword}</p>
-          </div>
-          <div className="rounded-[8px] bg-malmo-orange-50 px-[9px] py-[1px]">
-            <p className="label1-semibold text-malmo-orange-500">{history.solutionKeyword}</p>
-          </div>
-        </div>
-        <div className="pl-1">
-          <p className="label1-medium text-gray-iron-500">{formatDate(history.createdAt, 'YYYY년 MM월 DD일')}</p>
-          <p className="body1-semibold break-keep">{history.totalSummary}</p>
-        </div>
-      </div>
-      <ChevronRight size={24} />
-    </Link>
-  )
-
-  const EmptyItem = () => (
-    <div>
-      <img src={emptyImage} alt="Empty State" className="mb-5 px-[28px] pt-11" />
-      <div className="text-center">
-        <p className="heading1-bold mb-1">아직 대화 기록이 없어요</p>
-        <p className="body2-medium text-gray-iron-500">모모에게 고민을 이야기해 보세요!</p>
-      </div>
-    </div>
-  )
+  const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
 
   return (
     <div className="flex h-screen flex-col">
@@ -122,17 +66,21 @@ function RouteComponent() {
 
       <section className="flex-1 overflow-y-auto bg-gray-neutral-100">
         {isLoading ? (
-          <p className="p-5 text-center">불러오는 중...</p>
+          <EmptyState image={noResultImage} title="로딩중" description="대화를 불러오고 있어요" />
         ) : histories.length > 0 ? (
           <>
             {histories.map((history) => (
-              <ChatHistoryItem key={history.chatRoomId} history={history} />
+              <LinkedChatHistoryItem key={history.chatRoomId} history={history} />
             ))}
             <div ref={ref} className="h-[1px]" />
             {isFetchingNextPage && <p className="p-5 text-center">더 불러오는 중...</p>}
           </>
         ) : (
-          <EmptyItem />
+          <EmptyState
+            image={keyword ? noResultImage : emptyImage}
+            title={keyword ? '검색어와 일치하는 대화 기록이 없어요' : '아직 대화 기록이 없어요'}
+            description={keyword ? '다른 검색어를 입력해보세요!' : '모모에게 고민을 이야기해 보세요!'}
+          />
         )}
       </section>
 

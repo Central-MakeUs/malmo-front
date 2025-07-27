@@ -32,7 +32,7 @@ function RouteComponent() {
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-[47px]">
-      <img src={summary} alt="Summary Image" className="h-[160px] w-[179px]" />
+      <img src={summary} alt="Summary Image" className="px-[28px]" />
       <div className="text-center">
         <h1 className="heading1-bold text-gray-iron-950">모모가 대화를 요약하고 있어요</h1>
         <p className="body2-medium text-gray-iron-500">조금만 기다려주세요!</p>

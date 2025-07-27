@@ -6,12 +6,20 @@ import { cn } from '@ui/common/lib/utils'
 interface DetailHeaderBarProps {
   title?: string
   right?: ReactNode
+  left?: ReactNode
   showBackButton?: boolean
   onBackClick?: () => void
   className?: string
 }
 
-export function DetailHeaderBar({ title, right, onBackClick, className, showBackButton = true }: DetailHeaderBarProps) {
+export function DetailHeaderBar({
+  title,
+  right,
+  left,
+  onBackClick,
+  className,
+  showBackButton = true,
+}: DetailHeaderBarProps) {
   const router = useRouter()
 
   const handleBackClick = () => {
@@ -30,11 +38,12 @@ export function DetailHeaderBar({ title, right, onBackClick, className, showBack
       )}
     >
       <div className="z-10 flex h-[30px] w-[30px] items-center justify-center">
-        {showBackButton && (
+        {showBackButton && !left && (
           <button type="button" onClick={handleBackClick} className="p-1">
             <LucideChevronLeft className="h-[28px] w-[28px]" />
           </button>
         )}
+        {left}
       </div>
 
       {/* Title Area */}
