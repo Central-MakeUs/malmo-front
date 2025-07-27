@@ -16,6 +16,7 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   changeStatusBarColor(color?: string): Promise<void>
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
+  openWebView(url: string): Promise<void>
   [key: string]: any
 }
 
@@ -34,6 +35,10 @@ export const bridge = linkBridge<WebBridge>({
     changeStatusBarColor: async (color?: string) => {},
     saveChatTutorialSeen: async () => {},
     getChatTutorialSeen: async () => false,
+    openWebView: async (url: string) => {
+      // 웹에서는 새 창으로 열기
+      window.open(url, '_blank')
+    },
   },
 })
 

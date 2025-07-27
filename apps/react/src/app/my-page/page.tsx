@@ -9,6 +9,7 @@ import { useAuth } from '@/features/auth'
 import { calculateDDay } from '@/shared/utils/date'
 import { useTerms, TermsContentModal } from '@/features/term'
 import { TermsResponseDataTermsTypeEnum } from '@data/user-api-axios/api'
+import { bridge } from '@/shared/bridge'
 
 // 마이페이지에서 표시할 약관 타입들
 const MY_PAGE_TERMS_TYPES: readonly TermsResponseDataTermsTypeEnum[] = [
@@ -58,7 +59,11 @@ function MyPageComponent() {
     {
       label: '문의하기',
       group: MenuGroup.BASIC,
-      onClick: () => console.log('Navigate to /contact'),
+      onClick: () => {
+        bridge.openWebView(
+          'https://docs.google.com/forms/d/e/1FAIpQLSchox69lHrxE4Cb6zGfQQBlkapYRDMoeBWdarD8JEMsB6k6Eg/viewform?usp=header'
+        )
+      },
     },
     {
       label: '계정 관리',

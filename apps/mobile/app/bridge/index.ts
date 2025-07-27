@@ -88,6 +88,15 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
       const seen = await AuthStorage.getChatTutorialSeen()
       return seen
     },
+
+    async openWebView(url: string): Promise<void> {
+      try {
+        const { Linking } = require('react-native')
+        await Linking.openURL(url)
+      } catch (error) {
+        console.error('WebView 열기 오류:', error)
+      }
+    },
   }
 
   return {
@@ -131,6 +140,15 @@ export const appSchema = postMessageSchema({
   toggleOverlay: {
     validate: (value) => {
       return {}
+    },
+  },
+  openWebView: {
+    validate: (value) => {
+      return z
+        .object({
+          url: z.string().url(),
+        })
+        .parse(value)
     },
   },
 })

@@ -28,4 +28,5 @@ export interface BridgeActions {
   changeStatusBarColor(color: string): Promise<void>
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
+  openWebView(url: string): Promise<void>
 }
