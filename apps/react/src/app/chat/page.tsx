@@ -1,5 +1,3 @@
-// features/chat/page.tsx
-
 import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubble'
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
@@ -8,12 +6,13 @@ import { useChatMessagesQuery } from '@/features/chat/hook/use-chat-queries'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { formatDate } from '@/shared/utils'
-import { ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
+import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { z } from 'zod'
 import { useInView } from 'react-intersection-observer'
+import { ChevronRight } from 'lucide-react'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -33,7 +32,7 @@ function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const navigate = useNavigate()
-  const { chattingModal, streamingMessage, isChatStatusSuccess } = useChatting()
+  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess } = useChatting()
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
@@ -128,7 +127,7 @@ function RouteComponent() {
           </div>
         )}
 
-        <div className="space-y-5 px-5 py-6">
+        <div className="flex flex-col gap-6 px-5 py-[22px]">
           {messages.map((chat, index) => {
             const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
             return (
@@ -145,6 +144,17 @@ function RouteComponent() {
 
           {streamingMessage && (
             <AiChatBubble message={streamingMessage.content} timestamp={formatTimestamp(streamingMessage.createdAt)} />
+          )}
+
+          {chatStatus && chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
+            //TODO MyPage로 이동
+            <Link
+              to="/"
+              className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
+            >
+              <p className="body3-semibold">마이페이지로 이동하기</p>
+              <ChevronRight className="h-4 w-4" />
+            </Link>
           )}
         </div>
 

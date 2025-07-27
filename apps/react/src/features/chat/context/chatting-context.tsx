@@ -1,5 +1,3 @@
-// chat/context/chatting-context.tsx
-
 import { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useChattingModal, UseChattingModalReturn } from '../hook/use-chatting-modal'
 import {
@@ -13,6 +11,7 @@ import { InfiniteData, useQueryClient } from '@tanstack/react-query'
 import { chatKeys, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hook/use-chat-queries'
 
 interface ChattingContextType {
+  chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined
   chattingModal: UseChattingModalReturn
   sendingMessage: boolean
   setSendingMessageTrue: () => void
@@ -131,7 +130,14 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
   return (
     <ChattingContext.Provider
-      value={{ chattingModal, sendingMessage, setSendingMessageTrue, streamingMessage, isChatStatusSuccess }}
+      value={{
+        chatStatus,
+        chattingModal,
+        sendingMessage,
+        setSendingMessageTrue,
+        streamingMessage,
+        isChatStatusSuccess,
+      }}
     >
       {children}
     </ChattingContext.Provider>
