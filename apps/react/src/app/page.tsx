@@ -7,6 +7,7 @@ import { useAuth } from '@/features/auth'
 import { calculateDDay } from '@/shared/utils/date'
 import { ChatEntryCard } from '@/features/chat/components/chat-entry-card'
 import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
+import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -21,6 +22,9 @@ function HomePage() {
   // 채팅방 상태 확인
   const chatRoomStatus = useChatRoomStatusQuery()
   const isChatActive = chatRoomStatus.data === 'ALIVE'
+
+  // 애착유형이 있는지 확인
+  const hasAttachmentType = !!userInfo.loveTypeCategory
 
   return (
     <div className="min-h-screen bg-white">
@@ -39,6 +43,9 @@ function HomePage() {
       <div className="mt-3 px-5">
         {/* 연애 고민 상담 섹션 */}
         <ChatEntryCard isChatActive={isChatActive} />
+
+        {/* 애착유형 테스트 섹션 */}
+        {!hasAttachmentType && <AttachmentTestBanner />}
       </div>
 
       {/* 하단 네비게이션 */}
