@@ -1,3 +1,5 @@
+// features/chat/page.tsx
+
 import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubble'
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
@@ -5,11 +7,13 @@ import { useChatting } from '@/features/chat/context/chatting-context'
 import { useChatMessagesQuery } from '@/features/chat/hook/use-chat-queries'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { formatDate } from '@/shared/utils'
 import { ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
-import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { z } from 'zod'
+import { useInView } from 'react-intersection-observer'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -40,31 +44,29 @@ function RouteComponent() {
   const scrollHeightRef = useRef(0)
   const topMessageIdRef = useRef<number | string | null>(null)
 
+  // chatId가 있을 경우 (히스토리 뷰), 아래로 스크롤하여 새 페이지 로드
+  const { ref: bottomRef, inView: isBottomInView } = useInView({ threshold: 0 })
+
+  // chatId가 없을 경우 (실시간 채팅), 위로 스크롤하여 이전 페이지 로드
+  const { ref: topRef, inView: isTopInView } = useInView({ threshold: 0 })
+
+  useEffect(() => {
+    // 뷰의 맨 아래/위가 감지되고, 다음 페이지가 있으며, 로딩 중이 아닐 때 fetch
+    if ((isBottomInView || isTopInView) && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
+    }
+  }, [isBottomInView, isTopInView, hasNextPage, isFetchingNextPage, fetchNextPage])
+
   const messages = useMemo(() => {
     if (!data) return []
-    if (chatId) return data.pages.flatMap((page) => page.list ?? [])
+    const allMessages = data.pages.flatMap((page) => page.list ?? [])
+    return chatId ? allMessages : allMessages.reverse()
+  }, [data, chatId])
 
-    return data.pages.flatMap((page) => page.list ?? []).reverse()
-  }, [data])
-
-  const observerRef = useRef<IntersectionObserver>(null)
-  const sentinelRef = useCallback(
-    (node: HTMLDivElement) => {
-      if (isFetchingNextPage) return
-      if (observerRef.current) observerRef.current.disconnect()
-
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0]?.isIntersecting && hasNextPage) {
-          fetchNextPage()
-        }
-      })
-
-      if (node) observerRef.current.observe(node)
-    },
-    [fetchNextPage, hasNextPage, isFetchingNextPage]
-  )
-
+  // 실시간 채팅에서만 스크롤 위치를 보정 (위로 스크롤 시)
   useLayoutEffect(() => {
+    if (chatId) return
+
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
@@ -78,7 +80,7 @@ function RouteComponent() {
 
     scrollHeightRef.current = scrollContainer.scrollHeight
     topMessageIdRef.current = newTopMessageId
-  })
+  }, [messages, chatId, streamingMessage])
 
   const exitButton = useCallback(() => {
     const actived = messages.some((chat) => chat.senderType === ChatRoomMessageDataSenderTypeEnum.User)
@@ -98,7 +100,7 @@ function RouteComponent() {
     <div className="flex h-full flex-col">
       <DetailHeaderBar
         right={chatId ? undefined : exitButton()}
-        title={chatId?.toString()}
+        title={chatId ? formatDate(messages[0]?.createdAt, 'YYYY년 MM월 DD일') : ''}
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
 
@@ -111,11 +113,14 @@ function RouteComponent() {
 
         {isFetchingNextPage && (
           <div className="flex justify-center py-4">
-            <p className="body2-regular text-gray-500">이전 대화를 불러오는 중...</p>
+            <p className="body2-regular text-gray-500">
+              {chatId ? '다음 대화를 불러오는 중...' : '이전 대화를 불러오는 중...'}
+            </p>
           </div>
         )}
 
-        <div ref={sentinelRef} className="h-[1px]" />
+        {/* 실시간 채팅: 상단 트리거 */}
+        {!chatId && hasNextPage && <div ref={topRef} className="h-[1px]" />}
 
         {(isLoading || !isChatStatusSuccess) && (
           <div className="flex flex-1 items-center justify-center">
@@ -138,11 +143,13 @@ function RouteComponent() {
             )
           })}
 
-          {/* 스트리밍 중인 AI 메시지를 별도로 렌더링합니다. */}
           {streamingMessage && (
             <AiChatBubble message={streamingMessage.content} timestamp={formatTimestamp(streamingMessage.createdAt)} />
           )}
         </div>
+
+        {/* 히스토리 뷰: 하단 트리거 */}
+        {chatId && hasNextPage && <div ref={bottomRef} className="h-[1px]" />}
       </section>
 
       <ChatInput disabled={chatId !== undefined} />
