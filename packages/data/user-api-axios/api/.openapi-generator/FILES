@@ -43,7 +43,6 @@ models/couple-link-success-response.ts
 models/couple-unlink-data.ts
 models/couple-unlink-success-response.ts
 models/delete-chat-room-request-dto.ts
-models/delete-member-data.ts
 models/delete-member-success-response.ts
 models/get-chat-room-list-response.ts
 models/get-chat-room-summary-data.ts
@@ -78,6 +77,7 @@ models/send-chat-success-response.ts
 models/sign-up-request-dto.ts
 models/sign-up-success-response.ts
 models/swagger-error-response.ts
+models/terms-content-response-data.ts
 models/terms-data.ts
 models/terms-dto.ts
 models/terms-list-success-response.ts
@@ -88,3 +88,6 @@ models/update-member-request-dto.ts
 models/update-member-success-response.ts
 models/update-member-terms-request-dto.ts
 models/update-member-terms-success-response.ts
+models/update-start-love-date-data.ts
+models/update-start-love-date-request-dto.ts
+models/update-start-love-date-success-response.ts

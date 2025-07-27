@@ -13,15 +13,15 @@
  */
 
 /**
- * 멤버 탈퇴 응답 데이터
+ *
  * @export
- * @interface DeleteMemberData
+ * @interface UpdateStartLoveDateRequestDto
  */
-export interface DeleteMemberData {
+export interface UpdateStartLoveDateRequestDto {
   /**
-   * 탈퇴한 멤버 ID
-   * @type {number}
-   * @memberof DeleteMemberData
+   *
+   * @type {string}
+   * @memberof UpdateStartLoveDateRequestDto
    */
-  memberId?: number
+  startLoveDate?: string
 }

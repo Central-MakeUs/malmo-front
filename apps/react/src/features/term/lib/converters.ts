@@ -4,10 +4,10 @@ import { Term } from '../models/types'
 // 타입 변환 함수
 export function convertToTerms(data: TermsResponseData[]): Term[] {
   return data.map((item) => ({
-    termsId: item.termsId || 0,
-    title: item.title || '',
-    content: item.content || null,
-    required: item.isRequired || false,
+    termsId: item.content?.termsId || 0,
+    title: item.content?.title || '',
+    content: item.content?.content || null, // content가 없으면 null
+    required: item.content?.isRequired || false,
   }))
 }
 

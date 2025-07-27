@@ -55,7 +55,9 @@ export function TermsAgreementList({
                   onClick={() => onAgreementChange(term.termsId)}
                 />
               )}
-              <span className="body2-regular ml-3 text-gray-iron-950">{term.title}</span>
+              <span className="body2-regular ml-3 text-gray-iron-950">
+                {term.required ? `[필수] ${term.title}` : `[선택] ${term.title}`}
+              </span>
             </div>
             {term.content && (
               <button onClick={() => onShowTerms(term.termsId)} className="flex items-center justify-center">

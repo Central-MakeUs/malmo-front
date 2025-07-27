@@ -53,6 +53,10 @@ import type { UpdateMemberSuccessResponse } from '../models'
 import type { UpdateMemberTermsRequestDto } from '../models'
 // @ts-ignore
 import type { UpdateMemberTermsSuccessResponse } from '../models'
+// @ts-ignore
+import type { UpdateStartLoveDateRequestDto } from '../models'
+// @ts-ignore
+import type { UpdateStartLoveDateSuccessResponse } from '../models'
 /**
  * MembersApi - axios parameter creator
  * @export
@@ -61,7 +65,7 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
   return {
     /**
      * 현재 로그인된 사용자의 탈퇴를 처리합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 탈퇴
+     * @summary 사용자 탈퇴
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -318,6 +322,51 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
         options: localVarRequestOptions,
       }
     },
+    /**
+     * 연애 시작일을 변경합니다. JWT 토큰이 필요합니다.
+     * @summary 연애 시작일 변경
+     * @param {UpdateStartLoveDateRequestDto} updateStartLoveDateRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateStartLoveDate: async (
+      updateStartLoveDateRequestDto: UpdateStartLoveDateRequestDto,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'updateStartLoveDateRequestDto' is not null or undefined
+      assertParamExists('updateStartLoveDate', 'updateStartLoveDateRequestDto', updateStartLoveDateRequestDto)
+      const localVarPath = `/members/start-love-date`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        updateStartLoveDateRequestDto,
+        localVarRequestOptions,
+        configuration
+      )
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
   }
 }
 
@@ -330,7 +379,7 @@ export const MembersApiFp = function (configuration?: Configuration) {
   return {
     /**
      * 현재 로그인된 사용자의 탈퇴를 처리합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 탈퇴
+     * @summary 사용자 탈퇴
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -481,6 +530,32 @@ export const MembersApiFp = function (configuration?: Configuration) {
           configuration
         )(axios, localVarOperationServerBasePath || basePath)
     },
+    /**
+     * 연애 시작일을 변경합니다. JWT 토큰이 필요합니다.
+     * @summary 연애 시작일 변경
+     * @param {UpdateStartLoveDateRequestDto} updateStartLoveDateRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updateStartLoveDate(
+      updateStartLoveDateRequestDto: UpdateStartLoveDateRequestDto,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UpdateStartLoveDateSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updateStartLoveDate(
+        updateStartLoveDateRequestDto,
+        options
+      )
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['MembersApi.updateStartLoveDate']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
   }
 }
 
@@ -493,7 +568,7 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
   return {
     /**
      * 현재 로그인된 사용자의 탈퇴를 처리합니다. JWT 토큰이 필요합니다.
-     * @summary 🚧 [개발 전] 사용자 탈퇴
+     * @summary 사용자 탈퇴
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -572,6 +647,21 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
         .updateMemberTerms(requestParameters.updateMemberTermsRequestDto, options)
         .then((request) => request(axios, basePath))
     },
+    /**
+     * 연애 시작일을 변경합니다. JWT 토큰이 필요합니다.
+     * @summary 연애 시작일 변경
+     * @param {MembersApiUpdateStartLoveDateRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updateStartLoveDate(
+      requestParameters: MembersApiUpdateStartLoveDateRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<UpdateStartLoveDateSuccessResponse> {
+      return localVarFp
+        .updateStartLoveDate(requestParameters.updateStartLoveDateRequestDto, options)
+        .then((request) => request(axios, basePath))
+    },
   }
 }
 
@@ -618,6 +708,20 @@ export interface MembersApiUpdateMemberTermsRequest {
 }
 
 /**
+ * Request parameters for updateStartLoveDate operation in MembersApi.
+ * @export
+ * @interface MembersApiUpdateStartLoveDateRequest
+ */
+export interface MembersApiUpdateStartLoveDateRequest {
+  /**
+   *
+   * @type {UpdateStartLoveDateRequestDto}
+   * @memberof MembersApiUpdateStartLoveDate
+   */
+  readonly updateStartLoveDateRequestDto: UpdateStartLoveDateRequestDto
+}
+
+/**
  * MembersApi - object-oriented interface
  * @export
  * @class MembersApi
@@ -626,7 +730,7 @@ export interface MembersApiUpdateMemberTermsRequest {
 export class MembersApi extends BaseAPI {
   /**
    * 현재 로그인된 사용자의 탈퇴를 처리합니다. JWT 토큰이 필요합니다.
-   * @summary 🚧 [개발 전] 사용자 탈퇴
+   * @summary 사용자 탈퇴
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof MembersApi
@@ -715,6 +819,20 @@ export class MembersApi extends BaseAPI {
   public updateMemberTerms(requestParameters: MembersApiUpdateMemberTermsRequest, options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
       .updateMemberTerms(requestParameters.updateMemberTermsRequestDto, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * 연애 시작일을 변경합니다. JWT 토큰이 필요합니다.
+   * @summary 연애 시작일 변경
+   * @param {MembersApiUpdateStartLoveDateRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof MembersApi
+   */
+  public updateStartLoveDate(requestParameters: MembersApiUpdateStartLoveDateRequest, options?: RawAxiosRequestConfig) {
+    return MembersApiFp(this.configuration)
+      .updateStartLoveDate(requestParameters.updateStartLoveDateRequestDto, options)
       .then((request) => request(this.axios, this.basePath))
   }
 }

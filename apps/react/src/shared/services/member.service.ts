@@ -57,11 +57,6 @@ class MemberService extends MembersApi {
     return data
   }
 
-  async getLoveTypeInfo() {
-    const { data } = await super.getMemberLoveTypeInfo()
-    return data
-  }
-
   findOneQuery(params: { id?: number }) {
     return queryOptions({
       queryKey: [QUERY_KEY, params],

@@ -12,6 +12,10 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TermsContentResponseData } from './terms-content-response-data'
+
 /**
  * 약관 응답 데이터
  * @export
@@ -19,33 +23,25 @@
  */
 export interface TermsResponseData {
   /**
-   * 약관 ID
-   * @type {number}
-   * @memberof TermsResponseData
-   */
-  termsId?: number
-  /**
-   * 약관 제목
+   * 약관 타입
    * @type {string}
    * @memberof TermsResponseData
    */
-  title?: string
+  termsType?: TermsResponseDataTermsTypeEnum
   /**
-   * 약관 내용
-   * @type {string}
+   *
+   * @type {TermsContentResponseData}
    * @memberof TermsResponseData
    */
-  content?: string
-  /**
-   * 필수 동의 여부
-   * @type {boolean}
-   * @memberof TermsResponseData
-   */
-  isRequired?: boolean
-  /**
-   * 생성일시
-   * @type {string}
-   * @memberof TermsResponseData
-   */
-  createdAt?: string
+  content?: TermsContentResponseData
 }
+
+export const TermsResponseDataTermsTypeEnum = {
+  AgeVerification: 'AGE_VERIFICATION',
+  ServiceUsage: 'SERVICE_USAGE',
+  PrivacyPolicy: 'PRIVACY_POLICY',
+  Marketing: 'MARKETING',
+} as const
+
+export type TermsResponseDataTermsTypeEnum =
+  (typeof TermsResponseDataTermsTypeEnum)[keyof typeof TermsResponseDataTermsTypeEnum]
