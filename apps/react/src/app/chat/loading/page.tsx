@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import note from '@/assets/images/note.png'
+import summary from '@/assets/images/characters/summary.png'
 import { useEffect } from 'react'
 import chatService from '@/shared/services/chat.service'
 import { useQueryClient } from '@tanstack/react-query'
@@ -32,7 +32,7 @@ function RouteComponent() {
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-[47px]">
-      <img src={note} alt="Note and Pen Image" className="h-[135px] w-[192.33px]" />
+      <img src={summary} alt="Summary Image" className="h-[160px] w-[179px]" />
       <div className="text-center">
         <h1 className="heading1-bold text-gray-iron-950">모모가 대화를 요약하고 있어요</h1>
         <p className="body2-medium text-gray-iron-500">조금만 기다려주세요!</p>

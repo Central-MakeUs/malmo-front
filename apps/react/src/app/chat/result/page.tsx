@@ -93,7 +93,11 @@ function RouteComponent() {
           <hr className="border-gray-100" />
 
           {summaryData.map(({ title, content }) => (
-            <ChatResultSummarySection key={title} title={title} content={content} />
+            <ChatResultSummarySection
+              key={title}
+              title={title}
+              content={content ? content : '진행하지 않은 단계에요.'}
+            />
           ))}
 
           <Button className="mt-13" text="홈으로 이동하기" onClick={() => navigate({ to: '/' })} />

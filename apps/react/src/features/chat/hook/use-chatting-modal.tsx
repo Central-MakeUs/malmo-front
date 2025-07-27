@@ -66,8 +66,8 @@ export function useChattingModal(): UseChattingModalReturn {
       ),
       description: (
         <>
-          검사를 완료하면, 모모가 애착유형을 바탕으로
-          <br /> 상담을 도와 드려요.
+          나갔다가 들어와도 대화를 이어갈 수 있어요.
+          <br /> 단, 1일 이상 대화가 없으면 자동으로 종료돼요.
         </>
       ),
       cancelText: '나가기',
