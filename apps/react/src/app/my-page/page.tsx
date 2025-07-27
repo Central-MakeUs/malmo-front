@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import momoProfile from '@/assets/images/momo-profile.png'
 import HeartIcon from '@/assets/icons/heart.svg'
@@ -7,34 +7,83 @@ import LikeIcon from '@/assets/icons/like.svg'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { useAuth } from '@/features/auth'
 import { calculateDDay } from '@/shared/utils/date'
+import { useTerms, TermsContentModal } from '@/features/term'
+import { TermsResponseDataTermsTypeEnum } from '@data/user-api-axios/api'
+
+// 마이페이지에서 표시할 약관 타입들
+const MY_PAGE_TERMS_TYPES: readonly TermsResponseDataTermsTypeEnum[] = [
+  TermsResponseDataTermsTypeEnum.ServiceUsage,
+  TermsResponseDataTermsTypeEnum.PrivacyPolicy,
+]
 
 export const Route = createFileRoute('/my-page/')({
   component: MyPageComponent,
 })
 
+enum MenuGroup {
+  BASIC = 'basic',
+  TERMS = 'terms',
+}
+
 interface MenuItem {
   label: string
-  path: string
-  group: number
+  group: MenuGroup
+  onClick: () => void
 }
 
 function MyPageComponent() {
+  // 라우터 네비게이션
+  const navigate = useNavigate()
+
   // 사용자 데이터
   const { userInfo } = useAuth()
 
   // D-day 계산
   const dDay = calculateDDay(userInfo.startLoveDate)
 
+  // 약관 데이터
+  const { terms, selectedTermId, selectedTermContent, handleShowTerms, handleCloseTerms } = useTerms()
+
+  // 마이페이지에서 표시할 약관들만 타입으로 필터링
+  const myPageTerms = terms.filter((term) => MY_PAGE_TERMS_TYPES.includes(term.type))
+
+  // 전체 메뉴 아이템
   const menuItems: MenuItem[] = [
-    { label: '애착유형 검사하기', path: '/attachment-test', group: 1 },
-    { label: '문의하기', path: '/contact', group: 1 },
-    { label: '계정 관리', path: '/account', group: 1 },
-    { label: '서비스 이용약관', path: '/terms', group: 2 },
-    { label: '개인정보처리방침', path: '/privacy', group: 2 },
+    // 기본 메뉴
+    {
+      label: '애착유형 검사하기',
+      group: MenuGroup.BASIC,
+      onClick: () => console.log('Navigate to /attachment-test'),
+    },
+    {
+      label: '문의하기',
+      group: MenuGroup.BASIC,
+      onClick: () => console.log('Navigate to /contact'),
+    },
+    {
+      label: '계정 관리',
+      group: MenuGroup.BASIC,
+      onClick: () => console.log('Navigate to /account'),
+    },
+    // 약관
+    ...myPageTerms.map((term) => ({
+      label: term.title,
+      group: MenuGroup.TERMS,
+      onClick: () => handleShowTerms(term.termsId),
+    })),
   ]
 
   return (
     <div className="min-h-screen bg-white pb-[60px]">
+      {/* 약관 모달 */}
+      {selectedTermId !== null && selectedTermContent && (
+        <TermsContentModal
+          title={selectedTermContent.title || ''}
+          content={selectedTermContent.content || ''}
+          onClose={handleCloseTerms}
+        />
+      )}
+
       {/* 헤더 */}
       <header className="flex h-[60px] items-center px-5">
         <h1 className="heading2-bold text-gray-iron-950">마이페이지</h1>
@@ -103,13 +152,16 @@ function MyPageComponent() {
         {menuItems.map((item, index) => {
           const prevItem = menuItems[index - 1]
           const isNewGroup = prevItem && prevItem.group !== item.group
-          const needsDivider = index > 0 && prevItem?.group === item.group && item.group === 1
+          const needsDivider = index > 0 && prevItem?.group === item.group && item.group === 'basic'
 
           return (
             <div key={item.label}>
               {isNewGroup && <div className="h-[6px] bg-gray-neutral-50"></div>}
               {needsDivider && <hr className="mx-5 h-px border-0 bg-gray-iron-100" />}
-              <div className="flex h-16 items-center justify-between pr-6 pl-5">
+              <div
+                className="flex h-16 cursor-pointer items-center justify-between pr-6 pl-5 hover:bg-gray-50"
+                onClick={item.onClick}
+              >
                 <span className="body1-medium text-gray-iron-950">{item.label}</span>
                 <ChevronRight className="h-5 w-5 text-gray-iron-500" />
               </div>
