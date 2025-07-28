@@ -1,9 +1,11 @@
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
+import { useState } from 'react'
 
 import memberService from '@/shared/services/member.service'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
+import { PartnerCodeSheet } from '@/features/profile'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementComponent,
@@ -24,6 +26,7 @@ export const Route = createFileRoute('/my-page/couple-management/')({
 
 function CoupleManagementComponent() {
   const { inviteCode } = useLoaderData({ from: '/my-page/couple-management/' })
+  const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
 
   // 커플 연동 상태 (파트너 정보가 있는지로 판단)
   const { data: partnerInfo } = usePartnerInfo()
@@ -41,7 +44,7 @@ function CoupleManagementComponent() {
   const handleConnectPartner = () => {
     if (isConnected) return
 
-    // TODO: 상대방 코드 입력 바텀시트
+    setIsPartnerCodeSheetOpen(true)
   }
 
   const handleDisconnectCouple = () => {
@@ -83,6 +86,9 @@ function CoupleManagementComponent() {
           <span className="body1-medium text-gray-iron-400">커플 연결 끊기</span>
         </button>
       </div>
+
+      {/* 상대방 코드 입력 바텀시트 */}
+      <PartnerCodeSheet isOpen={isPartnerCodeSheetOpen} onOpenChange={setIsPartnerCodeSheetOpen} />
     </div>
   )
 }
