@@ -9,7 +9,7 @@ import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, CoupleDisconnectModal } from '@/features/profile'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
-  component: CoupleManagementComponent,
+  component: CoupleManagementPage,
   loader: async () => {
     try {
       const response = await memberService.inviteCode()
@@ -25,7 +25,7 @@ export const Route = createFileRoute('/my-page/couple-management/')({
   },
 })
 
-function CoupleManagementComponent() {
+function CoupleManagementPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { inviteCode } = useLoaderData({ from: '/my-page/couple-management/' })

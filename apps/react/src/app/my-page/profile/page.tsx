@@ -6,7 +6,7 @@ import { NicknameEditSheet, useProfileEdit } from '@/features/profile'
 import { AnniversaryEditSheet } from '@/features/anniversary'
 
 export const Route = createFileRoute('/my-page/profile/')({
-  component: ProfileEditComponent,
+  component: ProfileEditPage,
 })
 
 interface MenuItemProps {
@@ -24,7 +24,7 @@ function MenuItem({ label, onClick, rightElement }: MenuItemProps) {
   )
 }
 
-function ProfileEditComponent() {
+function ProfileEditPage() {
   const navigate = useNavigate()
   const profileEdit = useProfileEdit()
 

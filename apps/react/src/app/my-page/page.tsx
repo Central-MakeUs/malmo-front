@@ -6,10 +6,10 @@ import { useTerms, TermsContentModal } from '@/features/term'
 import { useMyPageMenu, ProfileSection, StatsSection, MenuList } from '@/features/profile'
 
 export const Route = createFileRoute('/my-page/')({
-  component: MyPageComponent,
+  component: MyPage,
 })
 
-function MyPageComponent() {
+function MyPage() {
   // 사용자 데이터
   const { userInfo } = useAuth()
 

@@ -8,10 +8,10 @@ import KakaoCircle from '@/assets/icons/kakao-circle.svg'
 import AppleCircle from '@/assets/icons/apple-circle.svg'
 
 export const Route = createFileRoute('/my-page/account-settings/')({
-  component: AccountSettingsComponent,
+  component: AccountSettingsPage,
 })
 
-function AccountSettingsComponent() {
+function AccountSettingsPage() {
   const { userInfo } = useAuth()
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
