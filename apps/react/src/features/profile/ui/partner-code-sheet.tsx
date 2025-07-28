@@ -11,9 +11,10 @@ import { CoupleConnectedModal } from './couple-connected-modal'
 interface PartnerCodeSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
+  onSuccess?: () => void
 }
 
-export function PartnerCodeSheet({ isOpen, onOpenChange }: PartnerCodeSheetProps) {
+export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess }: PartnerCodeSheetProps) {
   const [partnerCode, setPartnerCode] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -37,6 +38,9 @@ export function PartnerCodeSheet({ isOpen, onOpenChange }: PartnerCodeSheetProps
 
       // 성공 모달 표시
       setShowSuccessModal(true)
+
+      // 성공 콜백 호출
+      onSuccess?.()
 
       // 입력값 초기화
       setPartnerCode('')

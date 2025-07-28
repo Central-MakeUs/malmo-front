@@ -1,7 +1,8 @@
-import { createFileRoute, useLoaderData } from '@tanstack/react-router'
+import { createFileRoute, useLoaderData, useRouter } from '@tanstack/react-router'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import memberService from '@/shared/services/member.service'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
@@ -25,13 +26,24 @@ export const Route = createFileRoute('/my-page/couple-management/')({
 })
 
 function CoupleManagementComponent() {
+  const router = useRouter()
+  const queryClient = useQueryClient()
   const { inviteCode } = useLoaderData({ from: '/my-page/couple-management/' })
   const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
   const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
 
-  // 커플 연동 상태 (파트너 정보가 있는지로 판단)
+  // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
   const isConnected = !!partnerInfo
+
+  // 페이지 새로고침 함수
+  const handleRefreshPage = () => {
+    queryClient.setQueryData(['partnerInfo'], null)
+    queryClient.removeQueries({ queryKey: ['partnerInfo'] })
+
+    // 페이지 로더 새로고침
+    router.invalidate()
+  }
 
   const handleCopyInviteCode = async () => {
     try {
@@ -91,10 +103,18 @@ function CoupleManagementComponent() {
       </div>
 
       {/* 상대방 코드 입력 바텀시트 */}
-      <PartnerCodeSheet isOpen={isPartnerCodeSheetOpen} onOpenChange={setIsPartnerCodeSheetOpen} />
+      <PartnerCodeSheet
+        isOpen={isPartnerCodeSheetOpen}
+        onOpenChange={setIsPartnerCodeSheetOpen}
+        onSuccess={handleRefreshPage}
+      />
 
       {/* 커플 연결 끊기 모달 */}
-      <CoupleDisconnectModal isOpen={isDisconnectModalOpen} onOpenChange={setIsDisconnectModalOpen} />
+      <CoupleDisconnectModal
+        isOpen={isDisconnectModalOpen}
+        onOpenChange={setIsDisconnectModalOpen}
+        onSuccess={handleRefreshPage}
+      />
     </div>
   )
 }

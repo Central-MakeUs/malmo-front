@@ -11,17 +11,16 @@ import {
 import coupleService from '@/shared/services/couple.service'
 import { useAuth } from '@/features/auth'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
-import { useQueryClient } from '@tanstack/react-query'
 
 interface CoupleDisconnectModalProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
+  onSuccess?: () => void
 }
 
-export function CoupleDisconnectModal({ isOpen, onOpenChange }: CoupleDisconnectModalProps) {
+export function CoupleDisconnectModal({ isOpen, onOpenChange, onSuccess }: CoupleDisconnectModalProps) {
   const { refreshUserInfo } = useAuth()
   const { open } = useAlertDialog()
-  const queryClient = useQueryClient()
 
   const handleDisconnect = async () => {
     try {
@@ -30,11 +29,11 @@ export function CoupleDisconnectModal({ isOpen, onOpenChange }: CoupleDisconnect
       // 사용자 정보 새로고침
       await refreshUserInfo()
 
-      // usePartnerInfo 캐시 무효화
-      queryClient.invalidateQueries({ queryKey: ['partnerInfo'] })
-
       // 모달 닫기
       onOpenChange(false)
+
+      // 성공 콜백 호출
+      onSuccess?.()
 
       // TODO: 토스트 메시지 표시
       console.log('커플 연결이 끊어졌습니다')
