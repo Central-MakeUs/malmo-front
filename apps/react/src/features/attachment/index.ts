@@ -4,8 +4,8 @@ export * from './models/attachment-types'
 export * from './models/attachment-data'
 export * from './models/constants'
 
-// 훅
-export * from './hooks/use-attachment-questions'
+export { useAttachmentQuestions } from './hooks/use-attachment-questions'
+export { getAttachmentType } from './lib/get-attachment-type'
 
 // 공용 컴포넌트
 export * from './ui/info-box'
@@ -20,9 +20,7 @@ export * from './ui/question/question-list'
 export * from './ui/question/submission-loading'
 
 // 결과 관련 컴포넌트
-export * from './ui/result/result-score-box'
-export * from './ui/result/result-detail-box'
-export * from './ui/result/result-attitude-section'
+export * from './ui/result/attachment-result-content'
 
 // 메인 페이지 컴포넌트
 export * from './ui/main/attachment-test-intro'

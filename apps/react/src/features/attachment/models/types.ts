@@ -12,7 +12,10 @@ export interface AttachmentTypeData {
   character: string
   subtype: string
   characterImage: string
+  cardImage: string
   color: string
+  badgeBackgroundColor: string
+  badgeTextColor: string
   anxietyThreshold: string
   avoidanceThreshold: string
   description: string
