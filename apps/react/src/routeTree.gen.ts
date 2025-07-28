@@ -25,6 +25,7 @@ import { Route as OnboardingNicknamePageImport } from './app/onboarding/nickname
 import { Route as OnboardingMyCodePageImport } from './app/onboarding/my-code/page'
 import { Route as OnboardingCompletePageImport } from './app/onboarding/complete/page'
 import { Route as OnboardingAnniversaryPageImport } from './app/onboarding/anniversary/page'
+import { Route as MyPageProfilePageImport } from './app/my-page/profile/page'
 import { Route as MyPageAccountSettingsPageImport } from './app/my-page/account-settings/page'
 import { Route as ChatResultPageImport } from './app/chat/result/page'
 import { Route as ChatLoadingPageImport } from './app/chat/loading/page'
@@ -116,6 +117,12 @@ const OnboardingAnniversaryPageRoute = OnboardingAnniversaryPageImport.update({
   id: '/anniversary/',
   path: '/anniversary/',
   getParentRoute: () => OnboardingLayoutRoute,
+} as any)
+
+const MyPageProfilePageRoute = MyPageProfilePageImport.update({
+  id: '/my-page/profile/',
+  path: '/my-page/profile/',
+  getParentRoute: () => rootRoute,
 } as any)
 
 const MyPageAccountSettingsPageRoute = MyPageAccountSettingsPageImport.update({
@@ -242,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyPageAccountSettingsPageImport
       parentRoute: typeof rootRoute
     }
+    '/my-page/profile/': {
+      id: '/my-page/profile/'
+      path: '/my-page/profile'
+      fullPath: '/my-page/profile'
+      preLoaderRoute: typeof MyPageProfilePageImport
+      parentRoute: typeof rootRoute
+    }
     '/onboarding/anniversary/': {
       id: '/onboarding/anniversary/'
       path: '/anniversary'
@@ -350,6 +364,7 @@ export interface FileRoutesByFullPath {
   '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
+  '/my-page/profile': typeof MyPageProfilePageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
   '/onboarding/my-code': typeof OnboardingMyCodePageRoute
@@ -372,6 +387,7 @@ export interface FileRoutesByTo {
   '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
+  '/my-page/profile': typeof MyPageProfilePageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
   '/onboarding/my-code': typeof OnboardingMyCodePageRoute
@@ -396,6 +412,7 @@ export interface FileRoutesById {
   '/chat/loading/': typeof ChatLoadingPageRoute
   '/chat/result/': typeof ChatResultPageRoute
   '/my-page/account-settings/': typeof MyPageAccountSettingsPageRoute
+  '/my-page/profile/': typeof MyPageProfilePageRoute
   '/onboarding/anniversary/': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete/': typeof OnboardingCompletePageRoute
   '/onboarding/my-code/': typeof OnboardingMyCodePageRoute
@@ -421,6 +438,7 @@ export interface FileRouteTypes {
     | '/chat/loading'
     | '/chat/result'
     | '/my-page/account-settings'
+    | '/my-page/profile'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
     | '/onboarding/my-code'
@@ -442,6 +460,7 @@ export interface FileRouteTypes {
     | '/chat/loading'
     | '/chat/result'
     | '/my-page/account-settings'
+    | '/my-page/profile'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
     | '/onboarding/my-code'
@@ -464,6 +483,7 @@ export interface FileRouteTypes {
     | '/chat/loading/'
     | '/chat/result/'
     | '/my-page/account-settings/'
+    | '/my-page/profile/'
     | '/onboarding/anniversary/'
     | '/onboarding/complete/'
     | '/onboarding/my-code/'
@@ -485,6 +505,7 @@ export interface RootRouteChildren {
   MyPagePageRoute: typeof MyPagePageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
   MyPageAccountSettingsPageRoute: typeof MyPageAccountSettingsPageRoute
+  MyPageProfilePageRoute: typeof MyPageProfilePageRoute
   AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageRoute
   AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageRoute
 }
@@ -499,6 +520,7 @@ const rootRouteChildren: RootRouteChildren = {
   MyPagePageRoute: MyPagePageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
   MyPageAccountSettingsPageRoute: MyPageAccountSettingsPageRoute,
+  MyPageProfilePageRoute: MyPageProfilePageRoute,
   AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
 }
@@ -520,6 +542,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/my-page/",
         "/attachment-test/question/",
         "/my-page/account-settings/",
+        "/my-page/profile/",
         "/attachment-test/result/my/",
         "/attachment-test/result/partner/"
       ]
@@ -575,6 +598,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/my-page/account-settings/": {
       "filePath": "my-page/account-settings/page.tsx"
+    },
+    "/my-page/profile/": {
+      "filePath": "my-page/profile/page.tsx"
     },
     "/onboarding/anniversary/": {
       "filePath": "onboarding/anniversary/page.tsx",

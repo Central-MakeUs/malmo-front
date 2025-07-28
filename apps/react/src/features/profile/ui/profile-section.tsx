@@ -1,4 +1,5 @@
 import { ChevronRight } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import momoProfile from '@/assets/images/momo-profile.png'
 import HeartIcon from '@/assets/icons/heart.svg'
 
@@ -8,6 +9,12 @@ interface ProfileSectionProps {
 }
 
 export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
+  const navigate = useNavigate()
+
+  const handleProfileClick = () => {
+    navigate({ to: '/my-page/profile' })
+  }
+
   return (
     <div className="pt-5">
       {/* 프로필 이미지 */}
@@ -17,7 +24,7 @@ export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
 
       {/* 닉네임 */}
       <div className="mt-3 flex justify-center">
-        <div className="relative">
+        <div className="relative cursor-pointer" onClick={handleProfileClick}>
           <h2 className="heading1-bold text-center text-gray-iron-950">{nickname || '사용자'}</h2>
           <ChevronRight
             className="absolute top-1/2 ml-1 h-6 w-6 -translate-y-1/2 text-gray-iron-700"
