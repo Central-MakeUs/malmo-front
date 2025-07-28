@@ -1,4 +1,10 @@
-import { AlertDialog, AlertDialogContent, AlertDialogAction } from '@/shared/components/alert-dialog'
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogAction,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/shared/components/alert-dialog'
 import { Button } from '@/shared/ui/button'
 import MomoConnectedImage from '@/assets/images/momo-connected.png'
 
@@ -11,6 +17,11 @@ export function CoupleConnectedModal({ isOpen, onOpenChange }: CoupleConnectedMo
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-[320px] rounded-[20px] p-0">
+        {/* 접근성을 위한 숨겨진 제목 */}
+        <AlertDialogHeader className="sr-only">
+          <AlertDialogTitle>커플 연결 완료</AlertDialogTitle>
+        </AlertDialogHeader>
+
         <div className="flex flex-col items-center px-6 py-6">
           {/* 이미지 */}
           <div className="mt-9">
