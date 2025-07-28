@@ -16,6 +16,8 @@ export { NicknameInput } from './ui/nickname-input'
 export { PartnerCodeSheet } from './ui/partner-code-sheet'
 export { CoupleConnectedModal } from './ui/couple-connected-modal'
 export { CoupleDisconnectModal } from './ui/couple-disconnect-modal'
+export { LogoutModal } from './ui/logout-modal'
+export { WithdrawModal } from './ui/withdraw-modal'
 
 // 상수
 export { MY_PAGE_TERMS_TYPES, CONTACT_FORM_URL } from './lib/constants'

@@ -1,9 +1,9 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { useAuth } from '@/features/auth'
-import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 import { MemberDataProviderEnum } from '@data/user-api-axios/api'
-import memberService from '@/shared/services/member.service'
+import { LogoutModal, WithdrawModal } from '@/features/profile'
+import { useState } from 'react'
 import KakaoCircle from '@/assets/icons/kakao-circle.svg'
 import AppleCircle from '@/assets/icons/apple-circle.svg'
 
@@ -12,9 +12,9 @@ export const Route = createFileRoute('/my-page/account-settings/')({
 })
 
 function AccountSettingsComponent() {
-  const { userInfo, logout } = useAuth()
-  const { open } = useAlertDialog()
-  const navigate = useNavigate()
+  const { userInfo } = useAuth()
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false)
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
 
   // 소셜 계정 정보 조회
   const getProviderInfo = () => {
@@ -33,52 +33,11 @@ function AccountSettingsComponent() {
   const { icon: ProviderIcon, text: providerText } = getProviderInfo()
 
   const handleLogout = () => {
-    open({
-      title: '로그아웃 하시겠어요?',
-      cancelText: '로그아웃',
-      confirmText: '취소',
-      onCancel: async () => {
-        try {
-          const result = await logout()
-          if (result.success) {
-            navigate({ to: '/login' })
-          }
-        } catch (error: any) {
-          open({
-            title: '로그아웃 실패',
-            description: error.message || '로그아웃에 실패했습니다.',
-            confirmText: '확인',
-          })
-        }
-      },
-    })
+    setIsLogoutModalOpen(true)
   }
 
   const handleWithdraw = () => {
-    open({
-      title: '정말 계정을 탈퇴하시겠어요?',
-      description: '탈퇴 시 커플 연동이 자동으로 끊기며 모든 기록은 복구할 수 없어요.',
-      cancelText: '탈퇴하기',
-      confirmText: '취소',
-      onCancel: async () => {
-        try {
-          const result = await memberService.deleteMember()
-          if (result.data?.success) {
-            // 로그아웃 처리
-            await logout()
-            navigate({ to: '/login' })
-          } else {
-            throw new Error(result.data?.message || '회원 탈퇴에 실패했습니다.')
-          }
-        } catch (error: any) {
-          open({
-            title: '회원 탈퇴 실패',
-            description: error.message || '회원 탈퇴에 실패했습니다.',
-            confirmText: '확인',
-          })
-        }
-      },
-    })
+    setIsWithdrawModalOpen(true)
   }
 
   return (
@@ -107,6 +66,12 @@ function AccountSettingsComponent() {
           회원 탈퇴
         </button>
       </div>
+
+      {/* 로그아웃 모달 */}
+      <LogoutModal isOpen={isLogoutModalOpen} onOpenChange={setIsLogoutModalOpen} />
+
+      {/* 회원 탈퇴 모달 */}
+      <WithdrawModal isOpen={isWithdrawModalOpen} onOpenChange={setIsWithdrawModalOpen} />
     </div>
   )
 }
