@@ -1,6 +1,7 @@
 import { ChevronRight } from 'lucide-react'
 import loveLetter from '@/assets/images/love-letter-home.png'
 import { Badge } from '@/shared/ui'
+import { cn } from '@ui/common/lib/utils'
 
 // QuestionData 타입
 interface QuestionData {
@@ -15,6 +16,12 @@ interface TodayQuestionSectionProps {
 }
 
 export function TodayQuestionSection({ todayQuestion }: TodayQuestionSectionProps) {
+  // 답변 상태 데이터
+  const answerStatusData = [
+    { label: '나', answered: todayQuestion?.meAnswered },
+    { label: '연인', answered: todayQuestion?.partnerAnswered },
+  ]
+
   return (
     <div className="mt-8">
       <h2 className="heading2-semibold text-gray-iron-950">오늘의 마음 질문</h2>
@@ -26,11 +33,8 @@ export function TodayQuestionSection({ todayQuestion }: TodayQuestionSectionProp
           <div className="flex items-center justify-between pt-[18px] pr-[14px] pl-5">
             <div className="flex items-center">
               {/* 답변 상태 뱃지 */}
-              {[
-                { label: '나', answered: todayQuestion?.meAnswered, marginLeft: '' },
-                { label: '연인', answered: todayQuestion?.partnerAnswered, marginLeft: 'ml-4' },
-              ].map((user) => (
-                <div key={user.label} className={`flex items-center ${user.marginLeft}`}>
+              {answerStatusData.map((user, index) => (
+                <div key={user.label} className={cn('flex items-center', { 'ml-4': index > 0 })}>
                   <span className="body4-semibold text-gray-iron-950">{user.label}</span>
                   <Badge variant={user.answered ? 'completed' : 'required'} className="ml-[6px]">
                     {user.answered ? '답변 완료' : '답변 필요'}
