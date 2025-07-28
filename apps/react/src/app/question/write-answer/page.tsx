@@ -5,7 +5,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
 import { useState } from 'react'
 
-export const Route = createFileRoute('/question/answer/')({
+export const Route = createFileRoute('/question/write-answer/')({
   component: RouteComponent,
 })
 

@@ -39,7 +39,7 @@ function RouteComponent() {
         </div>
 
         <div className="flex-1 px-5 pb-6">
-          <TodayQuestionSection path="/question/answer" />
+          <TodayQuestionSection path="/question/see-answer" />
         </div>
       </section>
 

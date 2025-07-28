@@ -20,7 +20,8 @@ import { Route as LoginPageImport } from './app/login/page'
 import { Route as IntroPageImport } from './app/intro/page'
 import { Route as ChatPageImport } from './app/chat/page'
 import { Route as AttachmentTestPageImport } from './app/attachment-test/page'
-import { Route as QuestionAnswerPageImport } from './app/question/answer/page'
+import { Route as QuestionWriteAnswerPageImport } from './app/question/write-answer/page'
+import { Route as QuestionSeeAnswerPageImport } from './app/question/see-answer/page'
 import { Route as OnboardingTermsPageImport } from './app/onboarding/terms/page'
 import { Route as OnboardingPartnerCodePageImport } from './app/onboarding/partner-code/page'
 import { Route as OnboardingNicknamePageImport } from './app/onboarding/nickname/page'
@@ -89,9 +90,15 @@ const AttachmentTestPageRoute = AttachmentTestPageImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const QuestionAnswerPageRoute = QuestionAnswerPageImport.update({
-  id: '/question/answer/',
-  path: '/question/answer/',
+const QuestionWriteAnswerPageRoute = QuestionWriteAnswerPageImport.update({
+  id: '/question/write-answer/',
+  path: '/question/write-answer/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const QuestionSeeAnswerPageRoute = QuestionSeeAnswerPageImport.update({
+  id: '/question/see-answer/',
+  path: '/question/see-answer/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -291,11 +298,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingTermsPageImport
       parentRoute: typeof OnboardingLayoutImport
     }
-    '/question/answer/': {
-      id: '/question/answer/'
-      path: '/question/answer'
-      fullPath: '/question/answer'
-      preLoaderRoute: typeof QuestionAnswerPageImport
+    '/question/see-answer/': {
+      id: '/question/see-answer/'
+      path: '/question/see-answer'
+      fullPath: '/question/see-answer'
+      preLoaderRoute: typeof QuestionSeeAnswerPageImport
+      parentRoute: typeof rootRoute
+    }
+    '/question/write-answer/': {
+      id: '/question/write-answer/'
+      path: '/question/write-answer'
+      fullPath: '/question/write-answer'
+      preLoaderRoute: typeof QuestionWriteAnswerPageImport
       parentRoute: typeof rootRoute
     }
     '/attachment-test/result/my/': {
@@ -370,7 +384,8 @@ export interface FileRoutesByFullPath {
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
   '/onboarding/partner-code': typeof OnboardingPartnerCodePageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
-  '/question/answer': typeof QuestionAnswerPageRoute
+  '/question/see-answer': typeof QuestionSeeAnswerPageRoute
+  '/question/write-answer': typeof QuestionWriteAnswerPageRoute
   '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -393,7 +408,8 @@ export interface FileRoutesByTo {
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
   '/onboarding/partner-code': typeof OnboardingPartnerCodePageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
-  '/question/answer': typeof QuestionAnswerPageRoute
+  '/question/see-answer': typeof QuestionSeeAnswerPageRoute
+  '/question/write-answer': typeof QuestionWriteAnswerPageRoute
   '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -418,7 +434,8 @@ export interface FileRoutesById {
   '/onboarding/nickname/': typeof OnboardingNicknamePageRoute
   '/onboarding/partner-code/': typeof OnboardingPartnerCodePageRoute
   '/onboarding/terms/': typeof OnboardingTermsPageRoute
-  '/question/answer/': typeof QuestionAnswerPageRoute
+  '/question/see-answer/': typeof QuestionSeeAnswerPageRoute
+  '/question/write-answer/': typeof QuestionWriteAnswerPageRoute
   '/attachment-test/result/my/': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner/': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -444,7 +461,8 @@ export interface FileRouteTypes {
     | '/onboarding/nickname'
     | '/onboarding/partner-code'
     | '/onboarding/terms'
-    | '/question/answer'
+    | '/question/see-answer'
+    | '/question/write-answer'
     | '/attachment-test/result/my'
     | '/attachment-test/result/partner'
   fileRoutesByTo: FileRoutesByTo
@@ -466,7 +484,8 @@ export interface FileRouteTypes {
     | '/onboarding/nickname'
     | '/onboarding/partner-code'
     | '/onboarding/terms'
-    | '/question/answer'
+    | '/question/see-answer'
+    | '/question/write-answer'
     | '/attachment-test/result/my'
     | '/attachment-test/result/partner'
   id:
@@ -489,7 +508,8 @@ export interface FileRouteTypes {
     | '/onboarding/nickname/'
     | '/onboarding/partner-code/'
     | '/onboarding/terms/'
-    | '/question/answer/'
+    | '/question/see-answer/'
+    | '/question/write-answer/'
     | '/attachment-test/result/my/'
     | '/attachment-test/result/partner/'
   fileRoutesById: FileRoutesById
@@ -505,7 +525,8 @@ export interface RootRouteChildren {
   MyPagePageRoute: typeof MyPagePageRoute
   QuestionPageRoute: typeof QuestionPageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
-  QuestionAnswerPageRoute: typeof QuestionAnswerPageRoute
+  QuestionSeeAnswerPageRoute: typeof QuestionSeeAnswerPageRoute
+  QuestionWriteAnswerPageRoute: typeof QuestionWriteAnswerPageRoute
   AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageRoute
   AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageRoute
 }
@@ -520,7 +541,8 @@ const rootRouteChildren: RootRouteChildren = {
   MyPagePageRoute: MyPagePageRoute,
   QuestionPageRoute: QuestionPageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
-  QuestionAnswerPageRoute: QuestionAnswerPageRoute,
+  QuestionSeeAnswerPageRoute: QuestionSeeAnswerPageRoute,
+  QuestionWriteAnswerPageRoute: QuestionWriteAnswerPageRoute,
   AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
 }
@@ -542,7 +564,8 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/my-page/",
         "/question/",
         "/attachment-test/question/",
-        "/question/answer/",
+        "/question/see-answer/",
+        "/question/write-answer/",
         "/attachment-test/result/my/",
         "/attachment-test/result/partner/"
       ]
@@ -623,8 +646,11 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "onboarding/terms/page.tsx",
       "parent": "/onboarding"
     },
-    "/question/answer/": {
-      "filePath": "question/answer/page.tsx"
+    "/question/see-answer/": {
+      "filePath": "question/see-answer/page.tsx"
+    },
+    "/question/write-answer/": {
+      "filePath": "question/write-answer/page.tsx"
     },
     "/attachment-test/result/my/": {
       "filePath": "attachment-test/result/my/page.tsx"
