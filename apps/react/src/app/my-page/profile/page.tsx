@@ -43,7 +43,7 @@ function ProfileEditComponent() {
     },
     {
       label: '커플 연동 관리',
-      onClick: () => console.log('커플 연동 관리'),
+      onClick: () => navigate({ to: '/my-page/couple-management' }),
       rightElement: (
         <Badge
           className={isCoupleConnected ? 'bg-malmo-rasberry-25 text-malmo-rasberry-500' : 'bg-gray-100 text-gray-600'}
