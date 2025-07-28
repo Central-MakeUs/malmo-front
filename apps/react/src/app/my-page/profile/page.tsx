@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Badge } from '@/shared/ui/badge'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { usePartnerInfo } from '@/features/member'
+import { NicknameEditSheet, useProfileEdit } from '@/features/profile'
 
 export const Route = createFileRoute('/my-page/profile/')({
   component: ProfileEditComponent,
@@ -24,15 +25,16 @@ function MenuItem({ label, onClick, rightElement }: MenuItemProps) {
 
 function ProfileEditComponent() {
   const navigate = useNavigate()
+  const profileEdit = useProfileEdit()
 
   // 커플 연동 상태 확인
-  const { data: partnerInfo, isError, error } = usePartnerInfo()
+  const { data: partnerInfo, isError } = usePartnerInfo()
   const isCoupleConnected = !isError && !!partnerInfo
 
   const menuItems = [
     {
       label: '닉네임 변경',
-      onClick: () => console.log('닉네임 변경'),
+      onClick: profileEdit.openNicknameSheet,
     },
     {
       label: '디데이 변경',
@@ -65,6 +67,9 @@ function ProfileEditComponent() {
           </div>
         ))}
       </div>
+
+      {/* 바텀시트 */}
+      <NicknameEditSheet isOpen={profileEdit.isNicknameSheetOpen} onOpenChange={profileEdit.setNicknameSheetOpen} />
     </div>
   )
 }

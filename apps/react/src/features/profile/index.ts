@@ -4,11 +4,15 @@ export { MenuGroup } from './models/types'
 
 // 훅
 export { useMyPageMenu } from './hooks/use-my-page-menu'
+export { useProfileEdit } from './hooks/use-profile-edit'
+export { useNicknameInput, NICKNAME_MAX_LENGTH } from './hooks/use-nickname-input'
 
 // UI 컴포넌트
 export { ProfileSection } from './ui/profile-section'
 export { StatsSection } from './ui/stats-section'
 export { MenuList } from './ui/menu-list'
+export { NicknameEditSheet } from './ui/nickname-edit-sheet'
+export { NicknameInput } from './ui/nickname-input'
 
 // 상수
 export { MY_PAGE_TERMS_TYPES, CONTACT_FORM_URL } from './lib/constants'
