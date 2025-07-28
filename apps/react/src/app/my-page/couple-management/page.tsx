@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import memberService from '@/shared/services/member.service'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
-import { PartnerCodeSheet } from '@/features/profile'
+import { PartnerCodeSheet, CoupleDisconnectModal } from '@/features/profile'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementComponent,
@@ -27,6 +27,7 @@ export const Route = createFileRoute('/my-page/couple-management/')({
 function CoupleManagementComponent() {
   const { inviteCode } = useLoaderData({ from: '/my-page/couple-management/' })
   const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
+  const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
 
   // 커플 연동 상태 (파트너 정보가 있는지로 판단)
   const { data: partnerInfo } = usePartnerInfo()
@@ -48,7 +49,7 @@ function CoupleManagementComponent() {
   }
 
   const handleDisconnectCouple = () => {
-    // TODO: 커플 연결 끊기 확인 모달 띄우기
+    setIsDisconnectModalOpen(true)
   }
 
   return (
@@ -82,13 +83,18 @@ function CoupleManagementComponent() {
         <hr className="h-px border-0 bg-gray-iron-100" />
 
         {/* 커플 연결 끊기 */}
-        <button onClick={handleDisconnectCouple} className="flex h-16 w-full items-center">
-          <span className="body1-medium text-gray-iron-400">커플 연결 끊기</span>
+        <button onClick={handleDisconnectCouple} className="flex h-16 w-full items-center" disabled={!isConnected}>
+          <span className={`body1-medium ${isConnected ? 'text-gray-iron-950' : 'text-gray-iron-400'}`}>
+            커플 연결 끊기
+          </span>
         </button>
       </div>
 
       {/* 상대방 코드 입력 바텀시트 */}
       <PartnerCodeSheet isOpen={isPartnerCodeSheetOpen} onOpenChange={setIsPartnerCodeSheetOpen} />
+
+      {/* 커플 연결 끊기 모달 */}
+      <CoupleDisconnectModal isOpen={isDisconnectModalOpen} onOpenChange={setIsDisconnectModalOpen} />
     </div>
   )
 }
