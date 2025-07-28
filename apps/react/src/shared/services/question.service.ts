@@ -11,12 +11,12 @@ class QuestionService extends QuestionsApi {
     return data
   }
 
-  async fetchQuestionList(level: number) {
-    const { data } = await this.getQuestion({ level: 0 })
+  async fetchPastQuestion(level: number) {
+    const { data } = await this.getQuestion({ level })
     return data
   }
 
-  async fetchPastQuestion(questionId: number) {
+  async fetchQuestionDetail(questionId: number) {
     const { data } = await this.getAnswers({ coupleQuestionId: questionId })
     return data
   }
