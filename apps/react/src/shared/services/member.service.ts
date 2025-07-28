@@ -6,6 +6,7 @@ import {
   RegisterLoveTypeRequestDto,
   UpdateMemberRequestDto,
   UpdateMemberTermsRequestDto,
+  UpdateStartLoveDateRequestDto,
   LoveTypeTestResult,
 } from '@data/user-api-axios/api'
 
@@ -35,6 +36,11 @@ class MemberService extends MembersApi {
 
   async update(body: UpdateMemberRequestDto) {
     const { data } = await this.updateMember({ updateMemberRequestDto: body })
+    return { data }
+  }
+
+  async updateStartDate(body: UpdateStartLoveDateRequestDto) {
+    const { data } = await this.updateStartLoveDate({ updateStartLoveDateRequestDto: body })
     return { data }
   }
 

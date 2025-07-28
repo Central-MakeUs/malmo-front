@@ -3,6 +3,7 @@ import { Badge } from '@/shared/ui/badge'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { usePartnerInfo } from '@/features/member'
 import { NicknameEditSheet, useProfileEdit } from '@/features/profile'
+import { AnniversaryEditSheet } from '@/features/anniversary'
 
 export const Route = createFileRoute('/my-page/profile/')({
   component: ProfileEditComponent,
@@ -38,7 +39,7 @@ function ProfileEditComponent() {
     },
     {
       label: '디데이 변경',
-      onClick: () => console.log('디데이 변경'),
+      onClick: profileEdit.openAnniversarySheet,
     },
     {
       label: '커플 연동 관리',
@@ -70,6 +71,10 @@ function ProfileEditComponent() {
 
       {/* 바텀시트 */}
       <NicknameEditSheet isOpen={profileEdit.isNicknameSheetOpen} onOpenChange={profileEdit.setNicknameSheetOpen} />
+      <AnniversaryEditSheet
+        isOpen={profileEdit.isAnniversarySheetOpen}
+        onOpenChange={profileEdit.setAnniversarySheetOpen}
+      />
     </div>
   )
 }
