@@ -4,18 +4,35 @@ import { Badge, Button } from '@/shared/ui'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
 import { useState } from 'react'
+import { z } from 'zod'
+import questionService from '@/shared/services/question.service'
+
+const searchSchema = z.object({
+  coupleQuestionId: z.number(),
+  isEdit: z.boolean().optional(),
+})
 
 export const Route = createFileRoute('/question/write-answer/')({
   component: RouteComponent,
+  validateSearch: searchSchema,
+  loaderDeps: (search) => search,
+  loader: async ({ context, deps }) => {
+    const { coupleQuestionId } = deps.search
+
+    const data = await questionService.fetchQuestionDetail(coupleQuestionId)
+    return { data: data?.data, isEdit: deps.search.isEdit || false }
+  },
 })
 
 function RouteComponent() {
+  const { data, isEdit } = Route.useLoaderData()
+
   const historyModal = useQuestionModal()
   const [answer, setAnswer] = useState('')
   const MAX_LENGTH = 100
 
   const handleSave = () => {
-    historyModal.saveQuestionModal(answer)
+    historyModal.saveQuestionModal(answer, isEdit)
   }
 
   return (

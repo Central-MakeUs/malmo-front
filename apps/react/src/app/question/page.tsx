@@ -81,7 +81,7 @@ function RouteComponent() {
         <div className="flex-1 px-5 pb-6">
           <Link
             to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
-            search={{ questionId: selectedQuestion?.coupleQuestionId }}
+            search={{ coupleQuestionId: selectedQuestion?.coupleQuestionId || 0, isEdit: false }}
           >
             <TodayQuestionSection todayQuestion={selectedQuestion} level={data.level} />
           </Link>

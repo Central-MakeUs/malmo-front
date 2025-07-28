@@ -3,7 +3,7 @@ import questionService from '@/shared/services/question.service'
 import { useRouter } from '@tanstack/react-router'
 
 export interface UseQuestionModalReturn {
-  saveQuestionModal: (text: string) => void
+  saveQuestionModal: (text: string, isEdit: boolean) => void
   exitQuestionModal: () => void
 }
 
@@ -11,16 +11,34 @@ export function useQuestionModal(): UseQuestionModalReturn {
   const alertDialog = useAlertDialog()
   const router = useRouter()
 
-  const saveQuestionModal = (text: string) => {
+  const saveQuestionModal = (text: string, isEdit: boolean) => {
     alertDialog.open({
-      title: '답변을 저장하시겠어요?',
+      title: '답변을 작성하시겠어요?',
       description: '저장 이후에도 답변을 수정할 수 있어요.',
       cancelText: '이어서 작성하기',
       confirmText: '저장하기',
       onConfirm: async () => {
         alertDialog.close()
-        await questionService.postTodayQuestionAnswer({ answer: text })
-        router.history.back()
+
+        const response = isEdit
+          ? await questionService.patchTodayQuestionAnswer({ answer: text })
+          : await questionService.postTodayQuestionAnswer({ answer: text })
+
+        const { data } = response
+        if (!data?.coupleQuestionId) {
+          alertDialog.open({
+            title: '저장 실패',
+            description: '답변 저장에 실패했어요. 다시 시도해주세요.',
+            confirmText: '확인',
+          })
+          return
+        }
+
+        router.navigate({
+          to: '/question/see-answer',
+          search: { coupleQuestionId: data?.coupleQuestionId },
+          replace: true,
+        })
       },
     })
   }
