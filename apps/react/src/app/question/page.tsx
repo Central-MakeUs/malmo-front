@@ -3,7 +3,7 @@ import CalendarItem from '@/features/question/ui/calendar-item'
 import { HomeHeaderBar } from '@/shared/components/header-bar'
 import questionService from '@/shared/services/question.service'
 import { Badge, BottomNavigation } from '@/shared/ui'
-import { createFileRoute, useLoaderData } from '@tanstack/react-router'
+import { createFileRoute, Link, useLoaderData } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useState } from 'react'
@@ -79,7 +79,12 @@ function RouteComponent() {
         </div>
 
         <div className="flex-1 px-5 pb-6">
-          <TodayQuestionSection path="/question/see-answer" todayQuestion={selectedQuestion} />
+          <Link
+            to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
+            search={{ questionId: selectedQuestion?.coupleQuestionId }}
+          >
+            <TodayQuestionSection todayQuestion={selectedQuestion} level={data.level} />
+          </Link>
         </div>
       </section>
 

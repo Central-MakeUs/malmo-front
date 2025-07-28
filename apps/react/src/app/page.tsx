@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import malmoLogo from '@/assets/images/malmo-logo.png'
 import HeartIcon from '@/assets/icons/heart.svg'
 
@@ -64,7 +64,9 @@ function HomePage() {
         {!hasAttachmentType && <AttachmentTestBanner />}
 
         {/* 오늘의 마음 질문 섹션 */}
-        <TodayQuestionSection todayQuestion={todayQuestion} />
+        <Link to={'/question'}>
+          <TodayQuestionSection todayQuestion={todayQuestion} />
+        </Link>
 
         {/* 애착유형 카드 섹션 */}
         <AttachmentTypeCards

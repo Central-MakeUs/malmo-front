@@ -15,8 +15,7 @@ function RouteComponent() {
   const MAX_LENGTH = 100
 
   const handleSave = () => {
-    console.log('저장할 답변:', answer)
-    historyModal.saveQuestionModal()
+    historyModal.saveQuestionModal(answer)
   }
 
   return (

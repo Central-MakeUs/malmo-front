@@ -1,8 +1,9 @@
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import questionService from '@/shared/services/question.service'
 import { useRouter } from '@tanstack/react-router'
 
 export interface UseQuestionModalReturn {
-  saveQuestionModal: () => void
+  saveQuestionModal: (text: string) => void
   exitQuestionModal: () => void
 }
 
@@ -10,7 +11,7 @@ export function useQuestionModal(): UseQuestionModalReturn {
   const alertDialog = useAlertDialog()
   const router = useRouter()
 
-  const saveQuestionModal = () => {
+  const saveQuestionModal = (text: string) => {
     alertDialog.open({
       title: '답변을 저장하시겠어요?',
       description: '저장 이후에도 답변을 수정할 수 있어요.',
@@ -18,6 +19,7 @@ export function useQuestionModal(): UseQuestionModalReturn {
       confirmText: '저장하기',
       onConfirm: async () => {
         alertDialog.close()
+        await questionService.postTodayQuestionAnswer({ answer: text })
         router.history.back()
       },
     })
