@@ -23,9 +23,7 @@ function RouteComponent() {
               <ChevronRight className="h-5 w-5 text-gray-iron-300" />
             </div>
 
-            <Badge className="bg-gray-iron-700 text-white">
-              <p>모은 마음 29개</p>
-            </Badge>
+            <Badge variant="black">모은 마음 29개</Badge>
           </div>
 
           <div className="mx-auto grid h-[340px] w-[335px] grid-cols-6 grid-rows-5 place-items-center gap-1">
