@@ -14,11 +14,13 @@ import { Route as rootRoute } from './app/__root'
 import { Route as OnboardingLayoutImport } from './app/onboarding/layout'
 import { Route as ChatLayoutImport } from './app/chat/layout'
 import { Route as PageImport } from './app/page'
+import { Route as QuestionPageImport } from './app/question/page'
 import { Route as MyPagePageImport } from './app/my-page/page'
 import { Route as LoginPageImport } from './app/login/page'
 import { Route as IntroPageImport } from './app/intro/page'
 import { Route as ChatPageImport } from './app/chat/page'
 import { Route as AttachmentTestPageImport } from './app/attachment-test/page'
+import { Route as QuestionAnswerPageImport } from './app/question/answer/page'
 import { Route as OnboardingTermsPageImport } from './app/onboarding/terms/page'
 import { Route as OnboardingPartnerCodePageImport } from './app/onboarding/partner-code/page'
 import { Route as OnboardingNicknamePageImport } from './app/onboarding/nickname/page'
@@ -51,6 +53,12 @@ const PageRoute = PageImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const QuestionPageRoute = QuestionPageImport.update({
+  id: '/question/',
+  path: '/question/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const MyPagePageRoute = MyPagePageImport.update({
   id: '/my-page/',
   path: '/my-page/',
@@ -78,6 +86,12 @@ const ChatPageRoute = ChatPageImport.update({
 const AttachmentTestPageRoute = AttachmentTestPageImport.update({
   id: '/attachment-test/',
   path: '/attachment-test/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const QuestionAnswerPageRoute = QuestionAnswerPageImport.update({
+  id: '/question/answer/',
+  path: '/question/answer/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -207,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyPagePageImport
       parentRoute: typeof rootRoute
     }
+    '/question/': {
+      id: '/question/'
+      path: '/question'
+      fullPath: '/question'
+      preLoaderRoute: typeof QuestionPageImport
+      parentRoute: typeof rootRoute
+    }
     '/attachment-test/question/': {
       id: '/attachment-test/question/'
       path: '/attachment-test/question'
@@ -270,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingTermsPageImport
       parentRoute: typeof OnboardingLayoutImport
     }
+    '/question/answer/': {
+      id: '/question/answer/'
+      path: '/question/answer'
+      fullPath: '/question/answer'
+      preLoaderRoute: typeof QuestionAnswerPageImport
+      parentRoute: typeof rootRoute
+    }
     '/attachment-test/result/my/': {
       id: '/attachment-test/result/my/'
       path: '/attachment-test/result/my'
@@ -332,6 +360,7 @@ export interface FileRoutesByFullPath {
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
   '/my-page': typeof MyPagePageRoute
+  '/question': typeof QuestionPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
@@ -341,6 +370,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
   '/onboarding/partner-code': typeof OnboardingPartnerCodePageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
+  '/question/answer': typeof QuestionAnswerPageRoute
   '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -353,6 +383,7 @@ export interface FileRoutesByTo {
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
   '/my-page': typeof MyPagePageRoute
+  '/question': typeof QuestionPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
@@ -362,6 +393,7 @@ export interface FileRoutesByTo {
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
   '/onboarding/partner-code': typeof OnboardingPartnerCodePageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
+  '/question/answer': typeof QuestionAnswerPageRoute
   '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -376,6 +408,7 @@ export interface FileRoutesById {
   '/intro/': typeof IntroPageRoute
   '/login/': typeof LoginPageRoute
   '/my-page/': typeof MyPagePageRoute
+  '/question/': typeof QuestionPageRoute
   '/attachment-test/question/': typeof AttachmentTestQuestionPageRoute
   '/chat/loading/': typeof ChatLoadingPageRoute
   '/chat/result/': typeof ChatResultPageRoute
@@ -385,6 +418,7 @@ export interface FileRoutesById {
   '/onboarding/nickname/': typeof OnboardingNicknamePageRoute
   '/onboarding/partner-code/': typeof OnboardingPartnerCodePageRoute
   '/onboarding/terms/': typeof OnboardingTermsPageRoute
+  '/question/answer/': typeof QuestionAnswerPageRoute
   '/attachment-test/result/my/': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner/': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -400,6 +434,7 @@ export interface FileRouteTypes {
     | '/intro'
     | '/login'
     | '/my-page'
+    | '/question'
     | '/attachment-test/question'
     | '/chat/loading'
     | '/chat/result'
@@ -409,6 +444,7 @@ export interface FileRouteTypes {
     | '/onboarding/nickname'
     | '/onboarding/partner-code'
     | '/onboarding/terms'
+    | '/question/answer'
     | '/attachment-test/result/my'
     | '/attachment-test/result/partner'
   fileRoutesByTo: FileRoutesByTo
@@ -420,6 +456,7 @@ export interface FileRouteTypes {
     | '/intro'
     | '/login'
     | '/my-page'
+    | '/question'
     | '/attachment-test/question'
     | '/chat/loading'
     | '/chat/result'
@@ -429,6 +466,7 @@ export interface FileRouteTypes {
     | '/onboarding/nickname'
     | '/onboarding/partner-code'
     | '/onboarding/terms'
+    | '/question/answer'
     | '/attachment-test/result/my'
     | '/attachment-test/result/partner'
   id:
@@ -441,6 +479,7 @@ export interface FileRouteTypes {
     | '/intro/'
     | '/login/'
     | '/my-page/'
+    | '/question/'
     | '/attachment-test/question/'
     | '/chat/loading/'
     | '/chat/result/'
@@ -450,6 +489,7 @@ export interface FileRouteTypes {
     | '/onboarding/nickname/'
     | '/onboarding/partner-code/'
     | '/onboarding/terms/'
+    | '/question/answer/'
     | '/attachment-test/result/my/'
     | '/attachment-test/result/partner/'
   fileRoutesById: FileRoutesById
@@ -463,7 +503,9 @@ export interface RootRouteChildren {
   IntroPageRoute: typeof IntroPageRoute
   LoginPageRoute: typeof LoginPageRoute
   MyPagePageRoute: typeof MyPagePageRoute
+  QuestionPageRoute: typeof QuestionPageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
+  QuestionAnswerPageRoute: typeof QuestionAnswerPageRoute
   AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageRoute
   AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageRoute
 }
@@ -476,7 +518,9 @@ const rootRouteChildren: RootRouteChildren = {
   IntroPageRoute: IntroPageRoute,
   LoginPageRoute: LoginPageRoute,
   MyPagePageRoute: MyPagePageRoute,
+  QuestionPageRoute: QuestionPageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
+  QuestionAnswerPageRoute: QuestionAnswerPageRoute,
   AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
 }
@@ -496,7 +540,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/intro/",
         "/login/",
         "/my-page/",
+        "/question/",
         "/attachment-test/question/",
+        "/question/answer/",
         "/attachment-test/result/my/",
         "/attachment-test/result/partner/"
       ]
@@ -539,6 +585,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/my-page/": {
       "filePath": "my-page/page.tsx"
     },
+    "/question/": {
+      "filePath": "question/page.tsx"
+    },
     "/attachment-test/question/": {
       "filePath": "attachment-test/question/page.tsx"
     },
@@ -573,6 +622,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/onboarding/terms/": {
       "filePath": "onboarding/terms/page.tsx",
       "parent": "/onboarding"
+    },
+    "/question/answer/": {
+      "filePath": "question/answer/page.tsx"
     },
     "/attachment-test/result/my/": {
       "filePath": "attachment-test/result/my/page.tsx"

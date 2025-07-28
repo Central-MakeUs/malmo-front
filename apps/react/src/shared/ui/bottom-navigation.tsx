@@ -35,11 +35,11 @@ const navigationItems: NavigationItem[] = [
     path: '/chat-history',
   },
   {
-    id: 'mood-journal',
+    id: 'question',
     label: '마음도감',
     icon: MoodJournalIcon,
     activeIcon: MoodJournalActiveIcon,
-    path: '/mood-journal',
+    path: '/question',
   },
   {
     id: 'my-page',
