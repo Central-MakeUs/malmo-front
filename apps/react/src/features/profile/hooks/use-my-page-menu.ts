@@ -1,12 +1,11 @@
 import { useNavigate } from '@tanstack/react-router'
-import { useTerms } from '@/features/term'
 import { bridge } from '@/shared/bridge'
 import { MenuGroup, MenuItem } from '../models/types'
 import { MY_PAGE_TERMS_TYPES, CONTACT_FORM_URL } from '../lib/constants'
+import { Term } from '@/features/term/models/types'
 
-export function useMyPageMenu() {
+export function useMyPageMenu(terms: Term[], handleShowTerms: (termsId: number) => void) {
   const navigate = useNavigate()
-  const { terms, handleShowTerms } = useTerms()
 
   // 마이페이지에서 표시할 약관들만 타입으로 필터링
   const myPageTerms = terms.filter((term) => MY_PAGE_TERMS_TYPES.includes(term.type))

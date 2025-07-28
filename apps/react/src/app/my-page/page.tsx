@@ -17,18 +17,18 @@ function MyPage() {
   const dDay = calculateDDay(userInfo.startLoveDate)
 
   // 약관 데이터
-  const { selectedTermId, selectedTermContent, handleCloseTerms } = useTerms()
+  const { terms, selectedTermId, selectedTermContent, handleCloseTerms, handleShowTerms } = useTerms()
 
   // 메뉴 데이터
-  const { menuItems } = useMyPageMenu()
+  const { menuItems } = useMyPageMenu(terms, handleShowTerms)
 
   return (
     <div className="min-h-screen bg-white pb-[60px]">
       {/* 약관 모달 */}
-      {selectedTermId !== null && selectedTermContent && (
+      {selectedTermId !== null && selectedTermContent && selectedTermContent.title && selectedTermContent.content && (
         <TermsContentModal
-          title={selectedTermContent.title || ''}
-          content={selectedTermContent.content || ''}
+          title={selectedTermContent.title}
+          content={selectedTermContent.content}
           onClose={handleCloseTerms}
         />
       )}
