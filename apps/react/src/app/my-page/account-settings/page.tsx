@@ -35,9 +35,9 @@ function AccountSettingsComponent() {
   const handleLogout = () => {
     open({
       title: '로그아웃 하시겠어요?',
-      cancelText: '취소하기',
-      confirmText: '로그아웃',
-      onConfirm: async () => {
+      cancelText: '로그아웃',
+      confirmText: '취소',
+      onCancel: async () => {
         try {
           const result = await logout()
           if (result.success) {
@@ -58,9 +58,9 @@ function AccountSettingsComponent() {
     open({
       title: '정말 계정을 탈퇴하시겠어요?',
       description: '탈퇴 시 커플 연동이 자동으로 끊기며 모든 기록은 복구할 수 없어요.',
-      cancelText: '취소하기',
-      confirmText: '탈퇴하기',
-      onConfirm: async () => {
+      cancelText: '탈퇴하기',
+      confirmText: '취소',
+      onCancel: async () => {
         try {
           const result = await memberService.deleteMember()
           if (result.data?.success) {

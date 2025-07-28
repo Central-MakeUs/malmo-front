@@ -56,8 +56,8 @@ export function CoupleDisconnectModal({ isOpen, onOpenChange, onSuccess }: Coupl
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onOpenChange(false)}>취소하기</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDisconnect}>연결 끊기</AlertDialogAction>
+          <AlertDialogCancel onClick={handleDisconnect}>연결 끊기</AlertDialogCancel>
+          <AlertDialogAction onClick={() => onOpenChange(false)}>취소하기</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
