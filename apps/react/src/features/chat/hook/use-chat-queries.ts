@@ -4,8 +4,12 @@ import {
   BaseListSwaggerResponseChatRoomMessageData,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
+  ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
 import historyService from '@/shared/services/history.service'
+
+const CONNECTED_REQUIRED_MESSAGE =
+  '갈등 상황에 대해서는 이해했어! 그런데, 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 상대방에게 공유해봐!'
 
 export const chatKeys = {
   all: ['chat'] as const,
@@ -26,7 +30,11 @@ export const useChatRoomStatusQuery = () => {
 }
 
 // 2. 채팅 메시지 목록 조회를 위한 useInfiniteQuery 훅 (수정)
-export const useChatMessagesQuery = (enabled: boolean, chatId?: number) => {
+export const useChatMessagesQuery = (
+  enabled: boolean,
+  chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined,
+  chatId?: number
+) => {
   const PAGE_SIZE = 20
 
   if (chatId) {
@@ -75,6 +83,25 @@ export const useChatMessagesQuery = (enabled: boolean, chatId?: number) => {
         return undefined
       }
       return (lastPage.page ?? 0) + 1
+    },
+    select: (data) => {
+      if (chatStatus !== ChatRoomStateDataChatRoomStateEnum.Paused) return data
+
+      const newData = JSON.parse(JSON.stringify(data)) as InfiniteData<BaseListSwaggerResponseChatRoomMessageData>
+
+      const assistantMessage: ChatRoomMessageData = {
+        messageId: Date.now(),
+        content: CONNECTED_REQUIRED_MESSAGE,
+        createdAt: new Date().toISOString(),
+        senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+      }
+
+      const firstPageList = newData.pages[0]?.list
+      if (firstPageList?.some((msg) => msg.content === CONNECTED_REQUIRED_MESSAGE)) return newData
+
+      newData.pages[0]?.list?.unshift(assistantMessage)
+
+      return newData
     },
     enabled,
   })
