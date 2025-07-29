@@ -47,3 +47,10 @@ export function formatDate(dateString?: string | Date, format?: string): string 
 
   return format.replace(regex, (match) => replacements[match as keyof typeof replacements])
 }
+
+// D-day 계산
+export function calculateDDay(startLoveDate: string | undefined | null): number {
+  if (!startLoveDate) return 0
+
+  return Math.floor((Date.now() - new Date(startLoveDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
+}

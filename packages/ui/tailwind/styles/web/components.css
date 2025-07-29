@@ -239,6 +239,14 @@
     letter-spacing: -0.02em;
   }
 
+  .label1-semibold {
+    font-family: var(--font-pretendard);
+    font-size: 12px;
+    line-height: 20px;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: -0.02em;
+  }
+
   .label2-regular {
     font-family: var(--font-pretendard);
     font-size: 11px;

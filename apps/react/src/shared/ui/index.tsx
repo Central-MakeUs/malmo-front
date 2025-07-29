@@ -1,3 +1,5 @@
 export { Button } from './button'
-export { HeaderNavigation } from './header-navigation'
 export { Input } from './input'
+export { HeaderNavigation } from './header-navigation'
+export { BottomNavigation } from './bottom-navigation'
+export { Badge } from './badge'

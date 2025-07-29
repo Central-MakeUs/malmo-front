@@ -2,6 +2,11 @@ import StableImage from '@/assets/images/characters/stable.png'
 import AnxietyImage from '@/assets/images/characters/anxiety.png'
 import AvoidanceImage from '@/assets/images/characters/avoidance.png'
 import ConfusionImage from '@/assets/images/characters/confusion.png'
+// 홈페이지 카드용 캐릭터 이미지
+import StableCardImage from '@/assets/images/characters/stable-card.png'
+import AnxietyCardImage from '@/assets/images/characters/anxiety-card.png'
+import AvoidanceCardImage from '@/assets/images/characters/avoidance-card.png'
+import ConfusionCardImage from '@/assets/images/characters/confusion-card.png'
 import { AttachmentType, type AttachmentTypeData } from './types'
 
 // 안정형 (평온이)
@@ -10,7 +15,10 @@ export const STABLE_TYPE_DATA: AttachmentTypeData = {
   character: '평온이',
   subtype: '안정형',
   characterImage: StableImage,
+  cardImage: StableCardImage,
   color: '#EC4665',
+  badgeBackgroundColor: 'bg-malmo-rasberry-25',
+  badgeTextColor: 'text-malmo-rasberry-500',
   anxietyThreshold: '2.33 미만',
   avoidanceThreshold: '2.66 미만',
   description: `평온이 성격을 가진 사람은 연인과 가까워질 때 안정감을 느껴요. 연애 중에도 나만의 삶과 영역을 균형 있게 유지하는 편이에요.
@@ -43,7 +51,10 @@ export const ANXIETY_TYPE_DATA: AttachmentTypeData = {
   character: '걱정이',
   subtype: '불안형',
   characterImage: AnxietyImage,
+  cardImage: AnxietyCardImage,
   color: '#FF8400',
+  badgeBackgroundColor: 'bg-malmo-orange-50',
+  badgeTextColor: 'text-malmo-orange-500',
   anxietyThreshold: '2.33 이상',
   avoidanceThreshold: '2.61 미만',
   description: `걱정이 성격을 가진 사람은 상대의 반응에 쉽게 불안해져요. '사랑받고 있는 게 맞을까?'라는 의심이 자주 들고, 끊임없이 애정을 확인받고 싶어 해요.
@@ -76,7 +87,10 @@ export const AVOIDANCE_TYPE_DATA: AttachmentTypeData = {
   character: '도망이',
   subtype: '회피형',
   characterImage: AvoidanceImage,
+  cardImage: AvoidanceCardImage,
   color: '#FF8400',
+  badgeBackgroundColor: 'bg-malmo-orange-50',
+  badgeTextColor: 'text-malmo-orange-500',
   anxietyThreshold: '2.33 미만',
   avoidanceThreshold: '2.61 이상',
   description: `도망이 성격을 가진 사람은 혼자만의 시간과 독립성을 무엇보다 중요하게 여겨요. 그래서 연애보다는 일이나 취미에서 더 큰 만족을 느끼는 경우도 많아요.
@@ -109,7 +123,10 @@ export const CONFUSION_TYPE_DATA: AttachmentTypeData = {
   character: '갈팡이',
   subtype: '혼란형',
   characterImage: ConfusionImage,
+  cardImage: ConfusionCardImage,
   color: '#FF8400',
+  badgeBackgroundColor: 'bg-malmo-orange-50',
+  badgeTextColor: 'text-malmo-orange-500',
   anxietyThreshold: '2.33 이상',
   avoidanceThreshold: '2.61 이상',
   description: `갈팡이 성격을 가진 사람은 "사랑받고 싶다"는 마음과 "상처받을까봐 두렵다"는 마음이 자주 충돌해요. 그래서 연인에게 강하게 끌리다가도, 갑자기 밀어내거나 비판하는 모습을 보일 수 있어요.

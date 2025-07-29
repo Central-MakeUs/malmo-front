@@ -1,0 +1,71 @@
+import { ChevronRight } from 'lucide-react'
+import loveLetter from '@/assets/images/love-letter-home.png'
+import { Badge } from '@/shared/ui'
+import { cn } from '@ui/common/lib/utils'
+
+// QuestionData 타입
+interface QuestionData {
+  content?: string
+  level?: number
+  meAnswered?: boolean
+  partnerAnswered?: boolean
+}
+
+interface TodayQuestionSectionProps {
+  todayQuestion?: QuestionData | null
+}
+
+export function TodayQuestionSection({ todayQuestion }: TodayQuestionSectionProps) {
+  // 답변 상태 데이터
+  const answerStatusData = [
+    { label: '나', answered: todayQuestion?.meAnswered },
+    { label: '연인', answered: todayQuestion?.partnerAnswered },
+  ]
+
+  return (
+    <div className="mt-8">
+      <h2 className="heading2-semibold text-gray-iron-950">오늘의 마음 질문</h2>
+
+      {/* 질문 박스 */}
+      <div className="mt-3 h-[178px] rounded-lg border border-gray-iron-200 bg-white">
+        <div className="relative h-full">
+          {/* 상단 컨텐츠 */}
+          <div className="flex items-center justify-between pt-[18px] pr-[14px] pl-5">
+            <div className="flex items-center">
+              {/* 답변 상태 뱃지 */}
+              {answerStatusData.map((user, index) => (
+                <div key={user.label} className={cn('flex items-center', { 'ml-4': index > 0 })}>
+                  <span className="body4-semibold text-gray-iron-950">{user.label}</span>
+                  <Badge variant={user.answered ? 'completed' : 'required'} className="ml-[6px]">
+                    {user.answered ? '답변 완료' : '답변 필요'}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+
+            {/* 오른쪽 ChevronRight 아이콘 */}
+            <ChevronRight className="h-5 w-5 text-gray-iron-600" />
+          </div>
+
+          {/* 구분선 */}
+          <hr className="mx-3 mt-4 border-gray-iron-200" />
+
+          {/* 질문 내용 */}
+          <div className="mt-4 px-5 pr-[104px]">
+            <h3 className="body1-semibold break-keep text-gray-iron-950">
+              {todayQuestion?.content || '질문을 불러오는 중...'}
+            </h3>
+            <p className="label1-medium mt-2 text-gray-iron-500">
+              {todayQuestion?.level ? `${todayQuestion.level}번째 질문` : ''}
+            </p>
+          </div>
+
+          {/* 러브레터 이미지 */}
+          <div className="absolute right-[24px] bottom-0">
+            <img src={loveLetter} alt="Love Letter" className="h-[75px] w-[84px]" />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
