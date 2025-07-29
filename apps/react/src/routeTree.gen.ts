@@ -520,8 +520,8 @@ const rootRouteChildren: RootRouteChildren = {
   LoginPageRoute: LoginPageRoute,
   MyPagePageRoute: MyPagePageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
-  AttachmentTestResultPageRoute: AttachmentTestResultPageRoute,
   HistoryDeletePageRoute: HistoryDeletePageRoute,
+  AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
 }
 
@@ -542,8 +542,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/login/",
         "/my-page/",
         "/attachment-test/question/",
-        "/attachment-test/result/",
-        "/history/delete/"
+        "/history/delete/",
         "/attachment-test/result/my/",
         "/attachment-test/result/partner/"
       ]
