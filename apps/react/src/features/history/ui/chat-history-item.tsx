@@ -3,18 +3,15 @@ import { GetChatRoomListResponse } from '@data/user-api-axios/api'
 import { formatDate } from '@/shared/utils'
 import { ChevronRight } from 'lucide-react'
 import CheckedCircle from '@/assets/icons/checked-circle.svg'
+import { Badge } from '@/shared/ui'
 
 // 1. 공통 UI를 Base 컴포넌트로 추출
 const ChatHistoryItemBase = ({ history }: { history: GetChatRoomListResponse }) => (
   <>
     <div className="flex-1">
       <div className="mb-[10px] flex gap-1">
-        <div className="rounded-[8px] bg-malmo-rasberry-25 px-[9px] py-[1px]">
-          <p className="label1-semibold text-malmo-rasberry-500">{history.situationKeyword}</p>
-        </div>
-        <div className="rounded-[8px] bg-malmo-orange-50 px-[9px] py-[1px]">
-          <p className="label1-semibold text-malmo-orange-500">{history.solutionKeyword}</p>
-        </div>
+        <Badge variant="rasberry">{history.situationKeyword}</Badge>
+        <Badge variant="completed">{history.solutionKeyword}</Badge>
       </div>
       <div className="pl-1">
         <p className="label1-medium text-gray-iron-500">{formatDate(history.createdAt, 'YYYY년 MM월 DD일')}</p>

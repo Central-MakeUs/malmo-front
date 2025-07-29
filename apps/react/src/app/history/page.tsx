@@ -13,6 +13,7 @@ import { EmptyState, LinkedChatHistoryItem } from '@/features/history/ui/chat-hi
 import noResultImage from '@/assets/images/characters/no-result.png'
 import emptyImage from '@/assets/images/characters/empty.png'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
+import { BottomNavigation } from '@/shared/ui'
 
 export const Route = createFileRoute('/history/')({
   component: RouteComponent,
@@ -37,7 +38,7 @@ function RouteComponent() {
   const showEmpty = !isFetchingNextPage && histories.length === 0
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-screen flex-col pb-15">
       <HomeHeaderBar
         title="대화 기록"
         right={
@@ -79,7 +80,7 @@ function RouteComponent() {
       </section>
 
       <Link to={'/chat'}>
-        <div className="fixed right-5 bottom-6 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
+        <div className="fixed right-5 bottom-21 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
           <div
             className={cn(
               'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',
@@ -94,6 +95,8 @@ function RouteComponent() {
           <ChatBubble className="h-6 w-6" />
         </div>
       </Link>
+
+      <BottomNavigation />
     </div>
   )
 }
