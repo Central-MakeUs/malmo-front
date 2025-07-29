@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { cn } from '@ui/common/lib/utils'
 import momo from '@/assets/images/momo-home.png'
 
 interface ChatEntryCardProps {
@@ -19,11 +20,12 @@ export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
             {/* 뱃지 */}
             <div>
               <div
-                className={`inline-flex rounded-lg px-[9px] py-[1px] ${
+                className={cn(
+                  'inline-flex rounded-lg px-[9px] py-[1px]',
                   isChatActive ? 'bg-white' : 'bg-malmo-rasberry-500'
-                }`}
+                )}
               >
-                <span className={`label1-semibold ${isChatActive ? 'text-malmo-rasberry-500' : 'text-white'}`}>
+                <span className={cn('label1-semibold', isChatActive ? 'text-malmo-rasberry-500' : 'text-white')}>
                   {isChatActive ? 'CONTINUE' : 'START'}
                 </span>
               </div>
@@ -44,8 +46,8 @@ export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
 
           {/* 하단 버튼 */}
           <Link to="/chat">
-            <button className={`w-full rounded-[32px] py-3 ${isChatActive ? 'bg-malmo-rasberry-500' : 'bg-white'}`}>
-              <span className={`body2-semibold ${isChatActive ? 'text-white' : 'text-malmo-rasberry-500'}`}>
+            <button className={cn('w-full rounded-[32px] py-3', isChatActive ? 'bg-malmo-rasberry-500' : 'bg-white')}>
+              <span className={cn('body2-semibold', isChatActive ? 'text-white' : 'text-malmo-rasberry-500')}>
                 {isChatActive ? '대화 이어서하기' : '새 대화 시작하기'}
               </span>
             </button>

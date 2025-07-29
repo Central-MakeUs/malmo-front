@@ -28,11 +28,11 @@ const navigationItems: NavigationItem[] = [
     path: '/',
   },
   {
-    id: 'chat-history',
+    id: 'history',
     label: '대화기록',
     icon: ChatHistoryIcon,
     activeIcon: ChatHistoryActiveIcon,
-    path: '/chat-history',
+    path: '/history',
   },
   {
     id: 'question',
