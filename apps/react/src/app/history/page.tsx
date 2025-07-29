@@ -12,6 +12,7 @@ import { useDebounce } from '@/shared/hook/use-deboucne'
 import { EmptyState, LinkedChatHistoryItem } from '@/features/history/ui/chat-history-item'
 import noResultImage from '@/assets/images/characters/no-result.png'
 import emptyImage from '@/assets/images/characters/empty.png'
+import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 
 export const Route = createFileRoute('/history/')({
   component: RouteComponent,
@@ -21,18 +22,12 @@ function RouteComponent() {
   const { data: chatStatus, isSuccess } = useChatRoomStatusQuery()
   const [keyword, setKeyword] = useState('')
   const debouncedKeyword = useDebounce(keyword, 500)
-  const { ref, inView } = useInView()
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useChatHistoryQuery({
     keyword: debouncedKeyword,
     isSuccess,
   })
-
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
+  const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
   const activeChat =
     chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion ||

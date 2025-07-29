@@ -13,6 +13,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 
 import { z } from 'zod'
 import { useInView } from 'react-intersection-observer'
 import { ChevronRight } from 'lucide-react'
+import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -36,6 +37,7 @@ function RouteComponent() {
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
+    chatStatus,
     chatId
   )
 
@@ -43,18 +45,7 @@ function RouteComponent() {
   const scrollHeightRef = useRef(0)
   const topMessageIdRef = useRef<number | string | null>(null)
 
-  // chatId가 있을 경우 (히스토리 뷰), 아래로 스크롤하여 새 페이지 로드
-  const { ref: bottomRef, inView: isBottomInView } = useInView({ threshold: 0 })
-
-  // chatId가 없을 경우 (실시간 채팅), 위로 스크롤하여 이전 페이지 로드
-  const { ref: topRef, inView: isTopInView } = useInView({ threshold: 0 })
-
-  useEffect(() => {
-    // 뷰의 맨 아래/위가 감지되고, 다음 페이지가 있으며, 로딩 중이 아닐 때 fetch
-    if ((isBottomInView || isTopInView) && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
-    }
-  }, [isBottomInView, isTopInView, hasNextPage, isFetchingNextPage, fetchNextPage])
+  const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
   const messages = useMemo(() => {
     if (!data) return []
@@ -119,7 +110,7 @@ function RouteComponent() {
         )}
 
         {/* 실시간 채팅: 상단 트리거 */}
-        {!chatId && hasNextPage && <div ref={topRef} className="h-[1px]" />}
+        {!chatId && hasNextPage && <div ref={ref} className="h-[1px]" />}
 
         {(isLoading || !isChatStatusSuccess) && (
           <div className="flex flex-1 items-center justify-center">
@@ -159,7 +150,7 @@ function RouteComponent() {
         </div>
 
         {/* 히스토리 뷰: 하단 트리거 */}
-        {chatId && hasNextPage && <div ref={bottomRef} className="h-[1px]" />}
+        {chatId && hasNextPage && <div ref={ref} className="h-[1px]" />}
       </section>
 
       <ChatInput disabled={chatId !== undefined} />

@@ -8,25 +8,19 @@ import { useChatHistoryQuery } from '@/features/history/hook/use-chat-history-qu
 import { useChatSelect } from '@/features/history/hook/use-chat-select'
 import noResultImage from '@/assets/images/characters/no-result-gray.png'
 import { CheckIcon, EmptyState, SelectableChatHistoryItem } from '@/features/history/ui/chat-history-item'
+import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 
 export const Route = createFileRoute('/history/delete/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { ref, inView } = useInView()
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatHistoryQuery({})
-  const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
+  const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
+  const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
   const { selectedIds, isAllSelected, handleToggleSelect, handleSelectAll, handleDelete, backButton } =
     useChatSelect(histories)
-
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
-    }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const showEmpty = !isFetchingNextPage && histories.length === 0
 
