@@ -566,9 +566,9 @@ export interface RootRouteChildren {
   MyPagePageRoute: typeof MyPagePageRoute
   QuestionPageRoute: typeof QuestionPageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
+  HistoryDeletePageRoute: typeof HistoryDeletePageRoute
   QuestionSeeAnswerPageRoute: typeof QuestionSeeAnswerPageRoute
   QuestionWriteAnswerPageRoute: typeof QuestionWriteAnswerPageRoute
-  HistoryDeletePageRoute: typeof HistoryDeletePageRoute
   AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageRoute
   AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageRoute
 }
@@ -584,9 +584,9 @@ const rootRouteChildren: RootRouteChildren = {
   MyPagePageRoute: MyPagePageRoute,
   QuestionPageRoute: QuestionPageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
+  HistoryDeletePageRoute: HistoryDeletePageRoute,
   QuestionSeeAnswerPageRoute: QuestionSeeAnswerPageRoute,
   QuestionWriteAnswerPageRoute: QuestionWriteAnswerPageRoute,
-  HistoryDeletePageRoute: HistoryDeletePageRoute,
   AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
 }
@@ -609,9 +609,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/my-page/",
         "/question/",
         "/attachment-test/question/",
+        "/history/delete/",
         "/question/see-answer/",
         "/question/write-answer/",
-        "/history/delete/",
         "/attachment-test/result/my/",
         "/attachment-test/result/partner/"
       ]

@@ -13,33 +13,27 @@
  */
 
 /**
- * 과거 답변 상세 데이터
+ * 멤버 답변 상세 데이터
  * @export
- * @interface PastAnswerDto
+ * @interface AnswerDto
  */
-export interface PastAnswerDto {
-  /**
-   * 멤버 답변 ID
-   * @type {number}
-   * @memberof PastAnswerDto
-   */
-  memberAnswerId?: number
-  /**
-   * 답변 내용
-   * @type {string}
-   * @memberof PastAnswerDto
-   */
-  answer?: string
+export interface AnswerDto {
   /**
    * 답변한 멤버 닉네임
    * @type {string}
-   * @memberof PastAnswerDto
+   * @memberof AnswerDto
    */
-  memberNickname?: string
+  nickname?: string
   /**
-   * 답변 생성일시
+   * 답변 내용
    * @type {string}
-   * @memberof PastAnswerDto
+   * @memberof AnswerDto
    */
-  createdAt?: string
+  answer?: string
+  /**
+   * 수정 가능
+   * @type {boolean}
+   * @memberof AnswerDto
+   */
+  updatable?: boolean
 }

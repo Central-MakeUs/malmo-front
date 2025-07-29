@@ -6,6 +6,7 @@ import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
 import { useState } from 'react'
 import { z } from 'zod'
 import questionService from '@/shared/services/question.service'
+import { formatDate } from '@/shared/utils'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -28,7 +29,7 @@ function RouteComponent() {
   const { data, isEdit } = Route.useLoaderData()
 
   const historyModal = useQuestionModal()
-  const [answer, setAnswer] = useState('')
+  const [answer, setAnswer] = useState(data?.me?.answer || '')
   const MAX_LENGTH = 100
 
   const handleSave = () => {
@@ -45,10 +46,10 @@ function RouteComponent() {
 
       <div className="flex-1">
         <Badge variant="rasberry" className="mx-5 mt-6 mb-2">
-          1번째 마음 질문
+          {data?.level}번째 마음 질문
         </Badge>
-        <p className="heading1-bold mb-3 pr-15 pl-6 break-keep">내가 가장 사랑받는다고 느끼는 순간은 언제였나요?</p>
-        <p className="body4-medium mb-8 pl-6 text-gray-iron-500">2025년 07월 19일</p>
+        <p className="heading1-bold mb-3 pr-15 pl-6 break-keep">{data?.content}</p>
+        <p className="body4-medium mb-8 pl-6 text-gray-iron-500">{formatDate(data?.createdAt, 'YYYY년 MM월 DD일')}</p>
 
         <hr className="mx-5 mb-5 h-1 rounded-[1px] border-gray-iron-200" />
 

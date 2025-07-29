@@ -14,7 +14,7 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { PastAnswerDto } from './past-answer-dto'
+import type { AnswerDto } from './answer-dto'
 
 /**
  * 과거 답변 조회 응답 데이터
@@ -22,12 +22,6 @@ import type { PastAnswerDto } from './past-answer-dto'
  * @interface PastAnswerData
  */
 export interface PastAnswerData {
-  /**
-   * 커플 질문 ID
-   * @type {number}
-   * @memberof PastAnswerData
-   */
-  coupleQuestionId?: number
   /**
    * 질문 제목
    * @type {string}
@@ -41,15 +35,27 @@ export interface PastAnswerData {
    */
   content?: string
   /**
-   * 생성일시
+   * 질문 단계
+   * @type {number}
+   * @memberof PastAnswerData
+   */
+  level?: number
+  /**
+   * 답변 생성일시
    * @type {string}
    * @memberof PastAnswerData
    */
   createdAt?: string
   /**
-   * 답변 리스트
-   * @type {Array<PastAnswerDto>}
+   *
+   * @type {AnswerDto}
    * @memberof PastAnswerData
    */
-  answers?: Array<PastAnswerDto>
+  me?: AnswerDto
+  /**
+   *
+   * @type {AnswerDto}
+   * @memberof PastAnswerData
+   */
+  partner?: AnswerDto
 }
