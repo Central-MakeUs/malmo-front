@@ -16,6 +16,8 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   changeStatusBarColor(color?: string): Promise<void>
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
+  getQuestionHelp(): Promise<boolean>
+  setQuestionHelpFalse(): Promise<void>
   [key: string]: any
 }
 
@@ -34,6 +36,8 @@ export const bridge = linkBridge<WebBridge>({
     changeStatusBarColor: async (color?: string) => {},
     saveChatTutorialSeen: async () => {},
     getChatTutorialSeen: async () => false,
+    getQuestionHelp: async () => true,
+    setQuestionHelpFalse: async () => {},
   },
 })
 

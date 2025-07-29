@@ -1,3 +1,5 @@
+import bridge from '@/shared/bridge'
+import { Button } from '@/shared/ui'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/my-page/')({
@@ -5,5 +7,9 @@ export const Route = createFileRoute('/my-page/')({
 })
 
 function MyPageComponent() {
-  return <div>MyPageComponent</div>
+  return (
+    <div>
+      <Button text="Logout" onClick={async () => await bridge.logout()} />
+    </div>
+  )
 }

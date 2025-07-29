@@ -1,13 +1,15 @@
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { Badge } from '@/shared/ui'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { Pen } from 'lucide-react'
+import { Pen, X } from 'lucide-react'
 import MyHeart from '@/assets/icons/my-heart.svg'
 import OtherHeart from '@/assets/icons/other-heart.svg'
 import { z } from 'zod'
 import questionService from '@/shared/services/question.service'
 import { formatDate } from '@/shared/utils'
 import { cn } from '@ui/common/lib/utils'
+import { useState } from 'react'
+import bridge from '@/shared/bridge'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -19,14 +21,16 @@ export const Route = createFileRoute('/question/see-answer/')({
   loaderDeps: (search) => search,
   loader: async ({ context, deps }) => {
     const { coupleQuestionId } = deps.search
+    const showHelpInit = await bridge.getQuestionHelp()
 
     const data = await questionService.fetchQuestionDetail(coupleQuestionId)
-    return { data: data?.data || null, coupleQuestionId }
+    return { data: data?.data || null, coupleQuestionId, showHelpInit }
   },
 })
 
 function RouteComponent() {
-  const { data, coupleQuestionId } = Route.useLoaderData()
+  const { data, coupleQuestionId, showHelpInit } = Route.useLoaderData()
+  const [showHelp, setShowHelp] = useState(showHelpInit)
 
   return (
     <div className="flex h-screen flex-col">
@@ -48,15 +52,38 @@ function RouteComponent() {
               <p className="body1-semibold">{data?.me?.nickname}</p>
             </div>
 
-            <Link
-              className="flex items-center gap-1 text-gray-iron-500"
-              to="/question/write-answer"
-              disabled={!data?.me?.updatable}
-              search={{ coupleQuestionId, isEdit: true }}
-            >
-              <Pen className="h-4 w-4" />
-              <p className="body4-medium">수정하기</p>
-            </Link>
+            <div className="relative">
+              <div
+                className={cn(
+                  'absolute top-[-72px] right-0 rounded-[12px] bg-gray-iron-900 py-2.5 pr-[10px] pl-4 whitespace-nowrap',
+                  "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']",
+                  { hidden: !showHelp }
+                )}
+                onClick={async () => {
+                  await bridge.setQuestionHelpFalse()
+                  setShowHelp(false)
+                }}
+              >
+                <div className="flex gap-[2px] text-gray-iron-200">
+                  <p className="label1-medium">
+                    두 사람 모두 작성이 끝난 후
+                    <br />
+                    하루가 지나면 수정이 어려워요
+                  </p>
+                  <X className="h-4 w-4" />
+                </div>
+              </div>
+
+              <Link
+                className="flex items-center gap-1 text-gray-iron-500"
+                to="/question/write-answer"
+                disabled={!data?.me?.updatable}
+                search={{ coupleQuestionId, isEdit: true }}
+              >
+                <Pen className="h-4 w-4" />
+                <p className="body4-medium">수정하기</p>
+              </Link>
+            </div>
           </div>
 
           <div className="rounded-[10px] bg-gray-neutral-100 px-5 py-4">

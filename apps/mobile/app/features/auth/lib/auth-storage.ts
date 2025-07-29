@@ -5,6 +5,7 @@ export class AuthStorage {
   private static readonly REFRESH_TOKEN_KEY = 'auth_refresh_token'
   private static readonly USER_INFO_KEY = 'auth_user_info'
   private static readonly CHAT_TUTORIAL_KEY = 'chat_tutorial_seen'
+  private static readonly QUESTION_HELP_KEY = 'question_help'
 
   // 액세스 토큰 저장
   static async setAccessToken(token: string): Promise<void> {
@@ -103,6 +104,26 @@ export class AuthStorage {
     } catch (error) {
       console.error('채팅 튜토리얼 상태 조회 중 오류 발생:', error)
       return false
+    }
+  }
+
+  static async getQuestionHelp(): Promise<boolean> {
+    try {
+      const help = await SecureStore.getItemAsync(this.QUESTION_HELP_KEY)
+      console.log('Question help status:', help)
+      return help ? JSON.parse(help) : true
+    } catch (error) {
+      console.error('질문 도움말 상태 조회 중 오류 발생:', error)
+      return true
+    }
+  }
+
+  static async setQuestionHelp(help: boolean): Promise<void> {
+    try {
+      await SecureStore.setItemAsync(this.QUESTION_HELP_KEY, JSON.stringify(help))
+    } catch (error) {
+      console.error('질문 도움말 상태 저장 중 오류 발생:', error)
+      throw error
     }
   }
 }
