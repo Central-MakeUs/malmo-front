@@ -1,15 +1,14 @@
 import { DetailHeaderBar } from '@/shared/components/header-bar'
-import { Badge } from '@/shared/ui'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Pen, X } from 'lucide-react'
 import MyHeart from '@/assets/icons/my-heart.svg'
 import OtherHeart from '@/assets/icons/other-heart.svg'
 import { z } from 'zod'
 import questionService from '@/shared/services/question.service'
-import { formatDate } from '@/shared/utils'
 import { cn } from '@ui/common/lib/utils'
 import { useState } from 'react'
 import bridge from '@/shared/bridge'
+import { QuestionHeader } from '@/features/question/ui/qustion-header'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -24,7 +23,7 @@ export const Route = createFileRoute('/question/see-answer/')({
     const showHelpInit = await bridge.getQuestionHelp()
 
     const data = await questionService.fetchQuestionDetail(coupleQuestionId)
-    return { data: data?.data || null, coupleQuestionId, showHelpInit }
+    return { data: data?.data, coupleQuestionId, showHelpInit }
   },
 })
 
@@ -37,13 +36,7 @@ function RouteComponent() {
       <DetailHeaderBar title="답변 보기" className="border-b-[1px] border-gray-iron-100" />
 
       <div className="flex-1">
-        <Badge variant="rasberry" className="mx-5 mt-6 mb-2">
-          {data?.level}번째 마음 질문
-        </Badge>
-        <p className="heading1-bold mb-3 pr-15 pl-6 break-keep">{data?.content}</p>
-        <p className="body4-medium mb-8 pl-6 text-gray-iron-500">{formatDate(data?.createdAt, 'YYYY년 MM월 DD일')}</p>
-
-        <hr className="mx-5 mb-5 h-1 rounded-[1px] border-gray-iron-200" />
+        <QuestionHeader data={data} />
 
         <div className="mb-15 px-5">
           <div className="mb-3 flex justify-between">

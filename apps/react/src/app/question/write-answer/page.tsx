@@ -1,12 +1,12 @@
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import CustomTextarea from '@/features/question/ui/text-area'
-import { Badge, Button } from '@/shared/ui'
+import { Button } from '@/shared/ui'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
 import { useState } from 'react'
 import { z } from 'zod'
 import questionService from '@/shared/services/question.service'
-import { formatDate } from '@/shared/utils'
+import { QuestionHeader } from '@/features/question/ui/qustion-header'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -45,13 +45,7 @@ function RouteComponent() {
       />
 
       <div className="flex-1">
-        <Badge variant="rasberry" className="mx-5 mt-6 mb-2">
-          {data?.level}번째 마음 질문
-        </Badge>
-        <p className="heading1-bold mb-3 pr-15 pl-6 break-keep">{data?.content}</p>
-        <p className="body4-medium mb-8 pl-6 text-gray-iron-500">{formatDate(data?.createdAt, 'YYYY년 MM월 DD일')}</p>
-
-        <hr className="mx-5 mb-5 h-1 rounded-[1px] border-gray-iron-200" />
+        <QuestionHeader data={data} />
 
         <div className="w-full px-6">
           <CustomTextarea value={answer} onChange={(e) => setAnswer(e.target.value)} maxLength={MAX_LENGTH} />
