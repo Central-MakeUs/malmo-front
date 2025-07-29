@@ -17,6 +17,7 @@ import { Route as PageImport } from './app/page'
 import { Route as MyPagePageImport } from './app/my-page/page'
 import { Route as LoginPageImport } from './app/login/page'
 import { Route as IntroPageImport } from './app/intro/page'
+import { Route as HistoryPageImport } from './app/history/page'
 import { Route as ChatPageImport } from './app/chat/page'
 import { Route as AttachmentTestPageImport } from './app/attachment-test/page'
 import { Route as OnboardingTermsPageImport } from './app/onboarding/terms/page'
@@ -28,6 +29,7 @@ import { Route as OnboardingAnniversaryPageImport } from './app/onboarding/anniv
 import { Route as MyPageProfilePageImport } from './app/my-page/profile/page'
 import { Route as MyPageCoupleManagementPageImport } from './app/my-page/couple-management/page'
 import { Route as MyPageAccountSettingsPageImport } from './app/my-page/account-settings/page'
+import { Route as HistoryDeletePageImport } from './app/history/delete/page'
 import { Route as ChatResultPageImport } from './app/chat/result/page'
 import { Route as ChatLoadingPageImport } from './app/chat/loading/page'
 import { Route as AttachmentTestQuestionPageImport } from './app/attachment-test/question/page'
@@ -69,6 +71,12 @@ const LoginPageRoute = LoginPageImport.update({
 const IntroPageRoute = IntroPageImport.update({
   id: '/intro/',
   path: '/intro/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HistoryPageRoute = HistoryPageImport.update({
+  id: '/history/',
+  path: '/history/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -135,6 +143,12 @@ const MyPageCoupleManagementPageRoute = MyPageCoupleManagementPageImport.update(
 const MyPageAccountSettingsPageRoute = MyPageAccountSettingsPageImport.update({
   id: '/my-page/account-settings/',
   path: '/my-page/account-settings/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const HistoryDeletePageRoute = HistoryDeletePageImport.update({
+  id: '/history/delete/',
+  path: '/history/delete/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -207,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChatPageImport
       parentRoute: typeof ChatLayoutImport
     }
+    '/history/': {
+      id: '/history/'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryPageImport
+      parentRoute: typeof rootRoute
+    }
     '/intro/': {
       id: '/intro/'
       path: '/intro'
@@ -268,6 +289,13 @@ declare module '@tanstack/react-router' {
       path: '/my-page/profile'
       fullPath: '/my-page/profile'
       preLoaderRoute: typeof MyPageProfilePageImport
+      parentRoute: typeof rootRoute
+    }
+    '/history/delete/': {
+      id: '/history/delete/'
+      path: '/history/delete'
+      fullPath: '/history/delete'
+      preLoaderRoute: typeof HistoryDeletePageImport
       parentRoute: typeof rootRoute
     }
     '/onboarding/anniversary/': {
@@ -371,6 +399,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
   '/attachment-test': typeof AttachmentTestPageRoute
   '/chat/': typeof ChatPageRoute
+  '/history': typeof HistoryPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
   '/my-page': typeof MyPagePageRoute
@@ -378,16 +407,17 @@ export interface FileRoutesByFullPath {
   '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
-  '/my-page/couple-management': typeof MyPageCoupleManagementPageRoute
-  '/my-page/profile': typeof MyPageProfilePageRoute
+  '/my-page/couple-management': typeof MyPageCoupleManagementPageImport
+  '/my-page/profile': typeof MyPageProfilePageImport
+  '/history/delete': typeof HistoryDeletePageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
   '/onboarding/my-code': typeof OnboardingMyCodePageRoute
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
   '/onboarding/partner-code': typeof OnboardingPartnerCodePageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
-  '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
-  '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
+  '/attachment-test/result/my': typeof AttachmentTestResultMyPageImport
+  '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageImport
 }
 
 export interface FileRoutesByTo {
@@ -395,23 +425,25 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
   '/attachment-test': typeof AttachmentTestPageRoute
   '/chat': typeof ChatPageRoute
+  '/history': typeof HistoryPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
   '/my-page': typeof MyPagePageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
   '/chat/result': typeof ChatResultPageRoute
-  '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
-  '/my-page/couple-management': typeof MyPageCoupleManagementPageRoute
-  '/my-page/profile': typeof MyPageProfilePageRoute
+  '/my-page/account-settings': typeof MyPageAccountSettingsPageImport
+  '/my-page/couple-management': typeof MyPageCoupleManagementPageImport
+  '/my-page/profile': typeof MyPageProfilePageImport
+  '/history/delete': typeof HistoryDeletePageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
   '/onboarding/my-code': typeof OnboardingMyCodePageRoute
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
   '/onboarding/partner-code': typeof OnboardingPartnerCodePageRoute
-  '/onboarding/terms': typeof OnboardingTermsPageRoute
-  '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
-  '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
+  '/onboarding/terms': typeof OnboardingTermsPageImport
+  '/attachment-test/result/my': typeof AttachmentTestResultMyPageImport
+  '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageImport
 }
 
 export interface FileRoutesById {
@@ -421,23 +453,25 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingLayoutRouteWithChildren
   '/attachment-test/': typeof AttachmentTestPageRoute
   '/chat/': typeof ChatPageRoute
+  '/history/': typeof HistoryPageRoute
   '/intro/': typeof IntroPageRoute
   '/login/': typeof LoginPageRoute
   '/my-page/': typeof MyPagePageRoute
   '/attachment-test/question/': typeof AttachmentTestQuestionPageRoute
-  '/chat/loading/': typeof ChatLoadingPageRoute
-  '/chat/result/': typeof ChatResultPageRoute
-  '/my-page/account-settings/': typeof MyPageAccountSettingsPageRoute
-  '/my-page/couple-management/': typeof MyPageCoupleManagementPageRoute
-  '/my-page/profile/': typeof MyPageProfilePageRoute
-  '/onboarding/anniversary/': typeof OnboardingAnniversaryPageRoute
-  '/onboarding/complete/': typeof OnboardingCompletePageRoute
-  '/onboarding/my-code/': typeof OnboardingMyCodePageRoute
-  '/onboarding/nickname/': typeof OnboardingNicknamePageRoute
-  '/onboarding/partner-code/': typeof OnboardingPartnerCodePageRoute
-  '/onboarding/terms/': typeof OnboardingTermsPageRoute
-  '/attachment-test/result/my/': typeof AttachmentTestResultMyPageRoute
-  '/attachment-test/result/partner/': typeof AttachmentTestResultPartnerPageRoute
+  '/chat/loading/': typeof ChatLoadingPageImport
+  '/chat/result/': typeof ChatResultPageImport
+  '/my-page/account-settings/': typeof MyPageAccountSettingsPageImport
+  '/my-page/couple-management/': typeof MyPageCoupleManagementPageImport
+  '/my-page/profile/': typeof MyPageProfilePageImport
+  '/history/delete/': typeof HistoryDeletePageRoute
+  '/onboarding/anniversary/': typeof OnboardingAnniversaryPageImport
+  '/onboarding/complete/': typeof OnboardingCompletePageImport
+  '/onboarding/my-code/': typeof OnboardingMyCodePageImport
+  '/onboarding/nickname/': typeof OnboardingNicknamePageImport
+  '/onboarding/partner-code/': typeof OnboardingPartnerCodePageImport
+  '/onboarding/terms/': typeof OnboardingTermsPageImport
+  '/attachment-test/result/my/': typeof AttachmentTestResultMyPageImport
+  '/attachment-test/result/partner/': typeof AttachmentTestResultPartnerPageImport
 }
 
 export interface FileRouteTypes {
@@ -448,6 +482,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/attachment-test'
     | '/chat/'
+    | '/history'
     | '/intro'
     | '/login'
     | '/my-page'
@@ -457,6 +492,7 @@ export interface FileRouteTypes {
     | '/my-page/account-settings'
     | '/my-page/couple-management'
     | '/my-page/profile'
+    | '/history/delete'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
     | '/onboarding/my-code'
@@ -471,6 +507,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/attachment-test'
     | '/chat'
+    | '/history'
     | '/intro'
     | '/login'
     | '/my-page'
@@ -480,6 +517,7 @@ export interface FileRouteTypes {
     | '/my-page/account-settings'
     | '/my-page/couple-management'
     | '/my-page/profile'
+    | '/history/delete'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
     | '/onboarding/my-code'
@@ -495,6 +533,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/attachment-test/'
     | '/chat/'
+    | '/history/'
     | '/intro/'
     | '/login/'
     | '/my-page/'
@@ -504,6 +543,7 @@ export interface FileRouteTypes {
     | '/my-page/account-settings/'
     | '/my-page/couple-management/'
     | '/my-page/profile/'
+    | '/history/delete/'
     | '/onboarding/anniversary/'
     | '/onboarding/complete/'
     | '/onboarding/my-code/'
@@ -520,15 +560,17 @@ export interface RootRouteChildren {
   ChatLayoutRoute: typeof ChatLayoutRouteWithChildren
   OnboardingLayoutRoute: typeof OnboardingLayoutRouteWithChildren
   AttachmentTestPageRoute: typeof AttachmentTestPageRoute
+  HistoryPageRoute: typeof HistoryPageRoute
   IntroPageRoute: typeof IntroPageRoute
   LoginPageRoute: typeof LoginPageRoute
   MyPagePageRoute: typeof MyPagePageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
   MyPageAccountSettingsPageRoute: typeof MyPageAccountSettingsPageRoute
-  MyPageCoupleManagementPageRoute: typeof MyPageCoupleManagementPageRoute
-  MyPageProfilePageRoute: typeof MyPageProfilePageRoute
-  AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageRoute
-  AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageRoute
+  MyPageCoupleManagementPageRoute: typeof MyPageCoupleManagementPageImport
+  MyPageProfilePageRoute: typeof MyPageProfilePageImport
+  HistoryDeletePageRoute: typeof HistoryDeletePageRoute
+  AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageImport
+  AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageImport
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -536,18 +578,21 @@ const rootRouteChildren: RootRouteChildren = {
   ChatLayoutRoute: ChatLayoutRouteWithChildren,
   OnboardingLayoutRoute: OnboardingLayoutRouteWithChildren,
   AttachmentTestPageRoute: AttachmentTestPageRoute,
+  HistoryPageRoute: HistoryPageRoute,
   IntroPageRoute: IntroPageRoute,
   LoginPageRoute: LoginPageRoute,
   MyPagePageRoute: MyPagePageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
   MyPageAccountSettingsPageRoute: MyPageAccountSettingsPageRoute,
-  MyPageCoupleManagementPageRoute: MyPageCoupleManagementPageRoute,
-  MyPageProfilePageRoute: MyPageProfilePageRoute,
-  AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
-  AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
+  MyPageCoupleManagementPageRoute: MyPageCoupleManagementPageImport,
+  MyPageProfilePageRoute: MyPageProfilePageImport,
+  HistoryDeletePageRoute: HistoryDeletePageRoute,
+  AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageImport,
+  AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageImport,
 }
 
 export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+
 
 /* ROUTE_MANIFEST_START
 {
@@ -559,6 +604,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/chat",
         "/onboarding",
         "/attachment-test/",
+        "/history/",
         "/intro/",
         "/login/",
         "/my-page/",
@@ -566,6 +612,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/my-page/account-settings/",
         "/my-page/couple-management/",
         "/my-page/profile/",
+        "/history/delete/",
         "/attachment-test/result/my/",
         "/attachment-test/result/partner/"
       ]
@@ -599,6 +646,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "chat/page.tsx",
       "parent": "/chat"
     },
+    "/history/": {
+      "filePath": "history/page.tsx"
+    },
     "/intro/": {
       "filePath": "intro/page.tsx"
     },
@@ -627,6 +677,8 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/my-page/profile/": {
       "filePath": "my-page/profile/page.tsx"
+    "/history/delete/": {
+      "filePath": "history/delete/page.tsx"
     },
     "/onboarding/anniversary/": {
       "filePath": "onboarding/anniversary/page.tsx",

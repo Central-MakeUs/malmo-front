@@ -1,6 +1,8 @@
 import bridge from '@/shared/bridge'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import historyService from '@/shared/services/history.service'
 import { Button } from '@/shared/ui'
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -9,12 +11,15 @@ export interface UseChattingModalReturn {
   testRequiredModal: () => void
   exitChattingModal: () => void
   chattingTutorialModal: () => React.ReactNode
+  deleteChatHistoryModal: (id: number) => void
+  deleteChatHistoriesModal: (ids: number[], onFinish: () => void) => void
   showChattingTutorial: boolean
 }
 
 export function useChattingModal(): UseChattingModalReturn {
   const alertDialog = useAlertDialog()
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [showChattingTutorial, setShowChattingTutorial] = useState(false)
 
@@ -61,8 +66,8 @@ export function useChattingModal(): UseChattingModalReturn {
       ),
       description: (
         <>
-          검사를 완료하면, 모모가 애착유형을 바탕으로
-          <br /> 상담을 도와 드려요.
+          나갔다가 들어와도 대화를 이어갈 수 있어요.
+          <br /> 단, 1일 이상 대화가 없으면 자동으로 종료돼요.
         </>
       ),
       cancelText: '나가기',
@@ -70,6 +75,42 @@ export function useChattingModal(): UseChattingModalReturn {
       onCancel: () => {
         alertDialog.close()
         router.history.back()
+      },
+    })
+  }
+
+  const deleteChatHistoryModal = (id: number) => {
+    alertDialog.open({
+      title: '대화 기록을 삭제할까요?',
+      description: '삭제하면 기록을 되돌릴 수 없어요.',
+      cancelText: '삭제하기',
+      confirmText: '취소하기',
+      onCancel: async () => {
+        alertDialog.close()
+        await historyService.deleteHistory([id])
+        await queryClient.invalidateQueries({ queryKey: ['histories'] })
+        router.history.back()
+      },
+    })
+  }
+
+  const deleteChatHistoriesModal = (ids: number[], onFinish: () => void) => {
+    alertDialog.open({
+      title: '대화 기록을 삭제할까요?',
+      description: (
+        <>
+          삭제하면 기록을 되돌릴 수 없고
+          <br />
+          모모가 이 기록을 상담에 반영하지 않아요.
+        </>
+      ),
+      cancelText: '삭제하기',
+      confirmText: '취소하기',
+      onCancel: async () => {
+        alertDialog.close()
+        await historyService.deleteHistory(ids)
+        await queryClient.invalidateQueries({ queryKey: ['histories'] })
+        onFinish()
       },
     })
   }
@@ -141,5 +182,12 @@ export function useChattingModal(): UseChattingModalReturn {
     )
   }
 
-  return { testRequiredModal, exitChattingModal, chattingTutorialModal, showChattingTutorial }
+  return {
+    testRequiredModal,
+    exitChattingModal,
+    chattingTutorialModal,
+    showChattingTutorial,
+    deleteChatHistoryModal,
+    deleteChatHistoriesModal,
+  }
 }

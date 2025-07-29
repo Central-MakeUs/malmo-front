@@ -4,7 +4,12 @@ import {
   BaseListSwaggerResponseChatRoomMessageData,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
+  ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
+import historyService from '@/shared/services/history.service'
+
+const CONNECTED_REQUIRED_MESSAGE =
+  '갈등 상황에 대해서는 이해했어! 그런데, 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 상대방에게 공유해봐!'
 
 export const chatKeys = {
   all: ['chat'] as const,
@@ -14,7 +19,6 @@ export const chatKeys = {
 }
 
 // === QUERIES ===
-
 export const useChatRoomStatusQuery = () => {
   return useQuery({
     queryKey: chatKeys.status(),
@@ -26,9 +30,47 @@ export const useChatRoomStatusQuery = () => {
 }
 
 // 2. 채팅 메시지 목록 조회를 위한 useInfiniteQuery 훅 (수정)
-// 비효율적인 select 옵션을 제거하여 원본 데이터를 그대로 반환합니다.
-export const useChatMessagesQuery = (enabled: boolean) => {
-  const PAGE_SIZE = 20
+export const useChatMessagesQuery = (
+  enabled: boolean,
+  chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined,
+  chatId?: number
+) => {
+  const PAGE_SIZE = 10
+
+  const commonInfiniteQueryOptions = {
+    initialPageParam: 0,
+    getNextPageParam: (
+      lastPage: BaseListSwaggerResponseChatRoomMessageData,
+      allPages: BaseListSwaggerResponseChatRoomMessageData[]
+    ) => {
+      const totalCount = lastPage.totalCount ?? 0
+      const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
+
+      if (fetchedMessagesCount >= totalCount) {
+        return undefined
+      }
+
+      return allPages.length
+    },
+  }
+
+  if (chatId) {
+    return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
+      queryKey: chatKeys.messages(),
+      queryFn: async ({ pageParam = 0 }) => {
+        const response = await historyService.getHistory({
+          chatRoomId: chatId,
+          params: {
+            page: pageParam as number,
+            size: PAGE_SIZE,
+            sort: [],
+          },
+        })
+        return response.data as BaseListSwaggerResponseChatRoomMessageData
+      },
+      ...commonInfiniteQueryOptions,
+    })
+  }
 
   return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
     queryKey: chatKeys.messages(),
@@ -40,15 +82,25 @@ export const useChatMessagesQuery = (enabled: boolean) => {
       })
       return response.data as BaseListSwaggerResponseChatRoomMessageData
     },
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => {
-      const totalCount = lastPage.totalCount ?? 0
-      const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
+    ...commonInfiniteQueryOptions,
+    select: (data) => {
+      if (chatStatus !== ChatRoomStateDataChatRoomStateEnum.Paused) return data
 
-      if (fetchedMessagesCount >= totalCount) {
-        return undefined
+      const newData = JSON.parse(JSON.stringify(data)) as InfiniteData<BaseListSwaggerResponseChatRoomMessageData>
+
+      const assistantMessage: ChatRoomMessageData = {
+        messageId: Date.now(),
+        content: CONNECTED_REQUIRED_MESSAGE,
+        createdAt: new Date().toISOString(),
+        senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
       }
-      return (lastPage.page ?? 0) + 1
+
+      const firstPageList = newData.pages[0]?.list
+      if (firstPageList?.some((msg) => msg.content === CONNECTED_REQUIRED_MESSAGE)) return newData
+
+      newData.pages[0]?.list?.unshift(assistantMessage)
+
+      return newData
     },
     enabled,
   })
