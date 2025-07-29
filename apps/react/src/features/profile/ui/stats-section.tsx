@@ -1,5 +1,5 @@
-import ChatIcon from '@/assets/icons/chat.svg'
-import LikeIcon from '@/assets/icons/like.svg'
+import ChatIcon from '@/assets/icons/chat-gray.svg'
+import LikeIcon from '@/assets/icons/like-gray.svg'
 
 interface StatsSectionProps {
   totalChatRoomCount: number
