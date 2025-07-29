@@ -8,7 +8,7 @@ interface UseInfiniteScrollProps {
 }
 
 export function useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage }: UseInfiniteScrollProps) {
-  const { ref, inView } = useInView()
+  const { ref, inView } = useInView({ threshold: 0 })
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {

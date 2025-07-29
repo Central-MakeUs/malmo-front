@@ -29,6 +29,13 @@ export const Route = createFileRoute('/chat/')({
   },
 })
 
+const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean }>(({ isFetching }, ref) => (
+  <div ref={ref} className="flex h-12 items-center justify-center">
+    {isFetching && <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-500" />}
+  </div>
+))
+LoadingIndicator.displayName = 'LoadingIndicator'
+
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
@@ -43,33 +50,31 @@ function RouteComponent() {
 
   const scrollRef = useRef<HTMLElement>(null)
   const scrollHeightRef = useRef(0)
-  const topMessageIdRef = useRef<number | string | null>(null)
 
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
   const messages = useMemo(() => {
     if (!data) return []
     const allMessages = data.pages.flatMap((page) => page.list ?? [])
-    return chatId ? allMessages : allMessages.reverse()
+    return chatId ? allMessages : [...allMessages].reverse()
   }, [data, chatId])
 
-  // 실시간 채팅에서만 스크롤 위치를 보정 (위로 스크롤 시)
+  // 실시간 채팅에서 이전 대화 로드 시 스크롤 위치 보정
   useLayoutEffect(() => {
     if (chatId) return
 
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
-    const newTopMessageId = messages[0]?.messageId ?? null
-
-    if (newTopMessageId !== topMessageIdRef.current && scrollContainer.scrollHeight > scrollHeightRef.current) {
+    // 새 메시지가 추가되어 스크롤 높이가 변경되었을 때, 현재 스크롤 위치를 유지합니다.
+    if (scrollContainer.scrollHeight > scrollHeightRef.current) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight - scrollHeightRef.current
     } else {
+      // 새로운 메시지를 보내거나 처음 로드될 때는 맨 아래로 스크롤합니다.
       scrollContainer.scrollTop = scrollContainer.scrollHeight
     }
 
     scrollHeightRef.current = scrollContainer.scrollHeight
-    topMessageIdRef.current = newTopMessageId
   }, [messages, chatId, streamingMessage])
 
   const exitButton = useCallback(() => {
@@ -101,22 +106,13 @@ function RouteComponent() {
           </p>
         </div>
 
-        {isFetchingNextPage && (
-          <div className="flex justify-center py-4">
-            <p className="body2-regular text-gray-500">
-              {chatId ? '다음 대화를 불러오는 중...' : '이전 대화를 불러오는 중...'}
-            </p>
-          </div>
-        )}
-
-        {/* 실시간 채팅: 상단 트리거 */}
-        {!chatId && hasNextPage && <div ref={ref} className="h-[1px]" />}
-
-        {(isLoading || !isChatStatusSuccess) && (
+        {isLoading && (
           <div className="flex flex-1 items-center justify-center">
-            <p className="body2-regular text-gray-500">채팅 데이터를 불러오는 중...</p>
+            <LoadingIndicator isFetching={true} />
           </div>
         )}
+
+        {!chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
 
         <div className="flex flex-col gap-6 px-5 py-[22px]">
           {messages.map((chat, index) => {
@@ -137,10 +133,9 @@ function RouteComponent() {
             <AiChatBubble message={streamingMessage.content} timestamp={formatTimestamp(streamingMessage.createdAt)} />
           )}
 
-          {chatStatus && chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
-            //TODO MyPage로 이동
+          {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
             <Link
-              to="/"
+              to="/" // TODO: 마이페이지로 라우팅 필요
               className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
             >
               <p className="body3-semibold">마이페이지로 이동하기</p>
@@ -149,11 +144,10 @@ function RouteComponent() {
           )}
         </div>
 
-        {/* 히스토리 뷰: 하단 트리거 */}
-        {chatId && hasNextPage && <div ref={ref} className="h-[1px]" />}
+        {chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
       </section>
 
-      <ChatInput disabled={chatId !== undefined} />
+      <ChatInput disabled={!!chatId} />
       {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </div>
   )

@@ -35,7 +35,24 @@ export const useChatMessagesQuery = (
   chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined,
   chatId?: number
 ) => {
-  const PAGE_SIZE = 20
+  const PAGE_SIZE = 10
+
+  const commonInfiniteQueryOptions = {
+    initialPageParam: 0,
+    getNextPageParam: (
+      lastPage: BaseListSwaggerResponseChatRoomMessageData,
+      allPages: BaseListSwaggerResponseChatRoomMessageData[]
+    ) => {
+      const totalCount = lastPage.totalCount ?? 0
+      const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
+
+      if (fetchedMessagesCount >= totalCount) {
+        return undefined
+      }
+
+      return allPages.length
+    },
+  }
 
   if (chatId) {
     return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
@@ -51,16 +68,7 @@ export const useChatMessagesQuery = (
         })
         return response.data as BaseListSwaggerResponseChatRoomMessageData
       },
-      initialPageParam: 0,
-      getNextPageParam: (lastPage, allPages) => {
-        const totalCount = lastPage.totalCount ?? 0
-        const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
-
-        if (fetchedMessagesCount >= totalCount) {
-          return undefined
-        }
-        return (lastPage.page ?? 0) + 1
-      },
+      ...commonInfiniteQueryOptions,
     })
   }
 
@@ -74,16 +82,7 @@ export const useChatMessagesQuery = (
       })
       return response.data as BaseListSwaggerResponseChatRoomMessageData
     },
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, allPages) => {
-      const totalCount = lastPage.totalCount ?? 0
-      const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
-
-      if (fetchedMessagesCount >= totalCount) {
-        return undefined
-      }
-      return (lastPage.page ?? 0) + 1
-    },
+    ...commonInfiniteQueryOptions,
     select: (data) => {
       if (chatStatus !== ChatRoomStateDataChatRoomStateEnum.Paused) return data
 
