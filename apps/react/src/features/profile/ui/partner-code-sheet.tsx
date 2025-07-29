@@ -6,18 +6,17 @@ import { Input } from '@/shared/ui/input'
 import coupleService from '@/shared/services/couple.service'
 import { useAuth } from '@/features/auth'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
-import { CoupleConnectedModal } from './couple-connected-modal'
 
 interface PartnerCodeSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSuccess?: () => void
+  onCoupleConnected?: () => void // 커플 연결 성공시 호출할 핸들러
 }
 
-export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess }: PartnerCodeSheetProps) {
+export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConnected }: PartnerCodeSheetProps) {
   const [partnerCode, setPartnerCode] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const { refreshUserInfo } = useAuth()
   const { open } = useAlertDialog()
 
@@ -36,8 +35,8 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess }: PartnerCod
       // 성공시 시트 닫기
       onOpenChange(false)
 
-      // 성공 모달 표시
-      setShowSuccessModal(true)
+      // 커플 연결 성공 핸들러 호출
+      onCoupleConnected?.()
 
       // 성공 콜백 호출
       onSuccess?.()
@@ -96,9 +95,6 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess }: PartnerCod
           </div>
         </div>
       </SheetContent>
-
-      {/* 커플 연결 완료 모달 */}
-      <CoupleConnectedModal isOpen={showSuccessModal} onOpenChange={setShowSuccessModal} />
     </Sheet>
   )
 }

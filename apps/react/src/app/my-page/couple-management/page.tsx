@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query'
 
 import memberService from '@/shared/services/member.service'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
-import { PartnerCodeSheet, CoupleDisconnectModal } from '@/features/profile'
+import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementPage,
@@ -30,7 +30,9 @@ function CoupleManagementPage() {
   const queryClient = useQueryClient()
   const { inviteCode } = useLoaderData({ from: '/my-page/couple-management/' })
   const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
-  const [isDisconnectModalOpen, setIsDisconnectModalOpen] = useState(false)
+
+  // 프로필 모달 훅
+  const { coupleDisconnectModal, showCoupleConnectedModal, CoupleConnectedModal } = useProfileModal()
 
   // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
@@ -61,7 +63,7 @@ function CoupleManagementPage() {
   }
 
   const handleDisconnectCouple = () => {
-    setIsDisconnectModalOpen(true)
+    coupleDisconnectModal(handleRefreshPage)
   }
 
   return (
@@ -107,14 +109,11 @@ function CoupleManagementPage() {
         isOpen={isPartnerCodeSheetOpen}
         onOpenChange={setIsPartnerCodeSheetOpen}
         onSuccess={handleRefreshPage}
+        onCoupleConnected={showCoupleConnectedModal}
       />
 
-      {/* 커플 연결 끊기 모달 */}
-      <CoupleDisconnectModal
-        isOpen={isDisconnectModalOpen}
-        onOpenChange={setIsDisconnectModalOpen}
-        onSuccess={handleRefreshPage}
-      />
+      {/* 커플 연결 완료 모달 */}
+      {CoupleConnectedModal}
     </div>
   )
 }
