@@ -9,10 +9,12 @@ import { formatDate } from '@/shared/utils'
 import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
-import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useEffect } from 'react'
 import { z } from 'zod'
 import { ChevronRight } from 'lucide-react'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
+import bridge from '@/shared/bridge'
+import { useBridge } from '@webview-bridge/react'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -35,11 +37,24 @@ const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean 
 ))
 LoadingIndicator.displayName = 'LoadingIndicator'
 
+function usePrevious<T>(value: T): T | undefined {
+  const ref = useRef<T>(undefined)
+  useEffect(() => {
+    ref.current = value
+  }, [value])
+  return ref.current
+}
+
+type ChatLayoutContext = {
+  keyboardHeight: number
+}
+
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const navigate = useNavigate()
   const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess } = useChatting()
+  const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
@@ -47,8 +62,10 @@ function RouteComponent() {
     chatId
   )
 
-  const scrollRef = useRef<HTMLElement>(null)
+  const scrollRef = useRef<HTMLDivElement>(null)
   const scrollHeightRef = useRef(0)
+  const prevIsFetchingNextPage = usePrevious(isFetchingNextPage)
+  const prevKeyboardHeight = usePrevious(keyboardHeight)
 
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
@@ -58,23 +75,61 @@ function RouteComponent() {
     return chatId ? allMessages : [...allMessages].reverse()
   }, [data, chatId])
 
-  // 실시간 채팅에서 이전 대화 로드 시 스크롤 위치 보정
+  const smoothScrollTo = useCallback((element: HTMLElement, to: number, duration: number) => {
+    const start = element.scrollTop
+    const change = to - start
+    let startTime: number | null = null
+
+    const animateScroll = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      element.scrollTop = start + change * progress
+      if (elapsed < duration) {
+        requestAnimationFrame(animateScroll)
+      }
+    }
+    requestAnimationFrame(animateScroll)
+  }, [])
+
   useLayoutEffect(() => {
     if (chatId) return
-
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
-    // 새 메시지가 추가되어 스크롤 높이가 변경되었을 때, 현재 스크롤 위치를 유지합니다.
-    if (scrollContainer.scrollHeight > scrollHeightRef.current) {
+    const keyboardHeightChanged = typeof prevKeyboardHeight !== 'undefined' && prevKeyboardHeight !== keyboardHeight
+    if (keyboardHeightChanged) {
+      setTimeout(() => {
+        smoothScrollTo(scrollContainer, scrollContainer.scrollHeight, 250)
+      }, 0)
+      return
+    }
+
+    const justFinishedInfiniteScroll = prevIsFetchingNextPage && !isFetchingNextPage
+    const isNewMessage =
+      scrollHeightRef.current > 0 &&
+      scrollContainer.scrollHeight > scrollHeightRef.current &&
+      !justFinishedInfiniteScroll
+
+    if (justFinishedInfiniteScroll) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight - scrollHeightRef.current
-    } else {
-      // 새로운 메시지를 보내거나 처음 로드될 때는 맨 아래로 스크롤합니다.
+    } else if (isNewMessage) {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight
+    } else if (scrollHeightRef.current === 0) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight
     }
 
     scrollHeightRef.current = scrollContainer.scrollHeight
-  }, [messages, chatId, streamingMessage])
+  }, [
+    messages,
+    chatId,
+    isFetchingNextPage,
+    prevIsFetchingNextPage,
+    streamingMessage,
+    keyboardHeight,
+    prevKeyboardHeight,
+    smoothScrollTo,
+  ])
 
   const exitButton = useCallback(() => {
     const actived = messages.some((chat) => chat.senderType === ChatRoomMessageDataSenderTypeEnum.User)
@@ -98,7 +153,7 @@ function RouteComponent() {
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
 
-      <section className="flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
+      <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
           <p className="body3-medium text-center text-white">
             대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!
