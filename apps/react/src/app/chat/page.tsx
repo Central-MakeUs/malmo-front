@@ -9,9 +9,8 @@ import { formatDate } from '@/shared/utils'
 import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useRef } from 'react'
 import { z } from 'zod'
-import { useInView } from 'react-intersection-observer'
 import { ChevronRight } from 'lucide-react'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 
@@ -135,7 +134,7 @@ function RouteComponent() {
 
           {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
             <Link
-              to="/" // TODO: 마이페이지로 라우팅 필요
+              to="/my-page"
               className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
             >
               <p className="body3-semibold">마이페이지로 이동하기</p>
