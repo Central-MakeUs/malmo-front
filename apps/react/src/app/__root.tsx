@@ -67,13 +67,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     }
   },
 })
+
 function RootComponent() {
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
 
   return (
     <div
-      className="no-bounce-scroll flex h-screen w-full flex-col bg-white"
-      style={{ paddingBottom: keyboardHeight ? keyboardHeight - 35 : 0 }}
+      className="no-bounce-scroll flex h-screen w-full flex-col bg-white transition-[padding-bottom] duration-300 ease-in-out"
+      style={{ paddingBottom: keyboardHeight }}
     >
       <main className="relative mx-auto flex w-full max-w-[600px] flex-1 flex-col">
         <Outlet />
