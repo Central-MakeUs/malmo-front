@@ -27,6 +27,7 @@
     "class-variance-authority": "catalog:react",
     "clsx": "catalog:react",
     "event-source-polyfill": "^1.0.31",
+    "lottie-react": "^2.4.1",
     "lucide-react": "catalog:react",
     "path-to-regexp": "catalog:",
     "react": "catalog:react",
