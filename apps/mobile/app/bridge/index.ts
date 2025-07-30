@@ -8,7 +8,7 @@ import { refreshToken } from '../features/auth/token/refresh-token'
 
 export type AppBridgeState = Bridge & BridgeStore & BridgeActions
 
-export const appBridge = bridge<AppBridgeState>(({ set }) => {
+export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
   const actions: BridgeActions = {
     async socialLogin(type: SocialLoginType): Promise<SocialLoginResult> {
       try {
@@ -91,6 +91,14 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
 
     async setKeyboardHeight(height: number): Promise<void> {
       set({ keyboardHeight: height })
+      
+    async getQuestionHelp(): Promise<boolean> {
+      const helpSeen = await AuthStorage.getQuestionHelp()
+      return helpSeen
+    },
+
+    async setQuestionHelpFalse(): Promise<void> {
+      await AuthStorage.setQuestionHelp(false)
     },
   }
 

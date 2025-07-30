@@ -30,4 +30,6 @@ export interface BridgeActions {
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
   setKeyboardHeight(height: number): Promise<void>
+  getQuestionHelp(): Promise<boolean>
+  setQuestionHelpFalse(): Promise<void>
 }

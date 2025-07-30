@@ -24,7 +24,7 @@ export function formatDate(dateString?: string | Date, format?: string): string 
   const date = new Date(dateString)
 
   if (!format) {
-    return date.toISOString()
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
   }
 
   const replacements = {
