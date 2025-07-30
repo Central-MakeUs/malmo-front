@@ -1,0 +1,78 @@
+import { X } from 'lucide-react'
+import { useState } from 'react'
+import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
+import { Button } from '@/shared/ui/button'
+import { NicknameInput } from './nickname-input'
+import { useNicknameInput } from '../hooks/use-nickname-input'
+import memberService from '@/shared/services/member.service'
+import { useAuth } from '@/features/auth'
+
+interface NicknameEditSheetProps {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetProps) {
+  const { nickname, handleNicknameChange, isValid, maxLength } = useNicknameInput()
+  const { refreshUserInfo } = useAuth()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async () => {
+    if (!isValid || isSubmitting) return
+
+    try {
+      setIsSubmitting(true)
+
+      // 닉네임 업데이트 API 호출
+      await memberService.update({ nickname })
+
+      // 사용자 정보 새로고침
+      await refreshUserInfo()
+
+      // 성공시 시트 닫기
+      onOpenChange(false)
+    } catch (error) {
+      console.error('닉네임 변경 실패:', error)
+      // Todo 에러 처리
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+      <SheetContent side="bottom" className="!h-[380px] rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden">
+        {/* 접근성을 위한 숨겨진 제목 */}
+        <SheetTitle className="sr-only">닉네임 변경</SheetTitle>
+
+        {/* 커스텀 X 버튼 */}
+        <button
+          onClick={() => onOpenChange(false)}
+          className="absolute top-4 right-5 z-10 flex h-6 w-6 items-center justify-center"
+        >
+          <X className="h-6 w-6 text-gray-iron-950" />
+        </button>
+
+        <div className="flex h-full flex-col px-5 pt-10">
+          {/* 제목 */}
+          <h2 className="heading1-bold text-center text-gray-iron-950">닉네임 변경</h2>
+
+          {/* 설명 */}
+          <p className="body1-medium mt-1 text-center text-gray-iron-700">
+            <span className="text-malmo-rasberry-500">새로 사용할 닉네임</span>을 입력해주세요
+          </p>
+
+          {/* 닉네임 입력 */}
+          <div className="mt-7">
+            <NicknameInput value={nickname} onChange={handleNicknameChange} maxLength={maxLength} />
+          </div>
+
+          {/* 변경하기 버튼 */}
+          <div className="mt-auto mb-5">
+            <Button text={'변경하기'} onClick={handleSubmit} disabled={!isValid || isSubmitting} />
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  )
+}
