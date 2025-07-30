@@ -10,6 +10,7 @@ import {
   QUESTION_CONFIG,
 } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
+import bridge from '@/shared/bridge'
 
 export const Route = createFileRoute('/attachment-test/question/')({
   component: AttachmentTestQuestionPage,
@@ -75,7 +76,13 @@ function AttachmentTestQuestionPage() {
       </div>
 
       {/* 애착유형 검사 가이드 바텀 시트 */}
-      <AttachmentTestGuide isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
+      <AttachmentTestGuide
+        isOpen={isGuideOpen}
+        onClose={() => {
+          bridge.toggleOverlay(0)
+          setIsGuideOpen(false)
+        }}
+      />
     </div>
   )
 }

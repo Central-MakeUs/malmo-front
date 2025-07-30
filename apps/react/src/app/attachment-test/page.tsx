@@ -23,7 +23,7 @@ function AttachmentTestPage() {
   }, [])
 
   const handleStartTest = () => {
-    // bridge.toggleOverlay(1)
+    bridge.toggleOverlay(3)
     navigate({ to: '/attachment-test/question' })
   }
 
