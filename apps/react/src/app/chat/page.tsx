@@ -2,7 +2,7 @@ import { AiChatBubble, MyChatBubble } from '@/features/chat/components/chat-bubb
 import ChatInput from '@/features/chat/components/chat-input'
 import { DateDivider } from '@/features/chat/components/date-divider'
 import { useChatting } from '@/features/chat/context/chatting-context'
-import { useChatMessagesQuery } from '@/features/chat/hook/use-chat-queries'
+import { chatKeys, useChatMessagesQuery } from '@/features/chat/hook/use-chat-queries'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { formatDate } from '@/shared/utils'
@@ -15,6 +15,7 @@ import { ChevronRight } from 'lucide-react'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 import bridge from '@/shared/bridge'
 import { useBridge } from '@webview-bridge/react'
+import { useQueryClient } from '@tanstack/react-query'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -51,6 +52,7 @@ function RouteComponent() {
   const navigate = useNavigate()
   const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess } = useChatting()
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
+  const queryClient = useQueryClient()
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
