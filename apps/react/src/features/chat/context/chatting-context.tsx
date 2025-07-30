@@ -4,9 +4,10 @@ import {
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
+  BaseListSwaggerResponseChatRoomMessageData,
 } from '@data/user-api-axios/api'
 import { useChatSSE } from '@/features/chat/hook/use-chat-sse'
-import { useQueryClient } from '@tanstack/react-query'
+import { InfiniteData, useQueryClient } from '@tanstack/react-query'
 import { chatKeys, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hook/use-chat-queries'
 
 interface ChattingContextType {
@@ -31,25 +32,42 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
   const handleChatResponse = useCallback((chunk: string) => {
     setStreamingMessage((prev) => {
-      if (prev) {
-        return { ...prev, content: (prev.content || '') + chunk }
-      }
-      return {
-        messageId: null as any,
-        content: chunk,
-        createdAt: new Date().toISOString(),
+      const baseMessage = {
+        messageId: prev?.messageId || Date.now(),
+        createdAt: prev?.createdAt || new Date().toISOString(),
         senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
       }
+      return { ...baseMessage, content: (prev?.content || '') + chunk }
     })
   }, [])
 
   const handleResponseId = useCallback(
-    async (messageId: string) => {
-      await queryClient.invalidateQueries({ queryKey: chatKeys.messages() })
+    (messageId: string) => {
+      const queryKey = chatKeys.messages()
+
+      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+        if (!oldData || !streamingMessage) return oldData
+
+        const finalMessage = { ...streamingMessage, messageId: parseInt(messageId, 10) }
+
+        // 불변성을 유지하며 새로운 데이터 생성
+        const newData = {
+          ...oldData,
+          pages: oldData.pages.map((page, index) => {
+            if (index === 0) {
+              const newList = page.list ? [finalMessage, ...page.list] : [finalMessage]
+              return { ...page, list: newList }
+            }
+            return { ...page, list: [...(page.list || [])] }
+          }),
+        }
+        return newData
+      })
+
       setStreamingMessage(null)
       setSendingMessage(false)
     },
-    [queryClient]
+    [queryClient, streamingMessage]
   )
 
   const handleLevelFinished = useCallback(() => {
@@ -66,7 +84,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       onResponseId: handleResponseId,
       onLevelFinished: handleLevelFinished,
       onChatPaused: handleChatPaused,
-      onError: useCallback((error) => {
+      onError: useCallback(() => {
         setSendingMessage(false)
         setStreamingMessage(null)
       }, []),
