@@ -27,9 +27,7 @@ export function AttachmentTypeCards({
       attachmentType: myAttachmentType,
       badgeText: myAttachmentType || '검사필요',
       mysteryIcon: MyMysteryMomo,
-      // 내 결과가 있으면 결과 페이지로, 없으면 테스트 페이지로
       navigationTo: myAttachmentData ? '/attachment-test/result/my' : '/attachment-test',
-      isNavigationEnabled: true,
     },
     {
       title: '연인의 애착유형',
@@ -37,9 +35,11 @@ export function AttachmentTypeCards({
       attachmentType: partnerAttachmentType,
       badgeText: partnerAttachmentType || (!isPartnerConnected ? '연동 필요' : '검사 필요'),
       mysteryIcon: PartnerMysteryMomo,
-      // 파트너 결과가 있으면 결과 페이지로, 없으면 네비게이션 막기
-      navigationTo: partnerAttachmentData ? '/attachment-test/result/partner' : '/attachment-test',
-      isNavigationEnabled: !!partnerAttachmentData, // 파트너 결과가 있을 때만 네비게이션 허용
+      navigationTo: partnerAttachmentData
+        ? '/attachment-test/result/partner'
+        : !isPartnerConnected
+          ? '/partner-status?type=not-connected'
+          : '/partner-status?type=not-tested',
     },
   ]
 
@@ -55,7 +55,7 @@ export function AttachmentTypeCards({
               {/* 카드 헤더 */}
               <div className="flex h-10 items-center justify-between bg-gray-iron-700 pr-[10px] pl-4">
                 <span className="body3-medium text-white">{card.title}</span>
-                {card.isNavigationEnabled && <ChevronRight className="h-5 w-5 text-white" />}
+                <ChevronRight className="h-5 w-5 text-white" />
               </div>
 
               {/* 카드 내용 */}
@@ -90,11 +90,7 @@ export function AttachmentTypeCards({
 
           return (
             <div key={card.title} className="flex-1">
-              {card.isNavigationEnabled ? (
-                <Link to={card.navigationTo}>{CardContent}</Link>
-              ) : (
-                <div className="opacity-50">{CardContent}</div>
-              )}
+              <Link to={card.navigationTo}>{CardContent}</Link>
             </div>
           )
         })}

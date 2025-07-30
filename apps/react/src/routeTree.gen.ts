@@ -15,6 +15,7 @@ import { Route as OnboardingLayoutImport } from './app/onboarding/layout'
 import { Route as ChatLayoutImport } from './app/chat/layout'
 import { Route as PageImport } from './app/page'
 import { Route as QuestionPageImport } from './app/question/page'
+import { Route as PartnerStatusPageImport } from './app/partner-status/page'
 import { Route as MyPagePageImport } from './app/my-page/page'
 import { Route as LoginPageImport } from './app/login/page'
 import { Route as IntroPageImport } from './app/intro/page'
@@ -62,6 +63,12 @@ const PageRoute = PageImport.update({
 const QuestionPageRoute = QuestionPageImport.update({
   id: '/question/',
   path: '/question/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PartnerStatusPageRoute = PartnerStatusPageImport.update({
+  id: '/partner-status/',
+  path: '/partner-status/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -270,6 +277,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyPagePageImport
       parentRoute: typeof rootRoute
     }
+    '/partner-status/': {
+      id: '/partner-status/'
+      path: '/partner-status'
+      fullPath: '/partner-status'
+      preLoaderRoute: typeof PartnerStatusPageImport
+      parentRoute: typeof rootRoute
+    }
     '/question/': {
       id: '/question/'
       path: '/question'
@@ -445,6 +459,7 @@ export interface FileRoutesByFullPath {
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
   '/my-page': typeof MyPagePageRoute
+  '/partner-status': typeof PartnerStatusPageRoute
   '/question': typeof QuestionPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
@@ -474,6 +489,7 @@ export interface FileRoutesByTo {
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
   '/my-page': typeof MyPagePageRoute
+  '/partner-status': typeof PartnerStatusPageRoute
   '/question': typeof QuestionPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
@@ -505,6 +521,7 @@ export interface FileRoutesById {
   '/intro/': typeof IntroPageRoute
   '/login/': typeof LoginPageRoute
   '/my-page/': typeof MyPagePageRoute
+  '/partner-status/': typeof PartnerStatusPageRoute
   '/question/': typeof QuestionPageRoute
   '/attachment-test/question/': typeof AttachmentTestQuestionPageRoute
   '/chat/loading/': typeof ChatLoadingPageRoute
@@ -537,6 +554,7 @@ export interface FileRouteTypes {
     | '/intro'
     | '/login'
     | '/my-page'
+    | '/partner-status'
     | '/question'
     | '/attachment-test/question'
     | '/chat/loading'
@@ -565,6 +583,7 @@ export interface FileRouteTypes {
     | '/intro'
     | '/login'
     | '/my-page'
+    | '/partner-status'
     | '/question'
     | '/attachment-test/question'
     | '/chat/loading'
@@ -594,6 +613,7 @@ export interface FileRouteTypes {
     | '/intro/'
     | '/login/'
     | '/my-page/'
+    | '/partner-status/'
     | '/question/'
     | '/attachment-test/question/'
     | '/chat/loading/'
@@ -624,6 +644,7 @@ export interface RootRouteChildren {
   IntroPageRoute: typeof IntroPageRoute
   LoginPageRoute: typeof LoginPageRoute
   MyPagePageRoute: typeof MyPagePageRoute
+  PartnerStatusPageRoute: typeof PartnerStatusPageRoute
   QuestionPageRoute: typeof QuestionPageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
   HistoryDeletePageRoute: typeof HistoryDeletePageRoute
@@ -645,6 +666,7 @@ const rootRouteChildren: RootRouteChildren = {
   IntroPageRoute: IntroPageRoute,
   LoginPageRoute: LoginPageRoute,
   MyPagePageRoute: MyPagePageRoute,
+  PartnerStatusPageRoute: PartnerStatusPageRoute,
   QuestionPageRoute: QuestionPageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
   HistoryDeletePageRoute: HistoryDeletePageRoute,
@@ -673,6 +695,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/intro/",
         "/login/",
         "/my-page/",
+        "/partner-status/",
         "/question/",
         "/attachment-test/question/",
         "/history/delete/",
@@ -725,6 +748,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/my-page/": {
       "filePath": "my-page/page.tsx"
+    },
+    "/partner-status/": {
+      "filePath": "partner-status/page.tsx"
     },
     "/question/": {
       "filePath": "question/page.tsx"
