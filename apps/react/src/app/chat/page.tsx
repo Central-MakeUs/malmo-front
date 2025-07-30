@@ -49,7 +49,7 @@ function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const navigate = useNavigate()
-  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess } = useChatting()
+  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage } = useChatting()
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
@@ -93,6 +93,13 @@ function RouteComponent() {
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
+    const keyboardIsClosing = typeof prevKeyboardHeight !== 'undefined' && keyboardHeight < prevKeyboardHeight
+
+    if (keyboardIsClosing && !sendingMessage) {
+      scrollHeightRef.current = scrollContainer.scrollHeight // 스크롤 위치는 업데이트
+      return
+    }
+
     const keyboardHeightChanged = typeof prevKeyboardHeight !== 'undefined' && prevKeyboardHeight !== keyboardHeight
     if (keyboardHeightChanged) {
       setTimeout(() => {
@@ -122,6 +129,7 @@ function RouteComponent() {
     keyboardHeight,
     prevKeyboardHeight,
     smoothScrollTo,
+    sendingMessage,
   ])
 
   const exitButton = useCallback(() => {
