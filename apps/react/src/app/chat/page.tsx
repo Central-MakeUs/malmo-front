@@ -45,10 +45,6 @@ function usePrevious<T>(value: T): T | undefined {
   return ref.current
 }
 
-type ChatLayoutContext = {
-  keyboardHeight: number
-}
-
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
@@ -106,16 +102,13 @@ function RouteComponent() {
     }
 
     const justFinishedInfiniteScroll = prevIsFetchingNextPage && !isFetchingNextPage
-    const isNewMessage =
-      scrollHeightRef.current > 0 &&
-      scrollContainer.scrollHeight > scrollHeightRef.current &&
-      !justFinishedInfiniteScroll
+    const isInitialLoad = scrollHeightRef.current === 0 && scrollContainer.scrollHeight > 0
+    const isNewMessageAdded =
+      !isInitialLoad && scrollContainer.scrollHeight > scrollHeightRef.current && !justFinishedInfiniteScroll
 
     if (justFinishedInfiniteScroll) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight - scrollHeightRef.current
-    } else if (isNewMessage) {
-      scrollContainer.scrollTop = scrollContainer.scrollHeight
-    } else if (scrollHeightRef.current === 0) {
+    } else if (isInitialLoad || isNewMessageAdded) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight
     }
 
