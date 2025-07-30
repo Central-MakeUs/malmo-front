@@ -19,6 +19,7 @@ configuration.ts
 git_push.sh
 index.ts
 models/answer-data.ts
+models/answer-dto.ts
 models/answer-request-dto.ts
 models/answer-success-response.ts
 models/apple-login-request-dto.ts
@@ -62,7 +63,6 @@ models/pageable.ts
 models/partner-member-data.ts
 models/partner-member-info-success-response.ts
 models/past-answer-data.ts
-models/past-answer-dto.ts
 models/past-answer-success-response.ts
 models/past-question-data.ts
 models/past-question-success-response.ts

@@ -28,4 +28,6 @@ export interface BridgeActions {
   changeStatusBarColor(color: string): Promise<void>
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
+  getQuestionHelp(): Promise<boolean>
+  setQuestionHelpFalse(): Promise<void>
 }
