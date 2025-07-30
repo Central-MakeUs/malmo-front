@@ -1,21 +1,16 @@
 import { ChevronRight } from 'lucide-react'
 import loveLetter from '@/assets/images/love-letter-home.png'
 import { Badge } from '@/shared/ui'
+import { formatDate } from '@/shared/utils'
+import { QuestionData } from '@data/user-api-axios/api'
 import { cn } from '@ui/common/lib/utils'
-
-// QuestionData 타입
-interface QuestionData {
-  content?: string
-  level?: number
-  meAnswered?: boolean
-  partnerAnswered?: boolean
-}
 
 interface TodayQuestionSectionProps {
   todayQuestion?: QuestionData | null
+  level?: number
 }
 
-export function TodayQuestionSection({ todayQuestion }: TodayQuestionSectionProps) {
+export function TodayQuestionSection({ todayQuestion, level }: TodayQuestionSectionProps) {
   // 답변 상태 데이터
   const answerStatusData = [
     { label: '나', answered: todayQuestion?.meAnswered },
@@ -24,7 +19,7 @@ export function TodayQuestionSection({ todayQuestion }: TodayQuestionSectionProp
 
   return (
     <div className="mt-8">
-      <h2 className="heading2-semibold text-gray-iron-950">오늘의 마음 질문</h2>
+      <h2 className="heading2-semibold text-gray-iron-950">{level ? `${level}번째 마음 질문` : '오늘의 마음 질문'}</h2>
 
       {/* 질문 박스 */}
       <div className="mt-3 h-[178px] rounded-lg border border-gray-iron-200 bg-white">
@@ -56,12 +51,14 @@ export function TodayQuestionSection({ todayQuestion }: TodayQuestionSectionProp
               {todayQuestion?.content || '질문을 불러오는 중...'}
             </h3>
             <p className="label1-medium mt-2 text-gray-iron-500">
-              {todayQuestion?.level ? `${todayQuestion.level}번째 질문` : ''}
+              {level && todayQuestion?.createdAt
+                ? formatDate(todayQuestion.createdAt, 'YYYY년 MM월 DD일')
+                : `${todayQuestion?.level}번째 질문`}
             </p>
           </div>
 
           {/* 러브레터 이미지 */}
-          <div className="absolute right-[24px] bottom-0">
+          <div className={cn('absolute right-[24px] bottom-0', { hidden: level })}>
             <img src={loveLetter} alt="Love Letter" className="h-[75px] w-[84px]" />
           </div>
         </div>

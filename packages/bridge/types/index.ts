@@ -29,4 +29,6 @@ export interface BridgeActions {
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
   openWebView(url: string): Promise<void>
+  getQuestionHelp(): Promise<boolean>
+  setQuestionHelpFalse(): Promise<void>
 }

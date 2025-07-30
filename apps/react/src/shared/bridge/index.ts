@@ -17,6 +17,8 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
   openWebView(url: string): Promise<void>
+  getQuestionHelp(): Promise<boolean>
+  setQuestionHelpFalse(): Promise<void>
   [key: string]: any
 }
 
@@ -39,6 +41,8 @@ export const bridge = linkBridge<WebBridge>({
       // 웹에서는 새 창으로 열기
       window.open(url, '_blank')
     },
+    getQuestionHelp: async () => true,
+    setQuestionHelpFalse: async () => {},
   },
 })
 

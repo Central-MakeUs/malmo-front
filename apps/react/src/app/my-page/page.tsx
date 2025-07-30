@@ -1,3 +1,5 @@
+import bridge from '@/shared/bridge'
+import { Button } from '@/shared/ui'
 import { createFileRoute } from '@tanstack/react-router'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { useAuth } from '@/features/auth'
