@@ -91,7 +91,8 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
 
     async setKeyboardHeight(height: number): Promise<void> {
       set({ keyboardHeight: height })
-      
+    },
+
     async getQuestionHelp(): Promise<boolean> {
       const helpSeen = await AuthStorage.getQuestionHelp()
       return helpSeen
