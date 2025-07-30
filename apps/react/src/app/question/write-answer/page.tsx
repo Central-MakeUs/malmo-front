@@ -6,7 +6,7 @@ import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
 import { useState } from 'react'
 import { z } from 'zod'
 import questionService from '@/shared/services/question.service'
-import { QuestionHeader } from '@/features/question/ui/qustion-header'
+import { QuestionHeader } from '@/features/question/ui/question-header'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),

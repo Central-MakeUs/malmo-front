@@ -8,7 +8,7 @@ import questionService from '@/shared/services/question.service'
 import { cn } from '@ui/common/lib/utils'
 import { useState } from 'react'
 import bridge from '@/shared/bridge'
-import { QuestionHeader } from '@/features/question/ui/qustion-header'
+import { QuestionHeader } from '@/features/question/ui/question-header'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
