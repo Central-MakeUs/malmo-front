@@ -96,6 +96,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
       } catch (error) {
         console.error('WebView 열기 오류:', error)
       }
+    },
 
     async getQuestionHelp(): Promise<boolean> {
       const helpSeen = await AuthStorage.getQuestionHelp()
@@ -104,6 +105,15 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
 
     async setQuestionHelpFalse(): Promise<void> {
       await AuthStorage.setQuestionHelp(false)
+    },
+
+    async getIntroSeen(): Promise<boolean> {
+      const seen = await AuthStorage.getIntroSeen()
+      return seen
+    },
+
+    async setIntroSeen(): Promise<void> {
+      await AuthStorage.setIntroSeen()
     },
   }
 
@@ -157,6 +167,16 @@ export const appSchema = postMessageSchema({
           url: z.string().url(),
         })
         .parse(value)
+    },
+  },
+  getIntroSeen: {
+    validate: () => {
+      return {}
+    },
+  },
+  setIntroSeen: {
+    validate: () => {
+      return {}
     },
   },
 })
