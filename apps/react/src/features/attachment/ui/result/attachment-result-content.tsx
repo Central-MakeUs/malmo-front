@@ -62,7 +62,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-white">
+    <div className="flex min-h-screen w-full flex-col bg-white pt-[50px]">
       {/* 헤더 네비게이션 */}
       <DetailHeaderBar
         showBackButton={false}
@@ -71,6 +71,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
             <X className="h-6 w-6 text-gray-iron-950" />
           </button>
         }
+        className="fixed top-0"
       />
 
       {/* 캐릭터 정보 섹션 */}

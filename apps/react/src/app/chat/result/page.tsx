@@ -62,20 +62,9 @@ function RouteComponent() {
       </Link>
     )
 
-  if (!chatResult) {
-    return (
-      <div className="flex h-full flex-col">
-        <DetailHeaderBar right={exitButton()} showBackButton={fromHistory} className="bg-malmo-rasberry-25" />
-        <div className="flex flex-1 items-center justify-center bg-white">
-          <p className="body1-regular text-gray-500">요약 결과를 불러오는 중입니다...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="flex h-full flex-col">
-      <DetailHeaderBar right={exitButton()} showBackButton={fromHistory} className="bg-malmo-rasberry-25" />
+    <div className="flex h-full flex-col pt-[50px]">
+      <DetailHeaderBar right={exitButton()} showBackButton={fromHistory} className="fixed top-0 bg-malmo-rasberry-25" />
 
       <div className="flex-1 bg-malmo-rasberry-25 pt-3">
         <ChatResultHeader
@@ -84,11 +73,17 @@ function RouteComponent() {
         />
 
         <div className="flex flex-col gap-7 rounded-t-[24px] bg-white px-5 py-10">
-          <ChatResultMainInfo
-            date={chatResult.createdAt}
-            subject={chatResult.totalSummary}
-            onViewChat={() => navigate({ to: '/chat', search: { chatId: chatResult.chatRoomId } })}
-          />
+          {!chatResult ? (
+            <div className="flex flex-1 items-center justify-center bg-white">
+              <p className="body1-regular text-gray-500">요약 결과를 불러오는 중입니다...</p>
+            </div>
+          ) : (
+            <ChatResultMainInfo
+              date={chatResult.createdAt}
+              subject={chatResult.totalSummary}
+              onViewChat={() => navigate({ to: '/chat', search: { chatId: chatResult.chatRoomId } })}
+            />
+          )}
 
           <hr className="border-gray-100" />
 
