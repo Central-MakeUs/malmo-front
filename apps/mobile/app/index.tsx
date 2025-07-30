@@ -1,6 +1,6 @@
-import React, { useRef, useCallback } from 'react'
-import { SafeAreaView, View, Text, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native'
-import { createWebView, type BridgeWebView } from '@webview-bridge/react-native'
+import React, { useRef, useCallback, useEffect, useLayoutEffect } from 'react'
+import { SafeAreaView, View, StyleSheet, Platform, Keyboard, LayoutAnimation } from 'react-native'
+import { bridge, createWebView, useBridge, type BridgeWebView } from '@webview-bridge/react-native'
 import { appBridge, appSchema } from './bridge'
 import { useOverlay } from './features/overlay/use-overlay'
 import { DynamicStatusBar } from './features/status-bar/dynamic-status-bar'
@@ -17,6 +17,7 @@ export const { WebView, postMessage } = createWebView({
 export default function App() {
   const webviewRef = useRef<BridgeWebView>(null)
   const { OverlayComponent } = useOverlay()
+  const { setKeyboardHeight } = useBridge(appBridge)
 
   const webviewUrl =
     Platform.OS === 'android' ? process.env.EXPO_PUBLIC_ANDROID_WEB_VIEW_URL : process.env.EXPO_PUBLIC_IOS_WEB_VIEW_URL
@@ -24,6 +25,29 @@ export default function App() {
   if (!webviewUrl) {
     throw new Error('Webview URL is not set')
   }
+
+  useEffect(() => {
+    // 1. iOS에서만 키보드 이벤트 리스너를 실행하도록 수정
+    if (Platform.OS !== 'ios') return
+
+    const showEvent = 'keyboardWillShow'
+    const hideEvent = 'keyboardWillHide'
+
+    const keyboardDidShowListener = Keyboard.addListener(showEvent, (e) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      setKeyboardHeight(e.endCoordinates.height)
+    })
+
+    const keyboardDidHideListener = Keyboard.addListener(hideEvent, () => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      setKeyboardHeight(0)
+    })
+
+    return () => {
+      keyboardDidShowListener.remove()
+      keyboardDidHideListener.remove()
+    }
+  }, [setKeyboardHeight])
 
   const handleLoadEnd = useCallback(() => {
     console.log('Webview load end')
@@ -40,6 +64,7 @@ export default function App() {
           source={{ uri: webviewUrl }}
           style={styles.webview}
           bounces={false}
+          scrollEnabled={false}
           domStorageEnabled
           javaScriptEnabled
           allowsFullscreenVideo
@@ -57,7 +82,6 @@ export default function App() {
             console.error('WebView HTTP error: ', nativeEvent)
           }}
         />
-        <KeyboardAvoidingView behavior={'height'} />
       </SafeAreaView>
     </View>
   )

@@ -88,12 +88,17 @@ export const appBridge = bridge<AppBridgeState>(({ set }) => {
       const seen = await AuthStorage.getChatTutorialSeen()
       return seen
     },
+
+    async setKeyboardHeight(height: number): Promise<void> {
+      set({ keyboardHeight: height })
+    },
   }
 
   return {
     isLoggedIn: false,
     overlayState: { visible: false, opacity: 0 },
     statusBarColor: '#fff',
+    keyboardHeight: 0,
     ...actions,
   }
 })

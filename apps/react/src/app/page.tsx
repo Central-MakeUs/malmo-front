@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import malmoLogo from '@/assets/images/malmo-logo.png'
+import malmoLogo from '@/assets/images/malmo-logo-small.png'
 import HeartIcon from '@/assets/icons/heart.svg'
 
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
@@ -43,9 +43,9 @@ function HomePage() {
   const partnerAttachmentType = partnerAttachmentData?.character
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="flex h-full flex-col bg-white pt-[60px]">
       {/* 헤더 */}
-      <header className="flex h-[60px] items-center justify-between px-5">
+      <header className="fixed top-0 flex h-[60px] w-full items-center justify-between bg-white px-5">
         <img src={malmoLogo} alt="말모 로고" className="h-8 w-[94px]" />
 
         {/* D-day */}
@@ -56,7 +56,7 @@ function HomePage() {
       </header>
 
       {/* 메인 컨텐츠  */}
-      <div className="mt-3 px-5">
+      <div className="mt-3 flex-1 px-5">
         {/* 연애 고민 상담 섹션 */}
         <ChatEntryCard isChatActive={isChatActive} />
 

@@ -3,6 +3,8 @@ import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-ro
 import { match } from 'path-to-regexp'
 import { AuthContext } from '@/features/auth/hooks/use-auth'
 import { MemberDataMemberStateEnum } from '@data/user-api-axios/api'
+import { useBridge } from '@webview-bridge/react'
+import bridge from '@/shared/bridge'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -65,11 +67,15 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     }
   },
 })
-
 function RootComponent() {
+  const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
+
   return (
-    <div className="bg-gray-09 flex min-h-screen w-full flex-col">
-      <main className="relative mx-auto flex min-h-screen w-full max-w-[600px] flex-col bg-white">
+    <div
+      className="no-bounce-scroll flex h-screen w-full flex-col bg-white"
+      style={{ paddingBottom: keyboardHeight ? keyboardHeight - 35 : 0 }}
+    >
+      <main className="relative mx-auto flex w-full max-w-[600px] flex-1 flex-col">
         <Outlet />
       </main>
     </div>
