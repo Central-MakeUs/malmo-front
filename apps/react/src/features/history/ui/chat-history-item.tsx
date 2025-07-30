@@ -73,7 +73,7 @@ interface EmptyStateProps {
 
 export const EmptyState = ({ image, title, description, className }: EmptyStateProps) => (
   <div className={className}>
-    <img src={image} alt="Empty State" className="mb-5 px-7" />
+    <img src={image} alt="Empty State" className="mb-5 px-7 pt-14" />
     <div className="text-center">
       <p className="heading1-bold mb-1">{title}</p>
       <p className="body2-medium text-gray-iron-500">{description}</p>

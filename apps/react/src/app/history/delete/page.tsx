@@ -1,12 +1,10 @@
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect } from 'react'
-import { useInView } from 'react-intersection-observer'
 import { Button } from '@/shared/ui'
 import { cn } from '@ui/common/lib/utils'
 import { useChatHistoryQuery } from '@/features/history/hook/use-chat-history-query'
 import { useChatSelect } from '@/features/history/hook/use-chat-select'
-import noResultImage from '@/assets/images/characters/no-result-gray.png'
+import noResultImage from '@/assets/images/characters/empty.png'
 import { CheckIcon, EmptyState, SelectableChatHistoryItem } from '@/features/history/ui/chat-history-item'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 
