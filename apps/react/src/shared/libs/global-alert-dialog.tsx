@@ -49,6 +49,7 @@ export function AlertDialogProvider({
   const [state, setState] = useState<AlertDialogOpenOptions>({ description: '' })
 
   const open = (options: AlertDialogOpenOptions) => {
+    console.log('AlertDialogProvider open', options)
     bridge.toggleOverlay?.(options.overlayLevel ?? 1)
     setOpenAlertDialog(true)
     setState({ ...options })

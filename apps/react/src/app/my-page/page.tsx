@@ -6,6 +6,7 @@ import { useAuth } from '@/features/auth'
 import { calculateDDay } from '@/shared/utils/date'
 import { useTerms, TermsContentModal } from '@/features/term'
 import { useMyPageMenu, ProfileSection, StatsSection, MenuList } from '@/features/profile'
+import { HomeHeaderBar } from '@/shared/components/header-bar'
 
 export const Route = createFileRoute('/my-page/')({
   component: MyPage,
@@ -25,7 +26,7 @@ function MyPage() {
   const { menuItems } = useMyPageMenu(terms, handleShowTerms)
 
   return (
-    <div className="min-h-screen bg-white pb-[60px]">
+    <div className="flex h-screen flex-col bg-white">
       {/* 약관 모달 */}
       {selectedTermId !== null && selectedTermContent && selectedTermContent.title && selectedTermContent.content && (
         <TermsContentModal
@@ -36,9 +37,7 @@ function MyPage() {
       )}
 
       {/* 헤더 */}
-      <header className="flex h-[60px] items-center px-5">
-        <h1 className="heading2-bold text-gray-iron-950">마이페이지</h1>
-      </header>
+      <HomeHeaderBar title="마이페이지" />
 
       {/* 프로필 섹션 */}
       <ProfileSection nickname={userInfo.nickname || ''} dDay={dDay} />
@@ -50,7 +49,9 @@ function MyPage() {
       />
 
       {/* 메뉴 리스트 */}
-      <MenuList menuItems={menuItems} />
+      <div className="no-bounce-scroll flex-1 pb-[60px]">
+        <MenuList menuItems={menuItems} />
+      </div>
 
       {/* 하단 네비게이션 */}
       <BottomNavigation />

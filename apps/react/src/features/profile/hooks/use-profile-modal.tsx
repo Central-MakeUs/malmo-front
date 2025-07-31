@@ -4,14 +4,12 @@ import { useAuth } from '@/features/auth'
 import { useNavigate } from '@tanstack/react-router'
 import memberService from '@/shared/services/member.service'
 import coupleService from '@/shared/services/couple.service'
-import { CoupleConnectedModal } from '../ui/couple-connected-modal'
 
 export interface UseProfileModalReturn {
   logoutModal: () => void
   withdrawModal: () => void
   coupleDisconnectModal: (onSuccess?: () => void) => void
-  showCoupleConnectedModal: () => void
-  CoupleConnectedModal: React.ReactNode
+  coupleConnectedModal: () => void
 }
 
 export function useProfileModal(): UseProfileModalReturn {
@@ -82,21 +80,21 @@ export function useProfileModal(): UseProfileModalReturn {
     })
   }
 
-  const showCoupleConnectedModal = () => {
-    setCoupleConnectedModalOpen(true)
-  }
-
-  const hideCoupleConnectedModal = () => {
-    setCoupleConnectedModalOpen(false)
+  const coupleConnectedModal = () => {
+    alertDialog.open({
+      title: '커플 연동이 완료되었어요!',
+      description: '이제 말모를 제한 없이 사용할 수 있어요!',
+      confirmText: '확인',
+      onConfirm: async () => {
+        await refreshUserInfo()
+      },
+    })
   }
 
   return {
     logoutModal,
     withdrawModal,
     coupleDisconnectModal,
-    showCoupleConnectedModal,
-    CoupleConnectedModal: (
-      <CoupleConnectedModal isOpen={coupleConnectedModalOpen} onOpenChange={hideCoupleConnectedModal} />
-    ),
+    coupleConnectedModal,
   }
 }

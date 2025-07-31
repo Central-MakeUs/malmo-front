@@ -32,7 +32,7 @@ function CoupleManagementPage() {
   const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
 
   // 프로필 모달 훅
-  const { coupleDisconnectModal, showCoupleConnectedModal, CoupleConnectedModal } = useProfileModal()
+  const { coupleDisconnectModal, coupleConnectedModal } = useProfileModal()
 
   // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
@@ -109,11 +109,8 @@ function CoupleManagementPage() {
         isOpen={isPartnerCodeSheetOpen}
         onOpenChange={setIsPartnerCodeSheetOpen}
         onSuccess={handleRefreshPage}
-        onCoupleConnected={showCoupleConnectedModal}
+        onCoupleConnected={coupleConnectedModal}
       />
-
-      {/* 커플 연결 완료 모달 */}
-      {CoupleConnectedModal}
     </div>
   )
 }

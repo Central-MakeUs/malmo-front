@@ -12,7 +12,7 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
 
   const guideItems = [
     '애착유형은 고정된 성격이 아닌 현재 관계 성향을 알려줘요',
-    '나쁜 애착유형은 없어요! 최대한 솔직하게 응답해 주세요',
+    '나쁜 유형은 없어요! 최대한 솔직하게 응답해 주세요',
     '나와 비슷한 선택지를 가볍게 골라 주세요',
   ]
 
