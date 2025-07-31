@@ -110,6 +110,15 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
     async setQuestionHelpFalse(): Promise<void> {
       await AuthStorage.setQuestionHelp(false)
     },
+
+    async getIntroSeen(): Promise<boolean> {
+      const seen = await AuthStorage.getIntroSeen()
+      return seen
+    },
+
+    async setIntroSeen(): Promise<void> {
+      await AuthStorage.setIntroSeen()
+    },
   }
 
   return {
@@ -163,6 +172,16 @@ export const appSchema = postMessageSchema({
           url: z.string().url(),
         })
         .parse(value)
+    },
+  },
+  getIntroSeen: {
+    validate: () => {
+      return {}
+    },
+  },
+  setIntroSeen: {
+    validate: () => {
+      return {}
     },
   },
 })

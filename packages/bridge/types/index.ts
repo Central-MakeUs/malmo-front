@@ -34,4 +34,6 @@ export interface BridgeActions {
   openWebView(url: string): Promise<void>
   getQuestionHelp(): Promise<boolean>
   setQuestionHelpFalse(): Promise<void>
+  getIntroSeen(): Promise<boolean>
+  setIntroSeen(): Promise<void>
 }

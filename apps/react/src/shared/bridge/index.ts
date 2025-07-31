@@ -20,6 +20,8 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   openWebView(url: string): Promise<void>
   getQuestionHelp(): Promise<boolean>
   setQuestionHelpFalse(): Promise<void>
+  getIntroSeen(): Promise<boolean>
+  setIntroSeen(): Promise<void>
   [key: string]: any
 }
 
@@ -45,6 +47,14 @@ export const bridge = linkBridge<WebBridge>({
     },
     getQuestionHelp: async () => true,
     setQuestionHelpFalse: async () => {},
+    getIntroSeen: async () => {
+      // 웹에서는 localStorage 사용
+      return localStorage.getItem('intro_seen') === 'true'
+    },
+    setIntroSeen: async () => {
+      // 웹에서는 localStorage 사용
+      localStorage.setItem('intro_seen', 'true')
+    },
   },
 })
 
