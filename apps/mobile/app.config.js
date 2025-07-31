@@ -2,13 +2,14 @@ module.exports = () => {
   const KAKAO_NATIVE_APP_KEY = process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY || ''
 
   return {
-    name: 'mobile',
-    slug: 'mobile',
+    name: 'Malmo',
+    slug: 'malmo-app',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'malmo',
     userInterfaceStyle: 'automatic',
+    owner: 'hin6150',
     splash: {
       image: './assets/images/splash-icon.png',
       resizeMode: 'contain',
@@ -20,6 +21,7 @@ module.exports = () => {
       bundleIdentifier: 'com.malmo.app',
       usesAppleSignIn: true,
       infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
         CFBundleURLTypes: [
           {
             CFBundleURLSchemes: ['malmo', 'com.malmo.app'],
@@ -76,6 +78,11 @@ module.exports = () => {
       'expo-font',
       'expo-router',
     ],
+    extra: {
+      eas: {
+        projectId: 'e4f4d099-f0f2-4ad6-b58a-f8ab2a8a389a',
+      },
+    },
     experiments: {
       typedRoutes: true,
     },
