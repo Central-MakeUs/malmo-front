@@ -50,7 +50,7 @@ function RouteComponent() {
                 className={cn(
                   'absolute top-[-72px] right-0 rounded-[12px] bg-gray-iron-900 py-2.5 pr-[10px] pl-4 whitespace-nowrap',
                   "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']",
-                  { hidden: !showHelp }
+                  { hidden: !showHelp || !data?.me?.updatable }
                 )}
                 onClick={async () => {
                   await bridge.setQuestionHelpFalse()
@@ -71,6 +71,7 @@ function RouteComponent() {
                 className="flex items-center gap-1 text-gray-iron-500"
                 to="/question/write-answer"
                 disabled={!data?.me?.updatable}
+                hidden={!data?.me?.updatable}
                 search={{ coupleQuestionId, isEdit: true }}
               >
                 <Pen className="h-4 w-4" />

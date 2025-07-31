@@ -1,4 +1,5 @@
 import StarIcon from '@/assets/icons/star.svg'
+import CheckIcon from '@/assets/icons/check.svg'
 import { Button } from '@/shared/ui'
 
 interface AttachmentTestGuideProps {
@@ -10,15 +11,15 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
   if (!isOpen) return null
 
   const guideItems = [
-    '애착유형은 고정된 성격이 아닌 현재 관계 성향을 알려줘요.',
-    '나쁜 애착유형은 없어요! 최대한 솔직하게 응답해 주세요.',
-    '깊은 고민 대신 나와 비슷한 선택지를 가볍게 골라 주세요.',
+    '애착유형은 고정된 성격이 아닌 현재 관계 성향을 알려줘요',
+    '나쁜 애착유형은 없어요! 최대한 솔직하게 응답해 주세요',
+    '나와 비슷한 선택지를 가볍게 골라 주세요',
   ]
 
   return (
     <div className="fixed inset-0 z-50 flex items-end">
       {/* 배경 오버레이 */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       {/* 바텀 시트 */}
       <div className="relative h-[476px] w-full animate-in rounded-t-[20px] bg-white duration-300 slide-in-from-bottom">
@@ -43,10 +44,8 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
           {/* 컨테이너 */}
           <div className="space-y-3">
             {guideItems.map((item, index) => (
-              <div
-                key={index}
-                className="flex h-12 items-center justify-center rounded-lg bg-gray-neutral-100 py-[12px]"
-              >
+              <div key={index} className="flex h-fit gap-1 rounded-[10px] bg-gray-neutral-100 px-3 py-2">
+                <CheckIcon className="h-5 w-5 text-gray-iron-500" />
                 <p className="text-body3-medium text-gray-iron-800">{item}</p>
               </div>
             ))}
@@ -54,7 +53,7 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
 
           {/* 확인하기 버튼 */}
           <div className="mt-7">
-            <Button text="확인했어요!" onClick={onClose} />
+            <Button text="네, 확인했어요!" onClick={onClose} />
           </div>
         </div>
       </div>

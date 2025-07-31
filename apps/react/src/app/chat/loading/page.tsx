@@ -1,8 +1,10 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import summary from '@/assets/images/characters/summary.png'
+import summaryAnimation from '@/assets/lottie/summary.json'
+
 import { useEffect } from 'react'
+import Lottie from 'lottie-react'
 import chatService from '@/shared/services/chat.service'
 import { useQueryClient } from '@tanstack/react-query'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { chatKeys } from '@/features/chat/hook/use-chat-queries'
 
 export const Route = createFileRoute('/chat/loading/')({
@@ -17,6 +19,7 @@ function RouteComponent() {
     async function completeChatRoom() {
       try {
         const { data } = await chatService.postChatroomComplete()
+        await new Promise((resolve) => setTimeout(resolve, 3000))
 
         queryClient.removeQueries({ queryKey: chatKeys.messages() })
         await queryClient.invalidateQueries({ queryKey: chatKeys.status() })
@@ -32,7 +35,7 @@ function RouteComponent() {
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-[47px]">
-      <img src={summary} alt="Summary Image" className="px-[28px]" />
+      <Lottie animationData={summaryAnimation} className="px-[28px]" />
       <div className="text-center">
         <h1 className="heading1-bold text-gray-iron-950">모모가 대화를 요약하고 있어요</h1>
         <p className="body2-medium text-gray-iron-500">조금만 기다려주세요!</p>

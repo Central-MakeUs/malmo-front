@@ -1,4 +1,5 @@
-import Note from '@/assets/icons/note.svg'
+import noteAnimation from '@/assets/lottie/note.json'
+import Lottie from 'lottie-react'
 
 interface SubmissionLoadingProps {
   nickname?: string
@@ -7,7 +8,7 @@ interface SubmissionLoadingProps {
 export function SubmissionLoading({ nickname = '사용자' }: SubmissionLoadingProps) {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center bg-white px-[20px]">
-      <Note className="h-[236px] w-[320px]" />
+      <Lottie animationData={noteAnimation} className="h-[236px] w-[320px]" />
       <div className="mt-[24px] text-center">
         <h1 className="heading1-bold text-gray-iron-950">
           곧 <span className="text-malmo-rasberry-500">{nickname}</span>님의 결과를 보여드릴게요

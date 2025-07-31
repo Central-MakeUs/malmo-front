@@ -3,8 +3,6 @@ import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-ro
 import { match } from 'path-to-regexp'
 import { AuthContext } from '@/features/auth/hooks/use-auth'
 import { MemberDataMemberStateEnum } from '@data/user-api-axios/api'
-import { useBridge } from '@webview-bridge/react'
-import bridge from '@/shared/bridge'
 
 interface RouterContext {
   queryClient: QueryClient

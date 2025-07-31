@@ -15,6 +15,7 @@ import { ChevronRight } from 'lucide-react'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 import bridge from '@/shared/bridge'
 import { useBridge } from '@webview-bridge/react'
+import { useChatScroll } from '@/features/chat/hook/use-chat-scroll'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -37,14 +38,6 @@ const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean 
 ))
 LoadingIndicator.displayName = 'LoadingIndicator'
 
-function usePrevious<T>(value: T): T | undefined {
-  const ref = useRef<T>(undefined)
-  useEffect(() => {
-    ref.current = value
-  }, [value])
-  return ref.current
-}
-
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
@@ -58,11 +51,6 @@ function RouteComponent() {
     chatId
   )
 
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const scrollHeightRef = useRef(0)
-  const prevIsFetchingNextPage = usePrevious(isFetchingNextPage)
-  const prevKeyboardHeight = usePrevious(keyboardHeight)
-
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
   const messages = useMemo(() => {
@@ -71,66 +59,14 @@ function RouteComponent() {
     return chatId ? allMessages : [...allMessages].reverse()
   }, [data, chatId])
 
-  const smoothScrollTo = useCallback((element: HTMLElement, to: number, duration: number) => {
-    const start = element.scrollTop
-    const change = to - start
-    let startTime: number | null = null
-
-    const animateScroll = (currentTime: number) => {
-      if (startTime === null) startTime = currentTime
-      const elapsed = currentTime - startTime
-      const progress = Math.min(elapsed / duration, 1)
-      element.scrollTop = start + change * progress
-      if (elapsed < duration) {
-        requestAnimationFrame(animateScroll)
-      }
-    }
-    requestAnimationFrame(animateScroll)
-  }, [])
-
-  useLayoutEffect(() => {
-    if (chatId) return
-    const scrollContainer = scrollRef.current
-    if (!scrollContainer) return
-
-    const keyboardIsClosing = typeof prevKeyboardHeight !== 'undefined' && keyboardHeight < prevKeyboardHeight
-
-    if (keyboardIsClosing && !sendingMessage) {
-      scrollHeightRef.current = scrollContainer.scrollHeight // 스크롤 위치는 업데이트
-      return
-    }
-
-    const keyboardHeightChanged = typeof prevKeyboardHeight !== 'undefined' && prevKeyboardHeight !== keyboardHeight
-    if (keyboardHeightChanged) {
-      setTimeout(() => {
-        smoothScrollTo(scrollContainer, scrollContainer.scrollHeight, 250)
-      }, 0)
-      return
-    }
-
-    const justFinishedInfiniteScroll = prevIsFetchingNextPage && !isFetchingNextPage
-    const isInitialLoad = scrollHeightRef.current === 0 && scrollContainer.scrollHeight > 0
-    const isNewMessageAdded =
-      !isInitialLoad && scrollContainer.scrollHeight > scrollHeightRef.current && !justFinishedInfiniteScroll
-
-    if (justFinishedInfiniteScroll) {
-      scrollContainer.scrollTop = scrollContainer.scrollHeight - scrollHeightRef.current
-    } else if (isInitialLoad || isNewMessageAdded) {
-      scrollContainer.scrollTop = scrollContainer.scrollHeight
-    }
-
-    scrollHeightRef.current = scrollContainer.scrollHeight
-  }, [
-    messages,
+  const scrollRef = useChatScroll({
     chatId,
     isFetchingNextPage,
-    prevIsFetchingNextPage,
-    streamingMessage,
     keyboardHeight,
-    prevKeyboardHeight,
-    smoothScrollTo,
     sendingMessage,
-  ])
+    messages,
+    streamingMessage,
+  })
 
   const exitButton = useCallback(() => {
     const actived = messages.some((chat) => chat.senderType === ChatRoomMessageDataSenderTypeEnum.User)

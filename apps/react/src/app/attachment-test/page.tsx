@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/shared/ui'
 import { useAuth } from '@/features/auth'
 import { AttachmentTestIntro, AttachmentTestInfoSection, AttachmentTypesSection } from '@/features/attachment'
+import { useEffect } from 'react'
+import bridge from '@/shared/bridge'
 
 export const Route = createFileRoute('/attachment-test/')({
   component: AttachmentTestPage,
@@ -12,7 +14,16 @@ function AttachmentTestPage() {
   const { userInfo } = useAuth()
   const nickname = userInfo.nickname || '사용자'
 
+  useEffect(() => {
+    bridge.changeStatusBarColor('#FDEDF0')
+
+    return () => {
+      bridge.changeStatusBarColor('#fff')
+    }
+  }, [])
+
   const handleStartTest = () => {
+    bridge.toggleOverlay(3)
     navigate({ to: '/attachment-test/question' })
   }
 

@@ -13,6 +13,7 @@ export interface BridgeStore {
   overlayState: {
     visible: boolean
     opacity: number
+    upward?: boolean
   }
   statusBarColor: string
   keyboardHeight: number

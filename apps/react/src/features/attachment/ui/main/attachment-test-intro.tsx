@@ -1,6 +1,7 @@
 import { useNavigate } from '@tanstack/react-router'
 import { HeaderNavigation } from '@/shared/ui'
 import TestStartImage from '@/assets/images/test-start.png'
+import { DetailHeaderBar } from '@/shared/components/header-bar'
 
 interface AttachmentTestIntroProps {
   nickname: string
@@ -14,8 +15,8 @@ export function AttachmentTestIntro({ nickname }: AttachmentTestIntroProps) {
   }
 
   return (
-    <div className="bg-malmo-rasberry-25">
-      <HeaderNavigation onBack={handleGoToHome} />
+    <div className="bg-malmo-rasberry-25 pt-[50px]">
+      <DetailHeaderBar onBackClick={handleGoToHome} className="fixed top-0 bg-malmo-rasberry-25" />
 
       {/* 테스트 시작 이미지 */}
       <div className="mt-[36px] flex justify-center overflow-hidden">

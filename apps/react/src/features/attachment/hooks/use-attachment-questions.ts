@@ -4,6 +4,7 @@ import loveTypeService from '@/shared/services/love-type.service'
 import memberService from '@/shared/services/member.service'
 import { QUESTION_CONFIG } from '../models/constants'
 import type { LoveTypeQuestionData, LoveTypeTestResult } from '@data/user-api-axios/api'
+import { useAuth } from '@/features/auth'
 
 // 질문 타입 정의
 interface Question {
@@ -54,6 +55,7 @@ export interface UseAttachmentQuestionsResult {
 
 export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const navigate = useNavigate()
+  const auth = useAuth()
 
   // 질문 목록 상태
   const [questions, setQuestions] = useState<Question[]>([])
@@ -183,6 +185,9 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
 
       // 결과 제출
       await memberService.submitLoveTypeTest(formattedAnswers)
+
+      // 쿼리 무효화
+      await auth.refreshUserInfo()
 
       // 2초 후 결과 페이지로 이동
       setTimeout(() => {

@@ -65,16 +65,17 @@ function RouteComponent() {
                     if (data.level! > itemLevel) {
                       const { data: question } = await questionService.fetchPastQuestion(itemLevel)
                       setSelectedQuestion({ ...question })
+                    } else if (data.level! === itemLevel) {
+                      setSelectedQuestion({ ...data })
                     }
                   }}
                 >
                   <CalendarItem
                     props={{
                       className: cn('h-7 w-7', {
-                        'text-malmo-rasberry-500':
-                          (data.meAnswered && data.partnerAnswered) || data.level! >= itemLevel,
                         'text-malmo-rasberry-100': !data.partnerAnswered,
                         'text-gray-neutral-300': !data.meAnswered,
+                        'text-malmo-rasberry-500': (data.meAnswered && data.partnerAnswered) || data.level! > itemLevel,
                         'text-gray-neutral-100': data.level! < i + 1 || itemLevel > data.level!,
                       }),
                     }}
