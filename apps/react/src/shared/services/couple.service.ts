@@ -17,6 +17,11 @@ class CoupleService extends CouplesApi {
     return data
   }
 
+  async disconnectCouple() {
+    const { data } = await super.unlinkCouple()
+    return data
+  }
+
   connectCoupleMutation() {
     return {
       mutationKey: [QUERY_KEY, 'link'],

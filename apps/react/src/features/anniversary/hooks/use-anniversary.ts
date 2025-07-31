@@ -31,9 +31,9 @@ export function useAnniversary(initialDate: Date | null = null) {
 
   // 초기 날짜 설정 (제공된 날짜 또는 오늘)
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate || today)
-  const [visibleYear, setVisibleYear] = useState<number>(selectedDate.getFullYear())
-  const [visibleMonth, setVisibleMonth] = useState<number>(selectedDate.getMonth() + 1)
-  const [visibleDay, setVisibleDay] = useState<number>(selectedDate.getDate())
+  const [visibleYear, setVisibleYear] = useState<number>((initialDate || today).getFullYear())
+  const [visibleMonth, setVisibleMonth] = useState<number>((initialDate || today).getMonth() + 1)
+  const [visibleDay, setVisibleDay] = useState<number>((initialDate || today).getDate())
 
   // 타입 단언을 사용하여 RefObject<HTMLDivElement>로 명시적 타입 지정
   const yearRef = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>
@@ -42,6 +42,16 @@ export function useAnniversary(initialDate: Date | null = null) {
 
   // 년도 범위 (현재 년도 기준 -10년 ~ 현재)
   const years = Array.from({ length: 11 }, (_, i) => currentYear - 10 + i)
+
+  // initialDate가 변경될 때 모든 상태 업데이트
+  useEffect(() => {
+    if (initialDate) {
+      setSelectedDate(initialDate)
+      setVisibleYear(initialDate.getFullYear())
+      setVisibleMonth(initialDate.getMonth() + 1)
+      setVisibleDay(initialDate.getDate())
+    }
+  }, [initialDate])
 
   // 월 (1-12, 현재 년도인 경우 현재 월까지만)
   const getAvailableMonths = () => {
@@ -78,35 +88,34 @@ export function useAnniversary(initialDate: Date | null = null) {
 
   // 스크롤 위치 설정 함수
   const scrollToSelected = () => {
-    if (yearRef.current) {
-      const yearIndex = years.findIndex((y) => y === selectedDate.getFullYear())
-      if (yearIndex !== -1) {
-        yearRef.current.scrollTop = yearIndex * 50
+    setTimeout(() => {
+      if (yearRef.current) {
+        const yearIndex = years.findIndex((y) => y === selectedDate.getFullYear())
+        if (yearIndex !== -1) {
+          yearRef.current.scrollTop = yearIndex * 50
+        }
       }
-    }
 
-    if (monthRef.current) {
-      const monthIndex = months.findIndex((m) => m === selectedDate.getMonth() + 1)
-      if (monthIndex !== -1) {
-        monthRef.current.scrollTop = monthIndex * 50
+      if (monthRef.current) {
+        const monthIndex = months.findIndex((m) => m === selectedDate.getMonth() + 1)
+        if (monthIndex !== -1) {
+          monthRef.current.scrollTop = monthIndex * 50
+        }
       }
-    }
 
-    if (dayRef.current) {
-      const dayIndex = days.findIndex((d) => d === selectedDate.getDate())
-      if (dayIndex !== -1) {
-        dayRef.current.scrollTop = dayIndex * 50
+      if (dayRef.current) {
+        const dayIndex = days.findIndex((d) => d === selectedDate.getDate())
+        if (dayIndex !== -1) {
+          dayRef.current.scrollTop = dayIndex * 50
+        }
       }
-    }
+    }, 0)
   }
 
   // 초기 스크롤 위치 설정
   useEffect(() => {
     scrollToSelected()
-    setVisibleYear(selectedDate.getFullYear())
-    setVisibleMonth(selectedDate.getMonth() + 1)
-    setVisibleDay(selectedDate.getDate())
-  }, [selectedDate])
+  }, [selectedDate, years, months, days])
 
   // 년도 변경 시 월과 일 업데이트
   useEffect(() => {

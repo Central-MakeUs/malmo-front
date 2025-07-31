@@ -92,6 +92,15 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
     async setKeyboardHeight(height: number): Promise<void> {
       set({ keyboardHeight: height })
     },
+    
+    async openWebView(url: string): Promise<void> {
+      try {
+        const { Linking } = require('react-native')
+        await Linking.openURL(url)
+      } catch (error) {
+        console.error('WebView 열기 오류:', error)
+      }
+    },
 
     async getQuestionHelp(): Promise<boolean> {
       const helpSeen = await AuthStorage.getQuestionHelp()
@@ -145,6 +154,15 @@ export const appSchema = postMessageSchema({
   toggleOverlay: {
     validate: (value) => {
       return {}
+    },
+  },
+  openWebView: {
+    validate: (value) => {
+      return z
+        .object({
+          url: z.string().url(),
+        })
+        .parse(value)
     },
   },
 })

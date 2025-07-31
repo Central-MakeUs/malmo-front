@@ -3,7 +3,12 @@ import { createContext, ReactNode, useCallback, useEffect, useState, use } from 
 import authClient from '../lib/auth-client'
 import { SocialLoginType } from '@bridge/types'
 import memberService from '@/shared/services/member.service'
-import { MemberData, MemberDataMemberStateEnum, MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
+import {
+  MemberData,
+  MemberDataMemberStateEnum,
+  MemberDataLoveTypeCategoryEnum,
+  MemberDataProviderEnum,
+} from '@data/user-api-axios/api'
 
 // 멤버 상태 타입
 export type MemberState = MemberDataMemberStateEnum | null
@@ -11,12 +16,16 @@ export type MemberState = MemberDataMemberStateEnum | null
 // 사용자 정보 타입
 export type UserInfo = {
   memberState: MemberState
+  provider?: MemberDataProviderEnum
   nickname?: string
   startLoveDate?: string
   // 애착 유형 관련 필드
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
   anxietyRate?: number
   avoidanceRate?: number
+  // 통계 데이터
+  totalChatRoomCount?: number
+  totalCoupleQuestionCount?: number
 }
 
 export interface AuthContext {
@@ -37,11 +46,14 @@ const AuthContext = createContext<AuthContext | null>(null)
 // 초기 사용자 정보 상태
 const initialUserInfo: UserInfo = {
   memberState: null,
+  provider: undefined,
   nickname: undefined,
   startLoveDate: undefined,
   loveTypeCategory: undefined,
   anxietyRate: undefined,
   avoidanceRate: undefined,
+  totalChatRoomCount: undefined,
+  totalCoupleQuestionCount: undefined,
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -68,11 +80,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (memberInfo?.data) {
         const newUserInfo: UserInfo = {
           memberState: memberInfo.data.memberState || null,
+          provider: memberInfo.data.provider || undefined,
           nickname: memberInfo.data.nickname,
           startLoveDate: memberInfo.data.startLoveDate || undefined,
           loveTypeCategory: memberInfo.data.loveTypeCategory || undefined,
           anxietyRate: memberInfo.data.anxietyRate || undefined,
           avoidanceRate: memberInfo.data.avoidanceRate || undefined,
+          totalChatRoomCount: memberInfo.data.totalChatRoomCount || 5, // 임시 기본값
+          totalCoupleQuestionCount: memberInfo.data.totalCoupleQuestionCount || 10, // 임시 기본값
         }
 
         setUserInfo(newUserInfo)
