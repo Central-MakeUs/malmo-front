@@ -14,7 +14,7 @@ const CONNECTED_REQUIRED_MESSAGE =
 export const chatKeys = {
   all: ['chat'] as const,
   status: () => [...chatKeys.all, 'status'] as const,
-  messages: () => [...chatKeys.all, 'messages'] as const,
+  messages: (chatId?: number) => [...chatKeys.all, 'messages', chatId] as const,
   summary: (chatRoomId: number) => [...chatKeys.all, 'summary', chatRoomId] as const,
 }
 
@@ -56,7 +56,7 @@ export const useChatMessagesQuery = (
 
   if (chatId) {
     return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
-      queryKey: chatKeys.messages(),
+      queryKey: chatKeys.messages(chatId),
       queryFn: async ({ pageParam = 0 }) => {
         const response = await historyService.getHistory({
           chatRoomId: chatId,
@@ -73,7 +73,7 @@ export const useChatMessagesQuery = (
   }
 
   return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
-    queryKey: chatKeys.messages(),
+    queryKey: chatKeys.messages(chatId),
     queryFn: async ({ pageParam = 0 }) => {
       const response = await chatService.getChatroomMessagesList({
         page: pageParam as number,

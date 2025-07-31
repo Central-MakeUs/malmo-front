@@ -5,6 +5,7 @@ import { SocialLoginType, SocialLoginResult } from '@bridge/types'
 export interface WebBridge extends BridgeStore<WebBridge> {
   // 상태
   isLoggedIn: boolean
+  keyboardHeight: number
 
   // 액션
   socialLogin(type: SocialLoginType): Promise<SocialLoginResult>
@@ -28,6 +29,7 @@ export const bridge = linkBridge<WebBridge>({
   timeout: 20000,
   initialBridge: {
     isLoggedIn: false,
+    keyboardHeight: 0,
     socialLogin: async () => ({ success: false }),
     getAuthStatus: async () => ({ isLoggedIn: false }),
     getAuthToken: async () => ({ accessToken: null }),

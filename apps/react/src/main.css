@@ -8,6 +8,12 @@
   --content-width: 1240px;
 }
 
+.no-bounce-scroll {
+  overflow-y: auto;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}
+
 @theme {
   /* custom font */
   --default-font-family: var(--font-pretendard);

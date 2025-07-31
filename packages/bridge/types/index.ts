@@ -15,6 +15,7 @@ export interface BridgeStore {
     opacity: number
   }
   statusBarColor: string
+  keyboardHeight: number
 }
 
 // 브릿지 액션 타입 (함수)
@@ -28,6 +29,7 @@ export interface BridgeActions {
   changeStatusBarColor(color: string): Promise<void>
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
+  setKeyboardHeight(height: number): Promise<void>
   openWebView(url: string): Promise<void>
   getQuestionHelp(): Promise<boolean>
   setQuestionHelpFalse(): Promise<void>

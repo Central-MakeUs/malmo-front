@@ -51,7 +51,7 @@ function ChatInput(props: { disabled?: boolean }) {
       setText('')
     }
   }
-  // Shift+Enter는 줄바꿈, Enter는 전송으로 처리합니다.
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
@@ -81,7 +81,6 @@ function ChatInput(props: { disabled?: boolean }) {
           )}
         >
           <textarea
-            autoFocus={chattingModal.showChattingTutorial}
             disabled={disabled}
             ref={textareaRef}
             value={text}

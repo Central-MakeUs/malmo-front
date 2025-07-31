@@ -77,7 +77,7 @@ function RouteComponent() {
     <div className="flex h-full flex-col">
       <DetailHeaderBar right={exitButton()} showBackButton={fromHistory} className="bg-malmo-rasberry-25" />
 
-      <div className="flex-1 overflow-y-auto bg-malmo-rasberry-25 pt-3">
+      <div className="flex-1 bg-malmo-rasberry-25 pt-3">
         <ChatResultHeader
           title="대화 요약이 완료되었어요!"
           description={'모모가 고민을 해결하는 데<br /> 도움을 주었길 바라요'}

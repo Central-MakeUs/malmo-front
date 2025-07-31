@@ -16,7 +16,7 @@ class AuthClient {
           // 네이티브에서 토큰 가져오기
           const { accessToken } = await bridge.getAuthToken()
           console.log('Access Token:', accessToken)
-
+          
           if (!accessToken) {
             return { authenticated: false }
           }

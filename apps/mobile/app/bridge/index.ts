@@ -89,6 +89,10 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
       return seen
     },
 
+    async setKeyboardHeight(height: number): Promise<void> {
+      set({ keyboardHeight: height })
+    },
+    
     async openWebView(url: string): Promise<void> {
       try {
         const { Linking } = require('react-native')
@@ -96,6 +100,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
       } catch (error) {
         console.error('WebView 열기 오류:', error)
       }
+    },
 
     async getQuestionHelp(): Promise<boolean> {
       const helpSeen = await AuthStorage.getQuestionHelp()
@@ -111,6 +116,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
     isLoggedIn: false,
     overlayState: { visible: false, opacity: 0 },
     statusBarColor: '#fff',
+    keyboardHeight: 0,
     ...actions,
   }
 })
