@@ -7,6 +7,7 @@ import coupleService from '@/shared/services/couple.service'
 import { useAuth } from '@/features/auth'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 import bridge from '@/shared/bridge'
+import { useBridge } from '@webview-bridge/react'
 
 interface PartnerCodeSheetProps {
   isOpen: boolean
@@ -16,6 +17,7 @@ interface PartnerCodeSheetProps {
 }
 
 export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConnected }: PartnerCodeSheetProps) {
+  const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
   const [partnerCode, setPartnerCode] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { refreshUserInfo } = useAuth()
@@ -64,7 +66,14 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
 
   return (
     <Sheet open={isOpen} onOpenChange={handleClose}>
-      <SheetContent side="bottom" className="!h-[354px] rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden">
+      <SheetContent
+        side="bottom"
+        className="rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden"
+        style={{
+          bottom: keyboardHeight ?? 0,
+          transition: keyboardHeight && keyboardHeight > 0 ? 'bottom 250ms cubic-bezier(0.17,0.59,0.4,0.77)' : 'none',
+        }}
+      >
         {/* 접근성을 위한 숨겨진 제목 */}
         <SheetTitle className="sr-only">상대방 코드로 연결하기</SheetTitle>
 
@@ -93,7 +102,7 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
           </div>
 
           {/* 연결하기 버튼 */}
-          <div className="mt-auto mb-5">
+          <div className="mt-12 mb-5">
             <Button text={'연결하기'} onClick={handleSubmit} disabled={!partnerCode.trim() || isSubmitting} />
           </div>
         </div>
