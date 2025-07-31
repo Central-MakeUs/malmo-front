@@ -11,7 +11,7 @@ function ChatInput(props: { disabled?: boolean }) {
 
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { chattingModal, setSendingMessageTrue, sendingMessage } = useChatting()
+  const { setSendingMessageTrue, sendingMessage } = useChatting()
 
   const { mutate: sendMessage, isPending } = useSendMessageMutation()
 

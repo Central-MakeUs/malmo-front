@@ -29,8 +29,13 @@ class ChatService extends ChatroomApi {
   }
 
   async postChatroomSend(body: ChatRequest) {
-    const { data } = await this.sendChatMessage1({ chatRequest: { ...body } })
-    return data
+    try {
+      const { data } = await this.sendChatMessage1({ chatRequest: { ...body } })
+      return data
+    } catch (error) {
+      console.error('Error sending chat message:', error)
+      throw error
+    }
   }
 
   async postChatroomUpgrade() {
