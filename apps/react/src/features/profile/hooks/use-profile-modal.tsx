@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import MomoConnectedImage from '@/assets/images/momo-connected.png'
+
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 import { useAuth } from '@/features/auth'
 import { useNavigate } from '@tanstack/react-router'
@@ -16,7 +17,6 @@ export function useProfileModal(): UseProfileModalReturn {
   const alertDialog = useAlertDialog()
   const { logout, refreshUserInfo } = useAuth()
   const navigate = useNavigate()
-  const [coupleConnectedModalOpen, setCoupleConnectedModalOpen] = useState(false)
 
   const logoutModal = () => {
     alertDialog.open({
@@ -84,6 +84,7 @@ export function useProfileModal(): UseProfileModalReturn {
     alertDialog.open({
       title: '커플 연동이 완료되었어요!',
       description: '이제 말모를 제한 없이 사용할 수 있어요!',
+      image: <img src={MomoConnectedImage} alt="연결 완료" className="h-[164px] w-[184px]" />,
       confirmText: '확인',
       onConfirm: async () => {
         await refreshUserInfo()

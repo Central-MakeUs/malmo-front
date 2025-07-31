@@ -16,6 +16,7 @@ import bridge from '../bridge'
 
 type AlertDialogOpenOptions = {
   title?: string | React.ReactNode
+  image?: React.ReactNode
   description?: string | React.ReactNode
   cancelText?: string
   confirmText?: string
@@ -28,6 +29,7 @@ interface AlertDialogContextType {
   openAlertDialog: boolean
   title?: string | React.ReactNode
   description?: string | React.ReactNode
+  image?: React.ReactNode
   cancelText?: string
   confirmText: string
   onConfirm?: () => void | Promise<void>
@@ -80,11 +82,13 @@ export function AlertDialogProvider({
 }
 
 export function GlobalAlertDialog() {
-  const { openAlertDialog, title, description, cancelText, confirmText, onConfirm, onCancel, close } = useAlertDialog()
+  const { openAlertDialog, title, description, image, cancelText, confirmText, onConfirm, onCancel, close } =
+    useAlertDialog()
 
   return (
     <AlertDialog open={openAlertDialog} onOpenChange={close}>
       <AlertDialogContent>
+        <div className="mb-5 flex justify-center">{image}</div>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           {description && <AlertDialogDescription>{description}</AlertDialogDescription>}

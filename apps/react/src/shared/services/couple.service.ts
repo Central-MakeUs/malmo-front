@@ -18,8 +18,12 @@ class CoupleService extends CouplesApi {
   }
 
   async disconnectCouple() {
-    const { data } = await super.unlinkCouple()
-    return data
+    try {
+      const { data } = await super.unlinkCouple()
+      return data
+    } catch (error) {
+      console.error('Error disconnecting couple:', error)
+    }
   }
 
   connectCoupleMutation() {

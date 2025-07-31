@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import memberService from '@/shared/services/member.service'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
+import bridge from '@/shared/bridge'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementPage,
@@ -59,6 +60,7 @@ function CoupleManagementPage() {
   const handleConnectPartner = () => {
     if (isConnected) return
 
+    bridge.toggleOverlay(3)
     setIsPartnerCodeSheetOpen(true)
   }
 

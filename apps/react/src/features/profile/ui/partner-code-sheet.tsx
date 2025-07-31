@@ -6,6 +6,7 @@ import { Input } from '@/shared/ui/input'
 import coupleService from '@/shared/services/couple.service'
 import { useAuth } from '@/features/auth'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import bridge from '@/shared/bridge'
 
 interface PartnerCodeSheetProps {
   isOpen: boolean
@@ -33,6 +34,7 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
       await refreshUserInfo()
 
       // 성공시 시트 닫기
+      bridge.toggleOverlay(0)
       onOpenChange(false)
 
       // 커플 연결 성공 핸들러 호출
@@ -56,6 +58,7 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
 
   const handleClose = () => {
     setPartnerCode('')
+    bridge.toggleOverlay(0)
     onOpenChange(false)
   }
 
