@@ -1,6 +1,6 @@
-import React, { useRef, useCallback, useEffect, useLayoutEffect } from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import { SafeAreaView, View, StyleSheet, Platform, Keyboard, LayoutAnimation } from 'react-native'
-import { bridge, createWebView, useBridge, type BridgeWebView } from '@webview-bridge/react-native'
+import { createWebView, useBridge, type BridgeWebView } from '@webview-bridge/react-native'
 import { appBridge, appSchema } from './bridge'
 import { useOverlay } from './features/overlay/use-overlay'
 import { DynamicStatusBar } from './features/status-bar/dynamic-status-bar'

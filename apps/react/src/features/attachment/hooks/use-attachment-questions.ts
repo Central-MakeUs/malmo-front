@@ -4,8 +4,6 @@ import loveTypeService from '@/shared/services/love-type.service'
 import memberService from '@/shared/services/member.service'
 import { QUESTION_CONFIG } from '../models/constants'
 import type { LoveTypeQuestionData, LoveTypeTestResult } from '@data/user-api-axios/api'
-import { useQueryClient } from '@tanstack/react-query'
-import { QUERY_KEY } from '@/shared/services/couple.service'
 import { useAuth } from '@/features/auth'
 
 // 질문 타입 정의
