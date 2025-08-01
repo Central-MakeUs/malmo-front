@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import memberService from '@/shared/services/member.service'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
+import bridge from '@/shared/bridge'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementPage,
@@ -32,7 +33,7 @@ function CoupleManagementPage() {
   const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
 
   // 프로필 모달 훅
-  const { coupleDisconnectModal, showCoupleConnectedModal, CoupleConnectedModal } = useProfileModal()
+  const { coupleDisconnectModal, coupleConnectedModal } = useProfileModal()
 
   // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
@@ -59,6 +60,7 @@ function CoupleManagementPage() {
   const handleConnectPartner = () => {
     if (isConnected) return
 
+    bridge.toggleOverlay(3)
     setIsPartnerCodeSheetOpen(true)
   }
 
@@ -109,11 +111,8 @@ function CoupleManagementPage() {
         isOpen={isPartnerCodeSheetOpen}
         onOpenChange={setIsPartnerCodeSheetOpen}
         onSuccess={handleRefreshPage}
-        onCoupleConnected={showCoupleConnectedModal}
+        onCoupleConnected={coupleConnectedModal}
       />
-
-      {/* 커플 연결 완료 모달 */}
-      {CoupleConnectedModal}
     </div>
   )
 }

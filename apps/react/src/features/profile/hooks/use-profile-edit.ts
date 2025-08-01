@@ -1,14 +1,27 @@
+import bridge from '@/shared/bridge'
 import { useState } from 'react'
 
 export function useProfileEdit() {
   const [isNicknameSheetOpen, setIsNicknameSheetOpen] = useState(false)
   const [isAnniversarySheetOpen, setIsAnniversarySheetOpen] = useState(false)
 
-  const openNicknameSheet = () => setIsNicknameSheetOpen(true)
-  const setNicknameSheetOpen = (open: boolean) => setIsNicknameSheetOpen(open)
+  const openNicknameSheet = () => {
+    bridge.toggleOverlay(3)
+    setIsNicknameSheetOpen(true)
+  }
+  const setNicknameSheetOpen = (open: boolean) => {
+    bridge.toggleOverlay(open ? 3 : 0)
+    setIsNicknameSheetOpen(open)
+  }
 
-  const openAnniversarySheet = () => setIsAnniversarySheetOpen(true)
-  const setAnniversarySheetOpen = (open: boolean) => setIsAnniversarySheetOpen(open)
+  const openAnniversarySheet = () => {
+    bridge.toggleOverlay(3)
+    setIsAnniversarySheetOpen(true)
+  }
+  const setAnniversarySheetOpen = (open: boolean) => {
+    bridge.toggleOverlay(open ? 3 : 0)
+    setIsAnniversarySheetOpen(open)
+  }
 
   return {
     // 닉네임 관련

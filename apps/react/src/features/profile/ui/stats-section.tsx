@@ -28,9 +28,7 @@ export function StatsSection({ totalChatRoomCount, totalCoupleQuestionCount }: S
             <p className="body4-medium text-gray-iron-500">지금까지 모은 마음</p>
             <div className="mt-2 flex items-center">
               <LikeIcon className="h-6 w-6" />
-              <span className="heading1-bold ml-1 text-gray-iron-950">
-                {totalCoupleQuestionCount ? totalCoupleQuestionCount - 1 : 0}
-              </span>
+              <span className="heading1-bold ml-1 text-gray-iron-950">{totalCoupleQuestionCount || 0}</span>
             </div>
           </div>
         </div>

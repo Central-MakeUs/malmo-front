@@ -48,6 +48,8 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 3001,
+      host: env.VITE_HOST_URL,
+      allowedHosts: [env.VITE_HOST_URL || 'localhost'],
       proxy: {
         '/api': {
           target: env.VITE_API_URL,

@@ -6,6 +6,8 @@ import { NicknameInput } from './nickname-input'
 import { useNicknameInput } from '../hooks/use-nickname-input'
 import memberService from '@/shared/services/member.service'
 import { useAuth } from '@/features/auth'
+import bridge from '@/shared/bridge'
+import { useBridge } from '@webview-bridge/react'
 
 interface NicknameEditSheetProps {
   isOpen: boolean
@@ -16,6 +18,7 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetPro
   const { nickname, handleNicknameChange, isValid, maxLength } = useNicknameInput()
   const { refreshUserInfo } = useAuth()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
 
   const handleSubmit = async () => {
     if (!isValid || isSubmitting) return
@@ -41,7 +44,14 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetPro
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="!h-[380px] rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden">
+      <SheetContent
+        side="bottom"
+        className="rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden"
+        style={{
+          bottom: keyboardHeight ?? 0,
+          transition: keyboardHeight && keyboardHeight > 0 ? 'bottom 250ms cubic-bezier(0.17,0.59,0.4,0.77)' : 'none',
+        }}
+      >
         {/* 접근성을 위한 숨겨진 제목 */}
         <SheetTitle className="sr-only">닉네임 변경</SheetTitle>
 
@@ -68,7 +78,7 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetPro
           </div>
 
           {/* 변경하기 버튼 */}
-          <div className="mt-auto mb-5">
+          <div className="mt-12 mb-5">
             <Button text={'변경하기'} onClick={handleSubmit} disabled={!isValid || isSubmitting} />
           </div>
         </div>
