@@ -19,7 +19,7 @@ function RouteComponent() {
     async function completeChatRoom() {
       try {
         const { data } = await chatService.postChatroomComplete()
-        await new Promise((resolve) => setTimeout(resolve, 3000))
+        await new Promise((resolve) => setTimeout(resolve, 2000))
 
         queryClient.removeQueries({ queryKey: chatKeys.messages() })
         await queryClient.invalidateQueries({ queryKey: chatKeys.status() })
