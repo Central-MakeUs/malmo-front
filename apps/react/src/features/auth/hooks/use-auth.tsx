@@ -75,7 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return null
     }
     try {
-      const memberInfo = await memberService.findOne()
+      const queryOptions = memberService.userInfoQuery()
+      const memberInfo = await queryOptions.queryFn()
 
       if (memberInfo?.data) {
         const newUserInfo: UserInfo = {

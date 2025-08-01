@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import loveTypeService from '@/shared/services/love-type.service'
 import memberService from '@/shared/services/member.service'
 import { QUESTION_CONFIG } from '../models/constants'
@@ -60,11 +61,23 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
 
   // 질문 목록 상태
   const [questions, setQuestions] = useState<Question[]>([])
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isSubmitted, setIsSubmitted] = useState(false) // 제출 완료 상태 추가
 
-  // 결과 제출 로딩 상태
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  // 결과 제출 뮤테이션
+  const submitLoveTypeTestMutation = useMutation({
+    ...memberService.submitLoveTypeTestMutation(),
+    onSuccess: () => {
+      // 2초 후 결과 페이지로 이동
+      setTimeout(() => {
+        navigate({ to: '/attachment-test/result/my' })
+      }, QUESTION_CONFIG.SUBMISSION_DELAY)
+    },
+    onError: (err) => {
+      setIsSubmitted(false) // 에러 시 제출 상태 리셋
+      alert('결과 제출에 실패했습니다. 다시 시도해주세요.')
+    },
+  })
 
   // 페이지 관련 상태
   const [currentPage, setCurrentPage] = useState(1)
@@ -86,38 +99,22 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const currentQuestions = questions.slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
 
   // 질문 데이터 가져오기
+  const { data: questionsData, isLoading: loading, error: queryError } = useQuery(loveTypeService.questionsQuery())
+
   useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        setLoading(true)
-        const response = await loveTypeService.getQuestions()
-
-        // API 응답 구조에 맞게 데이터 처리
-        if (response && response.data && Array.isArray(response.data.list)) {
-          // API 응답 구조에 맞게 데이터 매핑
-          setQuestions(
-            response.data.list.map((item: LoveTypeQuestionData) => ({
-              id: item.questionNumber || 0,
-              content: item.content || '',
-            }))
-          )
-        }
-      } catch (err) {
-        setError('질문을 불러오는데 실패했습니다.')
-
-        // 임시 데이터 (에러 발생 시)
-        const tempQuestions = Array.from({ length: 36 }, (_, i) => ({
-          id: i + 1,
-          content: `질문 ${i + 1}: 애착유형 관련 질문입니다.`,
+    if (questionsData && questionsData.data && Array.isArray(questionsData.data.list)) {
+      // API 응답 구조에 맞게 데이터 매핑
+      setQuestions(
+        questionsData.data.list.map((item: LoveTypeQuestionData) => ({
+          id: item.questionNumber || 0,
+          content: item.content || '',
         }))
-        setQuestions(tempQuestions)
-      } finally {
-        setLoading(false)
-      }
+      )
+      setError(null)
+    } else if (queryError) {
+      setError('질문을 불러오는데 실패했습니다.')
     }
-
-    fetchQuestions()
-  }, [])
+  }, [questionsData, queryError])
 
   // 이전 페이지로 이동
   const handleGoBack = () => {
@@ -166,38 +163,27 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   }
 
   // 결과 제출
-  const handleSubmit = async () => {
-    try {
-      // 모든 질문에 답변했는지 확인
-      const answeredQuestions = Object.keys(answers).length
-      if (answeredQuestions < questions.length) {
-        alert(`아직 ${questions.length - answeredQuestions}개의 질문에 답변하지 않았습니다.`)
-        return
-      }
+  const handleSubmit = () => {
+    // 이미 제출했거나 제출 중이면 중복 실행 방지
+    if (submitLoveTypeTestMutation.isPending || isSubmitted) return
 
-      // 로딩 시작
-      setIsSubmitting(true)
-
-      // 답변 형식 변환
-      const formattedAnswers: LoveTypeTestResult[] = Object.entries(answers).map(([questionId, score]) => ({
-        questionId: parseInt(questionId),
-        score,
-      }))
-
-      // 결과 제출
-      await memberService.submitLoveTypeTest(formattedAnswers)
-
-      // 쿼리 무효화
-      await auth.refreshUserInfo()
-
-      // 2초 후 결과 페이지로 이동
-      setTimeout(() => {
-        navigate({ to: '/attachment-test/result/my' })
-      }, QUESTION_CONFIG.SUBMISSION_DELAY)
-    } catch (err) {
-      setIsSubmitting(false)
-      alert('결과 제출에 실패했습니다. 다시 시도해주세요.')
+    // 모든 질문에 답변했는지 확인
+    const answeredQuestions = Object.keys(answers).length
+    if (answeredQuestions < questions.length) {
+      alert(`아직 ${questions.length - answeredQuestions}개의 질문에 답변하지 않았습니다.`)
+      return
     }
+
+    setIsSubmitted(true)
+
+    // 답변 형식 변환
+    const formattedAnswers: LoveTypeTestResult[] = Object.entries(answers).map(([questionId, score]) => ({
+      questionId: parseInt(questionId),
+      score,
+    }))
+
+    // 결과 제출
+    submitLoveTypeTestMutation.mutate(formattedAnswers)
   }
 
   // 현재 페이지의 모든 질문에 답변했는지 확인
@@ -219,7 +205,10 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
     isCurrentPageComplete,
 
     // 제출 관련
-    isSubmitting,
+    isSubmitting: (() => {
+      const result = submitLoveTypeTestMutation.isPending || isSubmitted
+      return result
+    })(),
 
     // 액션 함수들
     handleGoBack,

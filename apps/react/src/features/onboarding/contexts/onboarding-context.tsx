@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import signUpService from '@/shared/services/sign-up.service'
 import { formatDate } from '@/shared/utils'
 import { useAuth } from '@/features/auth'
@@ -59,6 +60,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const { refreshUserInfo } = useAuth()
   const [data, setData] = useState<OnboardingData>(defaultOnboardingData)
 
+  const signUpMutation = useMutation({
+    ...signUpService.signUpMutation(),
+  })
+
   // 약관 동의 업데이트
   const updateTermsAgreements = (agreements: Record<number, boolean>) => {
     setData((prev) => ({
@@ -113,7 +118,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       }
 
       // 회원가입 API 호출
-      await signUpService.requestSignUp(requestBody)
+      await signUpMutation.mutateAsync(requestBody)
 
       // 멤버 상태 갱신
       await refreshUserInfo()

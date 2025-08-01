@@ -4,6 +4,7 @@ import { Pen, X } from 'lucide-react'
 import MyHeart from '@/assets/icons/my-heart.svg'
 import OtherHeart from '@/assets/icons/other-heart.svg'
 import { z } from 'zod'
+import { useQuery } from '@tanstack/react-query'
 import questionService from '@/shared/services/question.service'
 import { cn } from '@ui/common/lib/utils'
 import { useState } from 'react'
@@ -20,16 +21,17 @@ export const Route = createFileRoute('/question/see-answer/')({
   loaderDeps: (search) => search,
   loader: async ({ context, deps }) => {
     const { coupleQuestionId } = deps.search
+    await context.queryClient.ensureQueryData(questionService.questionDetailQuery(coupleQuestionId))
     const showHelpInit = await bridge.getQuestionHelp()
-
-    const data = await questionService.fetchQuestionDetail(coupleQuestionId)
-    return { data: data?.data, coupleQuestionId, showHelpInit }
+    return { coupleQuestionId, showHelpInit }
   },
 })
 
 function RouteComponent() {
-  const { data, coupleQuestionId, showHelpInit } = Route.useLoaderData()
+  const { coupleQuestionId, showHelpInit } = Route.useLoaderData()
   const [showHelp, setShowHelp] = useState(showHelpInit)
+
+  const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
 
   return (
     <div className="flex h-screen flex-col">

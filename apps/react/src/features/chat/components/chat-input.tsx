@@ -2,9 +2,10 @@ import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 import { cn } from '@ui/common/lib/utils'
 import { useChatting } from '../context/chatting-context'
-import { chatKeys, useSendMessageMutation } from '../hook/use-chat-queries'
+import { useSendMessageMutation } from '../hook/use-chat-queries'
 import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useQueryClient } from '@tanstack/react-query'
+import chatService from '@/shared/services/chat.service'
 
 function ChatInput(props: { disabled?: boolean }) {
   const queryClient = useQueryClient()
@@ -61,7 +62,8 @@ function ChatInput(props: { disabled?: boolean }) {
     }
   }
 
-  const paused = queryClient.getQueryData(chatKeys.status()) === ChatRoomStateDataChatRoomStateEnum.Paused
+  const paused =
+    queryClient.getQueryData(chatService.chatRoomStatusQuery().queryKey) === ChatRoomStateDataChatRoomStateEnum.Paused
   const disabled = props.disabled || paused || isPending || sendingMessage
 
   return (

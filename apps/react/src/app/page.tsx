@@ -6,15 +6,28 @@ import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { useAuth } from '@/features/auth'
 import { calculateDDay } from '@/shared/utils/date'
 import { ChatEntryCard } from '@/features/chat/components/chat-entry-card'
-import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
 import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
 import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
 import { AttachmentTypeCards } from '@/features/attachment/ui/attachment-type-cards'
 import { getAttachmentType } from '@/features/attachment'
 import { usePartnerInfo } from '@/features/member'
+import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
+import questionService from '@/shared/services/question.service'
+import memberService from '@/shared/services/member.service'
+import chatService from '@/shared/services/chat.service'
+import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
+  loader: async ({ context }) => {
+    const loadPromises = [
+      context.queryClient.ensureQueryData(questionService.todayQuestionQuery()),
+      context.queryClient.ensureQueryData(memberService.partnerInfoQuery()),
+      context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery()),
+    ]
+
+    await Promise.allSettled(loadPromises)
+  },
 })
 
 function HomePage() {
@@ -27,8 +40,8 @@ function HomePage() {
   const dDay = calculateDDay(userInfo.startLoveDate)
 
   // 채팅방 상태 확인
-  const chatRoomStatus = useChatRoomStatusQuery()
-  const isChatActive = chatRoomStatus.data === 'ALIVE'
+  const { data: chatRoomStatus } = useChatRoomStatusQuery()
+  const isChatActive = chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
   // 애착유형이 있는지 확인
   const hasAttachmentType = !!userInfo.loveTypeCategory

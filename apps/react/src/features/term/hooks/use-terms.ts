@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import termsService from '@/shared/services/terms.service'
 import { Term, TermAgreements } from '../models/types'
 import { convertToTerms, findTermById } from '../lib/converters'
@@ -6,7 +7,6 @@ import { convertToTerms, findTermById } from '../lib/converters'
 export function useTerms(initialAgreements: TermAgreements = {}) {
   // 약관 데이터 상태
   const [termsData, setTermsData] = useState<Term[]>([])
-  const [isLoading, setIsLoading] = useState(true)
 
   // 약관 모달 상태 관리
   const [selectedTermId, setSelectedTermId] = useState<number | null>(null)
@@ -15,39 +15,31 @@ export function useTerms(initialAgreements: TermAgreements = {}) {
   const [agreements, setAgreements] = useState<TermAgreements>(initialAgreements)
 
   // API에서 약관 데이터 가져오기
+  const { data: termsListData, isLoading } = useQuery(termsService.termsListQuery())
+
   useEffect(() => {
-    const fetchTerms = async () => {
-      try {
-        setIsLoading(true)
-        const terms = await termsService.findAll()
-        const convertedTerms = convertToTerms(terms)
-        setTermsData(convertedTerms)
+    if (termsListData) {
+      const convertedTerms = convertToTerms(termsListData)
+      setTermsData(convertedTerms)
 
-        // 약관 데이터가 로드되면 누락된 약관에 대한 기본값 설정
-        if (convertedTerms && convertedTerms.length > 0) {
-          const updatedAgreements = { ...agreements }
-          let hasUpdates = false
+      // 약관 데이터가 로드되면 누락된 약관에 대한 기본값 설정
+      if (convertedTerms && convertedTerms.length > 0) {
+        const updatedAgreements = { ...agreements }
+        let hasUpdates = false
 
-          convertedTerms.forEach((term) => {
-            if (updatedAgreements[term.termsId] === undefined) {
-              updatedAgreements[term.termsId] = false
-              hasUpdates = true
-            }
-          })
-
-          if (hasUpdates) {
-            setAgreements(updatedAgreements)
+        convertedTerms.forEach((term) => {
+          if (updatedAgreements[term.termsId] === undefined) {
+            updatedAgreements[term.termsId] = false
+            hasUpdates = true
           }
+        })
+
+        if (hasUpdates) {
+          setAgreements(updatedAgreements)
         }
-      } catch {
-        // TODO: 에러 처리
-      } finally {
-        setIsLoading(false)
       }
     }
-
-    fetchTerms()
-  }, [])
+  }, [termsListData, agreements])
 
   // 약관 내용 보기
   const handleShowTerms = (termsId: number) => {

@@ -1,5 +1,6 @@
 import { X } from 'lucide-react'
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -19,19 +20,12 @@ interface PartnerCodeSheetProps {
 export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConnected }: PartnerCodeSheetProps) {
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
   const [partnerCode, setPartnerCode] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const { refreshUserInfo } = useAuth()
   const { open } = useAlertDialog()
 
-  const handleSubmit = async () => {
-    if (!partnerCode.trim() || isSubmitting) return
-
-    try {
-      setIsSubmitting(true)
-
-      // 커플 연결 API 호출
-      await coupleService.connectCouple(partnerCode.trim())
-
+  const connectCoupleMutation = useMutation({
+    ...coupleService.connectCoupleMutation(),
+    onSuccess: async () => {
       // 사용자 정보 새로고침
       await refreshUserInfo()
 
@@ -47,15 +41,19 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
 
       // 입력값 초기화
       setPartnerCode('')
-    } catch (error: any) {
+    },
+    onError: () => {
       open({
         title: '연결 실패',
         description: '유효하지 않은 코드입니다. 다시 확인해주세요.',
         confirmText: '확인',
       })
-    } finally {
-      setIsSubmitting(false)
-    }
+    },
+  })
+
+  const handleSubmit = () => {
+    if (!partnerCode.trim() || connectCoupleMutation.isPending) return
+    connectCoupleMutation.mutate(partnerCode.trim())
   }
 
   const handleClose = () => {
@@ -103,7 +101,11 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
 
           {/* 연결하기 버튼 */}
           <div className="mt-12 mb-5">
-            <Button text={'연결하기'} onClick={handleSubmit} disabled={!partnerCode.trim() || isSubmitting} />
+            <Button
+              text={'연결하기'}
+              onClick={handleSubmit}
+              disabled={!partnerCode.trim() || connectCoupleMutation.isPending}
+            />
           </div>
         </div>
       </SheetContent>

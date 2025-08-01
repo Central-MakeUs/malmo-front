@@ -14,9 +14,14 @@ import noResultImage from '@/assets/images/characters/no-result.png'
 import emptyImage from '@/assets/images/characters/empty.png'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 import { BottomNavigation } from '@/shared/ui'
+import chatService from '@/shared/services/chat.service'
+import historyService from '@/shared/services/history.service'
 
 export const Route = createFileRoute('/history/')({
   component: RouteComponent,
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
+  },
 })
 
 function RouteComponent() {

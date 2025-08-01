@@ -8,6 +8,7 @@ import { useChatting } from '@/features/chat/context/chatting-context'
 import historyService from '@/shared/services/history.service'
 import { useEffect } from 'react'
 import bridge from '@/shared/bridge'
+import { useQuery } from '@tanstack/react-query'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -19,16 +20,20 @@ export const Route = createFileRoute('/chat/result/')({
   validateSearch: searchSchema,
   loaderDeps: (search) => search,
   loader: async ({ context, deps }) => {
-    const { data } = await historyService.getChatroomSummary(deps.search.chatId ?? 0)
+    const chatId = deps.search.chatId ?? 0
 
-    return { chatResult: data }
+    await context.queryClient.ensureQueryData(historyService.historySummaryQuery(chatId))
+
+    return { chatId }
   },
 })
 
 function RouteComponent() {
-  const { chatResult } = Route.useLoaderData()
+  const { chatId: loaderChatId } = Route.useLoaderData()
   const { chatId, fromHistory } = Route.useSearch()
   const { chattingModal } = useChatting()
+
+  const { data: chatResult, isLoading, error } = useQuery(historyService.historySummaryQuery(chatId ?? loaderChatId))
 
   const navigate = useNavigate()
 

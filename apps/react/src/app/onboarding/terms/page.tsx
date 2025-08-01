@@ -6,9 +6,13 @@ import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboard
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term'
 import { Button } from '@/shared/ui'
+import termsService from '@/shared/services/terms.service'
 
 export const Route = createFileRoute('/onboarding/terms/')({
   component: TermsPage,
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(termsService.termsListQuery())
+  },
 })
 
 function TermsPage() {

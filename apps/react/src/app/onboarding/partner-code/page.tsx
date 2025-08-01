@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { Button, HeaderNavigation, Input } from '@/shared/ui'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
@@ -15,7 +16,10 @@ function PartnerCodePage() {
   const { data, updatePartnerCode, completeOnboarding } = useOnboarding()
 
   const [partnerCode, setPartnerCode] = useState(data.partnerCode || '')
-  const [isLoading, setIsLoading] = useState(false)
+
+  const connectCoupleMutation = useMutation({
+    ...coupleService.connectCoupleMutation(),
+  })
 
   const handlePrevious = () => {
     if (partnerCode.trim()) {
@@ -31,11 +35,10 @@ function PartnerCodePage() {
     }
 
     updatePartnerCode(partnerCode)
-    setIsLoading(true)
 
     try {
       // 커플 연결 API 호출
-      await coupleService.connectCouple(partnerCode)
+      await connectCoupleMutation.mutateAsync(partnerCode)
 
       // 회원가입 완료 처리
       const success = await completeOnboarding()
@@ -46,8 +49,6 @@ function PartnerCodePage() {
       }
     } catch (error) {
       alert('유효하지 않은 커플 코드입니다.')
-    } finally {
-      setIsLoading(false)
     }
   }
 
@@ -77,7 +78,7 @@ function PartnerCodePage() {
 
       {/* 다음 버튼 */}
       <div className="mt-auto mb-10 px-5">
-        <Button text="다음" onClick={handleNext} disabled={isLoading} />
+        <Button text="다음" onClick={handleNext} disabled={connectCoupleMutation.isPending} />
       </div>
     </div>
   )

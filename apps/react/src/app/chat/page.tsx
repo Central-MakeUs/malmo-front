@@ -16,6 +16,8 @@ import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 import bridge from '@/shared/bridge'
 import { useBridge } from '@webview-bridge/react'
 import { useChatScroll } from '@/features/chat/hook/use-chat-scroll'
+import chatService from '@/shared/services/chat.service'
+import historyService from '@/shared/services/history.service'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -27,6 +29,15 @@ export const Route = createFileRoute('/chat/')({
   loaderDeps: (search) => search,
   loader: async ({ context, deps }) => {
     const { chatId } = deps.search
+
+    // 채팅방 상태 조회
+    await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
+
+    // chatId가 있으면 해당 히스토리 메시지도 미리 캐시에 저장
+    if (chatId) {
+      await context.queryClient.ensureInfiniteQueryData(historyService.historyMessagesQuery(chatId))
+    }
+
     return { chatId }
   },
 })
@@ -55,7 +66,7 @@ function RouteComponent() {
 
   const messages = useMemo(() => {
     if (!data) return []
-    const allMessages = data.pages.flatMap((page) => page.list ?? [])
+    const allMessages = data.pages.flatMap((page) => page?.list ?? [])
     return chatId ? allMessages : [...allMessages].reverse()
   }, [data, chatId])
 

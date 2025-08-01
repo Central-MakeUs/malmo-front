@@ -12,9 +12,13 @@ import {
 } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
 import bridge from '@/shared/bridge'
+import loveTypeService from '@/shared/services/love-type.service'
 
 export const Route = createFileRoute('/attachment-test/question/')({
   component: AttachmentTestQuestionPage,
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(loveTypeService.questionsQuery())
+  },
 })
 
 function AttachmentTestQuestionPage() {

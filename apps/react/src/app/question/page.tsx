@@ -3,6 +3,7 @@ import CalendarItem from '@/features/question/ui/calendar-item'
 import { HomeHeaderBar } from '@/shared/components/header-bar'
 import questionService from '@/shared/services/question.service'
 import { Badge, BottomNavigation } from '@/shared/ui'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -11,14 +12,16 @@ import { useState } from 'react'
 export const Route = createFileRoute('/question/')({
   component: RouteComponent,
   loader: async ({ context }) => {
-    const data = await questionService.fetchTodayQuestion()
-    return data?.data || null
+    await context.queryClient.ensureQueryData(questionService.todayQuestionQuery())
   },
 })
 
 function RouteComponent() {
-  const data = Route.useLoaderData()
-  if (!data || data.level === undefined) return null
+  const queryClient = useQueryClient()
+  const { data, isLoading, error } = useQuery(questionService.todayQuestionQuery())
+
+  if (isLoading) return <div>Loading...</div>
+  if (error || !data || data.level === undefined) return null
 
   const [currentLevel, setCurrentLevel] = useState(Math.floor((data.level - 1) / 30))
   const [selectedQuestion, setSelectedQuestion] = useState(data)
@@ -63,7 +66,7 @@ function RouteComponent() {
                   key={i}
                   onClick={async () => {
                     if (data.level! > itemLevel) {
-                      const { data: question } = await questionService.fetchPastQuestion(itemLevel)
+                      const question = await queryClient.ensureQueryData(questionService.pastQuestionQuery(itemLevel))
                       setSelectedQuestion({ ...question })
                     } else if (data.level! === itemLevel) {
                       setSelectedQuestion({ ...data })

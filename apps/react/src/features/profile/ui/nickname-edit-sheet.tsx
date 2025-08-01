@@ -1,9 +1,9 @@
 import { X } from 'lucide-react'
-import { useState } from 'react'
 import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
 import { Button } from '@/shared/ui/button'
 import { NicknameInput } from './nickname-input'
 import { useNicknameInput } from '../hooks/use-nickname-input'
+import { useMutation } from '@tanstack/react-query'
 import memberService from '@/shared/services/member.service'
 import { useAuth } from '@/features/auth'
 import bridge from '@/shared/bridge'
@@ -17,29 +17,24 @@ interface NicknameEditSheetProps {
 export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetProps) {
   const { nickname, handleNicknameChange, isValid, maxLength } = useNicknameInput()
   const { refreshUserInfo } = useAuth()
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
-
-  const handleSubmit = async () => {
-    if (!isValid || isSubmitting) return
-
-    try {
-      setIsSubmitting(true)
-
-      // 닉네임 업데이트 API 호출
-      await memberService.update({ nickname })
-
+  const updateNicknameMutation = useMutation({
+    ...memberService.updateMemberMutation(),
+    onSuccess: async () => {
       // 사용자 정보 새로고침
       await refreshUserInfo()
-
       // 성공시 시트 닫기
       onOpenChange(false)
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('닉네임 변경 실패:', error)
       // Todo 에러 처리
-    } finally {
-      setIsSubmitting(false)
-    }
+    },
+  })
+
+  const handleSubmit = () => {
+    if (!isValid || updateNicknameMutation.isPending) return
+    updateNicknameMutation.mutate({ nickname })
   }
 
   return (
@@ -79,7 +74,7 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetPro
 
           {/* 변경하기 버튼 */}
           <div className="mt-12 mb-5">
-            <Button text={'변경하기'} onClick={handleSubmit} disabled={!isValid || isSubmitting} />
+            <Button text={'변경하기'} onClick={handleSubmit} disabled={!isValid || updateNicknameMutation.isPending} />
           </div>
         </div>
       </SheetContent>

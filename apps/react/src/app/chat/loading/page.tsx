@@ -3,35 +3,43 @@ import summaryAnimation from '@/assets/lottie/summary.json'
 import { useEffect } from 'react'
 import Lottie from 'lottie-react'
 import chatService from '@/shared/services/chat.service'
-import { useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { chatKeys } from '@/features/chat/hook/use-chat-queries'
 
 export const Route = createFileRoute('/chat/loading/')({
   component: RouteComponent,
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
+  },
 })
 
 function RouteComponent() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
+  // 채팅 완료 mutation 사용
+  const completeChatMutation = useMutation({
+    ...chatService.completeChatRoomMutation(),
+    onSuccess: async (data) => {
+      // 2초 대기
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
+      // 캐시 정리 및 업데이트
+      queryClient.removeQueries({ queryKey: chatService.chatMessagesQuery().queryKey })
+      await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
+
+      // 결과 페이지로 이동
+      navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId, fromHistory: false } })
+    },
+    onError: () => {
+      navigate({ to: '/' })
+    },
+  })
+
   useEffect(() => {
-    async function completeChatRoom() {
-      try {
-        const { data } = await chatService.postChatroomComplete()
-        await new Promise((resolve) => setTimeout(resolve, 2000))
-
-        queryClient.removeQueries({ queryKey: chatKeys.messages() })
-        await queryClient.invalidateQueries({ queryKey: chatKeys.status() })
-
-        navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId, fromHistory: false } })
-      } catch (error) {
-        console.error('Error completing chat room:', error)
-        navigate({ to: '/' })
-      }
-    }
-    completeChatRoom()
-  }, [navigate, queryClient])
+    // 컴포넌트 마운트 시 채팅 완료 실행
+    completeChatMutation.mutate()
+  }, [completeChatMutation])
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-[47px]">
