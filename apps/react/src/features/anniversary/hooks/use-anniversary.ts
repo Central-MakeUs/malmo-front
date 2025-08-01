@@ -20,6 +20,7 @@ export interface AnniversaryActions {
   handleDateChange: (type: 'year' | 'month' | 'day', value: number) => void
   handleSelectDate: () => Date | undefined
   setSelectedDate: (date: Date) => void
+  resetToInitialDate: () => void
 }
 
 export function useAnniversary(initialDate: Date | null = null) {
@@ -46,12 +47,17 @@ export function useAnniversary(initialDate: Date | null = null) {
   // initialDate가 변경될 때 모든 상태 업데이트
   useEffect(() => {
     if (initialDate) {
-      setSelectedDate(initialDate)
-      setVisibleYear(initialDate.getFullYear())
-      setVisibleMonth(initialDate.getMonth() + 1)
-      setVisibleDay(initialDate.getDate())
+      const initialDateString = initialDate.toDateString()
+      const currentSelectedString = selectedDate.toDateString()
+
+      if (initialDateString !== currentSelectedString) {
+        setSelectedDate(initialDate)
+        setVisibleYear(initialDate.getFullYear())
+        setVisibleMonth(initialDate.getMonth() + 1)
+        setVisibleDay(initialDate.getDate())
+      }
     }
-  }, [initialDate])
+  }, [initialDate?.toDateString()])
 
   // 월 (1-12, 현재 년도인 경우 현재 월까지만)
   const getAvailableMonths = () => {
@@ -115,7 +121,7 @@ export function useAnniversary(initialDate: Date | null = null) {
   // 초기 스크롤 위치 설정
   useEffect(() => {
     scrollToSelected()
-  }, [selectedDate, years, months, days])
+  }, [selectedDate.toDateString()])
 
   // 년도 변경 시 월과 일 업데이트
   useEffect(() => {
@@ -257,6 +263,20 @@ export function useAnniversary(initialDate: Date | null = null) {
     return newDate
   }
 
+  // 초기 날짜로 리셋하는 함수
+  const resetToInitialDate = () => {
+    const targetDate = initialDate || today
+    setSelectedDate(targetDate)
+    setVisibleYear(targetDate.getFullYear())
+    setVisibleMonth(targetDate.getMonth() + 1)
+    setVisibleDay(targetDate.getDate())
+
+    // 스크롤 위치도 함께 업데이트
+    setTimeout(() => {
+      scrollToSelected()
+    }, 100)
+  }
+
   return {
     state: {
       selectedDate,
@@ -277,6 +297,7 @@ export function useAnniversary(initialDate: Date | null = null) {
       handleDateChange,
       handleSelectDate,
       setSelectedDate,
+      resetToInitialDate,
     },
   }
 }

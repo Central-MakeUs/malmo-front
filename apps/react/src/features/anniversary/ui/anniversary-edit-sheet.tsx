@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
 import { Button } from '@/shared/ui/button'
 import { DatePicker, useAnniversary } from '@/features/anniversary'
@@ -34,6 +34,13 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
       // Todo 에러 처리
     },
   })
+
+  // 바텀시트가 열릴 때마다 초기 날짜로 리셋
+  useEffect(() => {
+    if (isOpen) {
+      anniversary.actions.resetToInitialDate()
+    }
+  }, [isOpen])
 
   const handleSubmit = () => {
     if (updateStartDateMutation.isPending) return

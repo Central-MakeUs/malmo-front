@@ -16,17 +16,16 @@ function AnniversaryPage() {
   const { state, actions } = useAnniversary(data.anniversary)
 
   const handlePrevious = () => {
-    // 이전 페이지로 이동하기 전에 현재 선택된 날짜 저장
-    updateAnniversary(state.selectedDate)
+    // 현재 보이는 날짜로 업데이트 후 이전 페이지로 이동
+    const currentVisibleDate = new Date(state.visibleYear, state.visibleMonth - 1, state.visibleDay)
+    updateAnniversary(currentVisibleDate)
     goToPreviousStep()
   }
 
   const handleNext = () => {
-    // 현재 보이는 날짜로 최종 선택
-    const finalDate = actions.handleSelectDate()
-    // 온보딩 컨텍스트 업데이트
-    updateAnniversary(finalDate || state.selectedDate)
-    // 다음 페이지로 이동
+    // 현재 보이는 날짜로 최종 선택하고 다음 페이지로 이동
+    const finalDate = new Date(state.visibleYear, state.visibleMonth - 1, state.visibleDay)
+    updateAnniversary(finalDate)
     goToNextStep()
   }
 
