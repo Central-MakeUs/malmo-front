@@ -1,16 +1,17 @@
-import { useRouter } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 import TestStartImage from '@/assets/images/test-start.png'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 
 interface AttachmentTestIntroProps {
   nickname: string
+  from?: string
 }
 
-export function AttachmentTestIntro({ nickname }: AttachmentTestIntroProps) {
-  const router = useRouter()
+export function AttachmentTestIntro({ nickname, from }: AttachmentTestIntroProps) {
+  const navigate = useNavigate()
 
   const handleGoToHome = () => {
-    router.history.back()
+    navigate({ to: from || '/' })
   }
 
   return (

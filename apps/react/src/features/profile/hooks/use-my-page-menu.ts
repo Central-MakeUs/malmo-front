@@ -16,7 +16,7 @@ export function useMyPageMenu(terms: Term[], handleShowTerms: (termsId: number) 
     {
       label: '애착유형 검사하기',
       group: MenuGroup.BASIC,
-      onClick: () => navigate({ to: '/attachment-test' }),
+      onClick: () => navigate({ to: '/attachment-test', search: { from: '/my-page' } }),
     },
     {
       label: '문의하기',

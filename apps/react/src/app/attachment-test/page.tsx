@@ -1,16 +1,23 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { Button } from '@/shared/ui'
 import { useAuth } from '@/features/auth'
 import { AttachmentTestIntro, AttachmentTestInfoSection, AttachmentTypesSection } from '@/features/attachment'
 import { useEffect } from 'react'
 import bridge from '@/shared/bridge'
+import z from 'zod'
+
+const searchSchema = z.object({
+  from: z.string().optional(),
+})
 
 export const Route = createFileRoute('/attachment-test/')({
   component: AttachmentTestPage,
+  validateSearch: searchSchema,
 })
 
 function AttachmentTestPage() {
   const navigate = useNavigate()
+  const { from } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
   const nickname = userInfo.nickname || '사용자'
 
@@ -30,7 +37,7 @@ function AttachmentTestPage() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       {/* 상단 라즈베리 배경 섹션 */}
-      <AttachmentTestIntro nickname={nickname} />
+      <AttachmentTestIntro nickname={nickname} from={from} />
 
       {/* 흰색 섹션 */}
       <div className="flex-1 bg-white">

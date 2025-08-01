@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 import loveTypeService from '@/shared/services/love-type.service'
 import memberService from '@/shared/services/member.service'
 import { QUESTION_CONFIG } from '../models/constants'
@@ -55,6 +55,7 @@ export interface UseAttachmentQuestionsResult {
 
 export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const navigate = useNavigate()
+  const router = useRouter()
   const auth = useAuth()
 
   // 질문 목록 상태
@@ -124,7 +125,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
       setCurrentPage(currentPage - 1)
       scrollToFirstQuestion(questionRefs)
     } else {
-      navigate({ to: '/attachment-test' })
+      router.history.back()
     }
   }
 

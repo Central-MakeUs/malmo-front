@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { Button, HeaderNavigation } from '@/shared/ui'
+import { Button } from '@/shared/ui'
+import { DetailHeaderBar } from '@/shared/components/header-bar'
 import {
   useAttachmentQuestions,
   QuestionProgress,
@@ -42,7 +43,7 @@ function AttachmentTestQuestionPage() {
   return (
     <div className="flex h-screen w-full flex-col bg-white">
       {/* 헤더 */}
-      <HeaderNavigation onBack={handleGoBack} />
+      <DetailHeaderBar onBackClick={handleGoBack} />
 
       {/* 진행 상태 표시 */}
       <QuestionProgress
