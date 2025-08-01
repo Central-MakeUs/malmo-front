@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import loveLetter from '@/assets/images/love-letter.png'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
@@ -18,7 +18,7 @@ export const Route = createFileRoute('/onboarding/my-code/')({
 
 function MyCodePage() {
   const { goToNextStep, goToPreviousStep, goToHome } = useOnboardingNavigation()
-  const { updateInviteCode, completeOnboarding } = useOnboarding()
+  const { completeOnboarding } = useOnboarding()
 
   // 초대 코드 상태
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -26,13 +26,6 @@ function MyCodePage() {
   // 초대 코드 가져오기
   const { data: inviteCodeData, isLoading: isLoadingInviteCode } = useQuery(memberService.inviteCodeQuery())
   const inviteCode = inviteCodeData?.data?.coupleCode || ''
-
-  // 코드가 로드되면 context에 업데이트
-  useEffect(() => {
-    if (inviteCode) {
-      updateInviteCode(inviteCode)
-    }
-  }, [inviteCode, updateInviteCode])
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(inviteCode)

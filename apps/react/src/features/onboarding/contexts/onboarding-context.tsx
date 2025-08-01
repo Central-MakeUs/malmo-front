@@ -16,7 +16,6 @@ interface OnboardingData {
   anniversary: Date | null
 
   // 커플 연결 정보
-  inviteCode: string | null
   partnerCode: string | null
 }
 
@@ -33,9 +32,6 @@ interface OnboardingContextType {
   // 기념일 업데이트
   updateAnniversary: (date: Date) => void
 
-  // 초대 코드 업데이트
-  updateInviteCode: (code: string) => void
-
   // 파트너 코드 업데이트
   updatePartnerCode: (code: string) => void
 
@@ -48,7 +44,6 @@ const defaultOnboardingData: OnboardingData = {
   termsAgreements: {},
   nickname: '',
   anniversary: null,
-  inviteCode: null,
   partnerCode: null,
 }
 
@@ -85,14 +80,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     setData((prev) => ({
       ...prev,
       anniversary: date,
-    }))
-  }
-
-  // 초대 코드 업데이트
-  const updateInviteCode = (code: string) => {
-    setData((prev) => ({
-      ...prev,
-      inviteCode: code,
     }))
   }
 
@@ -136,7 +123,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         updateTermsAgreements,
         updateNickname,
         updateAnniversary,
-        updateInviteCode,
         updatePartnerCode,
         completeOnboarding,
       }}
