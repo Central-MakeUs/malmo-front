@@ -39,7 +39,7 @@ function RouteComponent() {
   useEffect(() => {
     // 컴포넌트 마운트 시 채팅 완료 실행
     completeChatMutation.mutate()
-  }, [completeChatMutation])
+  }, [])
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-[47px]">
