@@ -1,6 +1,5 @@
 module.exports = () => {
   const KAKAO_NATIVE_APP_KEY = process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY || ''
-
   return {
     name: 'Malmo',
     slug: 'malmo-app',
@@ -9,11 +8,10 @@ module.exports = () => {
     icon: './assets/images/icon.png',
     scheme: 'malmo',
     userInterfaceStyle: 'automatic',
-    owner: 'hin6150',
     splash: {
       image: './assets/images/splash-icon.png',
       resizeMode: 'contain',
-      backgroundColor: '#ffffff',
+      backgroundColor: '#FFFFFF',
     },
     assetBundlePatterns: ['**/*'],
     ios: {
@@ -21,7 +19,6 @@ module.exports = () => {
       bundleIdentifier: 'com.malmo.app',
       usesAppleSignIn: true,
       infoPlist: {
-        ITSAppUsesNonExemptEncryption: false,
         CFBundleURLTypes: [
           {
             CFBundleURLSchemes: ['malmo', 'com.malmo.app'],
@@ -32,12 +29,28 @@ module.exports = () => {
           },
         ],
         LSApplicationQueriesSchemes: ['kakaokompassauth', 'kakaolink', 'kakaoplus'],
+        NSAppTransportSecurity: {
+          NSAllowsArbitraryLoads: true,
+          NSAllowsArbitraryLoadsInWebContent: true,
+          NSExceptionDomains: {
+            'dev.malmo.io.kr': {
+              NSExceptionAllowsInsecureHTTPLoads: true,
+              NSExceptionMinimumTLSVersion: '1.0',
+              NSIncludesSubdomains: true,
+              NSExceptionRequiresForwardSecrecy: false,
+              NSExceptionAllowsLocalNetworking: true,
+              NSThirdPartyExceptionAllowsInsecureHTTPLoads: true,
+              NSThirdPartyExceptionMinimumTLSVersion: '1.0',
+              NSThirdPartyExceptionRequiresForwardSecrecy: false,
+            },
+          },
+        },
       },
     },
     android: {
       adaptiveIcon: {
         foregroundImage: './assets/images/adaptive-icon.png',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#FFFFFF',
       },
       package: 'com.malmo.app',
       intentFilters: [
@@ -78,11 +91,6 @@ module.exports = () => {
       'expo-font',
       'expo-router',
     ],
-    extra: {
-      eas: {
-        projectId: 'e4f4d099-f0f2-4ad6-b58a-f8ab2a8a389a',
-      },
-    },
     experiments: {
       typedRoutes: true,
     },
