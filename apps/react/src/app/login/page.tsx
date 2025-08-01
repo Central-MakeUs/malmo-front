@@ -4,7 +4,7 @@ import KakaoLogo from '@/assets/icons/kakao-logo.svg'
 import malmoLogo from '@/assets/images/malmo-logo.png'
 import { isWebView } from '@/shared/utils/webview'
 import { useAuth } from '@/features/auth'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 
@@ -17,6 +17,12 @@ export default function LoginPage() {
   const { open } = useAlertDialog()
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [isIos, setIsIos] = useState(false)
+
+  useEffect(() => {
+    setIsIos(/iPhone|iPad|iPod/i.test(navigator.userAgent))
+  }, [])
 
   const handleAppleLogin = async () => {
     if (isSubmitting) return
@@ -103,14 +109,16 @@ export default function LoginPage() {
         </button>
 
         {/* 애플 로그인 버튼 */}
-        <button
-          onClick={handleAppleLogin}
-          className="flex h-[52px] w-full items-center justify-center rounded-[8px] bg-black text-white"
-          disabled={isSubmitting}
-        >
-          <AppleLogo className="mr-2" width={24} height={24} />
-          <span className="body1-semibold text-[#FFFFFF]">{isSubmitting ? '로그인 중...' : 'Apple로 시작하기'}</span>
-        </button>
+        {isIos && (
+          <button
+            onClick={handleAppleLogin}
+            className="flex h-[52px] w-full items-center justify-center rounded-[8px] bg-black text-white"
+            disabled={isSubmitting}
+          >
+            <AppleLogo className="mr-2" width={24} height={24} />
+            <span className="body1-semibold text-[#FFFFFF]">{isSubmitting ? '로그인 중...' : 'Apple로 시작하기'}</span>
+          </button>
+        )}
       </div>
     </div>
   )

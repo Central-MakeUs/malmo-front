@@ -21,9 +21,9 @@ export default function App() {
   const { setKeyboardHeight } = useBridge(appBridge)
   const insets = useSafeAreaInsets()
 
-  // const webviewUrl = process.env.EXPO_PUBLIC_WEB_VIEW_URL
+  // const webviewUrl =  process.env.EXPO_PUBLIC_WEB_VIEW_URL
   const webviewUrl =
-    Platform.OS === 'android' ? process.env.EXPO_PUBLIC_ANDROID_WEB_VIEW_URL : process.env.EXPO_PUBLIC_IOS_WEB_VIEW_URL
+    Platform.OS === 'ios' ? process.env.EXPO_PUBLIC_LOCAL_URL : process.env.EXPO_PUBLIC_ANDROID_WEB_VIEW_URL
 
   if (!webviewUrl) {
     throw new Error('Webview URL is not set')
@@ -61,7 +61,7 @@ export default function App() {
       <DynamicStatusBar />
       {OverlayComponent}
 
-      <SafeAreaView style={[styles.safeArea]}>
+      <SafeAreaView style={[styles.safeArea, { paddingTop: Platform.OS === 'android' ? insets.top : 0 }]}>
         <WebView
           ref={webviewRef}
           source={{ uri: webviewUrl }}
