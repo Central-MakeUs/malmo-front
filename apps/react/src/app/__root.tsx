@@ -4,6 +4,7 @@ import { match } from 'path-to-regexp'
 import { AuthContext } from '@/features/auth/hooks/use-auth'
 import { MemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import bridge from '@/shared/bridge'
+import memberService from '@/shared/services/member.service'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -33,7 +34,7 @@ function matchRoute(routes: string[], path: string) {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
   beforeLoad: async ({ context, location }) => {
-    const { authenticated, userInfo } = context.auth
+    const { authenticated } = context.auth
     const pathname = location.pathname
 
     // 0. 소개 페이지 확인
@@ -60,25 +61,34 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     }
 
     // --- 이하 로직은 모두 '인증된 사용자'만 해당 ---
-    // 2. 사용자 정보 및 현재 경로 상태 정의
-    const needsOnboarding = userInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
-    const isOnOnboardingRoute = matchRoute(onboardingRoutes, pathname)
-    const isOnLoginRoute = pathname === '/login'
-    // 3. 상태에 따른 리다이렉트 규칙 적용
+    // 2. 사용자 정보 직접 가져오기
+    try {
+      const memberInfo = await memberService.getMemberInfo()
+      const userInfo = memberInfo.data?.data
 
-    // 규칙 1: 로그인한 사용자가 로그인 페이지에 접근하면 안 됩니다.
-    if (isOnLoginRoute) {
-      return redirect({ to: needsOnboarding ? '/onboarding/terms' : '/' })
-    }
+      const needsOnboarding = userInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
+      const isOnOnboardingRoute = matchRoute(onboardingRoutes, pathname)
+      const isOnLoginRoute = pathname === '/login'
 
-    // 규칙 2: 온보딩이 필요한 사용자는 온보딩 페이지만 접근해야 합니다.
-    if (needsOnboarding && !isOnOnboardingRoute) {
-      return redirect({ to: '/onboarding/terms' })
-    }
+      // 3. 상태에 따른 리다이렉트 규칙 적용
 
-    // 규칙 3: 온보딩을 마친 사용자는 온보딩 페이지에 접근하면 안 됩니다.
-    if (!needsOnboarding && isOnOnboardingRoute) {
-      return redirect({ to: '/' })
+      // 규칙 1: 로그인한 사용자가 로그인 페이지에 접근하면 안 됩니다.
+      if (isOnLoginRoute) {
+        return redirect({ to: needsOnboarding ? '/onboarding/terms' : '/' })
+      }
+
+      // 규칙 2: 온보딩이 필요한 사용자는 온보딩 페이지만 접근해야 합니다.
+      if (needsOnboarding && !isOnOnboardingRoute) {
+        return redirect({ to: '/onboarding/terms' })
+      }
+
+      // 규칙 3: 온보딩을 마친 사용자는 온보딩 페이지에 접근하면 안 됩니다.
+      if (!needsOnboarding && isOnOnboardingRoute) {
+        return redirect({ to: '/' })
+      }
+    } catch (error) {
+      // 사용자 정보 조회 실패시 로그인으로 리다이렉트
+      return redirect({ to: '/login' })
     }
   },
 })
