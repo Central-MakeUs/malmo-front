@@ -5,7 +5,7 @@ import { cn } from '@ui/common/lib/utils'
 import { useChatHistoryQuery } from '@/features/history/hook/use-chat-history-query'
 import { useChatSelect } from '@/features/history/hook/use-chat-select'
 import noResultImage from '@/assets/images/characters/empty.png'
-import { CheckIcon, EmptyState, SelectableChatHistoryItem } from '@/features/history/ui/chat-history-item'
+import { EmptyState, SelectableChatHistoryItem } from '@/features/history/ui/chat-history-item'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 
 export const Route = createFileRoute('/history/delete/')({
@@ -17,21 +17,13 @@ function RouteComponent() {
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
-  const { selectedIds, isAllSelected, handleToggleSelect, handleSelectAll, handleDelete, backButton } =
-    useChatSelect(histories)
+  const { selectedIds, handleToggleSelect, handleDelete, backButton } = useChatSelect()
 
   const showEmpty = !isFetchingNextPage && histories.length === 0
 
   return (
     <div className="flex h-screen flex-col">
       <DetailHeaderBar title="삭제" left={backButton()} />
-
-      {histories.length > 0 && (
-        <div className="flex cursor-pointer items-center gap-4 px-5 py-3" onClick={handleSelectAll}>
-          <CheckIcon isChecked={isAllSelected} />
-          <p className="body3-medium text-gray-iron-700">전체선택</p>
-        </div>
-      )}
 
       <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pb-20">
         {showEmpty ? (
