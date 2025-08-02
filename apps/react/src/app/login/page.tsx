@@ -79,7 +79,11 @@ export default function LoginPage() {
       {/* 로고 영역 */}
       <div className="flex w-full flex-1 flex-col items-center justify-center px-5">
         <div className="w-full">
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <p className="body1-semibold text-gray-iron-950">
+              <span className="text-malmo-rasberry-500">말</span>을 <span className="text-malmo-rasberry-500">모</span>
+              아 마음을 이어주는
+            </p>
             <img src={malmoLogo} alt="말모 로고" className="h-auto w-[160px]" />
           </div>
         </div>
