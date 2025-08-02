@@ -1,10 +1,9 @@
-import { useChattingModal } from '@/features/chat/hook/use-chatting-modal'
-import { GetChatRoomListResponse } from '@data/user-api-axios/api'
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useHistoryModal } from './use-history-modal'
 
 export const useChatSelect = () => {
-  const chattingModal = useChattingModal()
+  const historyModal = useHistoryModal()
   const [selectedIds, setSelectedIds] = useState<number[]>([])
 
   const handleToggleSelect = (id?: number) => {
@@ -13,7 +12,7 @@ export const useChatSelect = () => {
   }
 
   const handleDelete = () => {
-    chattingModal.deleteChatHistoriesModal(selectedIds, () => setSelectedIds([]))
+    historyModal.deleteChatHistoriesModal(selectedIds, () => setSelectedIds([]))
   }
 
   const backButton = () => (
