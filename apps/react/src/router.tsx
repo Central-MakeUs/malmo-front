@@ -6,7 +6,13 @@ import React from 'react'
 import { routeTree } from './routeTree.gen'
 
 export function createRouter() {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        throwOnError: true, // GET 요청은 Error Boundary로
+      },
+    },
+  })
 
   return createTanStackRouter({
     routeTree,
