@@ -21,9 +21,11 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
   }, [userInfo.startLoveDate])
   const anniversary = useAnniversary(initialDate)
 
+  const serviceOptions = memberService.updateStartDateMutation()
   const updateStartDateMutation = useMutation({
-    ...memberService.updateStartDateMutation(),
+    ...serviceOptions,
     onSuccess: async () => {
+      serviceOptions.onSuccess?.()
       // 사용자 정보 새로고침
       await refreshUserInfo()
       // 성공시 시트 닫기

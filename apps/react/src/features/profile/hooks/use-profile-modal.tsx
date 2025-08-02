@@ -45,6 +45,7 @@ export function useProfileModal(): UseProfileModalReturn {
   const disconnectCoupleMutation = useMutation({
     ...disconnectCoupleServiceOptions,
     onSuccess: async () => {
+      disconnectCoupleServiceOptions.onSuccess?.()
       await refreshUserInfo()
     },
     onError: () => {

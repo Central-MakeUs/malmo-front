@@ -47,6 +47,11 @@ class MemberService extends MembersApi {
         const { data } = await this.getPartnerMemberInfo()
         return data
       },
+      throwOnError: (error: any) => {
+        // axios 에러와 일반 에러 구조 모두 고려
+        const errorCode = error?.response?.data?.code
+        return errorCode !== 40301
+      },
     }
   }
 
@@ -56,6 +61,9 @@ class MemberService extends MembersApi {
       mutationFn: async (body: UpdateMemberRequestDto) => {
         const { data } = await this.updateMember({ updateMemberRequestDto: body })
         return data
+      },
+      onSuccess: () => {
+        toast.success('닉네임이 변경되었어요!')
       },
       onError: () => {
         toast.error('회원 정보 수정 중 오류가 발생했습니다')
@@ -69,8 +77,11 @@ class MemberService extends MembersApi {
         const { data } = await this.updateStartLoveDate({ updateStartLoveDateRequestDto: body })
         return data
       },
+      onSuccess: () => {
+        toast.success('디데이가 변경되었어요!')
+      },
       onError: () => {
-        toast.error('연애 시작일 수정 중 오류가 발생했습니다')
+        toast.error('디데이 수정 중 오류가 발생했습니다')
       },
     }
   }
