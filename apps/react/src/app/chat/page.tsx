@@ -18,6 +18,7 @@ import { useBridge } from '@webview-bridge/react'
 import { useChatScroll } from '@/features/chat/hook/use-chat-scroll'
 import chatService from '@/shared/services/chat.service'
 import historyService from '@/shared/services/history.service'
+import { useAuth } from '@/features/auth'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -55,6 +56,7 @@ function RouteComponent() {
   const navigate = useNavigate()
   const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage } = useChatting()
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
+  const auth = useAuth()
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
@@ -65,7 +67,7 @@ function RouteComponent() {
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
   const messages = useMemo(() => {
-    if (!data) return []
+    if (!data || !auth.userInfo.loveTypeCategory) return []
     const allMessages = data.pages.flatMap((page) => page?.list ?? [])
     return chatId ? allMessages : [...allMessages].reverse()
   }, [data, chatId])

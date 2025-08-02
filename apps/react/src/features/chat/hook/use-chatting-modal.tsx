@@ -6,6 +6,8 @@ import { useLocation, useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import chatService from '@/shared/services/chat.service'
+import { useAuth } from '@/features/auth'
+import { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
 export interface UseChattingModalReturn {
   testRequiredModal: () => void
@@ -19,13 +21,19 @@ export function useChattingModal(): UseChattingModalReturn {
   const router = useRouter()
   const queryClient = useQueryClient()
   const { pathname } = useLocation()
+  const auth = useAuth()
 
   const [showChattingTutorial, setShowChattingTutorial] = useState(false)
 
   useEffect(() => {
     if (pathname !== '/chat') return
 
-    const fetchTutorialSeen = async () => {
+    const fetchChatSeen = async () => {
+      if (!auth.userInfo.loveTypeCategory) {
+        testRequiredModal()
+        return
+      }
+
       const seen = await bridge.getChatTutorialSeen()
       if (seen) {
         setShowChattingTutorial(false)
@@ -35,7 +43,8 @@ export function useChattingModal(): UseChattingModalReturn {
       setShowChattingTutorial(true)
       bridge.toggleOverlay?.(2)
     }
-    fetchTutorialSeen()
+
+    fetchChatSeen()
   }, [])
 
   const testRequiredModal = () => {
@@ -54,6 +63,14 @@ export function useChattingModal(): UseChattingModalReturn {
       ),
       cancelText: '다음에 하기',
       confirmText: '검사하러 가기',
+      onCancel: () => {
+        alertDialog.close()
+        router.history.back()
+      },
+      onConfirm: () => {
+        alertDialog.close()
+        router.navigate({ to: '/attachment-test' })
+      },
     })
   }
 
