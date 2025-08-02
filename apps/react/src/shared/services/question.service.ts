@@ -1,62 +1,63 @@
 import apiInstance from '../libs/api'
 import { AnswerRequestDto, QuestionsApi } from '@data/user-api-axios/api'
+import { queryKeys } from '../query-keys'
 
 class QuestionService extends QuestionsApi {
   constructor() {
     super(undefined, '', apiInstance)
   }
 
-  async fetchTodayQuestion() {
-    try {
-      const { data } = await this.getTodayQuestion()
-      return data
-    } catch (error) {
-      console.error('Error fetching today question:', error)
-      throw error
+  // === Query Options ===
+  todayQuestionQuery() {
+    return {
+      queryKey: queryKeys.question.today(),
+      queryFn: async () => {
+        const { data } = await this.getTodayQuestion()
+        return data?.data
+      },
     }
   }
 
-  async fetchPastQuestion(level: number) {
-    try {
-      const { data } = await this.getQuestion({ level })
-      return data
-    } catch (error) {
-      console.error('Error fetching past question:', error)
-      throw error
+  pastQuestionQuery(level: number) {
+    return {
+      queryKey: queryKeys.question.past(level),
+      queryFn: async () => {
+        const { data } = await this.getQuestion({ level })
+        return data?.data
+      },
     }
   }
 
-  async fetchQuestionDetail(questionId: number) {
-    try {
-      const { data } = await this.getAnswers({ coupleQuestionId: questionId })
-      return data
-    } catch (error) {
-      console.error('Error fetching question detail:', error)
-      throw error
+  questionDetailQuery(questionId: number) {
+    return {
+      queryKey: queryKeys.question.detail(questionId),
+      queryFn: async () => {
+        const { data } = await this.getAnswers({ coupleQuestionId: questionId })
+        return data?.data
+      },
     }
   }
 
-  async postTodayQuestionAnswer(body: AnswerRequestDto) {
-    try {
-      const { data } = await this.postAnswer({
-        answerRequestDto: { ...body },
-      })
-      return data
-    } catch (error) {
-      console.error('Error posting today question answer:', error)
-      throw error
+  // === Mutation Options ===
+  submitAnswerMutation() {
+    return {
+      mutationFn: async (body: AnswerRequestDto) => {
+        const { data } = await this.postAnswer({
+          answerRequestDto: { ...body },
+        })
+        return data?.data
+      },
     }
   }
 
-  async patchTodayQuestionAnswer(body: AnswerRequestDto) {
-    try {
-      const { data } = await this.updateAnswer({
-        answerRequestDto: { ...body },
-      })
-      return data
-    } catch (error) {
-      console.error('Error patching today question answer:', error)
-      throw error
+  updateAnswerMutation() {
+    return {
+      mutationFn: async (body: AnswerRequestDto) => {
+        const { data } = await this.updateAnswer({
+          answerRequestDto: { ...body },
+        })
+        return data?.data
+      },
     }
   }
 }

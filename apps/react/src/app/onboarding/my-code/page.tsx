@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import loveLetter from '@/assets/images/love-letter.png'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { HeaderNavigation } from '@/shared/ui'
@@ -10,37 +11,21 @@ import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 
 export const Route = createFileRoute('/onboarding/my-code/')({
   component: MyCodePage,
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(memberService.inviteCodeQuery())
+  },
 })
 
 function MyCodePage() {
   const { goToNextStep, goToPreviousStep, goToHome } = useOnboardingNavigation()
-  const { updateInviteCode, completeOnboarding } = useOnboarding()
+  const { completeOnboarding } = useOnboarding()
 
   // 초대 코드 상태
-  const [inviteCode, setInviteCode] = useState<string>('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isLoadingInviteCode, setIsLoadingInviteCode] = useState(true)
 
   // 초대 코드 가져오기
-  useEffect(() => {
-    const fetchInviteCode = async () => {
-      try {
-        setIsLoadingInviteCode(true)
-        const response = await memberService.inviteCode()
-        if (response?.data?.coupleCode) {
-          const code = response.data.coupleCode
-          setInviteCode(code)
-          updateInviteCode(code)
-        }
-      } catch (error) {
-        // ToDo
-      } finally {
-        setIsLoadingInviteCode(false)
-      }
-    }
-
-    fetchInviteCode()
-  }, [])
+  const { data: inviteCodeData, isLoading: isLoadingInviteCode } = useQuery(memberService.inviteCodeQuery())
+  const inviteCode = inviteCodeData?.data?.coupleCode || ''
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(inviteCode)

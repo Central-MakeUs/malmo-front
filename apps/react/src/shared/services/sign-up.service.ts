@@ -6,12 +6,16 @@ class SignUpService extends SignUpsApi {
     super(undefined, '', apiInstance)
   }
 
-  async requestSignUp(body) {
-    const { data } = await this.signUp({
-      signUpRequestDto: body,
-    })
-
-    return data
+  // === Mutation Options ===
+  signUpMutation() {
+    return {
+      mutationFn: async (body: any) => {
+        const { data } = await this.signUp({
+          signUpRequestDto: body,
+        })
+        return data
+      },
+    }
   }
 }
 

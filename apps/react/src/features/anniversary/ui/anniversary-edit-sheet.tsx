@@ -1,9 +1,10 @@
 import { X } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useMemo, useEffect } from 'react'
 import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
 import { Button } from '@/shared/ui/button'
 import { DatePicker, useAnniversary } from '@/features/anniversary'
 import { useAuth } from '@/features/auth'
+import { useMutation } from '@tanstack/react-query'
 import memberService from '@/shared/services/member.service'
 
 interface AnniversaryEditSheetProps {
@@ -13,7 +14,6 @@ interface AnniversaryEditSheetProps {
 
 export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSheetProps) {
   const { userInfo, refreshUserInfo } = useAuth()
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // startLoveDate가 있으면 Date 객체로 변환해서 초기값으로 사용
   const initialDate = useMemo(() => {
@@ -21,33 +21,38 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
   }, [userInfo.startLoveDate])
   const anniversary = useAnniversary(initialDate)
 
-  const handleSubmit = async () => {
-    if (isSubmitting) return
-
-    try {
-      setIsSubmitting(true)
-
-      // 선택된 날짜 가져오기
-      const selectedDate = anniversary.actions.handleSelectDate()
-      if (!selectedDate) return
-
-      // 날짜를 YYYY-MM-DD 형식으로 변환
-      const startLoveDate = selectedDate.toISOString().split('T')[0]
-
-      // 디데이 업데이트 API 호출
-      await memberService.updateStartDate({ startLoveDate })
-
+  const updateStartDateMutation = useMutation({
+    ...memberService.updateStartDateMutation(),
+    onSuccess: async () => {
       // 사용자 정보 새로고침
       await refreshUserInfo()
-
       // 성공시 시트 닫기
       onOpenChange(false)
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error('디데이 변경 실패:', error)
       // Todo 에러 처리
-    } finally {
-      setIsSubmitting(false)
+    },
+  })
+
+  // 바텀시트가 열릴 때마다 초기 날짜로 리셋
+  useEffect(() => {
+    if (isOpen) {
+      anniversary.actions.resetToInitialDate()
     }
+  }, [isOpen])
+
+  const handleSubmit = () => {
+    if (updateStartDateMutation.isPending) return
+
+    // 선택된 날짜 가져오기
+    const selectedDate = anniversary.actions.handleSelectDate()
+    if (!selectedDate) return
+
+    // 날짜를 YYYY-MM-DD 형식으로 변환
+    const startLoveDate = selectedDate.toISOString().split('T')[0]
+
+    updateStartDateMutation.mutate({ startLoveDate })
   }
 
   return (
@@ -80,7 +85,7 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
 
           {/* 변경하기 버튼 */}
           <div className="mt-auto mb-5">
-            <Button text={'변경하기'} onClick={handleSubmit} disabled={isSubmitting} />
+            <Button text={'변경하기'} onClick={handleSubmit} disabled={updateStartDateMutation.isPending} />
           </div>
         </div>
       </SheetContent>

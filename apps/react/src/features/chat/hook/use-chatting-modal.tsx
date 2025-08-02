@@ -2,7 +2,7 @@ import bridge from '@/shared/bridge'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 import historyService from '@/shared/services/history.service'
 import { Button } from '@/shared/ui'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -22,6 +22,13 @@ export function useChattingModal(): UseChattingModalReturn {
   const queryClient = useQueryClient()
 
   const [showChattingTutorial, setShowChattingTutorial] = useState(false)
+
+  const deleteHistoryMutation = useMutation({
+    ...historyService.deleteHistoryMutation(),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['histories'] })
+    },
+  })
 
   useEffect(() => {
     const fetchTutorialSeen = async () => {
@@ -87,8 +94,7 @@ export function useChattingModal(): UseChattingModalReturn {
       confirmText: '취소하기',
       onCancel: async () => {
         alertDialog.close()
-        await historyService.deleteHistory([id])
-        await queryClient.invalidateQueries({ queryKey: ['histories'] })
+        await deleteHistoryMutation.mutateAsync([id])
         router.history.back()
       },
     })
@@ -108,8 +114,7 @@ export function useChattingModal(): UseChattingModalReturn {
       confirmText: '취소하기',
       onCancel: async () => {
         alertDialog.close()
-        await historyService.deleteHistory(ids)
-        await queryClient.invalidateQueries({ queryKey: ['histories'] })
+        await deleteHistoryMutation.mutateAsync(ids)
         onFinish()
       },
     })

@@ -1,52 +1,92 @@
 import apiInstance from '../libs/api'
-import {
-  ChatroomApi,
-  ChatroomApiGetChatRoomListRequest,
-  ChatRoomListSuccessResponse,
-  Pageable,
-} from '@data/user-api-axios/api'
-
-export const QUERY_KEY = 'histories'
+import { ChatroomApi } from '@data/user-api-axios/api'
+import { queryKeys } from '../query-keys'
+import { keepPreviousData } from '@tanstack/react-query'
 
 class HistoryService extends ChatroomApi {
   constructor() {
     super(undefined, '', apiInstance)
   }
 
-  async getHistoryList({
-    pageable: { page, size },
-    keyword,
-  }: ChatroomApiGetChatRoomListRequest): Promise<ChatRoomListSuccessResponse> {
-    const { data } = await this.getChatRoomList({
-      pageable: {
-        page,
-        size,
+  // === Query Options ===
+  historyListQuery(keyword = '', isSuccess?: boolean) {
+    return {
+      queryKey: queryKeys.history.list(keyword),
+      queryFn: async ({ pageParam = 0 }) => {
+        const { data } = await this.getChatRoomList({
+          pageable: { page: pageParam as number, size: 10 },
+          ...(keyword && { keyword }),
+        })
+        return data?.data
       },
-      keyword,
-    })
-    return data
-  }
-
-  async deleteHistory(chatRoomIdList: number[]) {
-    const { data } = await this.deleteChatRooms({
-      deleteChatRoomRequestDto: {
-        chatRoomIdList,
+      initialPageParam: 0,
+      getNextPageParam: (lastPage: any, allPages: any[]) => {
+        if (!lastPage || lastPage.totalCount == null) {
+          return undefined
+        }
+        const fetchedItemsCount = allPages.flatMap((page) => page?.list || []).length
+        if (fetchedItemsCount >= lastPage.totalCount) {
+          return undefined
+        }
+        return allPages.length
       },
-    })
-    return data
+      enabled: isSuccess,
+      placeholderData: keepPreviousData,
+    }
   }
 
-  async getHistory({ chatRoomId, params }: { chatRoomId: number; params: Pageable }) {
-    const { data } = await this.getChatRoomMessages({
-      pageable: params,
-      chatRoomId,
-    })
-    return data
+  // 특정 히스토리 메시지 조회 (무한 스크롤용)
+  historyMessagesQuery(chatRoomId: number) {
+    return {
+      queryKey: queryKeys.history.detail(chatRoomId),
+      queryFn: async ({ pageParam = 0 }) => {
+        const { data } = await this.getChatRoomMessages({
+          pageable: {
+            page: pageParam as number,
+            size: 10,
+            sort: [],
+          },
+          chatRoomId,
+        })
+        return data?.data
+      },
+      initialPageParam: 0,
+      getNextPageParam: (lastPage: any, allPages: any[]) => {
+        const totalCount = lastPage?.totalCount ?? 0
+        const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
+
+        if (fetchedMessagesCount >= totalCount) {
+          return undefined
+        }
+
+        return allPages.length
+      },
+    }
   }
 
-  async getChatroomSummary(chatRoomId: number) {
-    const { data } = await this.getCurrentChatRoom({ chatRoomId })
-    return data
+  // 히스토리 요약 조회
+  historySummaryQuery(chatRoomId: number) {
+    return {
+      queryKey: queryKeys.history.summary(chatRoomId),
+      queryFn: async () => {
+        const { data } = await this.getCurrentChatRoom({ chatRoomId })
+        return data?.data
+      },
+    }
+  }
+
+  // === Mutation Options ===
+  deleteHistoryMutation() {
+    return {
+      mutationFn: async (chatRoomIdList: number[]) => {
+        const { data } = await this.deleteChatRooms({
+          deleteChatRoomRequestDto: {
+            chatRoomIdList,
+          },
+        })
+        return data?.data
+      },
+    }
   }
 }
 

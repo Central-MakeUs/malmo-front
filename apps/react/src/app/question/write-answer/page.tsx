@@ -4,6 +4,7 @@ import { Button } from '@/shared/ui'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import questionService from '@/shared/services/question.service'
 import { QuestionHeader } from '@/features/question/ui/question-header'
@@ -20,13 +21,16 @@ export const Route = createFileRoute('/question/write-answer/')({
   loader: async ({ context, deps }) => {
     const { coupleQuestionId } = deps.search
 
-    const data = await questionService.fetchQuestionDetail(coupleQuestionId)
-    return { data: data?.data, isEdit: deps.search.isEdit || false }
+    await context.queryClient.ensureQueryData(questionService.questionDetailQuery(coupleQuestionId))
+
+    return { coupleQuestionId, isEdit: deps.search.isEdit || false }
   },
 })
 
 function RouteComponent() {
-  const { data, isEdit } = Route.useLoaderData()
+  const { coupleQuestionId, isEdit } = Route.useLoaderData()
+
+  const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
 
   const historyModal = useQuestionModal()
   const [answer, setAnswer] = useState(data?.me?.answer || '')

@@ -1,24 +1,32 @@
-import axios from 'axios'
-import apiInstance, { defaultOptions } from '../libs/api'
-import { AppleLoginRequestDto, KakaoLoginRequestDto, LoginsApi, RefreshApi } from '@data/user-api-axios/api'
+import apiInstance from '../libs/api'
+import { AppleLoginRequestDto, KakaoLoginRequestDto, LoginsApi } from '@data/user-api-axios/api'
 
 class LoginService extends LoginsApi {
   constructor() {
     super(undefined, '', apiInstance)
   }
 
-  async apple(body: AppleLoginRequestDto) {
-    const { data } = await this.loginWithApple({
-      appleLoginRequestDto: body,
-    })
-    return data
+  // === Mutation Options ===
+  appleLoginMutation() {
+    return {
+      mutationFn: async (body: AppleLoginRequestDto) => {
+        const { data } = await this.loginWithApple({
+          appleLoginRequestDto: body,
+        })
+        return data
+      },
+    }
   }
 
-  async kakao(body: KakaoLoginRequestDto) {
-    const { data } = await this.loginWithKakao({
-      kakaoLoginRequestDto: body,
-    })
-    return data
+  kakaoLoginMutation() {
+    return {
+      mutationFn: async (body: KakaoLoginRequestDto) => {
+        const { data } = await this.loginWithKakao({
+          kakaoLoginRequestDto: body,
+        })
+        return data
+      },
+    }
   }
 }
 

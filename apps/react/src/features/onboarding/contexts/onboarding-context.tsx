@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react'
+import { useMutation } from '@tanstack/react-query'
 import signUpService from '@/shared/services/sign-up.service'
 import { formatDate } from '@/shared/utils'
 import { useAuth } from '@/features/auth'
@@ -15,7 +16,6 @@ interface OnboardingData {
   anniversary: Date | null
 
   // 커플 연결 정보
-  inviteCode: string | null
   partnerCode: string | null
 }
 
@@ -32,9 +32,6 @@ interface OnboardingContextType {
   // 기념일 업데이트
   updateAnniversary: (date: Date) => void
 
-  // 초대 코드 업데이트
-  updateInviteCode: (code: string) => void
-
   // 파트너 코드 업데이트
   updatePartnerCode: (code: string) => void
 
@@ -47,7 +44,6 @@ const defaultOnboardingData: OnboardingData = {
   termsAgreements: {},
   nickname: '',
   anniversary: null,
-  inviteCode: null,
   partnerCode: null,
 }
 
@@ -58,6 +54,10 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const { refreshUserInfo } = useAuth()
   const [data, setData] = useState<OnboardingData>(defaultOnboardingData)
+
+  const signUpMutation = useMutation({
+    ...signUpService.signUpMutation(),
+  })
 
   // 약관 동의 업데이트
   const updateTermsAgreements = (agreements: Record<number, boolean>) => {
@@ -83,14 +83,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }))
   }
 
-  // 초대 코드 업데이트
-  const updateInviteCode = (code: string) => {
-    setData((prev) => ({
-      ...prev,
-      inviteCode: code,
-    }))
-  }
-
   // 파트너 코드 업데이트
   const updatePartnerCode = (code: string) => {
     setData((prev) => ({
@@ -113,7 +105,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       }
 
       // 회원가입 API 호출
-      await signUpService.requestSignUp(requestBody)
+      await signUpMutation.mutateAsync(requestBody)
 
       // 멤버 상태 갱신
       await refreshUserInfo()
@@ -131,7 +123,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         updateTermsAgreements,
         updateNickname,
         updateAnniversary,
-        updateInviteCode,
         updatePartnerCode,
         completeOnboarding,
       }}

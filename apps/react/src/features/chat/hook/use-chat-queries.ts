@@ -11,78 +11,26 @@ import historyService from '@/shared/services/history.service'
 const CONNECTED_REQUIRED_MESSAGE =
   '갈등 상황에 대해서는 이해했어! 그런데, 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 상대방에게 공유해봐!'
 
-export const chatKeys = {
-  all: ['chat'] as const,
-  status: () => [...chatKeys.all, 'status'] as const,
-  messages: (chatId?: number) => [...chatKeys.all, 'messages', chatId] as const,
-  summary: (chatRoomId: number) => [...chatKeys.all, 'summary', chatRoomId] as const,
-}
-
 // === QUERIES ===
 export const useChatRoomStatusQuery = () => {
-  return useQuery({
-    queryKey: chatKeys.status(),
-    queryFn: () => chatService.getChatroomStatus(),
-    select: (data) => {
-      return data.data?.chatRoomState
-    },
-  })
+  return useQuery(chatService.chatRoomStatusQuery())
 }
 
-// 2. 채팅 메시지 목록 조회를 위한 useInfiniteQuery 훅 (수정)
+// 채팅 메시지 목록 조회
 export const useChatMessagesQuery = (
   enabled: boolean,
   chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined,
   chatId?: number
 ) => {
-  const PAGE_SIZE = 10
-
-  const commonInfiniteQueryOptions = {
-    initialPageParam: 0,
-    getNextPageParam: (
-      lastPage: BaseListSwaggerResponseChatRoomMessageData,
-      allPages: BaseListSwaggerResponseChatRoomMessageData[]
-    ) => {
-      const totalCount = lastPage.totalCount ?? 0
-      const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
-
-      if (fetchedMessagesCount >= totalCount) {
-        return undefined
-      }
-
-      return allPages.length
-    },
-  }
-
+  // chatId가 있으면 히스토리 메시지, 없으면 현재 채팅 메시지
   if (chatId) {
-    return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
-      queryKey: chatKeys.messages(chatId),
-      queryFn: async ({ pageParam = 0 }) => {
-        const response = await historyService.getHistory({
-          chatRoomId: chatId,
-          params: {
-            page: pageParam as number,
-            size: PAGE_SIZE,
-            sort: [],
-          },
-        })
-        return response.data as BaseListSwaggerResponseChatRoomMessageData
-      },
-      ...commonInfiniteQueryOptions,
+    return useInfiniteQuery({
+      ...historyService.historyMessagesQuery(chatId),
     })
   }
 
-  return useInfiniteQuery<BaseListSwaggerResponseChatRoomMessageData, Error>({
-    queryKey: chatKeys.messages(chatId),
-    queryFn: async ({ pageParam = 0 }) => {
-      const response = await chatService.getChatroomMessagesList({
-        page: pageParam as number,
-        size: PAGE_SIZE,
-        sort: [],
-      })
-      return response.data as BaseListSwaggerResponseChatRoomMessageData
-    },
-    ...commonInfiniteQueryOptions,
+  return useInfiniteQuery({
+    ...chatService.chatMessagesQuery(),
     select: (data) => {
       if (chatStatus !== ChatRoomStateDataChatRoomStateEnum.Paused) return data
 
@@ -108,13 +56,13 @@ export const useChatMessagesQuery = (
 
 // === MUTATIONS ===
 
-// 3. 메시지 전송을 위한 useMutation 훅 (이전과 동일)
+// 메시지 전송
 export const useSendMessageMutation = () => {
   const queryClient = useQueryClient()
-  const queryKey = chatKeys.messages()
+  const queryKey = chatService.chatMessagesQuery().queryKey
 
   return useMutation({
-    mutationFn: (message: string) => chatService.postChatroomSend({ message }),
+    ...chatService.sendMessageMutation(),
     onMutate: async (newMessageText) => {
       await queryClient.cancelQueries({ queryKey })
       const previousMessages = queryClient.getQueryData(queryKey)
@@ -153,13 +101,13 @@ export const useSendMessageMutation = () => {
   })
 }
 
-// 4. 채팅방 업그레이드를 위한 useMutation 훅 (이전과 동일)
+// 채팅방 업그레이드
 export const useUpgradeChatRoomMutation = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: () => chatService.postChatroomUpgrade(),
+    ...chatService.upgradeChatRoomMutation(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: chatKeys.status() })
+      queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
     },
   })
 }

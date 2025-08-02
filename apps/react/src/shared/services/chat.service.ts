@@ -1,46 +1,88 @@
 import apiInstance from '../libs/api'
-import { ChatroomApi, ChatRequest, Pageable } from '@data/user-api-axios/api'
-
-export const QUERY_KEY = 'chatrooms'
+import { ChatroomApi } from '@data/user-api-axios/api'
+import { queryKeys } from '../query-keys'
 
 class ChatService extends ChatroomApi {
   constructor() {
     super(undefined, '', apiInstance)
   }
 
-  async getChatroomStatus() {
-    try {
-      const { data } = await this.getCurrentChatRoom1()
-      return data
-    } catch (error) {
-      console.error('Error fetching chatroom status:', error)
-      throw error
+  // === Query Options ===
+  chatRoomStatusQuery() {
+    return {
+      queryKey: queryKeys.chat.status(),
+      queryFn: async () => {
+        const { data } = await this.getCurrentChatRoom1()
+        return data?.data?.chatRoomState
+      },
     }
   }
 
-  async getChatroomMessagesList(params?: Pageable) {
-    const { data } = await this.getCurrentChatRoomMessages({ pageable: params || { page: 0, size: 20 } })
-    return data
-  }
+  // 채팅 메시지 목록 조회 (무한 스크롤용)
+  chatMessagesQuery(chatId?: number) {
+    return {
+      queryKey: [...queryKeys.chat.messages(), chatId] as const,
+      queryFn: async ({ pageParam = 0 }) => {
+        const { data } = await this.getCurrentChatRoomMessages({
+          pageable: {
+            page: pageParam as number,
+            size: 10,
+            sort: [],
+          },
+        })
+        return data?.data
+      },
+      initialPageParam: 0,
+      getNextPageParam: (lastPage: any, allPages: any[]) => {
+        const totalCount = lastPage?.totalCount ?? 0
+        const fetchedMessagesCount = allPages.reduce((acc, page) => acc + (page.list?.length || 0), 0)
 
-  async postChatroomComplete() {
-    const { data } = await this.completeChatRoom()
-    return data
-  }
+        if (fetchedMessagesCount >= totalCount) {
+          return undefined
+        }
 
-  async postChatroomSend(body: ChatRequest) {
-    try {
-      const { data } = await this.sendChatMessage1({ chatRequest: { ...body } })
-      return data
-    } catch (error) {
-      console.error('Error sending chat message:', error)
-      throw error
+        return allPages.length
+      },
     }
   }
 
-  async postChatroomUpgrade() {
-    const { data } = await this.sendChatMessage()
-    return data
+  // 채팅방 요약 조회
+  chatSummaryQuery(chatRoomId: number) {
+    return {
+      queryKey: queryKeys.chat.summary(chatRoomId),
+      queryFn: async () => {
+        const { data } = await this.getCurrentChatRoom1()
+        return data?.data
+      },
+    }
+  }
+
+  // === Mutation Options ===
+  sendMessageMutation() {
+    return {
+      mutationFn: async (message: string) => {
+        const { data } = await this.sendChatMessage1({ chatRequest: { message } })
+        return data?.data
+      },
+    }
+  }
+
+  upgradeChatRoomMutation() {
+    return {
+      mutationFn: async () => {
+        const { data } = await this.sendChatMessage()
+        return data?.data
+      },
+    }
+  }
+
+  completeChatRoomMutation() {
+    return {
+      mutationFn: async () => {
+        const { data } = await this.completeChatRoom()
+        return data?.data
+      },
+    }
   }
 }
 

@@ -8,7 +8,8 @@ import {
 } from '@data/user-api-axios/api'
 import { useChatSSE } from '@/features/chat/hook/use-chat-sse'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
-import { chatKeys, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hook/use-chat-queries'
+import { useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hook/use-chat-queries'
+import chatService from '@/shared/services/chat.service'
 
 interface ChattingContextType {
   chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined
@@ -43,7 +44,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
   const handleResponseId = useCallback(
     (messageId: string) => {
-      const queryKey = chatKeys.messages()
+      const queryKey = chatService.chatMessagesQuery().queryKey
 
       queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
         if (!oldData || !streamingMessage) return oldData
@@ -75,7 +76,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   }, [upgradeChatRoom])
 
   const handleChatPaused = useCallback(async () => {
-    await queryClient.invalidateQueries({ queryKey: chatKeys.status() })
+    await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
   }, [queryClient])
 
   useChatSSE(

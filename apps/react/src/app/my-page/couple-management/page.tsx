@@ -1,35 +1,27 @@
-import { createFileRoute, useLoaderData, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { useState } from 'react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import memberService from '@/shared/services/member.service'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
+import { queryKeys } from '@/shared/query-keys'
 import bridge from '@/shared/bridge'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementPage,
-  loader: async () => {
-    try {
-      const response = await memberService.inviteCode()
-      return {
-        inviteCode: response.data?.coupleCode || '',
-      }
-    } catch (error) {
-      // Todo 에러 처리
-      return {
-        inviteCode: '',
-      }
-    }
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(memberService.inviteCodeQuery())
   },
 })
 
 function CoupleManagementPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
-  const { inviteCode } = useLoaderData({ from: '/my-page/couple-management/' })
+  const { data: inviteCodeData } = useQuery(memberService.inviteCodeQuery())
+  const inviteCode = inviteCodeData?.data?.coupleCode || ''
   const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
 
   // 프로필 모달 훅
@@ -41,8 +33,8 @@ function CoupleManagementPage() {
 
   // 페이지 새로고침 함수
   const handleRefreshPage = () => {
-    queryClient.setQueryData(['partnerInfo'], null)
-    queryClient.removeQueries({ queryKey: ['partnerInfo'] })
+    queryClient.setQueryData(queryKeys.member.partnerInfo(), null)
+    queryClient.removeQueries({ queryKey: queryKeys.member.partnerInfo() })
 
     // 페이지 로더 새로고침
     router.invalidate()
@@ -106,7 +98,7 @@ function CoupleManagementPage() {
         </button>
       </div>
 
-      {/* 상대방 코드 입력 바텀시트 */}
+      {/* 상대방 코드 입력 바텀ㅌ트 */}
       <PartnerCodeSheet
         isOpen={isPartnerCodeSheetOpen}
         onOpenChange={setIsPartnerCodeSheetOpen}

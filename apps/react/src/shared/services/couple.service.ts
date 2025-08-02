@@ -1,6 +1,5 @@
-import { queryOptions } from '@tanstack/react-query'
 import apiInstance from '../libs/api'
-import { CouplesApi, CoupleLinkRequestDto, CoupleLinkSuccessResponse } from '@data/user-api-axios/api'
+import { CouplesApi, CoupleLinkRequestDto } from '@data/user-api-axios/api'
 
 export const QUERY_KEY = 'couples'
 
@@ -9,27 +8,25 @@ class CoupleService extends CouplesApi {
     super(undefined, '', apiInstance)
   }
 
-  async connectCouple(partnerCode: string) {
-    const requestDto: CoupleLinkRequestDto = {
-      coupleCode: partnerCode,
-    }
-    const { data } = await super.linkCouple({ coupleLinkRequestDto: requestDto })
-    return data
-  }
-
-  async disconnectCouple() {
-    try {
-      const { data } = await super.unlinkCouple()
-      return data
-    } catch (error) {
-      console.error('Error disconnecting couple:', error)
-    }
-  }
-
+  // === Mutation Options ===
   connectCoupleMutation() {
     return {
-      mutationKey: [QUERY_KEY, 'link'],
-      mutationFn: (partnerCode: string) => this.connectCouple(partnerCode),
+      mutationFn: async (partnerCode: string) => {
+        const requestDto: CoupleLinkRequestDto = {
+          coupleCode: partnerCode,
+        }
+        const { data } = await this.linkCouple({ coupleLinkRequestDto: requestDto })
+        return data
+      },
+    }
+  }
+
+  disconnectCoupleMutation() {
+    return {
+      mutationFn: async () => {
+        const { data } = await this.unlinkCouple()
+        return data
+      },
     }
   }
 }
