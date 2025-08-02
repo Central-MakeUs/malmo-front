@@ -15,7 +15,7 @@ interface NicknameEditSheetProps {
 }
 
 export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetProps) {
-  const { nickname, handleNicknameChange, isValid, maxLength } = useNicknameInput()
+  const { nickname, handleNicknameChange, clearNickname, isValid, maxLength } = useNicknameInput()
   const { refreshUserInfo } = useAuth()
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
   const serviceOptions = memberService.updateMemberMutation()
@@ -23,6 +23,7 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetPro
     ...serviceOptions,
     onSuccess: async () => {
       serviceOptions.onSuccess?.()
+      clearNickname()
       // 사용자 정보 새로고침
       await refreshUserInfo()
       // 성공시 시트 닫기
