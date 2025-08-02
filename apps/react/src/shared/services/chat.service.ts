@@ -64,6 +64,9 @@ class ChatService extends ChatroomApi {
         const { data } = await this.sendChatMessage1({ chatRequest: { message } })
         return data?.data
       },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
+      },
     }
   }
 
@@ -73,6 +76,9 @@ class ChatService extends ChatroomApi {
         const { data } = await this.sendChatMessage()
         return data?.data
       },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
+      },
     }
   }
 
@@ -81,6 +87,9 @@ class ChatService extends ChatroomApi {
       mutationFn: async () => {
         const { data } = await this.completeChatRoom()
         return data?.data
+      },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
       },
     }
   }

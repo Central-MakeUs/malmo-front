@@ -47,6 +47,9 @@ class QuestionService extends QuestionsApi {
         })
         return data?.data
       },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
+      },
     }
   }
 
@@ -57,6 +60,9 @@ class QuestionService extends QuestionsApi {
           answerRequestDto: { ...body },
         })
         return data?.data
+      },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
       },
     }
   }

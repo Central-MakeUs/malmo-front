@@ -56,6 +56,9 @@ class MemberService extends MembersApi {
         const { data } = await this.updateMember({ updateMemberRequestDto: body })
         return data
       },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
+      },
     }
   }
 
@@ -64,6 +67,9 @@ class MemberService extends MembersApi {
       mutationFn: async (body: UpdateStartLoveDateRequestDto) => {
         const { data } = await this.updateStartLoveDate({ updateStartLoveDateRequestDto: body })
         return data
+      },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
       },
     }
   }
@@ -76,6 +82,9 @@ class MemberService extends MembersApi {
         })
         return data
       },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
+      },
     }
   }
 
@@ -84,6 +93,9 @@ class MemberService extends MembersApi {
       mutationFn: async () => {
         const { data } = await this.deleteMember({})
         return data
+      },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
       },
     }
   }
@@ -95,6 +107,9 @@ class MemberService extends MembersApi {
           registerLoveTypeRequestDto: { results },
         })
         return data
+      },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
       },
     }
   }

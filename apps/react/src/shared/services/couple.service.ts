@@ -1,8 +1,6 @@
 import apiInstance from '../libs/api'
 import { CouplesApi, CoupleLinkRequestDto } from '@data/user-api-axios/api'
 
-export const QUERY_KEY = 'couples'
-
 class CoupleService extends CouplesApi {
   constructor() {
     super(undefined, '', apiInstance)
@@ -18,6 +16,9 @@ class CoupleService extends CouplesApi {
         const { data } = await this.linkCouple({ coupleLinkRequestDto: requestDto })
         return data
       },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
+      },
     }
   }
 
@@ -26,6 +27,9 @@ class CoupleService extends CouplesApi {
       mutationFn: async () => {
         const { data } = await this.unlinkCouple()
         return data
+      },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
       },
     }
   }

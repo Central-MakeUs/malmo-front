@@ -45,13 +45,6 @@ export function useQuestionModal(): UseQuestionModalReturn {
                 replace: true,
               })
             },
-            onError: () => {
-              alertDialog.open({
-                title: '저장 실패',
-                description: '답변 저장에 실패했어요. 다시 시도해주세요.',
-                confirmText: '확인',
-              })
-            },
           }
         )
       },

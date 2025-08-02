@@ -6,7 +6,6 @@ import { isWebView } from '@/shared/utils/webview'
 import { useAuth } from '@/features/auth'
 import { useEffect, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
-import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 
 export const Route = createFileRoute('/login/')({
   component: LoginPage,
@@ -14,7 +13,6 @@ export const Route = createFileRoute('/login/')({
 
 export default function LoginPage() {
   const auth = useAuth()
-  const { open } = useAlertDialog()
   const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -45,11 +43,6 @@ export default function LoginPage() {
       } else {
         // ToDo: 웹뷰가 아닌 경우 처리
       }
-    } catch (error: any) {
-      open({
-        title: '애플 로그인 실패',
-        description: error?.message || '애플 로그인에 실패했습니다.',
-      })
     } finally {
       setIsSubmitting(false)
     }
@@ -76,11 +69,6 @@ export default function LoginPage() {
       } else {
         // ToDo: 웹뷰가 아닌 경우 처리
       }
-    } catch (error: any) {
-      open({
-        title: '카카오 로그인 실패',
-        description: error?.message || '카카오 로그인에 실패했습니다.',
-      })
     } finally {
       setIsSubmitting(false)
     }

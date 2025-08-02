@@ -86,6 +86,9 @@ class HistoryService extends ChatroomApi {
         })
         return data?.data
       },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
+      },
     }
   }
 }

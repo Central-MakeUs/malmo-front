@@ -1,5 +1,5 @@
 import apiInstance from '../libs/api'
-import { SignUpsApi } from '@data/user-api-axios/api'
+import { SignUpsApi, SignUpRequestDto } from '@data/user-api-axios/api'
 
 class SignUpService extends SignUpsApi {
   constructor() {
@@ -9,11 +9,14 @@ class SignUpService extends SignUpsApi {
   // === Mutation Options ===
   signUpMutation() {
     return {
-      mutationFn: async (body: any) => {
+      mutationFn: async (body: SignUpRequestDto) => {
         const { data } = await this.signUp({
           signUpRequestDto: body,
         })
         return data
+      },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
       },
     }
   }

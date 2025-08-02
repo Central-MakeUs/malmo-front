@@ -97,7 +97,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       // 여기서 API 호출
       const requestBody = {
         nickname: data.nickname,
-        loveStartDate: data.anniversary ? formatDate(data.anniversary) : null,
+        loveStartDate: data.anniversary ? formatDate(data.anniversary) : '',
         terms: Object.entries(data.termsAgreements).map(([termsId, isAgreed]) => ({
           termsId: Number(termsId),
           isAgreed,

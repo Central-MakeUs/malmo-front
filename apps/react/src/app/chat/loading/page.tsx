@@ -18,8 +18,9 @@ function RouteComponent() {
   const queryClient = useQueryClient()
 
   // 채팅 완료 mutation 사용
+  const chatServiceOptions = chatService.completeChatRoomMutation()
   const completeChatMutation = useMutation({
-    ...chatService.completeChatRoomMutation(),
+    ...chatServiceOptions,
     onSuccess: async (data) => {
       // 2초 대기
       await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -32,6 +33,9 @@ function RouteComponent() {
       navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId, fromHistory: false } })
     },
     onError: () => {
+      // 서비스단 에러
+      chatServiceOptions.onError?.()
+      // 홈으로 이동
       navigate({ to: '/' })
     },
   })

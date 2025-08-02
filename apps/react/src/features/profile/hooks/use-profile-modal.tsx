@@ -20,8 +20,9 @@ export function useProfileModal(): UseProfileModalReturn {
   const navigate = useNavigate()
 
   // 회원 탈퇴 뮤테이션
+  const deleteMemberServiceOptions = memberService.deleteMemberMutation()
   const deleteMemberMutation = useMutation({
-    ...memberService.deleteMemberMutation(),
+    ...deleteMemberServiceOptions,
     onSuccess: async (result) => {
       if (result?.success) {
         // 로그아웃 처리
@@ -32,20 +33,25 @@ export function useProfileModal(): UseProfileModalReturn {
       }
     },
     onError: (error: any) => {
+      // 서비스단 에러
+      deleteMemberServiceOptions.onError?.()
+      // 다이얼로그 닫기
       alertDialog.close()
-      // TODO: 에러 처리
     },
   })
 
   // 커플 연결 끊기 뮤테이션
+  const disconnectCoupleServiceOptions = coupleService.disconnectCoupleMutation()
   const disconnectCoupleMutation = useMutation({
-    ...coupleService.disconnectCoupleMutation(),
+    ...disconnectCoupleServiceOptions,
     onSuccess: async () => {
       await refreshUserInfo()
     },
-    onError: (error: any) => {
+    onError: () => {
+      // 서비스단 에러
+      disconnectCoupleServiceOptions.onError?.()
+      // 다이얼로그 닫기
       alertDialog.close()
-      // TODO: 에러 처리
     },
   })
 

@@ -4,6 +4,7 @@ import { createWebView, useBridge, type BridgeWebView } from '@webview-bridge/re
 import { appBridge, appSchema } from './bridge'
 import { useOverlay } from './features/overlay/use-overlay'
 import { DynamicStatusBar } from './features/status-bar/dynamic-status-bar'
+import { WebViewError } from './components/webview-error'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export const { WebView, postMessage } = createWebView({
@@ -56,6 +57,10 @@ export default function App() {
     console.log('Webview load end')
   }, [])
 
+  const handleRetry = useCallback(() => {
+    webviewRef.current?.reload() // 웹뷰 새로고침
+  }, [])
+
   return (
     <View style={styles.container}>
       <DynamicStatusBar />
@@ -75,15 +80,11 @@ export default function App() {
           mediaPlaybackRequiresUserAction={false}
           originWhitelist={['*']}
           mixedContentMode="compatibility"
+          allowsBackForwardNavigationGestures={false}
+          onShouldStartLoadWithRequest={() => true}
+          renderError={() => <WebViewError onRetry={handleRetry} />}
+          startInLoadingState={false}
           onLoadEnd={handleLoadEnd}
-          onError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent
-            console.error('WebView error: ', nativeEvent)
-          }}
-          onHttpError={(syntheticEvent) => {
-            const { nativeEvent } = syntheticEvent
-            console.error('WebView HTTP error: ', nativeEvent)
-          }}
         />
       </SafeAreaView>
     </View>
