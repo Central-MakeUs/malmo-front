@@ -1,7 +1,8 @@
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
 import questionService from '@/shared/services/question.service'
 import { useRouter } from '@tanstack/react-router'
-import { useMutation } from '@tanstack/react-query'
+import { QueryClientContext, useMutation, useQueryClient } from '@tanstack/react-query'
+import historyService from '@/shared/services/history.service'
 
 export interface UseQuestionModalReturn {
   saveQuestionModal: (text: string, isEdit: boolean) => void
@@ -10,6 +11,7 @@ export interface UseQuestionModalReturn {
 
 export function useQuestionModal(): UseQuestionModalReturn {
   const alertDialog = useAlertDialog()
+  const queryClient = useQueryClient()
   const router = useRouter()
 
   const submitAnswerMutation = useMutation(questionService.submitAnswerMutation())
@@ -29,7 +31,7 @@ export function useQuestionModal(): UseQuestionModalReturn {
         mutation.mutate(
           { answer: text },
           {
-            onSuccess: (data) => {
+            onSuccess: async (data) => {
               if (!data?.coupleQuestionId) {
                 alertDialog.open({
                   title: '저장 실패',
@@ -38,6 +40,7 @@ export function useQuestionModal(): UseQuestionModalReturn {
                 })
                 return
               }
+              await queryClient.invalidateQueries({ queryKey: questionService.todayQuestionQuery().queryKey })
 
               router.navigate({
                 to: '/question/see-answer',
