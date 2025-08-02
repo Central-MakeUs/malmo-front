@@ -8,6 +8,7 @@ import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboard
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import memberService from '@/shared/services/member.service'
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
+import { toast } from '@/shared/components/toast'
 
 export const Route = createFileRoute('/onboarding/my-code/')({
   component: MyCodePage,
@@ -29,7 +30,7 @@ function MyCodePage() {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(inviteCode)
-    alert('초대 코드가 클립보드에 복사되었습니다.')
+    toast.success('초대 코드 복사 완료! 연인에게 공유해 주세요')
   }
 
   const handleConnectWithCode = () => {
@@ -46,8 +47,6 @@ function MyCodePage() {
 
       if (success) {
         goToHome()
-      } else {
-        alert('회원가입 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
       }
     } catch (error) {
       // ToDo
