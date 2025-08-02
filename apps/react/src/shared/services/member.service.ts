@@ -8,6 +8,7 @@ import {
   LoveTypeTestResult,
 } from '@data/user-api-axios/api'
 import { queryKeys } from '../query-keys'
+import { toast } from '../components/toast'
 
 export const QUERY_KEY = 'members'
 
@@ -46,6 +47,11 @@ class MemberService extends MembersApi {
         const { data } = await this.getPartnerMemberInfo()
         return data
       },
+      throwOnError: (error: any) => {
+        // axios 에러와 일반 에러 구조 모두 고려
+        const errorCode = error?.response?.data?.code
+        return errorCode !== 40301
+      },
     }
   }
 
@@ -56,8 +62,11 @@ class MemberService extends MembersApi {
         const { data } = await this.updateMember({ updateMemberRequestDto: body })
         return data
       },
+      onSuccess: () => {
+        toast.success('닉네임이 변경되었어요!')
+      },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('회원 정보 수정 중 오류가 발생했습니다')
       },
     }
   }
@@ -68,8 +77,11 @@ class MemberService extends MembersApi {
         const { data } = await this.updateStartLoveDate({ updateStartLoveDateRequestDto: body })
         return data
       },
+      onSuccess: () => {
+        toast.success('디데이가 변경되었어요!')
+      },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('디데이 수정 중 오류가 발생했습니다')
       },
     }
   }
@@ -83,7 +95,7 @@ class MemberService extends MembersApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('약관 동의 처리 중 오류가 발생했습니다')
       },
     }
   }
@@ -95,7 +107,7 @@ class MemberService extends MembersApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('회원 탈퇴 중 오류가 발생했습니다')
       },
     }
   }
@@ -109,7 +121,7 @@ class MemberService extends MembersApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('애착유형 검사 제출 중 오류가 발생했습니다')
       },
     }
   }

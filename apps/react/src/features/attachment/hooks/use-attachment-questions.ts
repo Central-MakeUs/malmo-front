@@ -6,6 +6,7 @@ import memberService from '@/shared/services/member.service'
 import { QUESTION_CONFIG } from '../models/constants'
 import type { LoveTypeQuestionData, LoveTypeTestResult } from '@data/user-api-axios/api'
 import { useAuth } from '@/features/auth'
+import { toast } from '@/shared/components/toast'
 
 // 질문 타입 정의
 interface Question {
@@ -173,7 +174,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
     // 모든 질문에 답변했는지 확인
     const answeredQuestions = Object.keys(answers).length
     if (answeredQuestions < questions.length) {
-      alert(`아직 ${questions.length - answeredQuestions}개의 질문에 답변하지 않았습니다.`)
+      toast.error(`아직 ${questions.length - answeredQuestions}개의 질문에 답변하지 않았습니다.`)
       return
     }
 

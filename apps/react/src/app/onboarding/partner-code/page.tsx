@@ -36,20 +36,12 @@ function PartnerCodePage() {
 
     updatePartnerCode(partnerCode)
 
-    try {
-      // 커플 연결 API 호출
-      await connectCoupleMutation.mutateAsync(partnerCode)
+    // 커플 연결 API 호출
+    await connectCoupleMutation.mutateAsync(partnerCode)
 
-      // 회원가입 완료 처리
-      const success = await completeOnboarding()
-      if (success) {
-        goToNextStep()
-      } else {
-        alert('회원가입 처리 중 오류가 발생했습니다. 다시 시도해주세요.')
-      }
-    } catch (error) {
-      alert('유효하지 않은 커플 코드입니다.')
-    }
+    // 회원가입 완료 처리
+    const success = await completeOnboarding()
+    if (success) goToNextStep()
   }
 
   return (

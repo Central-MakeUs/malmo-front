@@ -2,6 +2,7 @@ import apiInstance from '../libs/api'
 import { ChatroomApi } from '@data/user-api-axios/api'
 import { queryKeys } from '../query-keys'
 import { keepPreviousData } from '@tanstack/react-query'
+import { toast } from '../components/toast'
 
 class HistoryService extends ChatroomApi {
   constructor() {
@@ -87,7 +88,7 @@ class HistoryService extends ChatroomApi {
         return data?.data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('히스토리 삭제 중 오류가 발생했습니다')
       },
     }
   }

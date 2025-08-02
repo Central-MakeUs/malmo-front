@@ -9,6 +9,7 @@ import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
 import { queryKeys } from '@/shared/query-keys'
 import bridge from '@/shared/bridge'
+import { toast } from '@/shared/components/toast'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementPage,
@@ -43,7 +44,7 @@ function CoupleManagementPage() {
   const handleCopyInviteCode = async () => {
     try {
       await navigator.clipboard.writeText(inviteCode)
-      // TODO: 토스트 메시지 표시
+      toast.success('초대 코드 복사 완료! 연인에게 공유해 주세요')
     } catch (error) {
       console.error('클립보드 복사 실패:', error)
     }
@@ -98,7 +99,7 @@ function CoupleManagementPage() {
         </button>
       </div>
 
-      {/* 상대방 코드 입력 바텀ㅌ트 */}
+      {/* 상대방 코드 입력 바텀시트 */}
       <PartnerCodeSheet
         isOpen={isPartnerCodeSheetOpen}
         onOpenChange={setIsPartnerCodeSheetOpen}

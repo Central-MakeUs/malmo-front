@@ -18,9 +18,11 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetPro
   const { nickname, handleNicknameChange, isValid, maxLength } = useNicknameInput()
   const { refreshUserInfo } = useAuth()
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
+  const serviceOptions = memberService.updateMemberMutation()
   const updateNicknameMutation = useMutation({
-    ...memberService.updateMemberMutation(),
+    ...serviceOptions,
     onSuccess: async () => {
+      serviceOptions.onSuccess?.()
       // 사용자 정보 새로고침
       await refreshUserInfo()
       // 성공시 시트 닫기
