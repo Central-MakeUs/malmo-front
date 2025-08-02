@@ -97,7 +97,7 @@ export default function LoginPage() {
           disabled={isSubmitting}
         >
           <KakaoLogo className="mr-2" width={24} height={24} />
-          <span className="body1-semibold text-[#16181D]">{isSubmitting ? '로그인 중...' : '카카오로 시작하기'}</span>
+          <span className="body1-semibold text-[#16181D]">{'카카오로 시작하기'}</span>
         </button>
 
         {/* 애플 로그인 버튼 */}
@@ -108,7 +108,7 @@ export default function LoginPage() {
             disabled={isSubmitting}
           >
             <AppleLogo className="mr-2" width={24} height={24} />
-            <span className="body1-semibold text-[#FFFFFF]">{isSubmitting ? '로그인 중...' : 'Apple로 시작하기'}</span>
+            <span className="body1-semibold text-[#FFFFFF]">{'Apple로 시작하기'}</span>
           </button>
         )}
       </div>
