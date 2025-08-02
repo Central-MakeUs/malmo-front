@@ -26,10 +26,6 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: NicknameEditSheetPro
       // 성공시 시트 닫기
       onOpenChange(false)
     },
-    onError: (error) => {
-      console.error('닉네임 변경 실패:', error)
-      // Todo 에러 처리
-    },
   })
 
   const handleSubmit = () => {

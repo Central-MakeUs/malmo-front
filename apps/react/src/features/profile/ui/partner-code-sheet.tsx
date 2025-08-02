@@ -42,13 +42,6 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
       // 입력값 초기화
       setPartnerCode('')
     },
-    onError: () => {
-      open({
-        title: '연결 실패',
-        description: '유효하지 않은 코드입니다. 다시 확인해주세요.',
-        confirmText: '확인',
-      })
-    },
   })
 
   const handleSubmit = () => {

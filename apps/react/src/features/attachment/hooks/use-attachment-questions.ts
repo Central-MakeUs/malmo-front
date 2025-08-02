@@ -65,17 +65,20 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const [isSubmitted, setIsSubmitted] = useState(false) // 제출 완료 상태 추가
 
   // 결과 제출 뮤테이션
+  const serviceOptions = memberService.submitLoveTypeTestMutation()
   const submitLoveTypeTestMutation = useMutation({
-    ...memberService.submitLoveTypeTestMutation(),
+    ...serviceOptions,
     onSuccess: () => {
       // 2초 후 결과 페이지로 이동
       setTimeout(() => {
         navigate({ to: '/attachment-test/result/my' })
       }, QUESTION_CONFIG.SUBMISSION_DELAY)
     },
-    onError: (err) => {
-      setIsSubmitted(false) // 에러 시 제출 상태 리셋
-      alert('결과 제출에 실패했습니다. 다시 시도해주세요.')
+    onError: (error: any) => {
+      // 서비스단 에러 처리 먼저 실행
+      serviceOptions.onError?.()
+      // 앱단 에러 처리: 제출 상태 리셋
+      setIsSubmitted(false)
     },
   })
 

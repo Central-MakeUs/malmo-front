@@ -15,6 +15,9 @@ class LoginService extends LoginsApi {
         })
         return data
       },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
+      },
     }
   }
 
@@ -25,6 +28,9 @@ class LoginService extends LoginsApi {
           kakaoLoginRequestDto: body,
         })
         return data
+      },
+      onError: () => {
+        // TODO: 토스트 메시지로 에러 처리
       },
     }
   }

@@ -38,13 +38,6 @@ export function CoupleDisconnectModal({ isOpen, onOpenChange, onSuccess }: Coupl
       // TODO: 토스트 메시지 표시
       console.log('커플 연결이 끊어졌습니다')
     },
-    onError: (error: any) => {
-      open({
-        title: '연결 끊기 실패',
-        description: error.message || '연결 끊기에 실패했습니다.',
-        confirmText: '확인',
-      })
-    },
   })
 
   const handleDisconnect = () => {

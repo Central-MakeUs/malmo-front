@@ -29,10 +29,6 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
       // 성공시 시트 닫기
       onOpenChange(false)
     },
-    onError: (error) => {
-      console.error('디데이 변경 실패:', error)
-      // Todo 에러 처리
-    },
   })
 
   // 바텀시트가 열릴 때마다 초기 날짜로 리셋
