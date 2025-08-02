@@ -14,7 +14,7 @@ export function Button({ text, disabled = false, onClick, className = '', type =
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'h-[54px] w-full rounded-lg bg-malmo-rasberry-500 font-semibold text-white',
+        'h-[54px] w-full rounded-[10px] bg-malmo-rasberry-500 font-semibold text-white',
         {
           'bg-gray-100 text-gray-iron-700': type === 'secondary',
         },
