@@ -6,6 +6,7 @@ import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
+import { queryKeys } from '@/shared/query-keys'
 
 export interface UseChattingModalReturn {
   testRequiredModal: () => void
@@ -26,7 +27,8 @@ export function useChattingModal(): UseChattingModalReturn {
   const deleteHistoryMutation = useMutation({
     ...historyService.deleteHistoryMutation(),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['histories'] })
+      // 히스토리 관련 쿼리 캐시 무효화
+      await queryClient.invalidateQueries({ queryKey: queryKeys.history.all })
     },
   })
 
