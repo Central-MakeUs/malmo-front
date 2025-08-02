@@ -1,5 +1,4 @@
-import { ChattingProvider } from '@/features/chat/context/chatting-context'
-import { useChattingModal } from '@/features/chat/hook/use-chatting-modal'
+import { ChattingProvider, useChatting } from '@/features/chat/context/chatting-context'
 import bridge from '@/shared/bridge'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
@@ -10,7 +9,7 @@ export const Route = createFileRoute('/chat')({
 })
 
 function ChatLayout() {
-  const chattingModal = useChattingModal()
+  const { chattingModal } = useChatting()
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
 
   return (
