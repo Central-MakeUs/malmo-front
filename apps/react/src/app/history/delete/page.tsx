@@ -23,7 +23,7 @@ function RouteComponent() {
 
   return (
     <div className="flex h-screen flex-col">
-      <DetailHeaderBar title="삭제" left={backButton()} />
+      <DetailHeaderBar title="삭제" left={backButton()} className="border-b-[1px] border-b-gray-iron-100" />
 
       <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pb-20">
         {showEmpty ? (
