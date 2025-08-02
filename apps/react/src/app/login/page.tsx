@@ -96,7 +96,7 @@ export default function LoginPage() {
           className="mb-3 flex h-[52px] w-full items-center justify-center rounded-[8px] bg-[#FEE500]"
           disabled={isSubmitting}
         >
-          <KakaoLogo className="mr-2" width={24} height={24} />
+          <KakaoLogo className="mr-2" width={18} height={18} />
           <span className="body1-semibold text-[#16181D]">{'카카오로 시작하기'}</span>
         </button>
 
@@ -107,7 +107,7 @@ export default function LoginPage() {
             className="flex h-[52px] w-full items-center justify-center rounded-[8px] bg-black text-white"
             disabled={isSubmitting}
           >
-            <AppleLogo className="mr-2" width={24} height={24} />
+            <AppleLogo className="mr-2" width={18} height={18} />
             <span className="body1-semibold text-[#FFFFFF]">{'Apple로 시작하기'}</span>
           </button>
         )}
