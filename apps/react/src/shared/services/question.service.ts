@@ -1,6 +1,7 @@
 import apiInstance from '../libs/api'
 import { AnswerRequestDto, QuestionsApi } from '@data/user-api-axios/api'
 import { queryKeys } from '../query-keys'
+import { toast } from '../components/toast'
 
 class QuestionService extends QuestionsApi {
   constructor() {
@@ -48,7 +49,7 @@ class QuestionService extends QuestionsApi {
         return data?.data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('답변 제출 중 오류가 발생했습니다')
       },
     }
   }
@@ -62,7 +63,7 @@ class QuestionService extends QuestionsApi {
         return data?.data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('답변 수정 중 오류가 발생했습니다')
       },
     }
   }

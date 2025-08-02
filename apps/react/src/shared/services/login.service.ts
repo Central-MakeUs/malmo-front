@@ -1,5 +1,6 @@
 import apiInstance from '../libs/api'
 import { AppleLoginRequestDto, KakaoLoginRequestDto, LoginsApi } from '@data/user-api-axios/api'
+import { toast } from '../components/toast'
 
 class LoginService extends LoginsApi {
   constructor() {
@@ -16,7 +17,7 @@ class LoginService extends LoginsApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('Apple 로그인 중 오류가 발생했습니다')
       },
     }
   }
@@ -30,7 +31,7 @@ class LoginService extends LoginsApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('카카오 로그인 중 오류가 발생했습니다')
       },
     }
   }

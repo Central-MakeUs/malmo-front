@@ -8,6 +8,7 @@ import {
   LoveTypeTestResult,
 } from '@data/user-api-axios/api'
 import { queryKeys } from '../query-keys'
+import { toast } from '../components/toast'
 
 export const QUERY_KEY = 'members'
 
@@ -57,7 +58,7 @@ class MemberService extends MembersApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('회원 정보 수정 중 오류가 발생했습니다')
       },
     }
   }
@@ -69,7 +70,7 @@ class MemberService extends MembersApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('연애 시작일 수정 중 오류가 발생했습니다')
       },
     }
   }
@@ -83,7 +84,7 @@ class MemberService extends MembersApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('약관 동의 처리 중 오류가 발생했습니다')
       },
     }
   }
@@ -95,7 +96,7 @@ class MemberService extends MembersApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('회원 탈퇴 중 오류가 발생했습니다')
       },
     }
   }
@@ -109,7 +110,7 @@ class MemberService extends MembersApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('애착유형 검사 제출 중 오류가 발생했습니다')
       },
     }
   }

@@ -1,5 +1,6 @@
 import apiInstance from '../libs/api'
 import { CouplesApi, CoupleLinkRequestDto } from '@data/user-api-axios/api'
+import { toast } from '../components/toast'
 
 class CoupleService extends CouplesApi {
   constructor() {
@@ -17,7 +18,7 @@ class CoupleService extends CouplesApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('커플 연결 중 오류가 발생했습니다')
       },
     }
   }
@@ -29,7 +30,7 @@ class CoupleService extends CouplesApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('커플 연결 끊기 중 오류가 발생했습니다')
       },
     }
   }

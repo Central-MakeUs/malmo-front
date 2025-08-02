@@ -1,6 +1,7 @@
 import apiInstance from '../libs/api'
 import { ChatroomApi } from '@data/user-api-axios/api'
 import { queryKeys } from '../query-keys'
+import { toast } from '../components/toast'
 
 class ChatService extends ChatroomApi {
   constructor() {
@@ -65,7 +66,7 @@ class ChatService extends ChatroomApi {
         return data?.data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('메시지 전송 중 오류가 발생했습니다')
       },
     }
   }
@@ -77,7 +78,7 @@ class ChatService extends ChatroomApi {
         return data?.data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('채팅방 업그레이드 중 오류가 발생했습니다')
       },
     }
   }
@@ -89,7 +90,7 @@ class ChatService extends ChatroomApi {
         return data?.data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('채팅 완료 처리 중 오류가 발생했습니다')
       },
     }
   }

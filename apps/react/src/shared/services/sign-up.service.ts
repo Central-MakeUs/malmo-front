@@ -1,5 +1,6 @@
 import apiInstance from '../libs/api'
 import { SignUpsApi, SignUpRequestDto } from '@data/user-api-axios/api'
+import { toast } from '../components/toast'
 
 class SignUpService extends SignUpsApi {
   constructor() {
@@ -16,7 +17,7 @@ class SignUpService extends SignUpsApi {
         return data
       },
       onError: () => {
-        // TODO: 토스트 메시지로 에러 처리
+        toast.error('회원가입 중 오류가 발생했습니다')
       },
     }
   }
