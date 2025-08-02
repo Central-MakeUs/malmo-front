@@ -97,7 +97,7 @@ function HomePage() {
         {!hasAttachmentType && <AttachmentTestBanner />}
 
         {/* 오늘의 마음 질문 섹션 */}
-        <div onClick={handleTodayQuestionClick} className="cursor-pointer">
+        <div onClick={handleTodayQuestionClick} className="mt-8 cursor-pointer">
           <TodayQuestionSection todayQuestion={todayQuestion} />
         </div>
 
