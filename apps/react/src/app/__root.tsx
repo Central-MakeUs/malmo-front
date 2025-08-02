@@ -85,7 +85,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootComponent() {
   return (
-    <div className="no-bounce-scroll flex h-screen w-full flex-col bg-white">
+    <div className="no-bounce-scroll main-scrollable flex h-screen w-full flex-col bg-white">
       <main className="relative mx-auto flex w-full max-w-[600px] flex-1 flex-col">
         <Outlet />
       </main>
