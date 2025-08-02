@@ -7,6 +7,7 @@ import { useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { queryKeys } from '@/shared/query-keys'
+import chatService from '@/shared/services/chat.service'
 
 export interface UseChattingModalReturn {
   testRequiredModal: () => void
@@ -82,6 +83,7 @@ export function useChattingModal(): UseChattingModalReturn {
       cancelText: '나가기',
       confirmText: '이어서 대화하기',
       onCancel: () => {
+        queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
         alertDialog.close()
         router.history.back()
       },
