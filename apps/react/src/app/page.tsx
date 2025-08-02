@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import malmoLogo from '@/assets/images/malmo-logo-small.png'
 import HeartIcon from '@/assets/icons/heart.svg'
 
@@ -32,6 +32,7 @@ export const Route = createFileRoute('/')({
 
 function HomePage() {
   const { userInfo } = useAuth()
+  const navigate = useNavigate()
 
   const { data: todayQuestion } = useTodayQuestion()
   const { data: partnerInfo, error: partnerError } = usePartnerInfo()
@@ -55,6 +56,25 @@ function HomePage() {
   const myAttachmentType = myAttachmentData?.character
   const partnerAttachmentType = partnerAttachmentData?.character
 
+  // 오늘의 질문 클릭 핸들러
+  const handleTodayQuestionClick = () => {
+    if (!todayQuestion?.coupleQuestionId) return
+
+    if (todayQuestion.meAnswered) {
+      // 답변했으면 수정창으로
+      navigate({
+        to: '/question/see-answer',
+        search: { coupleQuestionId: todayQuestion.coupleQuestionId },
+      })
+    } else {
+      // 답변 전이면 작성창으로
+      navigate({
+        to: '/question/write-answer',
+        search: { coupleQuestionId: todayQuestion.coupleQuestionId },
+      })
+    }
+  }
+
   return (
     <div className="flex h-full flex-col bg-white pt-[60px]">
       {/* 헤더 */}
@@ -77,9 +97,9 @@ function HomePage() {
         {!hasAttachmentType && <AttachmentTestBanner />}
 
         {/* 오늘의 마음 질문 섹션 */}
-        <Link to={'/question'}>
+        <div onClick={handleTodayQuestionClick} className="cursor-pointer">
           <TodayQuestionSection todayQuestion={todayQuestion} />
-        </Link>
+        </div>
 
         {/* 애착유형 카드 섹션 */}
         <AttachmentTypeCards
