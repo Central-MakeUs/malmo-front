@@ -36,7 +36,7 @@ export function TermsAgreementList({
 
       <div className="mt-3 flex flex-col gap-3">
         {sortedTerms.map((term) => (
-          <div key={term.termsId} className="flex h-[50px] w-full items-center justify-between py-3 pr-[6px]">
+          <div key={term.termsId} className="flex h-[50px] w-full items-center justify-between py-3 pr-1">
             <div className="flex items-center">
               {agreements[term.termsId] ? (
                 <CheckedCircle

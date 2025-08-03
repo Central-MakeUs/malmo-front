@@ -53,7 +53,13 @@ function TermsPage() {
 
       {/* 헤더 및 타이틀 */}
       <DetailHeaderBar onBackClick={() => navigate({ to: '/login' })} />
-      <TitleSection title="서비스 이용 약관에 동의해주세요" />
+      <TitleSection
+        title={
+          <p>
+            서비스 이용 약관에 <br /> 동의해주세요
+          </p>
+        }
+      />
 
       {/* 약관 동의 섹션 */}
       <TermsAgreementList
