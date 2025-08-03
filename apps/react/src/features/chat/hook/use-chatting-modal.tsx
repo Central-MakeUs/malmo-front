@@ -1,19 +1,18 @@
 import bridge from '@/shared/bridge'
 import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
-import historyService from '@/shared/services/history.service'
 import { Button } from '@/shared/ui'
-import { useQueryClient, useMutation } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
+import { useQueryClient } from '@tanstack/react-query'
+import { useLocation, useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { queryKeys } from '@/shared/query-keys'
+import chatService from '@/shared/services/chat.service'
+import { useAuth } from '@/features/auth'
+import { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
 export interface UseChattingModalReturn {
   testRequiredModal: () => void
   exitChattingModal: () => void
   chattingTutorialModal: () => React.ReactNode
-  deleteChatHistoryModal: (id: number) => void
-  deleteChatHistoriesModal: (ids: number[], onFinish: () => void) => void
   showChattingTutorial: boolean
 }
 
@@ -21,19 +20,20 @@ export function useChattingModal(): UseChattingModalReturn {
   const alertDialog = useAlertDialog()
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { pathname } = useLocation()
+  const auth = useAuth()
 
   const [showChattingTutorial, setShowChattingTutorial] = useState(false)
 
-  const deleteHistoryMutation = useMutation({
-    ...historyService.deleteHistoryMutation(),
-    onSuccess: async () => {
-      // 히스토리 관련 쿼리 캐시 무효화
-      await queryClient.invalidateQueries({ queryKey: queryKeys.history.all })
-    },
-  })
-
   useEffect(() => {
-    const fetchTutorialSeen = async () => {
+    if (pathname !== '/chat') return
+
+    const fetchChatSeen = async () => {
+      if (!auth.userInfo.loveTypeCategory) {
+        testRequiredModal()
+        return
+      }
+
       const seen = await bridge.getChatTutorialSeen()
       if (seen) {
         setShowChattingTutorial(false)
@@ -43,7 +43,8 @@ export function useChattingModal(): UseChattingModalReturn {
       setShowChattingTutorial(true)
       bridge.toggleOverlay?.(2)
     }
-    fetchTutorialSeen()
+
+    fetchChatSeen()
   }, [])
 
   const testRequiredModal = () => {
@@ -62,6 +63,14 @@ export function useChattingModal(): UseChattingModalReturn {
       ),
       cancelText: '다음에 하기',
       confirmText: '검사하러 가기',
+      onCancel: () => {
+        alertDialog.close()
+        router.history.back()
+      },
+      onConfirm: () => {
+        alertDialog.close()
+        router.navigate({ to: '/attachment-test' })
+      },
     })
   }
 
@@ -82,42 +91,9 @@ export function useChattingModal(): UseChattingModalReturn {
       cancelText: '나가기',
       confirmText: '이어서 대화하기',
       onCancel: () => {
+        queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
         alertDialog.close()
         router.history.back()
-      },
-    })
-  }
-
-  const deleteChatHistoryModal = (id: number) => {
-    alertDialog.open({
-      title: '대화 기록을 삭제할까요?',
-      description: '삭제하면 기록을 되돌릴 수 없어요.',
-      cancelText: '삭제하기',
-      confirmText: '취소하기',
-      onCancel: async () => {
-        alertDialog.close()
-        await deleteHistoryMutation.mutateAsync([id])
-        router.history.back()
-      },
-    })
-  }
-
-  const deleteChatHistoriesModal = (ids: number[], onFinish: () => void) => {
-    alertDialog.open({
-      title: '대화 기록을 삭제할까요?',
-      description: (
-        <>
-          삭제하면 기록을 되돌릴 수 없고
-          <br />
-          모모가 이 기록을 상담에 반영하지 않아요.
-        </>
-      ),
-      cancelText: '삭제하기',
-      confirmText: '취소하기',
-      onCancel: async () => {
-        alertDialog.close()
-        await deleteHistoryMutation.mutateAsync(ids)
-        onFinish()
       },
     })
   }
@@ -194,7 +170,5 @@ export function useChattingModal(): UseChattingModalReturn {
     exitChattingModal,
     chattingTutorialModal,
     showChattingTutorial,
-    deleteChatHistoryModal,
-    deleteChatHistoriesModal,
   }
 }

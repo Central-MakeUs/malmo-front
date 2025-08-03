@@ -25,7 +25,7 @@ export function AttachmentTestIntro({ nickname, from }: AttachmentTestIntroProps
 
       {/* 제목 및 설명 */}
       <div className="mt-[44px] px-[34px]">
-        <h1 className="title2-bold text-gray-iron-950">{nickname}님의 애착유형을 검사할게요</h1>
+        <h1 className="title2-bold break-keep text-gray-iron-950">{nickname}님의 애착유형을 검사할게요</h1>
         <p className="body3-medium mt-[8px] text-gray-iron-700">테스트를 진행하고 나의 애착유형을 확인해 보세요</p>
       </div>
 

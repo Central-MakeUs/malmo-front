@@ -3,12 +3,12 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import loveLetter from '@/assets/images/love-letter.png'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
-import { HeaderNavigation } from '@/shared/ui'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import memberService from '@/shared/services/member.service'
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { toast } from '@/shared/components/toast'
+import { DetailHeaderBar } from '@/shared/components/header-bar'
 
 export const Route = createFileRoute('/onboarding/my-code/')({
   component: MyCodePage,
@@ -58,7 +58,7 @@ function MyCodePage() {
   return (
     <div className="flex h-screen w-full flex-col bg-white">
       {/* 헤더 및 타이틀 */}
-      <HeaderNavigation onBack={goToPreviousStep} />
+      <DetailHeaderBar onBackClick={goToPreviousStep} />
       <TitleSection
         title={
           <>

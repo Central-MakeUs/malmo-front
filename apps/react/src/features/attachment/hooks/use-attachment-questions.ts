@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useRouter } from '@tanstack/react-router'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import loveTypeService from '@/shared/services/love-type.service'
 import memberService from '@/shared/services/member.service'
 import { QUESTION_CONFIG } from '../models/constants'
 import type { LoveTypeQuestionData, LoveTypeTestResult } from '@data/user-api-axios/api'
 import { useAuth } from '@/features/auth'
 import { toast } from '@/shared/components/toast'
+import { queryKeys } from '@/shared/query-keys'
 
 // 질문 타입 정의
 interface Question {
@@ -59,6 +60,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const navigate = useNavigate()
   const router = useRouter()
   const auth = useAuth()
+  const queryClient = useQueryClient()
 
   // 질문 목록 상태
   const [questions, setQuestions] = useState<Question[]>([])
@@ -69,7 +71,10 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const serviceOptions = memberService.submitLoveTypeTestMutation()
   const submitLoveTypeTestMutation = useMutation({
     ...serviceOptions,
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: queryKeys.member.userInfo() })
+      await auth.refreshUserInfo()
+
       // 2초 후 결과 페이지로 이동
       setTimeout(() => {
         navigate({ to: '/attachment-test/result/my' })

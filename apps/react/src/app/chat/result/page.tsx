@@ -4,11 +4,11 @@ import { X } from 'lucide-react'
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { Button } from '@/shared/ui'
 import { z } from 'zod'
-import { useChatting } from '@/features/chat/context/chatting-context'
 import historyService from '@/shared/services/history.service'
 import { useEffect } from 'react'
 import bridge from '@/shared/bridge'
 import { useQuery } from '@tanstack/react-query'
+import { useHistoryModal } from '@/features/history/hook/use-history-modal'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -31,7 +31,7 @@ export const Route = createFileRoute('/chat/result/')({
 function RouteComponent() {
   const { chatId: loaderChatId } = Route.useLoaderData()
   const { chatId, fromHistory } = Route.useSearch()
-  const { chattingModal } = useChatting()
+  const historyModal = useHistoryModal()
 
   const { data: chatResult, isLoading, error } = useQuery(historyService.historySummaryQuery(chatId ?? loaderChatId))
 
@@ -56,7 +56,7 @@ function RouteComponent() {
       <div
         onClick={() => {
           if (!chatId) return
-          chattingModal.deleteChatHistoryModal(chatId)
+          historyModal.deleteChatHistoryModal(chatId)
         }}
       >
         <p className="body2-medium text-gray-iron-700">{chatId ? '삭제' : '로딩중'}</p>

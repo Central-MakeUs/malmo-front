@@ -79,7 +79,11 @@ export default function LoginPage() {
       {/* 로고 영역 */}
       <div className="flex w-full flex-1 flex-col items-center justify-center px-5">
         <div className="w-full">
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <p className="body1-semibold text-gray-iron-950">
+              <span className="text-malmo-rasberry-500">말</span>을 <span className="text-malmo-rasberry-500">모</span>
+              아 마음을 이어주는
+            </p>
             <img src={malmoLogo} alt="말모 로고" className="h-auto w-[160px]" />
           </div>
         </div>
@@ -92,8 +96,8 @@ export default function LoginPage() {
           className="mb-3 flex h-[52px] w-full items-center justify-center rounded-[8px] bg-[#FEE500]"
           disabled={isSubmitting}
         >
-          <KakaoLogo className="mr-2" width={24} height={24} />
-          <span className="body1-semibold text-[#16181D]">{isSubmitting ? '로그인 중...' : '카카오로 시작하기'}</span>
+          <KakaoLogo className="mr-2" width={18} height={18} />
+          <span className="body1-semibold text-[#16181D]">{'카카오로 시작하기'}</span>
         </button>
 
         {/* 애플 로그인 버튼 */}
@@ -103,8 +107,8 @@ export default function LoginPage() {
             className="flex h-[52px] w-full items-center justify-center rounded-[8px] bg-black text-white"
             disabled={isSubmitting}
           >
-            <AppleLogo className="mr-2" width={24} height={24} />
-            <span className="body1-semibold text-[#FFFFFF]">{isSubmitting ? '로그인 중...' : 'Apple로 시작하기'}</span>
+            <AppleLogo className="mr-2" width={18} height={18} />
+            <span className="body1-semibold text-[#FFFFFF]">{'Apple로 시작하기'}</span>
           </button>
         )}
       </div>

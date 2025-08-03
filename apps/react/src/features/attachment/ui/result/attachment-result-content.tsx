@@ -54,11 +54,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
   }
 
   const handleClose = () => {
-    navigate({ to: '/' })
-  }
-
-  const handleComplete = () => {
-    navigate({ to: '/' })
+    navigate({ to: '/', resetScroll: true })
   }
 
   return (
@@ -139,7 +135,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
 
       {/* 바텀 버튼 */}
       <div className="px-[20px] pb-[20px]">
-        <Button text="완료" onClick={handleComplete} />
+        <Button text="홈으로 이동하기" onClick={handleClose} />
       </div>
     </div>
   )

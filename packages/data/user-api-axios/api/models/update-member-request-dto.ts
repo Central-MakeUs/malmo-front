@@ -23,5 +23,5 @@ export interface UpdateMemberRequestDto {
    * @type {string}
    * @memberof UpdateMemberRequestDto
    */
-  nickname?: string
+  nickname: string
 }

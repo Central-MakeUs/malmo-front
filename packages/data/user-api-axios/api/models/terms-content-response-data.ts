@@ -12,6 +12,10 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { TermsDetailsResponseData } from './terms-details-response-data'
+
 /**
  * 약관 내용 응답 데이터
  * @export
@@ -31,11 +35,11 @@ export interface TermsContentResponseData {
    */
   title?: string
   /**
-   * 약관 내용
-   * @type {string}
+   * 약관 내용 및 형식
+   * @type {Array<TermsDetailsResponseData>}
    * @memberof TermsContentResponseData
    */
-  content?: string
+  details?: Array<TermsDetailsResponseData>
   /**
    * 필수 동의 여부
    * @type {boolean}

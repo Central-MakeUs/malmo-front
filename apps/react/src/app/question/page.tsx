@@ -32,7 +32,7 @@ function RouteComponent() {
     <div className="flex h-screen flex-col bg-gray-neutral-100 pb-[60px]">
       <HomeHeaderBar title="마음도감" />
 
-      <section className="overflow-y-auto">
+      <section className="overflow-y-auto bg-white">
         <div className="bg-white pt-3 pb-7">
           <div className="mb-4 flex items-center justify-between pr-5 pl-[14px]">
             <div className="flex items-center gap-1 py-[2px]">
@@ -44,9 +44,7 @@ function RouteComponent() {
               />
               <p className="body1-semibold">도감 {currentLevel + 1}페이지</p>
               <ChevronRight
-                className={cn('h-5 w-5 text-gray-iron-950', {
-                  'text-gray-iron-300': currentLevel >= maxPage,
-                })}
+                className={cn('h-5 w-5 text-gray-iron-950', { 'text-gray-iron-300': currentLevel >= maxPage })}
                 onClick={() => {
                   if (currentLevel < maxPage) setCurrentLevel((prev) => prev + 1)
                 }}
@@ -91,7 +89,7 @@ function RouteComponent() {
           </div>
         </div>
 
-        <div className="flex-1 px-5 pb-6">
+        <div className="flex-1 bg-gray-neutral-100 px-5 pt-5 pb-12">
           <Link
             to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
             search={{ coupleQuestionId: selectedQuestion?.coupleQuestionId || 0, isEdit: false }}

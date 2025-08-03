@@ -5,8 +5,7 @@ import ChatBubble from '@/assets/icons/chat.svg'
 import { cn } from '@ui/common/lib/utils'
 import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useChatRoomStatusQuery } from '@/features/chat/hook/use-chat-queries'
-import { useEffect, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
+import { useState } from 'react'
 import { useChatHistoryQuery } from '@/features/history/hook/use-chat-history-query'
 import { useDebounce } from '@/shared/hook/use-deboucne'
 import { EmptyState, LinkedChatHistoryItem } from '@/features/history/ui/chat-history-item'
@@ -15,7 +14,7 @@ import emptyImage from '@/assets/images/characters/empty.png'
 import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
 import { BottomNavigation } from '@/shared/ui'
 import chatService from '@/shared/services/chat.service'
-import historyService from '@/shared/services/history.service'
+import { Spinner } from '@/shared/ui/spinner'
 
 export const Route = createFileRoute('/history/')({
   component: RouteComponent,
@@ -40,7 +39,8 @@ function RouteComponent() {
     chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
-  const showEmpty = !isFetchingNextPage && histories.length === 0
+  const showEmpty = !isFetching && !isFetchingNextPage && histories.length === 0
+  const isLoading = isFetching && !isFetchingNextPage
 
   return (
     <div className="flex h-screen flex-col pb-15">
@@ -52,26 +52,34 @@ function RouteComponent() {
           </Link>
         }
       />
-
       <div className="px-5 pb-3">
-        <div className="flex items-center gap-3 rounded-[42px] bg-gray-neutral-100 px-4 py-[13px]">
-          <LucideSearch size={20} className="text-gray-iron-400" />
+        <div className="relative flex items-center">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+            <LucideSearch size={20} className="text-gray-iron-800" />
+          </div>
           <input
             type="text"
             placeholder="찾고싶은 대화 제목을 검색해보세요."
-            className="w-full bg-transparent text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
+            className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            disabled={isLoading}
           />
+          {/* isFetching 시 스피너 표시 */}
+          {isLoading && (
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+              <Spinner className="h-5 w-5 text-gray-iron-400" />
+            </div>
+          )}
         </div>
       </div>
 
-      <section className="flex-1 overflow-y-auto bg-gray-neutral-100">
-        {showEmpty ? (
+      <section className="flex-1 overflow-y-auto bg-gray-neutral-100 transition-opacity">
+        {histories.length === 0 ? (
           <EmptyState
-            image={keyword || !isFetching ? noResultImage : emptyImage}
-            title={keyword || !isFetching ? '검색어와 일치하는 대화 기록이 없어요' : '아직 대화 기록이 없어요'}
-            description={keyword || !isFetching ? '다른 검색어를 입력해보세요!' : '모모에게 고민을 이야기해 보세요!'}
+            image={debouncedKeyword ? noResultImage : emptyImage}
+            title={debouncedKeyword ? '검색어와 일치하는 대화 기록이 없어요' : '아직 대화 기록이 없어요'}
+            description={debouncedKeyword ? '다른 검색어를 입력해보세요!' : '모모에게 고민을 이야기해 보세요!'}
           />
         ) : (
           <>

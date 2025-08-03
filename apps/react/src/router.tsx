@@ -19,6 +19,7 @@ export function createRouter() {
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
     scrollRestoration: true,
+    scrollToTopSelectors: ['.main-scrollable'],
     defaultStructuralSharing: true,
     defaultNotFoundComponent: () => <NotFound />,
     defaultErrorComponent: ({ error }) => <RouterError error={error} />,

@@ -22,6 +22,7 @@ import { Route as IntroPageImport } from './app/intro/page'
 import { Route as HistoryPageImport } from './app/history/page'
 import { Route as ChatPageImport } from './app/chat/page'
 import { Route as AttachmentTestPageImport } from './app/attachment-test/page'
+import { Route as TermsPrivacyPolicyPageImport } from './app/terms/privacy-policy/page'
 import { Route as QuestionWriteAnswerPageImport } from './app/question/write-answer/page'
 import { Route as QuestionSeeAnswerPageImport } from './app/question/see-answer/page'
 import { Route as OnboardingTermsPageImport } from './app/onboarding/terms/page'
@@ -105,6 +106,12 @@ const ChatPageRoute = ChatPageImport.update({
 const AttachmentTestPageRoute = AttachmentTestPageImport.update({
   id: '/attachment-test/',
   path: '/attachment-test/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const TermsPrivacyPolicyPageRoute = TermsPrivacyPolicyPageImport.update({
+  id: '/terms/privacy-policy/',
+  path: '/terms/privacy-policy/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -396,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QuestionWriteAnswerPageImport
       parentRoute: typeof rootRoute
     }
+    '/terms/privacy-policy/': {
+      id: '/terms/privacy-policy/'
+      path: '/terms/privacy-policy'
+      fullPath: '/terms/privacy-policy'
+      preLoaderRoute: typeof TermsPrivacyPolicyPageImport
+      parentRoute: typeof rootRoute
+    }
     '/attachment-test/result/my/': {
       id: '/attachment-test/result/my/'
       path: '/attachment-test/result/my'
@@ -476,6 +490,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/terms': typeof OnboardingTermsPageRoute
   '/question/see-answer': typeof QuestionSeeAnswerPageRoute
   '/question/write-answer': typeof QuestionWriteAnswerPageRoute
+  '/terms/privacy-policy': typeof TermsPrivacyPolicyPageRoute
   '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -506,6 +521,7 @@ export interface FileRoutesByTo {
   '/onboarding/terms': typeof OnboardingTermsPageRoute
   '/question/see-answer': typeof QuestionSeeAnswerPageRoute
   '/question/write-answer': typeof QuestionWriteAnswerPageRoute
+  '/terms/privacy-policy': typeof TermsPrivacyPolicyPageRoute
   '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -538,6 +554,7 @@ export interface FileRoutesById {
   '/onboarding/terms/': typeof OnboardingTermsPageRoute
   '/question/see-answer/': typeof QuestionSeeAnswerPageRoute
   '/question/write-answer/': typeof QuestionWriteAnswerPageRoute
+  '/terms/privacy-policy/': typeof TermsPrivacyPolicyPageRoute
   '/attachment-test/result/my/': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner/': typeof AttachmentTestResultPartnerPageRoute
 }
@@ -571,6 +588,7 @@ export interface FileRouteTypes {
     | '/onboarding/terms'
     | '/question/see-answer'
     | '/question/write-answer'
+    | '/terms/privacy-policy'
     | '/attachment-test/result/my'
     | '/attachment-test/result/partner'
   fileRoutesByTo: FileRoutesByTo
@@ -600,6 +618,7 @@ export interface FileRouteTypes {
     | '/onboarding/terms'
     | '/question/see-answer'
     | '/question/write-answer'
+    | '/terms/privacy-policy'
     | '/attachment-test/result/my'
     | '/attachment-test/result/partner'
   id:
@@ -630,6 +649,7 @@ export interface FileRouteTypes {
     | '/onboarding/terms/'
     | '/question/see-answer/'
     | '/question/write-answer/'
+    | '/terms/privacy-policy/'
     | '/attachment-test/result/my/'
     | '/attachment-test/result/partner/'
   fileRoutesById: FileRoutesById
@@ -653,6 +673,7 @@ export interface RootRouteChildren {
   MyPageProfilePageRoute: typeof MyPageProfilePageRoute
   QuestionSeeAnswerPageRoute: typeof QuestionSeeAnswerPageRoute
   QuestionWriteAnswerPageRoute: typeof QuestionWriteAnswerPageRoute
+  TermsPrivacyPolicyPageRoute: typeof TermsPrivacyPolicyPageRoute
   AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageRoute
   AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageRoute
 }
@@ -675,6 +696,7 @@ const rootRouteChildren: RootRouteChildren = {
   MyPageProfilePageRoute: MyPageProfilePageRoute,
   QuestionSeeAnswerPageRoute: QuestionSeeAnswerPageRoute,
   QuestionWriteAnswerPageRoute: QuestionWriteAnswerPageRoute,
+  TermsPrivacyPolicyPageRoute: TermsPrivacyPolicyPageRoute,
   AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
 }
@@ -704,6 +726,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/my-page/profile/",
         "/question/see-answer/",
         "/question/write-answer/",
+        "/terms/privacy-policy/",
         "/attachment-test/result/my/",
         "/attachment-test/result/partner/"
       ]
@@ -807,6 +830,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/question/write-answer/": {
       "filePath": "question/write-answer/page.tsx"
+    },
+    "/terms/privacy-policy/": {
+      "filePath": "terms/privacy-policy/page.tsx"
     },
     "/attachment-test/result/my/": {
       "filePath": "attachment-test/result/my/page.tsx"

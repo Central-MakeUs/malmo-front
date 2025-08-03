@@ -18,11 +18,11 @@ export function TodayQuestionSection({ todayQuestion, level }: TodayQuestionSect
   ]
 
   return (
-    <div className="mt-8">
+    <div>
       <h2 className="heading2-semibold text-gray-iron-950">{level ? `${level}번째 마음 질문` : '오늘의 마음 질문'}</h2>
 
       {/* 질문 박스 */}
-      <div className="mt-3 h-[178px] rounded-lg border border-gray-iron-200 bg-white">
+      <div className={cn('mt-3 h-[178px] rounded-lg border-gray-iron-200 bg-white', { border: !level })}>
         <div className="relative h-full">
           {/* 상단 컨텐츠 */}
           <div className="flex items-center justify-between pt-[18px] pr-[14px] pl-5">

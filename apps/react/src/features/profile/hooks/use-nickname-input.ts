@@ -28,11 +28,16 @@ export function useNicknameInput({ initialValue = '', onNicknameChange }: UseNic
     return regex.test(name)
   }
 
+  const clearNickname = () => {
+    setNickname('')
+  }
+
   const isValid = nickname.trim().length > 0 && isValidNickname(nickname)
 
   return {
     nickname,
     setNickname,
+    clearNickname,
     handleNicknameChange,
     isValid,
     maxLength: NICKNAME_MAX_LENGTH,
