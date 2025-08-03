@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
-import momo from '@/assets/images/momo-home.png'
+import momoIdle from '@/assets/images/momo-home-idle.png'
+import momoChatting from '@/assets/images/momo-home-chatting.png'
 
 interface ChatEntryCardProps {
   isChatActive: boolean
@@ -41,7 +42,7 @@ export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
             </div>
 
             {/* 모모 이미지 */}
-            <img src={momo} alt="모모" className="h-24 w-28" />
+            <img src={isChatActive ? momoChatting : momoIdle} alt="모모" className="h-24 w-28" />
           </div>
 
           {/* 하단 버튼 */}
@@ -50,7 +51,7 @@ export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
               className={cn('h-[44px] w-full rounded-[32px]', isChatActive ? 'bg-malmo-rasberry-500' : 'bg-white')}
             >
               <span className={cn('body2-semibold', isChatActive ? 'text-white' : 'text-malmo-rasberry-500')}>
-                {isChatActive ? '대화 이어서하기' : '새 대화 시작하기'}
+                {isChatActive ? '대화 이어서 하기' : '새 대화 시작하기'}
               </span>
             </button>
           </Link>
