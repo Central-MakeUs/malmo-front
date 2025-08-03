@@ -32,8 +32,6 @@ import {
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base'
 // @ts-ignore
-import type { SwaggerErrorResponse } from '../models'
-// @ts-ignore
 import type { TermsListSuccessResponse } from '../models'
 /**
  * TermsApi - axios parameter creator

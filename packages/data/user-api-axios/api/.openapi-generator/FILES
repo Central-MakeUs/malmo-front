@@ -79,6 +79,7 @@ models/sign-up-success-response.ts
 models/swagger-error-response.ts
 models/terms-content-response-data.ts
 models/terms-data.ts
+models/terms-details-response-data.ts
 models/terms-dto.ts
 models/terms-list-success-response.ts
 models/terms-response-data.ts

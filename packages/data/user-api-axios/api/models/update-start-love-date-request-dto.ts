@@ -23,5 +23,5 @@ export interface UpdateStartLoveDateRequestDto {
    * @type {string}
    * @memberof UpdateStartLoveDateRequestDto
    */
-  startLoveDate?: string
+  startLoveDate: string
 }
