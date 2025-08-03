@@ -38,7 +38,7 @@ function NicknamePage() {
       <TitleSection
         title={
           <>
-            만나서 반가워요
+            만나서 반가워요!
             <br />
             어떻게 불러드릴까요?
           </>
