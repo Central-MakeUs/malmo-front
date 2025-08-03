@@ -1,22 +1,20 @@
 import termsService from '@/shared/services/terms.service'
 import { TermsResponseDataTermsTypeEnum } from '@data/user-api-axios/api'
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, useLoaderData } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/terms/privacy-policy/')({
   component: RouteComponent,
-  loader: async ({ context }) => {
-    const terms = await termsService.getTerms()
-    return terms.data.data
-  },
 })
 
 function RouteComponent() {
-  const terms = Route.useLoaderData()
-  if (!terms || !terms.list || !terms.list) {
+  const { data: termsListData, isLoading } = useQuery(termsService.termsListQuery())
+
+  if (isLoading) {
     return <div>약관을 불러오는 중입니다...</div>
   }
 
-  const filteredTerms = terms?.list.find(
+  const filteredTerms = termsListData?.find(
     (term) => term.termsType === TermsResponseDataTermsTypeEnum.PrivacyPolicy
   )?.content
 

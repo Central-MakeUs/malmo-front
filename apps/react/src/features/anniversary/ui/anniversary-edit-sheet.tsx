@@ -49,6 +49,7 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
 
     // 날짜를 YYYY-MM-DD 형식으로 변환
     const startLoveDate = selectedDate.toISOString().split('T')[0]
+    if (!startLoveDate) return
 
     updateStartDateMutation.mutate({ startLoveDate })
   }
