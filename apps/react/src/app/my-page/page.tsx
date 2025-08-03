@@ -32,10 +32,10 @@ function MyPage() {
   return (
     <div className="flex h-screen flex-col bg-white">
       {/* 약관 모달 */}
-      {selectedTermId !== null && selectedTermContent && selectedTermContent.title && selectedTermContent.content && (
+      {selectedTermId !== null && selectedTermContent && selectedTermContent.title && selectedTermContent.details && (
         <TermsContentModal
           title={selectedTermContent.title}
-          content={selectedTermContent.content}
+          details={selectedTermContent.details}
           onClose={handleCloseTerms}
         />
       )}

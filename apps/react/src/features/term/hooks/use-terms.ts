@@ -19,19 +19,19 @@ export function useTerms(initialAgreements: TermAgreements = {}) {
       setTermsData(convertedTerms)
 
       // 초기 동의 상태 설정
-      const newAgreements = { ...initialAgreements }
-      let hasUpdates = false
-      convertedTerms.forEach((term) => {
-        if (newAgreements[term.termsId] === undefined) {
-          newAgreements[term.termsId] = false
-          hasUpdates = true
-        }
+      setAgreements((currentAgreements) => {
+        const newAgreements = { ...currentAgreements }
+        let hasUpdates = false
+        convertedTerms.forEach((term) => {
+          if (newAgreements[term.termsId] === undefined) {
+            newAgreements[term.termsId] = false
+            hasUpdates = true
+          }
+        })
+        return hasUpdates ? newAgreements : currentAgreements
       })
-      if (hasUpdates) {
-        setAgreements(newAgreements)
-      }
     }
-  }, [termsListData, initialAgreements])
+  }, [termsListData])
 
   // 약관 상세보기 모달 열기
   const handleShowTerms = (termsId: number) => {
