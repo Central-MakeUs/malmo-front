@@ -35,12 +35,12 @@ function AttachmentTestPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="relative flex min-h-screen w-full flex-col bg-malmo-rasberry-25">
       {/* 상단 라즈베리 배경 섹션 */}
       <AttachmentTestIntro nickname={nickname} from={from} />
 
       {/* 흰색 섹션 */}
-      <div className="flex-1 bg-white">
+      <div className="-mt-1 flex-1 rounded-t-[24px] bg-white">
         <div className="mt-[48px] px-[20px]">
           {/* 애착유형 검사 소개 섹션 */}
           <AttachmentTestInfoSection />
@@ -48,11 +48,14 @@ function AttachmentTestPage() {
           {/* 애착유형 소개 섹션 */}
           <AttachmentTypesSection />
 
-          {/* 시작 버튼 */}
-          <div className="mt-[80px] pb-[20px]">
-            <Button text="시작하기" onClick={handleStartTest} />
-          </div>
+          {/* 플로팅 버튼을 위한 하단 여백 */}
+          <div className="pb-[154px]"></div>
         </div>
+      </div>
+
+      {/* 플로팅 버튼 */}
+      <div className="fixed right-0 bottom-0 left-0 z-10 flex justify-center px-5 py-4">
+        <Button text="시작하기" onClick={handleStartTest} />
       </div>
     </div>
   )
