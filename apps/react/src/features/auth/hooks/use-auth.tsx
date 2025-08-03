@@ -87,8 +87,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           loveTypeCategory: memberInfo.data.loveTypeCategory || undefined,
           anxietyRate: memberInfo.data.anxietyRate || undefined,
           avoidanceRate: memberInfo.data.avoidanceRate || undefined,
-          totalChatRoomCount: memberInfo.data.totalChatRoomCount || 5, // 임시 기본값
-          totalCoupleQuestionCount: memberInfo.data.totalCoupleQuestionCount || 10, // 임시 기본값
+          totalChatRoomCount: memberInfo.data.totalChatRoomCount || 0,
+          totalCoupleQuestionCount: memberInfo.data.totalCoupleQuestionCount || 0,
         }
 
         setUserInfo(newUserInfo)
