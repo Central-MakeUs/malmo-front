@@ -12,6 +12,7 @@ module.exports = () => {
       image: './assets/images/splash-icon.png',
       resizeMode: 'contain',
       backgroundColor: '#FFFFFF',
+      imageWidth: 200,
     },
     assetBundlePatterns: ['**/*'],
     ios: {
