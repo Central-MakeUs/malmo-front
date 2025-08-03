@@ -6,6 +6,7 @@ import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term
 import { Button } from '@/shared/ui'
 import termsService from '@/shared/services/terms.service'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
+import bridge from '@/shared/bridge'
 
 export const Route = createFileRoute('/onboarding/terms/')({
   component: TermsPage,
@@ -40,6 +41,11 @@ function TermsPage() {
     }
   }
 
+  const handleBack = async () => {
+    await bridge.logout()
+    navigate({ to: '/login' })
+  }
+
   return (
     <div className="flex h-screen w-full flex-col bg-white">
       {/* 약관 전체화면 */}
@@ -52,7 +58,7 @@ function TermsPage() {
       )}
 
       {/* 헤더 및 타이틀 */}
-      <DetailHeaderBar onBackClick={() => navigate({ to: '/login' })} />
+      <DetailHeaderBar onBackClick={handleBack} />
       <TitleSection title="서비스 이용 약관에 동의해주세요" />
 
       {/* 약관 동의 섹션 */}

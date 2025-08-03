@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { cn } from '@ui/common/lib/utils'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export const Route = createFileRoute('/question/')({
   component: RouteComponent,
@@ -25,6 +25,12 @@ function RouteComponent() {
 
   const [currentLevel, setCurrentLevel] = useState(Math.floor((data.level - 1) / 30))
   const [selectedQuestion, setSelectedQuestion] = useState(data)
+
+  useEffect(() => {
+    if (data) {
+      setSelectedQuestion(data)
+    }
+  }, [data])
 
   const maxPage = Math.floor((data.level - 1) / 30)
 

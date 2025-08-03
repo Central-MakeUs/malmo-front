@@ -37,7 +37,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     const { authenticated } = context.auth
     const pathname = location.pathname
 
-    if (pathname === '/terms/privacy-policy' || pathname === '/login') {
+    if (pathname === '/terms/privacy-policy') {
       // 약관 페이지는 인증 여부와 관계없이 접근 가능
       return
     }
