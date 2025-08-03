@@ -88,9 +88,9 @@ export const AVOIDANCE_TYPE_DATA: AttachmentTypeData = {
   subtype: '회피형',
   characterImage: AvoidanceImage,
   cardImage: AvoidanceCardImage,
-  color: '#FF8400',
-  badgeBackgroundColor: 'bg-malmo-orange-50',
-  badgeTextColor: 'text-malmo-orange-500',
+  color: '#EC4665',
+  badgeBackgroundColor: 'bg-malmo-rasberry-25',
+  badgeTextColor: 'text-malmo-rasberry-500',
   anxietyThreshold: '2.33 미만',
   avoidanceThreshold: '2.61 이상',
   description: `도망이 성격을 가진 사람은 혼자만의 시간과 독립성을 무엇보다 중요하게 여겨요. 그래서 연애보다는 일이나 취미에서 더 큰 만족을 느끼는 경우도 많아요.
