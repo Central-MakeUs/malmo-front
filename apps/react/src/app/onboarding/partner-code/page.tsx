@@ -1,11 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { Button, HeaderNavigation, Input } from '@/shared/ui'
+import { Button, Input } from '@/shared/ui'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import coupleService from '@/shared/services/couple.service'
+import { DetailHeaderBar } from '@/shared/components/header-bar'
 
 export const Route = createFileRoute('/onboarding/partner-code/')({
   component: PartnerCodePage,
@@ -47,7 +48,7 @@ function PartnerCodePage() {
   return (
     <div className="flex h-screen w-full flex-col bg-white">
       {/* 헤더 및 타이틀 */}
-      <HeaderNavigation onBack={handlePrevious} />
+      <DetailHeaderBar onBackClick={handlePrevious} />
       <TitleSection
         title={
           <>

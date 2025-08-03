@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Button, HeaderNavigation } from '@/shared/ui'
+import { Button } from '@/shared/ui'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useAnniversary, DatePicker } from '@/features/anniversary'
+import { DetailHeaderBar } from '@/shared/components/header-bar'
 
 export const Route = createFileRoute('/onboarding/anniversary/')({
   component: AnniversaryPage,
@@ -32,7 +33,7 @@ function AnniversaryPage() {
   return (
     <div className="flex h-screen w-full flex-col bg-white">
       {/* 헤더 및 타이틀 */}
-      <HeaderNavigation onBack={handlePrevious} />
+      <DetailHeaderBar onBackClick={handlePrevious} />
       <TitleSection
         title={
           <>

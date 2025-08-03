@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { HeaderNavigation } from '@/shared/ui'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'

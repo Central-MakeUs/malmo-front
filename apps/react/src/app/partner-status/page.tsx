@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { z } from 'zod'
 import { Button } from '@/shared/ui/button'
-import { HeaderNavigation } from '@/shared/ui'
 
 // 상태별 이미지 import
 import momoEmptyStateImage from '@/assets/images/momo-empty-state.png'
+import { DetailHeaderBar } from '@/shared/components/header-bar'
 
 // 쿼리 파라미터 검증 스키마
 const partnerStatusSearchSchema = z.object({
@@ -31,7 +31,7 @@ function PartnerStatusPage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-white">
       {/* 헤더 */}
-      <HeaderNavigation onBack={handleGoToHome} />
+      <DetailHeaderBar onBackClick={handleGoToHome} />
 
       {/* 메인 콘텐츠 */}
       <div className="flex flex-1 flex-col px-6">
