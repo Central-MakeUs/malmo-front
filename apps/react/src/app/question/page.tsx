@@ -94,7 +94,7 @@ function RouteComponent() {
             to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
             search={{ coupleQuestionId: selectedQuestion?.coupleQuestionId || 0, isEdit: false }}
           >
-            <TodayQuestionSection todayQuestion={selectedQuestion} level={data.level} />
+            <TodayQuestionSection todayQuestion={selectedQuestion} level={selectedQuestion.level} />
           </Link>
         </div>
       </section>
