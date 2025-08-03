@@ -5,96 +5,74 @@ import { Term, TermAgreements } from '../models/types'
 import { convertToTerms, findTermById } from '../lib/converters'
 
 export function useTerms(initialAgreements: TermAgreements = {}) {
-  // 약관 데이터 상태
   const [termsData, setTermsData] = useState<Term[]>([])
-
-  // 약관 모달 상태 관리
   const [selectedTermId, setSelectedTermId] = useState<number | null>(null)
-
-  // 약관 동의 상태 관리
   const [agreements, setAgreements] = useState<TermAgreements>(initialAgreements)
 
-  // API에서 약관 데이터 가져오기
+  // API로부터 약관 목록 데이터 가져오기
   const { data: termsListData, isLoading } = useQuery(termsService.termsListQuery())
 
   useEffect(() => {
+    // API 응답 데이터가 있으면 내부 모델로 변환하여 상태 업데이트
     if (termsListData) {
       const convertedTerms = convertToTerms(termsListData)
       setTermsData(convertedTerms)
 
-      // 약관 데이터가 로드되면 누락된 약관에 대한 기본값 설정
-      if (convertedTerms && convertedTerms.length > 0) {
-        const updatedAgreements = { ...agreements }
-        let hasUpdates = false
-
-        convertedTerms.forEach((term) => {
-          if (updatedAgreements[term.termsId] === undefined) {
-            updatedAgreements[term.termsId] = false
-            hasUpdates = true
-          }
-        })
-
-        if (hasUpdates) {
-          setAgreements(updatedAgreements)
+      // 초기 동의 상태 설정
+      const newAgreements = { ...initialAgreements }
+      let hasUpdates = false
+      convertedTerms.forEach((term) => {
+        if (newAgreements[term.termsId] === undefined) {
+          newAgreements[term.termsId] = false
+          hasUpdates = true
         }
+      })
+      if (hasUpdates) {
+        setAgreements(newAgreements)
       }
     }
-  }, [termsListData, agreements])
+  }, [termsListData, initialAgreements])
 
-  // 약관 내용 보기
+  // 약관 상세보기 모달 열기
   const handleShowTerms = (termsId: number) => {
     setSelectedTermId(termsId)
   }
 
-  // 약관 모달 닫기
+  // 약관 상세보기 모달 닫기
   const handleCloseTerms = () => {
     setSelectedTermId(null)
   }
 
-  // 선택된 약관 내용 가져오기
+  // 선택된 약관의 제목과 상세 내용
   const selectedTermContent = useMemo(() => {
-    if (selectedTermId === null || !termsData || !Array.isArray(termsData)) {
-      return { title: '', content: '' }
+    if (selectedTermId === null) {
+      return { title: '', details: null }
     }
-
     const selectedTerm = findTermById(termsData, selectedTermId)
-
-    if (selectedTerm) {
-      return {
-        title: selectedTerm.title || '',
-        content: selectedTerm.content || '',
-      }
+    return {
+      title: selectedTerm?.title || '',
+      details: selectedTerm?.details || null,
     }
-
-    return { title: '', content: '' }
   }, [selectedTermId, termsData])
 
-  // 필수 약관 모두 체크되었는지 확인
+  // 필수 약관 모두 동의했는지 확인
   const isAllRequiredChecked = useMemo(() => {
-    if (!termsData || termsData.length === 0) return false
-
     const requiredTerms = termsData.filter((term) => term.required)
-    return requiredTerms.every((term) => agreements[term.termsId])
+    return requiredTerms.length > 0 && requiredTerms.every((term) => agreements[term.termsId])
   }, [agreements, termsData])
 
-  // 모든 약관 체크되었는지 확인
+  // 모든 약관에 동의했는지 확인
   const isAllChecked = useMemo(() => {
-    if (!termsData || termsData.length === 0) return false
-
-    return termsData.every((term) => agreements[term.termsId])
+    return termsData.length > 0 && termsData.every((term) => agreements[term.termsId])
   }, [agreements, termsData])
 
   // 전체 동의 처리
   const handleAllAgreements = () => {
     const newValue = !isAllChecked
-    const newAgreements = { ...agreements }
-
-    if (termsData) {
-      termsData.forEach((term) => {
-        newAgreements[term.termsId] = newValue
-      })
-    }
-
+    const newAgreements: TermAgreements = {}
+    termsData.forEach((term) => {
+      newAgreements[term.termsId] = newValue
+    })
     setAgreements(newAgreements)
   }
 

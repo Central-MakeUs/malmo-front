@@ -1,5 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { HeaderNavigation } from '@/shared/ui'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
@@ -7,6 +6,7 @@ import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context
 import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term'
 import { Button } from '@/shared/ui'
 import termsService from '@/shared/services/terms.service'
+import { DetailHeaderBar } from '@/shared/components/header-bar'
 
 export const Route = createFileRoute('/onboarding/terms/')({
   component: TermsPage,
@@ -16,6 +16,7 @@ export const Route = createFileRoute('/onboarding/terms/')({
 })
 
 function TermsPage() {
+  const navigate = useNavigate()
   const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
   const { data, updateTermsAgreements } = useOnboarding()
 
@@ -46,13 +47,13 @@ function TermsPage() {
       {selectedTermId !== null && selectedTermContent && (
         <TermsContentModal
           title={selectedTermContent.title || ''}
-          content={selectedTermContent.content || ''}
+          details={selectedTermContent.details || null}
           onClose={handleCloseTerms}
         />
       )}
 
       {/* 헤더 및 타이틀 */}
-      <HeaderNavigation onBack={goToPreviousStep} />
+      <DetailHeaderBar onBackClick={() => navigate({ to: '/login' })} />
       <TitleSection title="서비스 이용 약관에 동의해주세요" />
 
       {/* 약관 동의 섹션 */}
