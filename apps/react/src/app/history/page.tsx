@@ -108,7 +108,7 @@ function RouteComponent() {
               {activeChat ? '진행 중인 대화가 있어요!' : '모모와 고민 상담하러 가기'}
             </p>
           </div>
-          <ChatBubble className="h-6 w-6" />
+          <ChatBubble className="h-6 w-6 drop-shadow-[1px_2px_12px_rgba(0,0,0,0.15)]" />
         </div>
       </Link>
 
