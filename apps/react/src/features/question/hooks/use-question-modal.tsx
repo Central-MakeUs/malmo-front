@@ -19,7 +19,7 @@ export function useQuestionModal(): UseQuestionModalReturn {
 
   const saveQuestionModal = (text: string, isEdit: boolean) => {
     alertDialog.open({
-      title: '답변을 작성하시겠어요?',
+      title: '답변을 저장하시겠어요?',
       description: '저장 이후에도 답변을 수정할 수 있어요.',
       cancelText: '이어서 작성하기',
       confirmText: '저장하기',
