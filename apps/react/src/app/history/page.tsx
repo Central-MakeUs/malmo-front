@@ -83,8 +83,11 @@ function RouteComponent() {
           />
         ) : (
           <>
-            {histories.map((history) => (
-              <LinkedChatHistoryItem key={history.chatRoomId} history={history} />
+            {histories.map((history, index) => (
+              <div key={history.chatRoomId}>
+                <LinkedChatHistoryItem history={history} />
+                {index < histories.length - 1 && <hr className="h-[6px] border-0 bg-gray-neutral-50" />}
+              </div>
             ))}
             <div ref={ref} className="h-[1px]" />
             {isFetchingNextPage && <p className="p-5 text-center">더 불러오는 중...</p>}
