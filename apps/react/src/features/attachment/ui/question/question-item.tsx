@@ -15,14 +15,14 @@ export function QuestionItem({ question, answers, onSelectAnswer, isDisabled, re
   const questionNumber = question.id
 
   return (
-    <div className="mb-[32px]" ref={ref}>
+    <div className="mb-[32px] py-[20px]" ref={ref}>
       {/* 질문 번호 */}
-      <p className={`heading2-bold mb-[2px] ${isDisabled ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}>
+      <p className={`heading2-bold mb-[2px] pl-1 ${isDisabled ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}>
         Q{questionNumber}
       </p>
 
       {/* 질문 텍스트 */}
-      <div className="w-[284px]">
+      <div className="w-[284px] pl-1">
         <p
           className={`text-[16px] font-semibold break-keep ${isDisabled ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}
         >
