@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
@@ -6,7 +6,6 @@ import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term
 import { Button } from '@/shared/ui'
 import termsService from '@/shared/services/terms.service'
 import { DetailHeaderBar } from '@/shared/components/header-bar'
-import bridge from '@/shared/bridge'
 import { useAuth } from '@/features/auth'
 
 export const Route = createFileRoute('/onboarding/terms/')({
@@ -43,6 +42,11 @@ function TermsPage() {
     }
   }
 
+  const handleBack = async () => {
+    await auth.logout()
+    navigate({ to: '/login' })
+  }
+
   return (
     <div className="flex h-screen w-full flex-col bg-white">
       {/* 약관 전체화면 */}
@@ -55,12 +59,7 @@ function TermsPage() {
       )}
 
       {/* 헤더 및 타이틀 */}
-      <DetailHeaderBar
-        onBackClick={async () => {
-          await auth.logout()
-          navigate({ to: '/login' })
-        }}
-      />
+      <DetailHeaderBar onBackClick={() => handleBack()} />
       <TitleSection
         title={
           <p>
