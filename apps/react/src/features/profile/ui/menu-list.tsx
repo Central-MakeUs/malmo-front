@@ -18,7 +18,9 @@ export function MenuList({ menuItems }: MenuListProps) {
             {isNewGroup && <div className="h-[6px] bg-gray-neutral-50"></div>}
             {needsDivider && <hr className="mx-5 h-px border-0 bg-gray-iron-100" />}
             <div
-              className="flex h-16 cursor-pointer items-center justify-between pr-6 pl-5 hover:bg-gray-50"
+              className={`flex cursor-pointer items-center justify-between pr-6 pl-5 hover:bg-gray-50 ${
+                item.group === MenuGroup.BASIC ? 'h-16' : 'h-13'
+              }`}
               onClick={item.onClick}
             >
               <span className="body1-medium text-gray-iron-950">{item.label}</span>

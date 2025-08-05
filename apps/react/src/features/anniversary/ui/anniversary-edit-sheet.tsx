@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
 import { Button } from '@/shared/ui/button'
 import { DatePicker, useAnniversary } from '@/features/anniversary'
@@ -21,6 +21,9 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
   }, [userInfo.startLoveDate])
   const anniversary = useAnniversary(initialDate)
 
+  // 날짜 변경 여부 추적
+  const [hasChanged, setHasChanged] = useState(false)
+
   const serviceOptions = memberService.updateStartDateMutation()
   const updateStartDateMutation = useMutation({
     ...serviceOptions,
@@ -37,8 +40,32 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
   useEffect(() => {
     if (isOpen) {
       anniversary.actions.resetToInitialDate()
+      setHasChanged(false) // 변경 상태도 리셋
     }
   }, [isOpen])
+
+  // 날짜 변경 감지
+  useEffect(() => {
+    if (!isOpen || !initialDate) return
+
+    const { visibleYear, visibleMonth, visibleDay } = anniversary.state
+    const initialYear = initialDate.getFullYear()
+    const initialMonth = initialDate.getMonth() + 1
+    const initialDay = initialDate.getDate()
+
+    const isChanged = visibleYear !== initialYear || visibleMonth !== initialMonth || visibleDay !== initialDay
+
+    if (isChanged && !hasChanged) {
+      setHasChanged(true)
+    }
+  }, [
+    anniversary.state.visibleYear,
+    anniversary.state.visibleMonth,
+    anniversary.state.visibleDay,
+    initialDate,
+    hasChanged,
+    isOpen,
+  ])
 
   const handleSubmit = () => {
     if (updateStartDateMutation.isPending) return
@@ -84,7 +111,11 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
 
           {/* 변경하기 버튼 */}
           <div className="mt-auto mb-5">
-            <Button text={'변경하기'} onClick={handleSubmit} disabled={updateStartDateMutation.isPending} />
+            <Button
+              text={'변경하기'}
+              onClick={handleSubmit}
+              disabled={!hasChanged || updateStartDateMutation.isPending}
+            />
           </div>
         </div>
       </SheetContent>

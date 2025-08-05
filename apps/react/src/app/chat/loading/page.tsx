@@ -46,7 +46,7 @@ function RouteComponent() {
   }, [])
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-[47px]">
+    <div className="-mt-[30px] flex h-full flex-col items-center justify-center gap-[47px]">
       <Lottie animationData={summaryAnimation} className="px-[28px]" />
       <div className="text-center">
         <h1 className="heading1-bold text-gray-iron-950">모모가 대화를 요약하고 있어요</h1>

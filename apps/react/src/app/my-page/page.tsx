@@ -30,7 +30,7 @@ function MyPage() {
   const { menuItems } = useMyPageMenu(terms, handleShowTerms)
 
   return (
-    <div className="flex h-screen flex-col bg-white">
+    <div className="mb-[80px] flex h-screen flex-col bg-white">
       {/* 약관 모달 */}
       {selectedTermId !== null && selectedTermContent && selectedTermContent.title && selectedTermContent.details && (
         <TermsContentModal
@@ -53,7 +53,7 @@ function MyPage() {
       />
 
       {/* 메뉴 리스트 */}
-      <div className="no-bounce-scroll flex-1 pb-[60px]">
+      <div className="pb-[60px]">
         <MenuList menuItems={menuItems} />
       </div>
 

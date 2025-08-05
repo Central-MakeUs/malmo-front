@@ -100,6 +100,14 @@
     letter-spacing: -0.02em;
   }
 
+  .body1-medium {
+    font-family: var(--font-pretendard);
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.02em;
+  }
+
   .body1-regular {
     font-family: var(--font-pretendard);
     font-size: 16px;

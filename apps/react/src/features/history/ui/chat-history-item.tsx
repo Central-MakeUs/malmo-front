@@ -24,12 +24,12 @@ const ChatHistoryItemBase = ({ history }: { history: GetChatRoomListResponse }) 
 // 2. '대화 기록' 페이지용 링크 아이템
 export const LinkedChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => (
   <Link
-    className="mb-[6px] flex items-center justify-between gap-16 bg-white px-5 py-6"
+    className="flex items-center justify-between gap-16 bg-white px-5 pt-6 pb-7"
     to={'/chat/result'}
     search={{ chatId: history.chatRoomId, fromHistory: true }}
   >
     <ChatHistoryItemBase history={history} />
-    <ChevronRight size={24} />
+    <ChevronRight className="text-gray-iron-700" size={24} />
   </Link>
 )
 

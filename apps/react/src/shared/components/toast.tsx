@@ -8,7 +8,7 @@ export const toast = {
   error: (message: string) => {
     sonnerToast.custom(() => (
       <div className="flex justify-center">
-        <div className="bg-opacity-85 inline-flex items-center rounded-[30px] bg-[#18181B] py-[11px] pr-6 pl-5">
+        <div className="inline-flex items-center rounded-[30px] bg-[#18181B]/85 py-[11px] pr-6 pl-5">
           <ErrorIcon className="h-5 w-5" />
           <span className="body3-medium ml-[10px] text-gray-iron-100">{message}</span>
         </div>
@@ -18,7 +18,7 @@ export const toast = {
   success: (message: string) => {
     sonnerToast.custom(() => (
       <div className="flex justify-center">
-        <div className="bg-opacity-85 inline-flex items-center rounded-[30px] bg-[#18181B] py-[11px] pr-6 pl-5">
+        <div className="inline-flex items-center rounded-[30px] bg-[#18181B]/85 py-[11px] pr-6 pl-5">
           <SuccessIcon className="h-5 w-5" />
           <span className="body3-medium ml-[10px] text-gray-iron-100">{message}</span>
         </div>
@@ -42,7 +42,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         toastOptions={{
           unstyled: true,
           style: {
-            top: '50px',
+            top: '35px',
           },
         }}
       />

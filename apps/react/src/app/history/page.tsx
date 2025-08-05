@@ -83,8 +83,11 @@ function RouteComponent() {
           />
         ) : (
           <>
-            {histories.map((history) => (
-              <LinkedChatHistoryItem key={history.chatRoomId} history={history} />
+            {histories.map((history, index) => (
+              <div key={history.chatRoomId}>
+                <LinkedChatHistoryItem history={history} />
+                {index < histories.length - 1 && <hr className="h-[6px] border-0 bg-gray-neutral-50" />}
+              </div>
             ))}
             <div ref={ref} className="h-[1px]" />
             {isFetchingNextPage && <p className="p-5 text-center">더 불러오는 중...</p>}
@@ -105,7 +108,7 @@ function RouteComponent() {
               {activeChat ? '진행 중인 대화가 있어요!' : '모모와 고민 상담하러 가기'}
             </p>
           </div>
-          <ChatBubble className="h-6 w-6" />
+          <ChatBubble className="h-6 w-6 drop-shadow-[1px_2px_12px_rgba(0,0,0,0.15)]" />
         </div>
       </Link>
 

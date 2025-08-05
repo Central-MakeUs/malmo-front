@@ -80,10 +80,20 @@ function RouteComponent() {
                   <CalendarItem
                     props={{
                       className: cn('h-7 w-7', {
-                        'text-malmo-rasberry-100': !data.partnerAnswered,
-                        'text-gray-neutral-300': !data.meAnswered,
+                        // 1) 둘 다 답변했거나, 과거 날짜
                         'text-malmo-rasberry-500': (data.meAnswered && data.partnerAnswered) || data.level! > itemLevel,
-                        'text-gray-neutral-100': data.level! < i + 1 || itemLevel > data.level!,
+
+                        // 2) 한명만 답변했을 때
+                        'text-malmo-rasberry-100':
+                          (data.meAnswered || data.partnerAnswered) &&
+                          !(data.meAnswered && data.partnerAnswered) &&
+                          data.level! === itemLevel,
+
+                        // 3) 둘 다 안 했고, 오늘 날짜일 때
+                        'text-gray-neutral-300': !data.meAnswered && !data.partnerAnswered && data.level! === itemLevel,
+
+                        // 4) 미래 날짜
+                        'text-gray-neutral-100': itemLevel > data.level!,
                       }),
                     }}
                     date={itemLevel.toString()}
@@ -100,7 +110,7 @@ function RouteComponent() {
             to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
             search={{ coupleQuestionId: selectedQuestion?.coupleQuestionId || 0, isEdit: false }}
           >
-            <TodayQuestionSection todayQuestion={selectedQuestion} level={data.level} />
+            <TodayQuestionSection todayQuestion={selectedQuestion} level={selectedQuestion.level} />
           </Link>
         </div>
       </section>

@@ -26,11 +26,11 @@ export function NicknameInput({
           maxLength={maxLength}
           className={className}
         />
-        <div className="absolute top-1/2 right-4 -translate-y-1/2 text-sm text-gray-iron-400">
-          {value.length}/{maxLength}
+        <div className="absolute top-1/2 right-4 -translate-y-1/2 text-sm text-gray-iron-500">
+          {value.length} / {maxLength}
         </div>
       </div>
-      <p className="label1-regular mt-[6px] text-gray-iron-950">특수문자, 띄어쓰기 없이 작성해주세요.</p>
+      <p className="label1-regular mt-[6px] pl-1 text-gray-iron-950">특수문자, 띄어쓰기 없이 작성해주세요.</p>
     </div>
   )
 }

@@ -29,7 +29,7 @@ const navigationItems: NavigationItem[] = [
   },
   {
     id: 'history',
-    label: '대화기록',
+    label: '대화 기록',
     icon: ChatHistoryIcon,
     activeIcon: ChatHistoryActiveIcon,
     path: '/history',

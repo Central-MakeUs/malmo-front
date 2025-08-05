@@ -27,7 +27,7 @@ export function ResultAttitudeSection({ icon: Icon, title, color, items }: Resul
             } ${index > 0 ? 'border-t border-gray-iron-100' : ''}`}
           >
             <CheckIcon className="h-[20px] w-[20px] flex-shrink-0" />
-            <span className="body3-medium ml-[4px] text-gray-iron-800">{item}</span>
+            <span className="body2-reading-regular ml-[4px] text-gray-iron-800">{item}</span>
           </div>
         ))}
       </div>

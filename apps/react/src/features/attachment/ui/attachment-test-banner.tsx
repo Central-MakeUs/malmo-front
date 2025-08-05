@@ -7,7 +7,7 @@ export function AttachmentTestBanner() {
     <Link to="/attachment-test">
       <div className="-mx-5 mt-4 h-[68px] cursor-pointer overflow-hidden bg-gray-neutral-100 pl-[28px]">
         <div className="relative flex h-full items-center">
-          <img src={noteImage} alt="Note" className="h-[68px] w-[83px] object-contain" />
+          <img src={noteImage} alt="Note" className="h-[68px] w-[96px] object-contain" />
           {/* 텍스트와 아이콘 */}
           <div className="relative z-10 ml-[12px] flex w-full items-center justify-between pr-8">
             <span className="body3-semibold text-gray-iron-950">내 애착유형 테스트하러 가기</span>

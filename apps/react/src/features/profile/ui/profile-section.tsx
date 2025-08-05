@@ -2,6 +2,8 @@ import { ChevronRight } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import momoProfile from '@/assets/images/momo-profile.png'
 import HeartIcon from '@/assets/icons/heart.svg'
+import { usePartnerInfo } from '@/features/member'
+import { withParticle } from '@/shared/utils'
 
 interface ProfileSectionProps {
   nickname: string
@@ -10,10 +12,15 @@ interface ProfileSectionProps {
 
 export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
   const navigate = useNavigate()
+  const { data: partnerInfo } = usePartnerInfo()
 
   const handleProfileClick = () => {
     navigate({ to: '/my-page/profile' })
   }
+
+  // 연인의 닉네임이 있으면 표시하고, 없으면 "연인" 표시
+  const partnerName = partnerInfo?.nickname || '연인'
+  const partnerDisplayText = withParticle(partnerName)
 
   return (
     <div className="pt-5">
@@ -36,7 +43,7 @@ export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
       {/* 연인과 D-day */}
       <div className="mt-[18px] flex h-8 justify-center">
         <div className="flex items-center rounded-[30px] border border-gray-iron-200 px-4">
-          <span className="body2-semibold text-gray-iron-950">연인과</span>
+          <span className="body2-semibold text-gray-iron-950">{partnerDisplayText}</span>
           <HeartIcon className="mx-[9px] h-4 w-4" />
           <span className="body2-semibold text-gray-iron-950">D+{dDay}</span>
         </div>

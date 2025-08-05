@@ -9,7 +9,7 @@ export function ResultDetailBox({ attachmentData }: ResultDetailBoxProps) {
     <div className="mt-[16px] rounded-[12px] bg-gray-neutral-100 px-[20px] pt-[28px] pb-[40px]">
       {/* 애착유형 태그 */}
       <div className="flex justify-center">
-        <div className="rounded-[19.5px] bg-gray-iron-700 px-[16px] py-[8px]">
+        <div className="rounded-[19.5px] bg-gray-iron-700 px-[16px] py-[6px]">
           <span className="body3-medium text-white">
             {attachmentData.character} - {attachmentData.subtype}
           </span>

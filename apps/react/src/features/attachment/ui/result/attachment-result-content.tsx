@@ -107,7 +107,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
       </div>
 
       {/* 결과 태도 섹션 */}
-      <div className="mt-[52px] mb-[80px] px-[20px]">
+      <div className="mt-[52px] px-[20px]">
         {/* 관계에 대한 태도 */}
         <ResultAttitudeSection
           icon={RelationshipIcon}
@@ -119,7 +119,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
         {/* 갈등해결 태도 */}
         <ResultAttitudeSection
           icon={ConflictIcon}
-          title="갈등해결 태도"
+          title="갈등 해결 태도"
           color="#1B1B1B"
           items={attachmentData.conflictSolvingAttitudes}
         />
