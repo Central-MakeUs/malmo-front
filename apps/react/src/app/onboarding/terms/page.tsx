@@ -59,7 +59,7 @@ function TermsPage() {
       )}
 
       {/* 헤더 및 타이틀 */}
-      <DetailHeaderBar onBackClick={() => handleBack()} />
+      <DetailHeaderBar onBackClick={handleBack} />
       <TitleSection
         title={
           <p>

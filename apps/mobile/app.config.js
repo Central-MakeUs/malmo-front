@@ -1,7 +1,7 @@
 module.exports = () => {
   const KAKAO_NATIVE_APP_KEY = process.env.EXPO_PUBLIC_KAKAO_NATIVE_APP_KEY || ''
   return {
-    name: 'Malmo',
+    name: '말모',
     slug: 'malmo-app',
     version: '1.0.0',
     orientation: 'portrait',
@@ -16,7 +16,7 @@ module.exports = () => {
     },
     assetBundlePatterns: ['**/*'],
     ios: {
-      supportsTablet: true,
+      supportsTablet: false,
       bundleIdentifier: 'com.malmo.app',
       usesAppleSignIn: true,
       infoPlist: {
