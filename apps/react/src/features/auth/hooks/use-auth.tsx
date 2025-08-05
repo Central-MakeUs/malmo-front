@@ -4,7 +4,6 @@ import authClient from '../lib/auth-client'
 import { SocialLoginType } from '@bridge/types'
 import memberService from '@/shared/services/member.service'
 import {
-  MemberData,
   MemberDataMemberStateEnum,
   MemberDataLoveTypeCategoryEnum,
   MemberDataProviderEnum,
@@ -19,11 +18,9 @@ export type UserInfo = {
   provider?: MemberDataProviderEnum
   nickname?: string
   startLoveDate?: string
-  // 애착 유형 관련 필드
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
   anxietyRate?: number
   avoidanceRate?: number
-  // 통계 데이터
   totalChatRoomCount?: number
   totalCoupleQuestionCount?: number
 }
@@ -61,79 +58,63 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false)
   const [userInfo, setUserInfo] = useState<UserInfo>(initialUserInfo)
 
-  useEffect(() => {
-    refreshUserInfo()
-  }, [])
-
   // 멤버 상태가 온보딩이 필요한지 여부
   const needsOnboarding = userInfo.memberState === MemberDataMemberStateEnum.BeforeOnboarding
 
-  // 사용자 정보 조회 함수
-  const fetchUserInfo = useCallback(async () => {
-    if (!authenticated) {
-      setUserInfo(initialUserInfo)
-      return null
-    }
+  // 내부에서만 사용할 사용자 정보 조회 함수 (상태 의존성 없음)
+  const _fetchUserInfo = async (): Promise<UserInfo | null> => {
     try {
-      const queryOptions = memberService.userInfoQuery()
-      const memberInfo = await queryOptions.queryFn()
+      const memberInfo = await memberService.getMemberInfo()
 
-      if (memberInfo?.data) {
+      if (memberInfo?.data?.data) {
         const newUserInfo: UserInfo = {
-          memberState: memberInfo.data.memberState || null,
-          provider: memberInfo.data.provider || undefined,
-          nickname: memberInfo.data.nickname,
-          startLoveDate: memberInfo.data.startLoveDate || undefined,
-          loveTypeCategory: memberInfo.data.loveTypeCategory || undefined,
-          anxietyRate: memberInfo.data.anxietyRate || undefined,
-          avoidanceRate: memberInfo.data.avoidanceRate || undefined,
-          totalChatRoomCount: memberInfo.data.totalChatRoomCount || 0,
-          totalCoupleQuestionCount: memberInfo.data.totalCoupleQuestionCount || 0,
+          memberState: memberInfo.data.data.memberState || null,
+          provider: memberInfo.data.data.provider || undefined,
+          nickname: memberInfo.data.data.nickname,
+          startLoveDate: memberInfo.data.data.startLoveDate || undefined,
+          loveTypeCategory: memberInfo.data.data.loveTypeCategory || undefined,
+          anxietyRate: memberInfo.data.data.anxietyRate || undefined,
+          avoidanceRate: memberInfo.data.data.avoidanceRate || undefined,
+          totalChatRoomCount: memberInfo.data.data.totalChatRoomCount || 0,
+          totalCoupleQuestionCount: memberInfo.data.data.totalCoupleQuestionCount || 0,
         }
-
         setUserInfo(newUserInfo)
         return newUserInfo
       }
-
-      return null
+      // 데이터가 없는 경우도 실패로 처리
+      throw new Error('User info not found')
     } catch (error) {
+      // 실패 시 인증 상태를 확실히 초기화
+      setAuthenticated(false)
+      setUserInfo(initialUserInfo)
       return null
     }
-  }, [authenticated])
-
-  // 사용자 정보 갱신 함수
-  const refreshUserInfo = useCallback(async () => {
-    return await fetchUserInfo()
-  }, [fetchUserInfo])
+  }
 
   const socialLogin = useCallback(
     async (type: SocialLoginType) => {
       try {
-        // 소셜 로그인 시도
         const result = await authClient.socialLogin(type)
 
         if (result.success) {
-          // 인증 상태 업데이트
-          setAuthenticated(true)
+          setAuthenticated(true) // 먼저 인증 상태를 true로 설정
+          const currentUserInfo = await _fetchUserInfo() // 그 다음 사용자 정보를 가져옴
 
-          // 사용자 정보 조회
-          const currentUserInfo = await fetchUserInfo()
-
-          // 온보딩 필요 여부 확인
-          const needsOnboarding = currentUserInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
+          const currentNeedsOnboarding = currentUserInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
 
           return {
             ...result,
-            needsOnboarding,
+            needsOnboarding: currentNeedsOnboarding,
           }
         }
-
         return result
       } catch (e) {
+        setAuthenticated(false)
+        setUserInfo(initialUserInfo)
         throw e
       }
     },
-    [fetchUserInfo]
+    [] // 의존성 배열을 비워 stale closure 문제 해결
   )
 
   const logout = useCallback(async () => {
@@ -147,27 +128,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  // 외부에서 사용자 정보를 새로고침할 때 사용하는 함수
+  const refreshUserInfo = useCallback(async () => {
+    if (authenticated) {
+      return await _fetchUserInfo()
+    }
+    return null
+  }, [authenticated]) // authenticated 상태에 의존
+
   useEffect(() => {
     const initAuth = async () => {
       try {
         const result = await authClient.getAuth()
-
-        if (result && 'authenticated' in result) {
-          setAuthenticated(result.authenticated)
-          // 인증 상태 확인 후 사용자 정보 조회
-          if (result.authenticated) {
-            await fetchUserInfo()
-          }
+        if (result?.authenticated) {
+          setAuthenticated(true)
+          await _fetchUserInfo() // 앱 시작 시 사용자 정보 조회
         }
       } catch (error) {
-        //TODO: 인증 상태 조회 실패 시 처리
+        setAuthenticated(false)
+        setUserInfo(initialUserInfo)
       } finally {
         setLoading(false)
       }
     }
-
     initAuth()
-  }, [fetchUserInfo])
+  }, [])
 
   if (loading) return <Skeleton />
 

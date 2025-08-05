@@ -1,11 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router' // useNavigate 제거, useRouter 사용
 import AppleLogo from '@/assets/icons/apple-logo.svg'
 import KakaoLogo from '@/assets/icons/kakao-logo.svg'
 import malmoLogo from '@/assets/images/malmo-logo.png'
 import { isWebView } from '@/shared/utils/webview'
 import { useAuth } from '@/features/auth'
 import { useEffect, useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
+import { SocialLoginType } from '@bridge/types'
 
 export const Route = createFileRoute('/login/')({
   component: LoginPage,
@@ -13,58 +13,26 @@ export const Route = createFileRoute('/login/')({
 
 export default function LoginPage() {
   const auth = useAuth()
-  const navigate = useNavigate()
+  const router = useRouter() // router 인스턴스 가져오기
   const [isSubmitting, setIsSubmitting] = useState(false)
-
   const [isIos, setIsIos] = useState(false)
 
   useEffect(() => {
     setIsIos(/iPhone|iPad|iPod/i.test(navigator.userAgent))
   }, [])
 
-  const handleAppleLogin = async () => {
+  const handleLogin = async (provider: SocialLoginType) => {
     if (isSubmitting) return
 
     try {
       setIsSubmitting(true)
-
       if (isWebView()) {
-        // 로그인 시도
-        const result = await auth.socialLogin('apple')
-
+        const result = await auth.socialLogin(provider)
         if (result.success) {
-          // 온보딩 필요 여부에 따라 라우팅
-          if (result.needsOnboarding) {
-            navigate({ to: '/onboarding/terms' })
-          } else {
-            navigate({ to: '/' })
-          }
-        }
-      } else {
-        // ToDo: 웹뷰가 아닌 경우 처리
-      }
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
-  const handleKakaoLogin = async () => {
-    if (isSubmitting) return
-
-    try {
-      setIsSubmitting(true)
-
-      if (isWebView()) {
-        // 로그인 시도
-        const result = await auth.socialLogin('kakao')
-
-        if (result.success) {
-          // 온보딩 필요 여부에 따라 라우팅
-          if (result.needsOnboarding) {
-            navigate({ to: '/onboarding/terms' })
-          } else {
-            navigate({ to: '/' })
-          }
+          // 로그인 성공 시, 라우터 상태를 갱신하여
+          // __root.tsx의 beforeLoad가 새 상태로 다시 실행되도록 함
+          await router.invalidate()
+          router.navigate({ to: '/' })
         }
       } else {
         // ToDo: 웹뷰가 아닌 경우 처리
@@ -91,19 +59,23 @@ export default function LoginPage() {
 
       <div className="w-full px-5 pb-[calc(32px+env(safe-area-inset-bottom,0px))]">
         {/* 카카오 로그인 버튼 */}
-        <button
-          onClick={handleKakaoLogin}
-          className="mb-3 flex h-[52px] w-full items-center justify-center rounded-[8px] bg-[#FEE500]"
-          disabled={isSubmitting}
-        >
-          <KakaoLogo className="mr-2" width={18} height={18} />
-          <span className="body1-semibold text-[#16181D]">{'카카오로 시작하기'}</span>
-        </button>
+        {isWebView() ? (
+          <button
+            onClick={() => handleLogin('kakao')}
+            className="mb-3 flex h-[52px] w-full items-center justify-center rounded-[8px] bg-[#FEE500]"
+            disabled={isSubmitting}
+          >
+            <KakaoLogo className="mr-2" width={18} height={18} />
+            <span className="body1-semibold text-[#16181D]">{'카카오로 시작하기'}</span>
+          </button>
+        ) : (
+          <p className="body1-semibold mb-[100px] text-center text-gray-iron-950">이제 앱 스토어에서 만나보세요.</p>
+        )}
 
         {/* 애플 로그인 버튼 */}
         {isIos && (
           <button
-            onClick={handleAppleLogin}
+            onClick={() => handleLogin('apple')}
             className="flex h-[52px] w-full items-center justify-center rounded-[8px] bg-black text-white"
             disabled={isSubmitting}
           >
