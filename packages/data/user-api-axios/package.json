@@ -13,8 +13,7 @@
     "axios": "catalog:"
   },
   "dependencies": {
-    "@data/utils": "workspace:*",
-    "@system/logger": "workspace:*"
+    "@data/utils": "workspace:*"
   },
   "devDependencies": {
     "@system/typescript": "workspace:*",
