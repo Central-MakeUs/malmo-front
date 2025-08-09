@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
+import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
 import { Button } from '@/shared/ui/button'
 import { NicknameInput } from './nickname-input'
 import { useNicknameInput } from '../hooks/use-nickname-input'

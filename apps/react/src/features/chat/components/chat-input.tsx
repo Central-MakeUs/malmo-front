@@ -1,6 +1,6 @@
 import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
-import { cn } from '@ui/common/lib/utils'
+import { cn } from '@/shared/libs/cn'
 import { useChatting } from '../context/chatting-context'
 import { useSendMessageMutation } from '../hook/use-chat-queries'
 import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'

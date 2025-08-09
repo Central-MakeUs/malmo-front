@@ -1,7 +1,7 @@
 import { X } from 'lucide-react'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
+import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import coupleService from '@/shared/services/couple.service'

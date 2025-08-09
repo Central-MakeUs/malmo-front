@@ -1,7 +1,7 @@
 import { LucideIcon } from 'lucide-react'
 import { Link, useRouterState } from '@tanstack/react-router'
 import React from 'react'
-import { cn } from '@ui/common/lib/utils'
+import { cn } from '@/shared/libs/cn'
 
 interface NavigationIconProps {
   icon: LucideIcon

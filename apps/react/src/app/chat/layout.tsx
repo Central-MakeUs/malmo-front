@@ -1,7 +1,7 @@
 import { ChattingProvider, useChatting } from '@/features/chat/context/chatting-context'
 import bridge from '@/shared/bridge'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { cn } from '@ui/common/lib/utils'
+import { cn } from '@/shared/libs/cn'
 import { useBridge } from '@webview-bridge/react'
 
 export const Route = createFileRoute('/chat')({

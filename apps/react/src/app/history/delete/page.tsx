@@ -1,7 +1,7 @@
 import { DetailHeaderBar } from '@/shared/components/header-bar'
 import { createFileRoute } from '@tanstack/react-router'
 import { Button } from '@/shared/ui'
-import { cn } from '@ui/common/lib/utils'
+import { cn } from '@/shared/libs/cn'
 import { useChatHistoryQuery } from '@/features/history/hook/use-chat-history-query'
 import { useChatSelect } from '@/features/history/hook/use-chat-select'
 import noResultImage from '@/assets/images/characters/empty.png'

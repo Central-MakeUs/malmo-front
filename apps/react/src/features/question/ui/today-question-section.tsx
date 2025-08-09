@@ -3,7 +3,7 @@ import loveLetter from '@/assets/images/love-letter-home.png'
 import { Badge } from '@/shared/ui'
 import { formatDate } from '@/shared/utils'
 import { QuestionData } from '@data/user-api-axios/api'
-import { cn } from '@ui/common/lib/utils'
+import { cn } from '@/shared/libs/cn'
 
 interface TodayQuestionSectionProps {
   todayQuestion?: QuestionData | null
