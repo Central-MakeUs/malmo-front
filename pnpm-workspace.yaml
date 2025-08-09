@@ -62,18 +62,6 @@ catalogs:
     server-only: ^0.0.1
     jose: ^6
 
-  storybook:
-    '@chromatic-com/storybook': ^3
-    '@storybook/addon-essentials': ^8
-    '@storybook/addon-interactions': ^8
-    '@storybook/addon-links': ^8
-    '@storybook/addon-onboarding': ^8
-    '@storybook/blocks': ^8
-    '@storybook/preset-react-webpack': ^8
-    '@storybook/react': ^8
-    '@storybook/react-vite': ^8
-    storybook: ^8
-
   ui:
     '@radix-ui/react-accordion': ^1
     '@radix-ui/react-alert-dialog': ^1
