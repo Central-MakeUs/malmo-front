@@ -98,7 +98,7 @@ export const config = [
       'no-unused-expressions': 0,
       'no-unused-disable-directive': 0,
 
-      // 미사용 변수에 대해 경고하지 않습니다.
+      // 미사용 변수에 대해 경고하지 않습니다. (TS 규칙으로 대체)
       'no-unused-vars': 0,
 
       // 동일한 스코프 내에서 변수명을 덮어쓰는 것을 허용합니다.
@@ -179,9 +179,16 @@ export const config = [
 
       'turbo/no-undeclared-env-vars': 0,
 
-      // TypeScript의 any 사용과 미사용 변수 경고를 비활성화합니다.
+      // TypeScript의 any 사용 경고는 비활성화, 미사용 변수는 에러로 통일합니다.
       '@typescript-eslint/no-explicit-any': 0,
-      '@typescript-eslint/no-unused-vars': 0,
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
       '@typescript-eslint/ban-types': 0,
       '@typescript-eslint/no-empty-object-type': 0,
       '@typescript-eslint/no-unsafe-function-type': 0,
