@@ -1,12 +1,13 @@
-import StableImage from '@/assets/images/characters/stable.png'
+import AnxietyCardImage from '@/assets/images/characters/anxiety-card.png'
 import AnxietyImage from '@/assets/images/characters/anxiety.png'
+import AvoidanceCardImage from '@/assets/images/characters/avoidance-card.png'
 import AvoidanceImage from '@/assets/images/characters/avoidance.png'
+import ConfusionCardImage from '@/assets/images/characters/confusion-card.png'
 import ConfusionImage from '@/assets/images/characters/confusion.png'
 // 홈페이지 카드용 캐릭터 이미지
 import StableCardImage from '@/assets/images/characters/stable-card.png'
-import AnxietyCardImage from '@/assets/images/characters/anxiety-card.png'
-import AvoidanceCardImage from '@/assets/images/characters/avoidance-card.png'
-import ConfusionCardImage from '@/assets/images/characters/confusion-card.png'
+import StableImage from '@/assets/images/characters/stable.png'
+
 import { AttachmentType, type AttachmentTypeData } from './types'
 
 // 안정형 (평온이)

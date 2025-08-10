@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { createContext, useState } from 'react'
 
+import bridge from '../bridge'
+import { useAlertDialog } from '../hooks/use-alert-dialog'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,8 +13,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog'
-import { useAlertDialog } from '../hooks/use-alert-dialog'
-import bridge from '../bridge'
 
 type AlertDialogOpenOptions = {
   title?: string | React.ReactNode

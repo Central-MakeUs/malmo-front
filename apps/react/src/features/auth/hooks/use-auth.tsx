@@ -1,13 +1,15 @@
-import { Skeleton } from '@/shared/ui/skeleton'
-import { createContext, ReactNode, useCallback, useEffect, useState, use } from 'react'
-import authClient from '../lib/auth-client'
 import { SocialLoginType } from '@bridge/types'
-import memberService from '@/shared/services/member.service'
 import {
   MemberDataMemberStateEnum,
   MemberDataLoveTypeCategoryEnum,
   MemberDataProviderEnum,
 } from '@data/user-api-axios/api'
+import { createContext, ReactNode, useCallback, useEffect, useState, use } from 'react'
+
+import memberService from '@/shared/services/member.service'
+import { Skeleton } from '@/shared/ui/skeleton'
+
+import authClient from '../lib/auth-client'
 
 // 멤버 상태 타입
 export type MemberState = MemberDataMemberStateEnum | null
@@ -83,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       // 데이터가 없는 경우도 실패로 처리
       throw new Error('User info not found')
-    } catch (error) {
+    } catch {
       // 실패 시 인증 상태를 확실히 초기화
       setAuthenticated(false)
       setUserInfo(initialUserInfo)
@@ -144,7 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setAuthenticated(true)
           await _fetchUserInfo() // 앱 시작 시 사용자 정보 조회
         }
-      } catch (error) {
+      } catch {
         setAuthenticated(false)
         setUserInfo(initialUserInfo)
       } finally {

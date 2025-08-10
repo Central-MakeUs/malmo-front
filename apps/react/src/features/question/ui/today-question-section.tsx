@@ -1,9 +1,10 @@
+import { QuestionData } from '@data/user-api-axios/api'
 import { ChevronRight } from 'lucide-react'
+
 import loveLetter from '@/assets/images/love-letter-home.png'
+import { cn } from '@/shared/lib/cn'
 import { Badge } from '@/shared/ui'
 import { formatDate } from '@/shared/utils'
-import { QuestionData } from '@data/user-api-axios/api'
-import { cn } from '@/shared/lib/cn'
 
 interface TodayQuestionSectionProps {
   todayQuestion?: QuestionData | null

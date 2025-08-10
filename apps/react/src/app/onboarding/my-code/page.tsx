@@ -1,14 +1,15 @@
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
-import loveLetter from '@/assets/images/love-letter.png'
-import { TitleSection } from '@/features/onboarding/ui/title-section'
-import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
-import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
-import memberService from '@/shared/services/member.service'
+
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
-import { toast } from '@/shared/ui/toast'
+import loveLetter from '@/assets/images/love-letter.png'
+import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
+import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
+import { TitleSection } from '@/features/onboarding/ui/title-section'
+import memberService from '@/shared/services/member.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/onboarding/my-code/')({
   component: MyCodePage,
@@ -48,7 +49,7 @@ function MyCodePage() {
       if (success) {
         goToHome()
       }
-    } catch (error) {
+    } catch {
       // ToDo
     } finally {
       setIsSubmitting(false)

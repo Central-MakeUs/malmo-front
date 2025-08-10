@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
+
 import noteImage from '@/assets/images/note-home.png'
 
 export function AttachmentTestBanner() {

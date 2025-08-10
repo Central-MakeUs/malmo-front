@@ -1,9 +1,10 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { Badge } from '@/shared/ui/badge'
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
+
+import { AnniversaryEditSheet } from '@/features/anniversary'
 import { usePartnerInfo } from '@/features/member'
 import { NicknameEditSheet, useProfileEdit } from '@/features/profile'
-import { AnniversaryEditSheet } from '@/features/anniversary'
+import { Badge } from '@/shared/ui/badge'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/my-page/profile/')({
   component: ProfileEditPage,

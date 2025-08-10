@@ -1,7 +1,8 @@
 import { Link } from '@tanstack/react-router'
-import { cn } from '@/shared/lib/cn'
-import momoIdle from '@/assets/images/momo-home-idle.png'
+
 import momoChatting from '@/assets/images/momo-home-chatting.png'
+import momoIdle from '@/assets/images/momo-home-idle.png'
+import { cn } from '@/shared/lib/cn'
 
 interface ChatEntryCardProps {
   isChatActive: boolean

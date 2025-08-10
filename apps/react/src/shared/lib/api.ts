@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { isWebView } from '../utils/webview'
+
 import { bridge } from '../bridge'
+import { isWebView } from '../utils/webview'
 
 const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_API_URL : '/api'
 const AUTH_ROUTE = '/login'
@@ -9,10 +10,6 @@ interface QueueItem {
   resolve: (value: any) => void
   reject: (reason?: any) => void
   config: AxiosRequestConfig
-}
-
-interface ApiOptions {
-  throwError?: boolean
 }
 
 export const defaultOptions = {

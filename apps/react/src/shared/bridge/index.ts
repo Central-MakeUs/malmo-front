@@ -1,5 +1,5 @@
-import { BridgeStore, linkBridge } from '@webview-bridge/web'
 import { SocialLoginType, SocialLoginResult } from '@bridge/types'
+import { BridgeStore, linkBridge } from '@webview-bridge/web'
 
 // 웹에서 사용할 브릿지 타입 정의
 export interface WebBridge extends BridgeStore<WebBridge> {
@@ -37,8 +37,8 @@ export const bridge = linkBridge<WebBridge>({
     getAuthToken: async () => ({ accessToken: null }),
     logout: async () => ({ success: false, message: '로그아웃 실패' }),
     notifyTokenExpired: async () => ({ accessToken: null }),
-    toggleOverlay: async (level?: number) => {},
-    changeStatusBarColor: async (color?: string) => {},
+    toggleOverlay: async (_level?: number) => {},
+    changeStatusBarColor: async (_color?: string) => {},
     saveChatTutorialSeen: async () => {},
     getChatTutorialSeen: async () => false,
     openWebView: async (url: string) => {

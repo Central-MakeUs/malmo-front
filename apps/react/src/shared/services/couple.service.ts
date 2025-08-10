@@ -1,5 +1,6 @@
-import apiInstance from '../lib/api'
 import { CouplesApi, CoupleLinkRequestDto } from '@data/user-api-axios/api'
+
+import apiInstance from '../lib/api'
 import { toast } from '../ui/toast'
 
 class CoupleService extends CouplesApi {

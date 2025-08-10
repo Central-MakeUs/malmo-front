@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react'
 import { useMutation } from '@tanstack/react-query'
+import React, { createContext, useContext, useState, ReactNode } from 'react'
+
+import { useAuth } from '@/features/auth'
 import signUpService from '@/shared/services/sign-up.service'
 import { formatDate } from '@/shared/utils'
-import { useAuth } from '@/features/auth'
 
 // 온보딩 데이터 타입 정의
 interface OnboardingData {
@@ -111,7 +112,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       await refreshUserInfo()
 
       return true
-    } catch (error) {
+    } catch {
       return false
     }
   }

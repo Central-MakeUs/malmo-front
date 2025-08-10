@@ -1,6 +1,7 @@
-import apiInstance from '../lib/api'
 import { TermsApi, TermsResponseData } from '@data/user-api-axios/api'
+
 import { queryKeys } from './query-keys'
+import apiInstance from '../lib/api'
 
 export interface Terms extends TermsResponseData {}
 

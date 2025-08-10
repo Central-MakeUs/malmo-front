@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+
 import memberService from '@/shared/services/member.service'
 
 export function usePartnerInfo() {

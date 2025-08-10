@@ -1,14 +1,14 @@
+import { useMutation } from '@tanstack/react-query'
+import { useBridge } from '@webview-bridge/react'
 import { X } from 'lucide-react'
 import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
+
+import { useAuth } from '@/features/auth'
+import bridge from '@/shared/bridge'
+import coupleService from '@/shared/services/couple.service'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
-import coupleService from '@/shared/services/couple.service'
-import { useAuth } from '@/features/auth'
-import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
-import bridge from '@/shared/bridge'
-import { useBridge } from '@webview-bridge/react'
+import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
 
 interface PartnerCodeSheetProps {
   isOpen: boolean
@@ -21,7 +21,6 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
   const [partnerCode, setPartnerCode] = useState('')
   const { refreshUserInfo } = useAuth()
-  const { open } = useAlertDialog()
 
   const connectCoupleMutation = useMutation({
     ...coupleService.connectCoupleMutation(),

@@ -1,6 +1,7 @@
+import { SocialLoginType } from '@bridge/types'
+
 import bridge from '@/shared/bridge'
 import { isWebView } from '@/shared/utils/webview'
-import { SocialLoginType } from '@bridge/types'
 
 // 인증 관련 기능을 제공하는 클라이언트
 class AuthClient {
@@ -16,7 +17,7 @@ class AuthClient {
           // 네이티브에서 토큰 가져오기
           const { accessToken } = await bridge.getAuthToken()
           console.log('Access Token:', accessToken)
-          
+
           if (!accessToken) {
             return { authenticated: false }
           }

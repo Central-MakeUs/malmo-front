@@ -1,5 +1,5 @@
-import StarIcon from '@/assets/icons/star.svg'
 import CheckIcon from '@/assets/icons/check.svg'
+import StarIcon from '@/assets/icons/star.svg'
 import { Button } from '@/shared/ui'
 
 interface AttachmentTestGuideProps {
@@ -22,7 +22,7 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
 
       {/* 바텀 시트 */}
-      <div className="relative h-[476px] w-full animate-in rounded-t-[20px] bg-white duration-300 slide-in-from-bottom">
+      <div className="animate-in slide-in-from-bottom relative h-[476px] w-full rounded-t-[20px] bg-white duration-300">
         {/* 상단 40px 간격 */}
         <div className="h-10" />
 

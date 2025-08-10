@@ -1,12 +1,13 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { TitleSection } from '@/features/onboarding/ui/title-section'
-import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
-import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
-import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term'
-import { Button } from '@/shared/ui'
-import termsService from '@/shared/services/terms.service'
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
+
 import { useAuth } from '@/features/auth'
+import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
+import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
+import { TitleSection } from '@/features/onboarding/ui/title-section'
+import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term'
+import termsService from '@/shared/services/terms.service'
+import { Button } from '@/shared/ui'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/onboarding/terms/')({
   component: TermsPage,
@@ -18,7 +19,7 @@ export const Route = createFileRoute('/onboarding/terms/')({
 function TermsPage() {
   const auth = useAuth()
   const navigate = useNavigate()
-  const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
+  const { goToNextStep } = useOnboardingNavigation()
   const { data, updateTermsAgreements } = useOnboarding()
 
   const {

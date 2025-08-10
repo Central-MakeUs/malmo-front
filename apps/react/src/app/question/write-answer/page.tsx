@@ -1,13 +1,14 @@
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
-import CustomTextarea from '@/features/question/ui/text-area'
-import { Button } from '@/shared/ui'
-import { createFileRoute } from '@tanstack/react-router'
-import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
-import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 import { z } from 'zod'
-import questionService from '@/shared/services/question.service'
+
+import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
 import { QuestionHeader } from '@/features/question/ui/question-header'
+import CustomTextarea from '@/features/question/ui/text-area'
+import questionService from '@/shared/services/question.service'
+import { Button } from '@/shared/ui'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),

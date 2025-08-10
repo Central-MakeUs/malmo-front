@@ -1,8 +1,8 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useRouter } from '@tanstack/react-router'
+
 import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import questionService from '@/shared/services/question.service'
-import { useRouter } from '@tanstack/react-router'
-import { QueryClientContext, useMutation, useQueryClient } from '@tanstack/react-query'
-import historyService from '@/shared/services/history.service'
 
 export interface UseQuestionModalReturn {
   saveQuestionModal: (text: string, isEdit: boolean) => void

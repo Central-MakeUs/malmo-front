@@ -1,6 +1,7 @@
-import apiInstance from '../lib/api'
 import { AnswerRequestDto, QuestionsApi } from '@data/user-api-axios/api'
+
 import { queryKeys } from './query-keys'
+import apiInstance from '../lib/api'
 import { toast } from '../ui/toast'
 
 class QuestionService extends QuestionsApi {

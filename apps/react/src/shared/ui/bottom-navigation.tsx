@@ -1,15 +1,16 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { cn } from '@/shared/lib/cn'
+
 // 기본 아이콘들
-import HomeIcon from '@/assets/icons/nav/home.svg'
+import ChatHistoryActiveIcon from '@/assets/icons/nav/chat-history-active.svg'
 import ChatHistoryIcon from '@/assets/icons/nav/chat-history.svg'
+import HomeActiveIcon from '@/assets/icons/nav/home-active.svg'
+import HomeIcon from '@/assets/icons/nav/home.svg'
+import MoodJournalActiveIcon from '@/assets/icons/nav/mood-journal-active.svg'
 import MoodJournalIcon from '@/assets/icons/nav/mood-journal.svg'
+import UserActiveIcon from '@/assets/icons/nav/user-active.svg'
 import UserIcon from '@/assets/icons/nav/user.svg'
 // 액티브 아이콘들
-import HomeActiveIcon from '@/assets/icons/nav/home-active.svg'
-import ChatHistoryActiveIcon from '@/assets/icons/nav/chat-history-active.svg'
-import MoodJournalActiveIcon from '@/assets/icons/nav/mood-journal-active.svg'
-import UserActiveIcon from '@/assets/icons/nav/user-active.svg'
+import { cn } from '@/shared/lib/cn'
 
 interface NavigationItem {
   id: string

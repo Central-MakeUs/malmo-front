@@ -1,10 +1,10 @@
-import summaryAnimation from '@/assets/lottie/summary.json'
-
-import { useEffect } from 'react'
-import Lottie from 'lottie-react'
-import chatService from '@/shared/services/chat.service'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import Lottie from 'lottie-react'
+import { useEffect } from 'react'
+
+import summaryAnimation from '@/assets/lottie/summary.json'
+import chatService from '@/shared/services/chat.service'
 
 export const Route = createFileRoute('/chat/loading/')({
   component: RouteComponent,

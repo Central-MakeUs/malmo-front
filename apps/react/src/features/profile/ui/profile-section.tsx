@@ -1,7 +1,8 @@
-import { ChevronRight } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
-import momoProfile from '@/assets/images/momo-profile.png'
+import { ChevronRight } from 'lucide-react'
+
 import HeartIcon from '@/assets/icons/heart.svg'
+import momoProfile from '@/assets/images/momo-profile.png'
 import { usePartnerInfo } from '@/features/member'
 import { withParticle } from '@/shared/utils'
 

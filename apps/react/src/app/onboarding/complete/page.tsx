@@ -1,7 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Button } from '@/shared/ui'
-import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
+
 import onboardingEndImage from '@/assets/images/onboarding-end.png'
+import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
+import { Button } from '@/shared/ui'
 
 export const Route = createFileRoute('/onboarding/complete/')({
   component: ConnectCompletePage,

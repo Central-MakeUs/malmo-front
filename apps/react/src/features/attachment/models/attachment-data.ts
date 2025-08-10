@@ -1,5 +1,5 @@
-import { AttachmentType } from './types'
 import { STABLE_TYPE_DATA, ANXIETY_TYPE_DATA, AVOIDANCE_TYPE_DATA, CONFUSION_TYPE_DATA } from './attachment-types'
+import { AttachmentType } from './types'
 
 // 애착유형 검사 정보 데이터
 export const ATTACHMENT_TEST_INFO = [

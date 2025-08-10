@@ -1,6 +1,7 @@
+import { PastAnswerData } from '@data/user-api-axios/api'
+
 import { Badge } from '@/shared/ui'
 import { formatDate } from '@/shared/utils'
-import { PastAnswerData } from '@data/user-api-axios/api'
 
 export const QuestionHeader = ({ data }: { data?: PastAnswerData }) => (
   <>

@@ -1,19 +1,20 @@
-import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { LucideSearch } from 'lucide-react'
-import ChatBubble from '@/assets/icons/chat.svg'
-import { cn } from '@/shared/lib/cn'
-import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
-import { useChatRoomStatusQuery } from '@/features/chat/hooks/use-chat-queries'
 import { useState } from 'react'
-import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
-import { useDebounce } from '@/shared/hooks/use-debounce'
-import { EmptyState, LinkedChatHistoryItem } from '@/features/history/ui/chat-history-item'
-import noResultImage from '@/assets/images/characters/no-result.png'
+
+import ChatBubble from '@/assets/icons/chat.svg'
 import emptyImage from '@/assets/images/characters/empty.png'
+import noResultImage from '@/assets/images/characters/no-result.png'
+import { useChatRoomStatusQuery } from '@/features/chat/hooks/use-chat-queries'
+import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
+import { EmptyState, LinkedChatHistoryItem } from '@/features/history/ui/chat-history-item'
+import { useDebounce } from '@/shared/hooks/use-debounce'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
-import { BottomNavigation } from '@/shared/ui'
+import { cn } from '@/shared/lib/cn'
 import chatService from '@/shared/services/chat.service'
+import { BottomNavigation } from '@/shared/ui'
+import { HomeHeaderBar } from '@/shared/ui/header-bar'
 import { Spinner } from '@/shared/ui/spinner'
 
 export const Route = createFileRoute('/history/')({
@@ -39,7 +40,6 @@ function RouteComponent() {
     chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
-  const showEmpty = !isFetching && !isFetchingNextPage && histories.length === 0
   const isLoading = isFetching && !isFetchingNextPage
 
   return (

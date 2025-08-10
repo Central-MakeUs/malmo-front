@@ -1,5 +1,6 @@
-import bridge from '@/shared/bridge'
 import { useState } from 'react'
+
+import bridge from '@/shared/bridge'
 
 export function useProfileEdit() {
   const [isNicknameSheetOpen, setIsNicknameSheetOpen] = useState(false)

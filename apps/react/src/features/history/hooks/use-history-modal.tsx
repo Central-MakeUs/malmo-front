@@ -1,7 +1,8 @@
-import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
-import historyService from '@/shared/services/history.service'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
+
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
+import historyService from '@/shared/services/history.service'
 import { queryKeys } from '@/shared/services/query-keys'
 
 export interface UseHistoryModalReturn {

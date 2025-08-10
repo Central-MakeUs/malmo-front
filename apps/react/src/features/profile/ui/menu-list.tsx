@@ -1,4 +1,5 @@
 import { ChevronRight } from 'lucide-react'
+
 import { MenuItem, MenuGroup } from '../models/types'
 
 interface MenuListProps {

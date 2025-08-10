@@ -1,4 +1,5 @@
-import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
+
 import TestStartImage from '@/assets/images/test-start.png'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
