@@ -1,5 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { cn } from '@ui/common/lib/utils'
+import { cn } from '@/shared/lib/cn'
 // 기본 아이콘들
 import HomeIcon from '@/assets/icons/nav/home.svg'
 import ChatHistoryIcon from '@/assets/icons/nav/chat-history.svg'

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import MomoConnectedImage from '@/assets/images/momo-connected.png'
 
-import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import { useAuth } from '@/features/auth'
 import { useNavigate } from '@tanstack/react-router'
 import memberService from '@/shared/services/member.service'

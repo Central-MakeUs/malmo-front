@@ -1,4 +1,4 @@
-import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import questionService from '@/shared/services/question.service'
 import { useRouter } from '@tanstack/react-router'
 import { QueryClientContext, useMutation, useQueryClient } from '@tanstack/react-query'

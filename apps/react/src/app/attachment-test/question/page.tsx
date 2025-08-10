@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Button } from '@/shared/ui'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import {
   useAttachmentQuestions,
   QuestionProgress,

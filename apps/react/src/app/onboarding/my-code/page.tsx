@@ -7,8 +7,8 @@ import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboard
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import memberService from '@/shared/services/member.service'
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
-import { toast } from '@/shared/components/toast'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { toast } from '@/shared/ui/toast'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/onboarding/my-code/')({
   component: MyCodePage,

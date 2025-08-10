@@ -1,6 +1,6 @@
-import apiInstance from '../libs/api'
+import apiInstance from '../lib/api'
 import { SignUpsApi, SignUpRequestDto } from '@data/user-api-axios/api'
-import { toast } from '../components/toast'
+import { toast } from '../ui/toast'
 
 class SignUpService extends SignUpsApi {
   constructor() {

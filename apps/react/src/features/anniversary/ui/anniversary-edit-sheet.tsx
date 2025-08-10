@@ -1,6 +1,6 @@
 import { X } from 'lucide-react'
 import { useMemo, useEffect, useState } from 'react'
-import { Sheet, SheetContent, SheetTitle } from '@ui/common/components/sheet'
+import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
 import { Button } from '@/shared/ui/button'
 import { DatePicker, useAnniversary } from '@/features/anniversary'
 import { useAuth } from '@/features/auth'

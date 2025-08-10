@@ -1,7 +1,7 @@
-import apiInstance from '../libs/api'
+import apiInstance from '../lib/api'
 import { ChatroomApi } from '@data/user-api-axios/api'
-import { queryKeys } from '../query-keys'
-import { toast } from '../components/toast'
+import { queryKeys } from './query-keys'
+import { toast } from '../ui/toast'
 
 class ChatService extends ChatroomApi {
   constructor() {

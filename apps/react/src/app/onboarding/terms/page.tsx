@@ -5,7 +5,7 @@ import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context
 import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term'
 import { Button } from '@/shared/ui'
 import termsService from '@/shared/services/terms.service'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { useAuth } from '@/features/auth'
 
 export const Route = createFileRoute('/onboarding/terms/')({

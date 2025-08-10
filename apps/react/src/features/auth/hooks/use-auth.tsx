@@ -1,4 +1,4 @@
-import { Skeleton } from '@ui/common/components/skeleton'
+import { Skeleton } from '@/shared/ui/skeleton'
 import { createContext, ReactNode, useCallback, useEffect, useState, use } from 'react'
 import authClient from '../lib/auth-client'
 import { SocialLoginType } from '@bridge/types'

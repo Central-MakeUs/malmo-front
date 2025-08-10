@@ -1,6 +1,6 @@
 import { LoveTypesApi } from '@data/user-api-axios/api'
-import apiInstance from '@/shared/libs/api'
-import { queryKeys } from '../query-keys'
+import apiInstance from '@/shared/lib/api'
+import { queryKeys } from './query-keys'
 
 class LoveTypeService extends LoveTypesApi {
   constructor() {

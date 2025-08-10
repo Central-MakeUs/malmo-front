@@ -12,10 +12,7 @@
   "peerDependencies": {
     "axios": "catalog:"
   },
-  "dependencies": {
-    "@data/utils": "workspace:*",
-    "@system/logger": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@system/typescript": "workspace:*",
     "@types/node": "catalog:",

@@ -1,6 +1,5 @@
-@import '@ui/tailwind/styles/web.css';
+@import './styles/globals.css';
 
-@source "../node_modules/@ui/common";
 
 :root {
   /* custom variable */

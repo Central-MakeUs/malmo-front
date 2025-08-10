@@ -1,11 +1,11 @@
 import { TodayQuestionSection } from '@/features/question'
 import CalendarItem from '@/features/question/ui/calendar-item'
-import { HomeHeaderBar } from '@/shared/components/header-bar'
+import { HomeHeaderBar } from '@/shared/ui/header-bar'
 import questionService from '@/shared/services/question.service'
 import { Badge, BottomNavigation } from '@/shared/ui'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { cn } from '@ui/common/lib/utils'
+import { cn } from '@/shared/lib/cn'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
 

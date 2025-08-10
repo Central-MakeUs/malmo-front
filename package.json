@@ -37,10 +37,6 @@
       "eslint --fix --config apps/mobile/eslint.config.js",
       "prettier --write"
     ],
-    "apps/storybook/**/*.{js,mjs,ts,tsx}": [
-      "eslint --fix --config apps/storybook/eslint.config.js",
-      "prettier --write"
-    ],
     "packages/**/*.{js,mjs,ts,tsx}": [
       "prettier --write"
     ],

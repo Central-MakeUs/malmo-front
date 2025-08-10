@@ -7,8 +7,7 @@
     "./base": "./base.js",
     "./next": "./next.js",
     "./react": "./react.js",
-    "./node": "./node.js",
-    "./storybook": "./storybook.js"
+    "./node": "./node.js"
   },
   "peerDependencies": {
     "typescript": "catalog:"
@@ -23,7 +22,6 @@
     "eslint-plugin-react": "^7",
     "eslint-plugin-react-hooks": "^5",
     "eslint-plugin-security": "^3",
-    "eslint-plugin-storybook": "^0.12.0",
     "eslint-plugin-turbo": "^2",
     "eslint-plugin-unicorn": "^58",
     "globals": "^16.0.0",

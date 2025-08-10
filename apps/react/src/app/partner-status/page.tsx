@@ -4,7 +4,7 @@ import { Button } from '@/shared/ui/button'
 
 // 상태별 이미지 import
 import momoEmptyStateImage from '@/assets/images/momo-empty-state.png'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 // 쿼리 파라미터 검증 스키마
 const partnerStatusSearchSchema = z.object({

@@ -1,4 +1,4 @@
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
@@ -8,7 +8,7 @@ import historyService from '@/shared/services/history.service'
 import { useEffect } from 'react'
 import bridge from '@/shared/bridge'
 import { useQuery } from '@tanstack/react-query'
-import { useHistoryModal } from '@/features/history/hook/use-history-modal'
+import { useHistoryModal } from '@/features/history/hooks/use-history-modal'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),

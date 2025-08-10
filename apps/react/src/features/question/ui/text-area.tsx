@@ -1,4 +1,4 @@
-import { cn } from '@ui/common/lib/utils'
+import { cn } from '@/shared/lib/cn'
 
 interface CustomTextareaProps {
   value: string
