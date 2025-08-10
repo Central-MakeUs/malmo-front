@@ -182,8 +182,8 @@ export const config = [
 
       'turbo/no-undeclared-env-vars': 0,
 
-      // TypeScript의 any 사용 경고는 비활성화, 미사용 변수는 에러로 통일합니다.
-      '@typescript-eslint/no-explicit-any': 0,
+      // TypeScript의 any 사용 경고 활성화, 미사용 변수는 에러로 통일합니다.
+      '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
