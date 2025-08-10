@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
 import { useAuth } from '@/features/auth'
 import { useMyPageMenu, ProfileSection, StatsSection, MenuList } from '@/features/profile'
@@ -17,7 +18,11 @@ export const Route = createFileRoute('/my-page/')({
 
 function MyPage() {
   // 사용자 데이터
-  const { userInfo } = useAuth()
+  const { userInfo, refreshUserInfo } = useAuth()
+
+  useEffect(() => {
+    void refreshUserInfo()
+  }, [refreshUserInfo])
 
   // D-day 계산
   const dDay = calculateDDay(userInfo.startLoveDate)
