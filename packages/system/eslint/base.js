@@ -6,8 +6,10 @@ import unicornPlugin from 'eslint-plugin-unicorn'
 import securityPlugin from 'eslint-plugin-security'
 import vitestPlugin from '@vitest/eslint-plugin'
 import queryPlugin from '@tanstack/eslint-plugin-query'
+import importPlugin from 'eslint-plugin-import'
 
 export const config = [
+  { ignores: ['**/dist/**', '**/build/**', '**/node_modules/**'] },
   js.configs.recommended,
   eslintConfigPrettier,
   ...tsEslint.configs.recommended,
@@ -18,6 +20,7 @@ export const config = [
       unicorn: unicornPlugin,
       vitest: vitestPlugin,
       '@tanstack/query': queryPlugin,
+      import: importPlugin,
     },
     rules: {
       'turbo/no-undeclared-env-vars': 'warn',
@@ -192,6 +195,18 @@ export const config = [
       '@typescript-eslint/ban-types': 0,
       '@typescript-eslint/no-empty-object-type': 0,
       '@typescript-eslint/no-unsafe-function-type': 0,
+
+      // 임포트 순서를 통일합니다.
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'object', 'type'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+          pathGroups: [{ pattern: '@/**', group: 'internal', position: 'after' }],
+          pathGroupsExcludedImportTypes: ['builtin'],
+        },
+      ],
 
       // 파일명을 케밥 케이스(kebab-case)로 강제합니다.
       'unicorn/filename-case': [
