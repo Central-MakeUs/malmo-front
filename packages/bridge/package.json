@@ -12,8 +12,6 @@
   },
   "devDependencies": {
     "@system/eslint": "workspace:*",
-    "@system/typescript": "workspace:*",
-    "@types/node": "catalog:",
-    "zod": "catalog:"
+    "@system/typescript": "workspace:*"
   }
 }

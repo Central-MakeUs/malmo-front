@@ -1,5 +1,3 @@
-@import 'tw-animate-css';
-
 @theme inline {
   --font-pretendard: var(--font-pretendard);
   --container-2xl: 1400px;
