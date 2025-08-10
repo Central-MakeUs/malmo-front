@@ -1,10 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
-import { useAuth } from '@/features/auth'
 import { MemberDataProviderEnum } from '@data/user-api-axios/api'
-import { useProfileModal } from '@/features/profile'
-import KakaoCircle from '@/assets/icons/kakao-circle.svg'
+import { createFileRoute } from '@tanstack/react-router'
+
 import AppleCircle from '@/assets/icons/apple-circle.svg'
+import KakaoCircle from '@/assets/icons/kakao-circle.svg'
+import { useAuth } from '@/features/auth'
+import { useProfileModal } from '@/features/profile'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/my-page/account-settings/')({
   component: AccountSettingsPage,

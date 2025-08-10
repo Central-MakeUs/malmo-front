@@ -1,13 +1,16 @@
-import { useState, useEffect, useRef } from 'react'
-import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useState, useEffect, useRef } from 'react'
+
+import { useAuth } from '@/features/auth'
 import loveTypeService from '@/shared/services/love-type.service'
 import memberService from '@/shared/services/member.service'
-import { QUESTION_CONFIG } from '../models/constants'
-import type { LoveTypeQuestionData, LoveTypeTestResult } from '@data/user-api-axios/api'
-import { useAuth } from '@/features/auth'
-import { toast } from '@/shared/ui/toast'
 import { queryKeys } from '@/shared/services/query-keys'
+import { toast } from '@/shared/ui/toast'
+
+import { QUESTION_CONFIG } from '../models/constants'
+
+import type { LoveTypeQuestionData, LoveTypeTestResult } from '@data/user-api-axios/api'
 
 // 질문 타입 정의
 interface Question {
@@ -80,7 +83,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
         navigate({ to: '/attachment-test/result/my' })
       }, QUESTION_CONFIG.SUBMISSION_DELAY)
     },
-    onError: (error: any) => {
+    onError: (_error: any) => {
       // 서비스단 에러 처리 먼저 실행
       serviceOptions.onError?.()
       // 앱단 에러 처리: 제출 상태 리셋

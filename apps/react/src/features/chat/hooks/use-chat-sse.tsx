@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill'
+import { useEffect, useRef } from 'react'
+
 import bridge from '@/shared/bridge'
 
 const API_HOST = import.meta.env.PROD ? import.meta.env.VITE_API_URL : '/api'

@@ -1,6 +1,6 @@
-import { SectionHeader } from '../section-header'
-import { InfoBox } from '../info-box'
 import { ATTACHMENT_TEST_INFO } from '../../models/attachment-data'
+import { InfoBox } from '../info-box'
+import { SectionHeader } from '../section-header'
 
 export function AttachmentTestInfoSection() {
   return (

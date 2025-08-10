@@ -1,9 +1,10 @@
-import { Link } from '@tanstack/react-router'
 import { GetChatRoomListResponse } from '@data/user-api-axios/api'
-import { formatDate } from '@/shared/utils'
+import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
+
 import CheckedCircle from '@/assets/icons/checked-circle.svg'
 import { Badge } from '@/shared/ui'
+import { formatDate } from '@/shared/utils'
 
 // 1. 공통 UI를 Base 컴포넌트로 추출
 const ChatHistoryItemBase = ({ history }: { history: GetChatRoomListResponse }) => (

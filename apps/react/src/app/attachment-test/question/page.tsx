@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { Button } from '@/shared/ui'
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
+
 import {
   useAttachmentQuestions,
   QuestionProgress,
@@ -13,6 +12,8 @@ import {
 import { useAuth } from '@/features/auth'
 import bridge from '@/shared/bridge'
 import loveTypeService from '@/shared/services/love-type.service'
+import { Button } from '@/shared/ui'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/attachment-test/question/')({
   component: AttachmentTestQuestionPage,

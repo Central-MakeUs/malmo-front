@@ -1,14 +1,14 @@
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { X } from 'lucide-react'
-import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
-import { Button } from '@/shared/ui'
-import { z } from 'zod'
-import historyService from '@/shared/services/history.service'
 import { useEffect } from 'react'
-import bridge from '@/shared/bridge'
-import { useQuery } from '@tanstack/react-query'
+import { z } from 'zod'
+
+import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { useHistoryModal } from '@/features/history/hooks/use-history-modal'
+import bridge from '@/shared/bridge'
+import historyService from '@/shared/services/history.service'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -33,7 +33,7 @@ function RouteComponent() {
   const { chatId, fromHistory } = Route.useSearch()
   const historyModal = useHistoryModal()
 
-  const { data: chatResult, isLoading, error } = useQuery(historyService.historySummaryQuery(chatId ?? loaderChatId))
+  const { data: chatResult } = useQuery(historyService.historySummaryQuery(chatId ?? loaderChatId))
 
   const navigate = useNavigate()
 

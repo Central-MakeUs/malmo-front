@@ -1,13 +1,15 @@
-import { X } from 'lucide-react'
-import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
-import { Button } from '@/shared/ui/button'
-import { NicknameInput } from './nickname-input'
-import { useNicknameInput } from '../hooks/use-nickname-input'
 import { useMutation } from '@tanstack/react-query'
-import memberService from '@/shared/services/member.service'
+import { useBridge } from '@webview-bridge/react'
+import { X } from 'lucide-react'
+
 import { useAuth } from '@/features/auth'
 import bridge from '@/shared/bridge'
-import { useBridge } from '@webview-bridge/react'
+import memberService from '@/shared/services/member.service'
+import { Button } from '@/shared/ui/button'
+import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
+
+import { NicknameInput } from './nickname-input'
+import { useNicknameInput } from '../hooks/use-nickname-input'
 
 interface NicknameEditSheetProps {
   isOpen: boolean

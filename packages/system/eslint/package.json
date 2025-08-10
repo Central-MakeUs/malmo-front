@@ -5,16 +5,13 @@
   "private": true,
   "exports": {
     "./base": "./base.js",
-    "./next": "./next.js",
-    "./react": "./react.js",
-    "./node": "./node.js"
+    "./react": "./react.js"
   },
   "peerDependencies": {
     "typescript": "catalog:"
   },
   "devDependencies": {
     "@eslint/js": "^9",
-    "@next/eslint-plugin-next": "^15",
     "@tanstack/eslint-plugin-query": "^5",
     "@vitest/eslint-plugin": "^1",
     "eslint": "catalog:",

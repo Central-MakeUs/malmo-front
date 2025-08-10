@@ -1,8 +1,10 @@
-import { NotFound } from '@/shared/ui/not-found'
-import { RouterError } from '@/shared/ui/router-error'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
 import React from 'react'
+
+import { NotFound } from '@/shared/ui/not-found'
+import { RouterError } from '@/shared/ui/router-error'
+
 import { routeTree } from './routeTree.gen'
 
 export function createRouter() {

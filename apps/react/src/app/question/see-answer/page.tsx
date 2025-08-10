@@ -1,15 +1,16 @@
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Pen, X } from 'lucide-react'
+import { useState } from 'react'
+import { z } from 'zod'
+
 import MyHeart from '@/assets/icons/my-heart.svg'
 import OtherHeart from '@/assets/icons/other-heart.svg'
-import { z } from 'zod'
-import { useQuery } from '@tanstack/react-query'
-import questionService from '@/shared/services/question.service'
-import { cn } from '@/shared/lib/cn'
-import { useState } from 'react'
-import bridge from '@/shared/bridge'
 import { QuestionHeader } from '@/features/question/ui/question-header'
+import bridge from '@/shared/bridge'
+import { cn } from '@/shared/lib/cn'
+import questionService from '@/shared/services/question.service'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),

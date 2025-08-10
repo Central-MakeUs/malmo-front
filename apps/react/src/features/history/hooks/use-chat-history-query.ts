@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
+
 import historyService from '@/shared/services/history.service'
 
 interface UseChatHistoryQueryProps {

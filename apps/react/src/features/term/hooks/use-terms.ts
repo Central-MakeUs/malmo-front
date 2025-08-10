@@ -1,8 +1,10 @@
-import { useState, useEffect, useMemo } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useState, useEffect, useMemo } from 'react'
+
 import termsService from '@/shared/services/terms.service'
-import { Term, TermAgreements } from '../models/types'
+
 import { convertToTerms, findTermById } from '../lib/converters'
+import { Term, TermAgreements } from '../models/types'
 
 export function useTerms(initialAgreements: TermAgreements = {}) {
   const [termsData, setTermsData] = useState<Term[]>([])

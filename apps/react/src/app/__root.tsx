@@ -1,6 +1,7 @@
 import { QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-router'
 import { match } from 'path-to-regexp'
+
 import { AuthContext } from '@/features/auth/hooks/use-auth'
 import bridge from '@/shared/bridge'
 

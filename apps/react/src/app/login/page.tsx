@@ -1,11 +1,12 @@
+import { SocialLoginType } from '@bridge/types'
 import { createFileRoute, useRouter } from '@tanstack/react-router' // useNavigate 제거, useRouter 사용
+import { useEffect, useState } from 'react'
+
 import AppleLogo from '@/assets/icons/apple-logo.svg'
 import KakaoLogo from '@/assets/icons/kakao-logo.svg'
 import malmoLogo from '@/assets/images/malmo-logo.png'
-import { isWebView } from '@/shared/utils/webview'
 import { useAuth } from '@/features/auth'
-import { useEffect, useState } from 'react'
-import { SocialLoginType } from '@bridge/types'
+import { isWebView } from '@/shared/utils/webview'
 
 export const Route = createFileRoute('/login/')({
   component: LoginPage,

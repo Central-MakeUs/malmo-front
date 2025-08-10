@@ -1,6 +1,6 @@
-import { SectionHeader } from '../section-header'
-import { AttachmentTypeTag } from '../attachment-type-tag'
 import { ATTACHMENT_TYPE_PREVIEW } from '../../models/attachment-data'
+import { AttachmentTypeTag } from '../attachment-type-tag'
+import { SectionHeader } from '../section-header'
 
 export function AttachmentTypesSection() {
   return (

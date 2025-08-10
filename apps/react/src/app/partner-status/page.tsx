@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { z } from 'zod'
-import { Button } from '@/shared/ui/button'
 
-// 상태별 이미지 import
 import momoEmptyStateImage from '@/assets/images/momo-empty-state.png'
+import { Button } from '@/shared/ui/button'
+// 상태별 이미지 import
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 // 쿼리 파라미터 검증 스키마

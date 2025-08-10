@@ -1,13 +1,12 @@
-import bridge from '@/shared/bridge'
-import { Button } from '@/shared/ui'
 import { createFileRoute } from '@tanstack/react-router'
-import { BottomNavigation } from '@/shared/ui/bottom-navigation'
+
 import { useAuth } from '@/features/auth'
-import { calculateDDay } from '@/shared/utils/date'
-import { useTerms, TermsContentModal } from '@/features/term'
 import { useMyPageMenu, ProfileSection, StatsSection, MenuList } from '@/features/profile'
-import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { useTerms, TermsContentModal } from '@/features/term'
 import termsService from '@/shared/services/terms.service'
+import { BottomNavigation } from '@/shared/ui/bottom-navigation'
+import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { calculateDDay } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/my-page/')({
   component: MyPage,

@@ -1,5 +1,6 @@
-import noteAnimation from '@/assets/lottie/note.json'
 import Lottie from 'lottie-react'
+
+import noteAnimation from '@/assets/lottie/note.json'
 
 interface SubmissionLoadingProps {
   nickname?: string

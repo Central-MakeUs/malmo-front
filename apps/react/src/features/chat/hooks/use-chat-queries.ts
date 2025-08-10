@@ -1,11 +1,12 @@
-import { useQuery, useMutation, useQueryClient, useInfiniteQuery, InfiniteData } from '@tanstack/react-query'
-import chatService from '@/shared/services/chat.service'
 import {
   BaseListSwaggerResponseChatRoomMessageData,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery, InfiniteData } from '@tanstack/react-query'
+
+import chatService from '@/shared/services/chat.service'
 import historyService from '@/shared/services/history.service'
 
 const CONNECTED_REQUIRED_MESSAGE =

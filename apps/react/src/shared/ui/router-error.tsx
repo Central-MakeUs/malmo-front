@@ -1,4 +1,5 @@
 import React from 'react'
+
 import momoErrorImage from '@/assets/images/momo-error.png'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 

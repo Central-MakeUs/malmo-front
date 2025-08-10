@@ -1,13 +1,13 @@
-import bridge from '@/shared/bridge'
-import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
-import { Button } from '@/shared/ui'
 import { useQueryClient } from '@tanstack/react-query'
 import { useLocation, useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import chatService from '@/shared/services/chat.service'
+
 import { useAuth } from '@/features/auth'
-import { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
+import bridge from '@/shared/bridge'
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
+import chatService from '@/shared/services/chat.service'
+import { Button } from '@/shared/ui'
 
 export interface UseChattingModalReturn {
   testRequiredModal: () => void

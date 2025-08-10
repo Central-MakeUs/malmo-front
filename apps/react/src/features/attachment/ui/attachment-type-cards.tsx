@@ -1,8 +1,10 @@
 import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
+
 import MyMysteryMomo from '@/assets/icons/my-mystery.svg'
 import PartnerMysteryMomo from '@/assets/icons/partner-mystery.svg'
 import { Badge } from '@/shared/ui'
+
 import type { AttachmentTypeData } from '../models/types'
 
 interface AttachmentTypeCardsProps {

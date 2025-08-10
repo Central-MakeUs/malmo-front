@@ -1,10 +1,11 @@
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
-import { Button } from '@/shared/ui'
-import { useAuth } from '@/features/auth'
-import { AttachmentTestIntro, AttachmentTestInfoSection, AttachmentTypesSection } from '@/features/attachment'
 import { useEffect } from 'react'
-import bridge from '@/shared/bridge'
 import z from 'zod'
+
+import { AttachmentTestIntro, AttachmentTestInfoSection, AttachmentTypesSection } from '@/features/attachment'
+import { useAuth } from '@/features/auth'
+import bridge from '@/shared/bridge'
+import { Button } from '@/shared/ui'
 
 const searchSchema = z.object({
   from: z.string().optional(),

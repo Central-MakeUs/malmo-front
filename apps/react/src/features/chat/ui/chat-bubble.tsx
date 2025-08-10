@@ -1,7 +1,9 @@
-import momoChat from '@/assets/images/momo-chat.png'
 import { useMemo } from 'react'
-import { groupSentences } from '../util/chat-format'
+
+import momoChat from '@/assets/images/momo-chat.png'
 import { cn } from '@/shared/lib/cn'
+
+import { groupSentences } from '../util/chat-format'
 
 interface AiChatBubbleProps {
   message?: string

@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
-import MomoConnectedImage from '@/assets/images/momo-connected.png'
-
-import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
-import { useAuth } from '@/features/auth'
 import { useNavigate } from '@tanstack/react-router'
-import memberService from '@/shared/services/member.service'
+
+import MomoConnectedImage from '@/assets/images/momo-connected.png'
+import { useAuth } from '@/features/auth'
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import coupleService from '@/shared/services/couple.service'
+import memberService from '@/shared/services/member.service'
 
 export interface UseProfileModalReturn {
   logoutModal: () => void
@@ -32,7 +32,7 @@ export function useProfileModal(): UseProfileModalReturn {
         throw new Error(result?.message || '회원 탈퇴에 실패했습니다.')
       }
     },
-    onError: (error: any) => {
+    onError: () => {
       // 서비스단 에러
       deleteMemberServiceOptions.onError?.()
       // 다이얼로그 닫기
@@ -67,7 +67,7 @@ export function useProfileModal(): UseProfileModalReturn {
           if (result.success) {
             navigate({ to: '/login' })
           }
-        } catch (error: any) {
+        } catch {
           alertDialog.close()
           // TODO: 에러 처리
         }

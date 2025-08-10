@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react'
 import { Toaster, toast as sonnerToast } from 'sonner'
+
 import ErrorIcon from '@/assets/icons/toast/error.svg'
 import SuccessIcon from '@/assets/icons/toast/success.svg'
 

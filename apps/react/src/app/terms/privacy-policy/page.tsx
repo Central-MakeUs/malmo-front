@@ -1,7 +1,8 @@
-import termsService from '@/shared/services/terms.service'
 import { TermsResponseDataTermsTypeEnum } from '@data/user-api-axios/api'
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, useLoaderData } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+
+import termsService from '@/shared/services/terms.service'
 
 export const Route = createFileRoute('/terms/privacy-policy/')({
   component: RouteComponent,

@@ -1,11 +1,13 @@
-import { ArrowUp } from 'lucide-react'
-import React, { useState, useRef, useEffect } from 'react'
-import { cn } from '@/shared/lib/cn'
-import { useChatting } from '../context/chatting-context'
-import { useSendMessageMutation } from '../hooks/use-chat-queries'
 import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useQueryClient } from '@tanstack/react-query'
+import { ArrowUp } from 'lucide-react'
+import React, { useState, useRef, useEffect } from 'react'
+
+import { cn } from '@/shared/lib/cn'
 import chatService from '@/shared/services/chat.service'
+
+import { useChatting } from '../context/chatting-context'
+import { useSendMessageMutation } from '../hooks/use-chat-queries'
 
 function ChatInput(props: { disabled?: boolean }) {
   const queryClient = useQueryClient()

@@ -1,6 +1,8 @@
+import { ChevronRight } from 'lucide-react'
+
 import CheckedCircle from '@/assets/icons/checked-circle.svg'
 import UncheckedCircle from '@/assets/icons/unchecked-circle.svg'
-import { ChevronRight } from 'lucide-react'
+
 import { Term, TermAgreements } from '../models/types'
 
 interface TermsAgreementListProps {

@@ -1,11 +1,12 @@
+import { useMutation } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import { Button, Input } from '@/shared/ui'
-import { TitleSection } from '@/features/onboarding/ui/title-section'
-import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
+
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
+import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
+import { TitleSection } from '@/features/onboarding/ui/title-section'
 import coupleService from '@/shared/services/couple.service'
+import { Button, Input } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/onboarding/partner-code/')({

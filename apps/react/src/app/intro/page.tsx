@@ -1,12 +1,12 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import React, { useState } from 'react'
-import { Button } from '@/shared/ui/button'
-import bridge from '@/shared/bridge'
 
-import momoIntroImage from '@/assets/images/introduce/momo-intro.png'
 import attachmentTypeImage from '@/assets/images/introduce/attachment-type.png'
 import coupleConsultationImage from '@/assets/images/introduce/couple-consultation.png'
 import dailyQuestionImage from '@/assets/images/introduce/daily-question.png'
+import momoIntroImage from '@/assets/images/introduce/momo-intro.png'
+import bridge from '@/shared/bridge'
+import { Button } from '@/shared/ui/button'
 
 // 데이터 타입 정의
 interface IntroPageData {
@@ -77,7 +77,7 @@ function IntroPage() {
       await bridge.setIntroSeen()
       // 로그인 페이지로 이동
       navigate({ to: '/login' })
-    } catch (error) {
+    } catch {
       // Todo: 오류 처리
       navigate({ to: '/login' })
     }

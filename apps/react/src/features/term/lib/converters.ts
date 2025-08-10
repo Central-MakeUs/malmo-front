@@ -1,4 +1,5 @@
 import { TermsResponseData, TermsResponseDataTermsTypeEnum } from '@data/user-api-axios/api'
+
 import { Term } from '../models/types'
 
 // API 응답 데이터를 내부 Term 모델로 변환

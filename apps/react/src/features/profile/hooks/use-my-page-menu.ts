@@ -1,8 +1,10 @@
 import { useNavigate } from '@tanstack/react-router'
-import { bridge } from '@/shared/bridge'
-import { MenuGroup, MenuItem } from '../models/types'
-import { MY_PAGE_TERMS_TYPES, CONTACT_FORM_URL } from '../lib/constants'
+
 import { Term } from '@/features/term/models/types'
+import { bridge } from '@/shared/bridge'
+
+import { MY_PAGE_TERMS_TYPES, CONTACT_FORM_URL } from '../lib/constants'
+import { MenuGroup, MenuItem } from '../models/types'
 
 export function useMyPageMenu(terms: Term[], handleShowTerms: (termsId: number) => void) {
   const navigate = useNavigate()

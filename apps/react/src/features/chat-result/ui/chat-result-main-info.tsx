@@ -1,5 +1,6 @@
-import { formatDate } from '@/shared/utils'
 import { ChevronRight } from 'lucide-react'
+
+import { formatDate } from '@/shared/utils'
 
 interface ChatResultMainInfoProps {
   date?: string

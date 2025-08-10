@@ -1,14 +1,15 @@
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
-import { Button } from '@/shared/ui'
-import { X } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
-import RelationshipIcon from '@/assets/icons/relationship.svg'
+import { X } from 'lucide-react'
+
 import ConflictIcon from '@/assets/icons/conflict.svg'
 import EmotionIcon from '@/assets/icons/emotion.svg'
-import { ResultScoreBox } from '@/features/attachment/ui/result/result-score-box'
-import { ResultDetailBox } from '@/features/attachment/ui/result/result-detail-box'
-import { ResultAttitudeSection } from '@/features/attachment/ui/result/result-attitude-section'
+import RelationshipIcon from '@/assets/icons/relationship.svg'
 import { ATTACHMENT_TYPE_DATA } from '@/features/attachment/models/attachment-data'
+import { ResultAttitudeSection } from '@/features/attachment/ui/result/result-attitude-section'
+import { ResultDetailBox } from '@/features/attachment/ui/result/result-detail-box'
+import { ResultScoreBox } from '@/features/attachment/ui/result/result-score-box'
+import { Button } from '@/shared/ui'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 interface UserInfo {
   nickname?: string

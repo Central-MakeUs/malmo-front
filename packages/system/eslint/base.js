@@ -6,8 +6,10 @@ import unicornPlugin from 'eslint-plugin-unicorn'
 import securityPlugin from 'eslint-plugin-security'
 import vitestPlugin from '@vitest/eslint-plugin'
 import queryPlugin from '@tanstack/eslint-plugin-query'
+import importPlugin from 'eslint-plugin-import'
 
 export const config = [
+  { ignores: ['**/dist/**', '**/build/**', '**/node_modules/**'] },
   js.configs.recommended,
   eslintConfigPrettier,
   ...tsEslint.configs.recommended,
@@ -18,6 +20,7 @@ export const config = [
       unicorn: unicornPlugin,
       vitest: vitestPlugin,
       '@tanstack/query': queryPlugin,
+      import: importPlugin,
     },
     rules: {
       'turbo/no-undeclared-env-vars': 'warn',
@@ -98,7 +101,7 @@ export const config = [
       'no-unused-expressions': 0,
       'no-unused-disable-directive': 0,
 
-      // 미사용 변수에 대해 경고하지 않습니다.
+      // 미사용 변수에 대해 경고하지 않습니다. (TS 규칙으로 대체)
       'no-unused-vars': 0,
 
       // 동일한 스코프 내에서 변수명을 덮어쓰는 것을 허용합니다.
@@ -179,12 +182,31 @@ export const config = [
 
       'turbo/no-undeclared-env-vars': 0,
 
-      // TypeScript의 any 사용과 미사용 변수 경고를 비활성화합니다.
-      '@typescript-eslint/no-explicit-any': 0,
-      '@typescript-eslint/no-unused-vars': 0,
+      // TypeScript의 any 사용 경고 활성화, 미사용 변수는 에러로 통일합니다.
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
       '@typescript-eslint/ban-types': 0,
       '@typescript-eslint/no-empty-object-type': 0,
       '@typescript-eslint/no-unsafe-function-type': 0,
+
+      // 임포트 순서를 통일합니다.
+      'import/order': [
+        'error',
+        {
+          groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index'], 'object', 'type'],
+          'newlines-between': 'always',
+          alphabetize: { order: 'asc', caseInsensitive: true },
+          pathGroups: [{ pattern: '@/**', group: 'internal', position: 'after' }],
+          pathGroupsExcludedImportTypes: ['builtin'],
+        },
+      ],
 
       // 파일명을 케밥 케이스(kebab-case)로 강제합니다.
       'unicorn/filename-case': [

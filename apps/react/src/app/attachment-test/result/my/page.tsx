@@ -1,6 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { useAuth } from '@/features/auth'
+
 import { AttachmentResultContent } from '@/features/attachment/ui/result/attachment-result-content'
+import { useAuth } from '@/features/auth'
 
 export const Route = createFileRoute('/attachment-test/result/my/')({
   beforeLoad: async ({ context }) => {
