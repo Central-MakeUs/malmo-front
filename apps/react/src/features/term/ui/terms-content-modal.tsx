@@ -1,7 +1,7 @@
 import { ChevronLeft } from 'lucide-react'
 import { TermDetail } from '../models/types'
 import { TermsDetailsResponseDataTypeEnum } from '@data/user-api-axios/api'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 interface TermsContentModalProps {
   title: string

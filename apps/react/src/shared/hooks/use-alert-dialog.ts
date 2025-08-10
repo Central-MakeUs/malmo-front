@@ -1,5 +1,5 @@
 import { use } from 'react'
-import { AlertDialogContext } from '../libs/global-alert-dialog'
+import { AlertDialogContext } from '../lib/global-alert-dialog'
 
 export const useAlertDialog = () => {
   const context = use(AlertDialogContext)

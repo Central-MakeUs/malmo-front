@@ -6,7 +6,7 @@ import { useAuth } from '@/features/auth'
 import { calculateDDay } from '@/shared/utils/date'
 import { useTerms, TermsContentModal } from '@/features/term'
 import { useMyPageMenu, ProfileSection, StatsSection, MenuList } from '@/features/profile'
-import { HomeHeaderBar } from '@/shared/components/header-bar'
+import { HomeHeaderBar } from '@/shared/ui/header-bar'
 import termsService from '@/shared/services/terms.service'
 
 export const Route = createFileRoute('/my-page/')({

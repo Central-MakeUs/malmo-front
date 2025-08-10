@@ -1,6 +1,6 @@
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import TestStartImage from '@/assets/images/test-start.png'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 interface AttachmentTestIntroProps {
   nickname: string

@@ -10,8 +10,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '../components/alert-dialog'
-import { useAlertDialog } from '../hook/alert-dialog.hook'
+} from '../ui/alert-dialog'
+import { useAlertDialog } from '../hooks/use-alert-dialog'
 import bridge from '../bridge'
 
 type AlertDialogOpenOptions = {

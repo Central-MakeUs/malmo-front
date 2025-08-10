@@ -1,4 +1,4 @@
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { Button } from '@/shared/ui'
 import { X } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'

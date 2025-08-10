@@ -1,8 +1,8 @@
-import apiInstance from '../libs/api'
+import apiInstance from '../lib/api'
 import { ChatroomApi } from '@data/user-api-axios/api'
-import { queryKeys } from '../query-keys'
+import { queryKeys } from './query-keys'
 import { keepPreviousData } from '@tanstack/react-query'
-import { toast } from '../components/toast'
+import { toast } from '../ui/toast'
 
 class HistoryService extends ChatroomApi {
   constructor() {

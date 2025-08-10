@@ -1,5 +1,5 @@
 import bridge from '@/shared/bridge'
-import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import { Button } from '@/shared/ui'
 import { useQueryClient } from '@tanstack/react-query'
 import { useLocation, useRouter } from '@tanstack/react-router'

@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Badge } from '@/shared/ui/badge'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { usePartnerInfo } from '@/features/member'
 import { NicknameEditSheet, useProfileEdit } from '@/features/profile'
 import { AnniversaryEditSheet } from '@/features/anniversary'

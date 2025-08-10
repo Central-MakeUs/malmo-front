@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -7,9 +7,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import memberService from '@/shared/services/member.service'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
-import { queryKeys } from '@/shared/query-keys'
+import { queryKeys } from '@/shared/services/query-keys'
 import bridge from '@/shared/bridge'
-import { toast } from '@/shared/components/toast'
+import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementPage,

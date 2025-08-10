@@ -1,14 +1,14 @@
 import { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react'
-import { useChattingModal, UseChattingModalReturn } from '../hook/use-chatting-modal'
+import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
 import {
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
   BaseListSwaggerResponseChatRoomMessageData,
 } from '@data/user-api-axios/api'
-import { useChatSSE } from '@/features/chat/hook/use-chat-sse'
+import { useChatSSE } from '@/features/chat/hooks/use-chat-sse'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
-import { useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hook/use-chat-queries'
+import { useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
 import chatService from '@/shared/services/chat.service'
 
 interface ChattingContextType {

@@ -2,8 +2,8 @@ import { RouterProvider } from '@tanstack/react-router'
 import { createRouter } from './router'
 import { AuthProvider, useAuth } from '@/features/auth'
 import { ThemeProvider } from '@/shared/contexts/theme.context'
-import { AlertDialogProvider } from './shared/libs/global-alert-dialog'
-import { ToastProvider } from '@/shared/components/toast'
+import { AlertDialogProvider } from './shared/lib/global-alert-dialog'
+import { ToastProvider } from '@/shared/ui/toast'
 
 declare module '@tanstack/react-router' {
   interface Register {

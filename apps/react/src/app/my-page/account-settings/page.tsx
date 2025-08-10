@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { useAuth } from '@/features/auth'
 import { MemberDataProviderEnum } from '@data/user-api-axios/api'
 import { useProfileModal } from '@/features/profile'

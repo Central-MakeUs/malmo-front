@@ -6,7 +6,7 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import coupleService from '@/shared/services/couple.service'
 import { useAuth } from '@/features/auth'
-import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import bridge from '@/shared/bridge'
 import { useBridge } from '@webview-bridge/react'
 

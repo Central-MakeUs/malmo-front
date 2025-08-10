@@ -1,8 +1,8 @@
-import { useAlertDialog } from '@/shared/hook/alert-dialog.hook'
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import historyService from '@/shared/services/history.service'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
-import { queryKeys } from '@/shared/query-keys'
+import { queryKeys } from '@/shared/services/query-keys'
 
 export interface UseHistoryModalReturn {
   deleteChatHistoryModal: (id: number) => void

@@ -1,4 +1,4 @@
-import apiInstance from '../libs/api'
+import apiInstance from '../lib/api'
 import {
   MemberData,
   MembersApi,
@@ -7,8 +7,8 @@ import {
   UpdateStartLoveDateRequestDto,
   LoveTypeTestResult,
 } from '@data/user-api-axios/api'
-import { queryKeys } from '../query-keys'
-import { toast } from '../components/toast'
+import { queryKeys } from './query-keys'
+import { toast } from '../ui/toast'
 
 export const QUERY_KEY = 'members'
 

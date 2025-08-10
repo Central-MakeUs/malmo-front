@@ -4,7 +4,7 @@ import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useAnniversary, DatePicker } from '@/features/anniversary'
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/onboarding/anniversary/')({
   component: AnniversaryPage,

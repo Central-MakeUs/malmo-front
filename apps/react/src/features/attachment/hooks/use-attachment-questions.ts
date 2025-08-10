@@ -6,8 +6,8 @@ import memberService from '@/shared/services/member.service'
 import { QUESTION_CONFIG } from '../models/constants'
 import type { LoveTypeQuestionData, LoveTypeTestResult } from '@data/user-api-axios/api'
 import { useAuth } from '@/features/auth'
-import { toast } from '@/shared/components/toast'
-import { queryKeys } from '@/shared/query-keys'
+import { toast } from '@/shared/ui/toast'
+import { queryKeys } from '@/shared/services/query-keys'
 
 // 질문 타입 정의
 interface Question {

@@ -1,4 +1,4 @@
-import { cn } from '@/shared/libs/cn'
+import { cn } from '@/shared/lib/cn'
 
 interface CalendarItemProps {
   props: React.SVGProps<SVGSVGElement>

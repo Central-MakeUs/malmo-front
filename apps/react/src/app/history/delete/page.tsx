@@ -1,12 +1,12 @@
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { createFileRoute } from '@tanstack/react-router'
 import { Button } from '@/shared/ui'
-import { cn } from '@/shared/libs/cn'
-import { useChatHistoryQuery } from '@/features/history/hook/use-chat-history-query'
-import { useChatSelect } from '@/features/history/hook/use-chat-select'
+import { cn } from '@/shared/lib/cn'
+import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
+import { useChatSelect } from '@/features/history/hooks/use-chat-select'
 import noResultImage from '@/assets/images/characters/empty.png'
 import { EmptyState, SelectableChatHistoryItem } from '@/features/history/ui/chat-history-item'
-import { useInfiniteScroll } from '@/shared/hook/use-infinite-scroll'
+import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 
 export const Route = createFileRoute('/history/delete/')({
   component: RouteComponent,

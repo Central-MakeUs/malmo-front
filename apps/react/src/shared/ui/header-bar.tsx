@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { LucideChevronLeft } from 'lucide-react'
 import { useRouter } from '@tanstack/react-router'
-import { cn } from '@/shared/libs/cn'
+import { cn } from '@/shared/lib/cn'
 
 interface DetailHeaderBarProps {
   title?: string

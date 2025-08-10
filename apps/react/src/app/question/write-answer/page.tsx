@@ -1,4 +1,4 @@
-import { DetailHeaderBar } from '@/shared/components/header-bar'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import CustomTextarea from '@/features/question/ui/text-area'
 import { Button } from '@/shared/ui'
 import { createFileRoute } from '@tanstack/react-router'

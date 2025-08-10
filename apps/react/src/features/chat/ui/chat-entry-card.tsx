@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { cn } from '@/shared/libs/cn'
+import { cn } from '@/shared/lib/cn'
 import momoIdle from '@/assets/images/momo-home-idle.png'
 import momoChatting from '@/assets/images/momo-home-chatting.png'
 
