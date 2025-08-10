@@ -38,6 +38,8 @@ import type { KakaoLoginRequestDto } from '../models'
 // @ts-ignore
 import type { LoginSuccessResponse } from '../models'
 // @ts-ignore
+import type { LogoutSuccessResponse } from '../models'
+// @ts-ignore
 import type { SwaggerErrorResponse } from '../models'
 /**
  * LoginsApi - axios parameter creator
@@ -127,6 +129,38 @@ export const LoginsApiAxiosParamCreator = function (configuration?: Configuratio
         options: localVarRequestOptions,
       }
     },
+    /**
+     * 로그아웃을 진행합니다. 로그아웃에 성공하면 Refresh Token은 만료됩니다.
+     * @summary 로그아웃
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    logout: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+      const localVarPath = `/logout`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
   }
 }
 
@@ -183,6 +217,27 @@ export const LoginsApiFp = function (configuration?: Configuration) {
           configuration
         )(axios, localVarOperationServerBasePath || basePath)
     },
+    /**
+     * 로그아웃을 진행합니다. 로그아웃에 성공하면 Refresh Token은 만료됩니다.
+     * @summary 로그아웃
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async logout(
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LogoutSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.logout(options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['LoginsApi.logout']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
   }
 }
 
@@ -222,6 +277,15 @@ export const LoginsApiFactory = function (configuration?: Configuration, basePat
       return localVarFp
         .loginWithKakao(requestParameters.kakaoLoginRequestDto, options)
         .then((request) => request(axios, basePath))
+    },
+    /**
+     * 로그아웃을 진행합니다. 로그아웃에 성공하면 Refresh Token은 만료됩니다.
+     * @summary 로그아웃
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    logout(options?: RawAxiosRequestConfig): AxiosPromise<LogoutSuccessResponse> {
+      return localVarFp.logout(options).then((request) => request(axios, basePath))
     },
   }
 }
@@ -286,6 +350,19 @@ export class LoginsApi extends BaseAPI {
   public loginWithKakao(requestParameters: LoginsApiLoginWithKakaoRequest, options?: RawAxiosRequestConfig) {
     return LoginsApiFp(this.configuration)
       .loginWithKakao(requestParameters.kakaoLoginRequestDto, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * 로그아웃을 진행합니다. 로그아웃에 성공하면 Refresh Token은 만료됩니다.
+   * @summary 로그아웃
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof LoginsApi
+   */
+  public logout(options?: RawAxiosRequestConfig) {
+    return LoginsApiFp(this.configuration)
+      .logout(options)
       .then((request) => request(this.axios, this.basePath))
   }
 }
