@@ -75,7 +75,11 @@ function RouteComponent() {
       </div>
 
       <section className="flex-1 overflow-y-auto bg-gray-neutral-100 transition-opacity">
-        {histories.length === 0 ? (
+        {isLoading ? (
+          <div className="flex h-full items-center justify-center">
+            <Spinner className="h-5 w-5 text-gray-400" />
+          </div>
+        ) : histories.length === 0 ? (
           <EmptyState
             image={debouncedKeyword ? noResultImage : emptyImage}
             title={debouncedKeyword ? '검색어와 일치하는 대화 기록이 없어요' : '아직 대화 기록이 없어요'}
