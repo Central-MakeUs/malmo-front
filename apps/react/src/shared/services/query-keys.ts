@@ -10,7 +10,6 @@ export const queryKeys = {
   // === Member 관련 ===
   member: {
     all: ['member'] as const,
-    userInfo: () => [...queryKeys.member.all, 'userInfo'] as const,
     inviteCode: () => [...queryKeys.member.all, 'inviteCode'] as const,
     partnerInfo: () => [...queryKeys.member.all, 'partnerInfo'] as const,
   },
