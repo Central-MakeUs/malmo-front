@@ -39,7 +39,7 @@ function RouteComponent() {
     <div className="flex h-screen flex-col bg-gray-neutral-100 pb-[60px]">
       <HomeHeaderBar title="마음도감" />
 
-      <section className="overflow-y-auto bg-white">
+      <section className="overflow-y-auto overscroll-y-none bg-white">
         <div className="bg-white pt-3 pb-7">
           <div className="mb-4 flex items-center justify-between pr-5 pl-[14px]">
             <div className="flex items-center gap-1 py-[2px]">
