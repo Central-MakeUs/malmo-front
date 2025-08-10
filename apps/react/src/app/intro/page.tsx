@@ -5,7 +5,6 @@ import attachmentTypeImage from '@/assets/images/introduce/attachment-type.png'
 import coupleConsultationImage from '@/assets/images/introduce/couple-consultation.png'
 import dailyQuestionImage from '@/assets/images/introduce/daily-question.png'
 import momoIntroImage from '@/assets/images/introduce/momo-intro.png'
-import bridge from '@/shared/bridge'
 import { Button } from '@/shared/ui/button'
 
 // 데이터 타입 정의
@@ -72,15 +71,8 @@ function IntroPage() {
 
   // 완료 처리
   const handleComplete = async () => {
-    try {
-      // bridge를 통해 소개 페이지 완료 상태 저장
-      await bridge.setIntroSeen()
-      // 로그인 페이지로 이동
-      navigate({ to: '/login' })
-    } catch {
-      // Todo: 오류 처리
-      navigate({ to: '/login' })
-    }
+    // 소개 후 자연스럽게 로그인으로 이동
+    navigate({ to: '/login' })
   }
 
   // 건너뛰기
