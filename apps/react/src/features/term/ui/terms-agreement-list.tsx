@@ -25,11 +25,16 @@ export function TermsAgreementList({
 
   return (
     <div className="mt-[76px] px-5">
-      <div className="mb-4 flex h-[50px] w-full items-center py-3 pr-6">
+      <div
+        className="mb-4 flex h-[50px] w-full cursor-pointer items-center py-3 pr-6"
+        onClick={onAllAgreementChange}
+        role="button"
+        aria-label="약관 전체 동의"
+      >
         {isAllChecked ? (
-          <CheckedCircle className="h-[22px] w-[22px] cursor-pointer" onClick={onAllAgreementChange} />
+          <CheckedCircle className="pointer-events-none h-[22px] w-[22px]" />
         ) : (
-          <UncheckedCircle className="h-[22px] w-[22px] cursor-pointer" onClick={onAllAgreementChange} />
+          <UncheckedCircle className="pointer-events-none h-[22px] w-[22px]" />
         )}
         <span className="body1-semibold ml-3 text-gray-iron-950">약관 전체 동의</span>
       </div>
@@ -38,17 +43,31 @@ export function TermsAgreementList({
 
       <div className="mt-3 flex flex-col gap-3">
         {sortedTerms.map((term) => (
-          <div key={term.termsId} className="flex h-[50px] w-full items-center justify-between py-3 pr-1">
+          <div
+            key={term.termsId}
+            className="flex h-[50px] w-full items-center justify-between py-3 pr-1"
+            onClick={() => {
+              if (term.details && term.details.length > 0) onShowTerms(term.termsId)
+            }}
+            role={term.details && term.details.length > 0 ? 'button' : undefined}
+            aria-label={term.details && term.details.length > 0 ? `${term.title} 상세 보기` : undefined}
+          >
             <div className="flex items-center">
               {agreements[term.termsId] ? (
                 <CheckedCircle
                   className="h-[22px] w-[22px] cursor-pointer"
-                  onClick={() => onAgreementChange(term.termsId)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onAgreementChange(term.termsId)
+                  }}
                 />
               ) : (
                 <UncheckedCircle
                   className="h-[22px] w-[22px] cursor-pointer"
-                  onClick={() => onAgreementChange(term.termsId)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onAgreementChange(term.termsId)
+                  }}
                 />
               )}
               <span className="body2-regular ml-3 text-gray-iron-950">
@@ -56,11 +75,7 @@ export function TermsAgreementList({
               </span>
             </div>
 
-            {term.details && term.details.length > 0 && (
-              <button onClick={() => onShowTerms(term.termsId)} className="flex items-center justify-center">
-                <ChevronRight className="h-5 w-5 text-gray-iron-500" />
-              </button>
-            )}
+            {term.details && term.details.length > 0 && <ChevronRight className="h-5 w-5 text-gray-iron-500" />}
           </div>
         ))}
       </div>
