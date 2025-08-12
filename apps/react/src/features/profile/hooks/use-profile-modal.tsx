@@ -59,6 +59,7 @@ export function useProfileModal(): UseProfileModalReturn {
   const logoutModal = () => {
     alertDialog.open({
       title: '로그아웃 하시겠어요?',
+      description: <>고민이 있을 때, 언제든 찾아와 주세요!</>,
       cancelText: '로그아웃',
       confirmText: '취소',
       onCancel: async () => {
@@ -78,7 +79,12 @@ export function useProfileModal(): UseProfileModalReturn {
   const withdrawModal = () => {
     alertDialog.open({
       title: '정말 계정을 탈퇴하시겠어요?',
-      description: '탈퇴 시 커플 연동이 자동으로 끊기며 모든 기록은 복구할 수 없어요.',
+      description: (
+        <>
+          탈퇴 시 커플 연동이 자동으로 끊기며
+          <br /> 모든 기록은 복구할 수 없어요.
+        </>
+      ),
       cancelText: '탈퇴하기',
       confirmText: '취소',
       onCancel: () => {
