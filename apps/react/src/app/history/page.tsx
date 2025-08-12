@@ -27,7 +27,7 @@ export const Route = createFileRoute('/history/')({
 function RouteComponent() {
   const { data: chatStatus, isSuccess } = useChatRoomStatusQuery()
   const [keyword, setKeyword] = useState('')
-  const debouncedKeyword = useDebounce(keyword, 500)
+  const debouncedKeyword = useDebounce(keyword, 750)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useChatHistoryQuery({
     keyword: debouncedKeyword,
@@ -63,7 +63,6 @@ function RouteComponent() {
             className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            disabled={isLoading}
           />
           {/* isFetching 시 스피너 표시 */}
           {isLoading && (
