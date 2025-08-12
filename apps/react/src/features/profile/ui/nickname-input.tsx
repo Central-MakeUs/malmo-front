@@ -26,7 +26,7 @@ export function NicknameInput({
           maxLength={maxLength}
           className={className}
         />
-        <div className="absolute top-1/2 right-4 -translate-y-1/2 text-sm text-gray-iron-500">
+        <div className="body2-medium absolute top-1/2 right-4 -translate-y-1/2 text-gray-iron-500">
           {value.length} / {maxLength}
         </div>
       </div>
