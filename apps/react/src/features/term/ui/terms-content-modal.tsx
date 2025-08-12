@@ -18,7 +18,7 @@ export function TermsContentModal({ title, details, onClose }: TermsContentModal
       case TermsDetailsResponseDataTypeEnum.Subtitle:
         return <p className="heading1-bold mb-[5px]">{detail.content}</p>
       case TermsDetailsResponseDataTypeEnum.Content:
-        return <p className="body2-regular mb-4">{detail.content}</p>
+        return <p className="body2-regular mb-4 whitespace-pre-line">{detail.content}</p>
       default:
         return (
           <div
