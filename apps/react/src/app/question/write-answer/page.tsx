@@ -49,13 +49,9 @@ function RouteComponent() {
         onBackClick={() => historyModal.exitQuestionModal()}
       />
 
-      <div className="flex-1">
-        <QuestionHeader data={data} />
+      <QuestionHeader data={data} />
 
-        <div className="w-full px-6">
-          <CustomTextarea value={answer} onChange={(e) => setAnswer(e.target.value)} maxLength={MAX_LENGTH} />
-        </div>
-      </div>
+      <CustomTextarea value={answer} onChange={(e) => setAnswer(e.target.value)} maxLength={MAX_LENGTH} />
 
       <div className="p-5">
         <Button text="저장하기" onClick={handleSave} disabled={!answer.trim()} />
