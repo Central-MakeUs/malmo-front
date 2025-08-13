@@ -52,7 +52,7 @@ function PartnerStatusPage() {
         {/* 설명 */}
         {type === 'not-connected' ? (
           <p className="body2-medium mt-1 text-center">
-            <span className="text-malmo-rasberry-500">마이페이지 &gt; 커플 연동 관리</span>
+            <span className="text-malmo-rasberry-500">마이페이지 &gt; 프로필 &gt; 커플 연동 관리</span>
             <span className="text-gray-iron-950">에서 초대가 가능해요</span>
           </p>
         ) : (

@@ -39,6 +39,8 @@ function SheetContent({
   className,
   children,
   side = 'right',
+  onOpenAutoFocus,
+  onCloseAutoFocus,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: 'top' | 'right' | 'bottom' | 'left'
@@ -60,6 +62,14 @@ function SheetContent({
             'data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t',
           className
         )}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
+          onOpenAutoFocus?.(event)
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault()
+          onCloseAutoFocus?.(event)
+        }}
         {...props}
       >
         {children}

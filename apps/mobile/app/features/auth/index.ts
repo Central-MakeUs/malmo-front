@@ -3,3 +3,6 @@ export { kakaoLogin } from './social/kakao-login'
 
 // 애플 로그인
 export { appleLogin } from './social/apple-login'
+
+// 로그아웃
+export { logout } from './token/logout'

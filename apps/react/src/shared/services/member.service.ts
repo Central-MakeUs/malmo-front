@@ -21,16 +21,6 @@ class MemberService extends MembersApi {
   }
 
   // === Query Options ===
-  userInfoQuery() {
-    return {
-      queryKey: queryKeys.member.userInfo(),
-      queryFn: async () => {
-        const { data } = await this.getMemberInfo()
-        return data
-      },
-    }
-  }
-
   inviteCodeQuery() {
     return {
       queryKey: queryKeys.member.inviteCode(),

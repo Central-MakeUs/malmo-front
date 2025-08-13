@@ -27,7 +27,7 @@ export const Route = createFileRoute('/history/')({
 function RouteComponent() {
   const { data: chatStatus, isSuccess } = useChatRoomStatusQuery()
   const [keyword, setKeyword] = useState('')
-  const debouncedKeyword = useDebounce(keyword, 500)
+  const debouncedKeyword = useDebounce(keyword, 750)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useChatHistoryQuery({
     keyword: debouncedKeyword,
@@ -63,7 +63,6 @@ function RouteComponent() {
             className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            disabled={isLoading}
           />
           {/* isFetching 시 스피너 표시 */}
           {isLoading && (
@@ -75,7 +74,11 @@ function RouteComponent() {
       </div>
 
       <section className="flex-1 overflow-y-auto bg-gray-neutral-100 transition-opacity">
-        {histories.length === 0 ? (
+        {isLoading ? (
+          <div className="flex h-full items-center justify-center">
+            <Spinner className="h-5 w-5 text-gray-400" />
+          </div>
+        ) : histories.length === 0 ? (
           <EmptyState
             image={debouncedKeyword ? noResultImage : emptyImage}
             title={debouncedKeyword ? '검색어와 일치하는 대화 기록이 없어요' : '아직 대화 기록이 없어요'}

@@ -26,7 +26,12 @@ function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof
   )
 }
 
-function AlertDialogContent({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
+function AlertDialogContent({
+  className,
+  onOpenAutoFocus,
+  onCloseAutoFocus,
+  ...props
+}: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
@@ -36,6 +41,14 @@ function AlertDialogContent({ className, ...props }: React.ComponentProps<typeof
           'fixed top-[50%] left-[50%] z-50 w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] rounded-[14px] bg-background px-[22px] pt-9 pb-5 shadow-lg',
           className
         )}
+        onOpenAutoFocus={(event) => {
+          event.preventDefault()
+          onOpenAutoFocus?.(event)
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault()
+          onCloseAutoFocus?.(event)
+        }}
         {...props}
       />
     </AlertDialogPortal>

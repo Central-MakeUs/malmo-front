@@ -3,7 +3,6 @@ import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-ro
 import { match } from 'path-to-regexp'
 
 import { AuthContext } from '@/features/auth/hooks/use-auth'
-import bridge from '@/shared/bridge'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -33,15 +32,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     const { authenticated, needsOnboarding } = context.auth
     const pathname = location.pathname
 
-    // 0. 소개 페이지 확인 (intro가 필요한 경우)
-    if (pathname !== '/intro' && !matchRoute(publicRoutes, pathname)) {
-      const introSeen = await bridge.getIntroSeen()
-
-      if (!introSeen) {
-        throw redirect({ to: '/intro' })
-      }
-    }
-
     // --- 인증 기반 라우팅 규칙 ---
     const isOnLoginRoute = pathname === '/login'
     const isOnOnboardingRoute = matchRoute(onboardingRoutes, pathname)
@@ -65,7 +55,11 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
     // 2. 미인증 사용자
     if (!authenticated) {
-      // 공개된 경로가 아니면 로그인 페이지로 리다이렉트
+      // 루트('/') 진입 시에는 인트로로 유도
+      if (pathname === '/') {
+        throw redirect({ to: '/intro' })
+      }
+      // 비공개 경로 접근 시에는 로그인으로 유도
       if (!matchRoute(publicRoutes, pathname)) {
         throw redirect({ to: '/login' })
       }

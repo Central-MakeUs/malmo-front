@@ -1,8 +1,10 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { z } from 'zod'
 
+// internal imports
 import { TodayQuestionSection } from '@/features/question'
 import CalendarItem from '@/features/question/ui/calendar-item'
 import { cn } from '@/shared/lib/cn'
@@ -12,6 +14,10 @@ import { HomeHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/question/')({
   component: RouteComponent,
+  validateSearch: z.object({
+    selectedLevel: z.number().optional(),
+  }),
+  loaderDeps: (search) => search,
   loader: async ({ context }) => {
     await context.queryClient.ensureQueryData(questionService.todayQuestionQuery())
   },
@@ -19,19 +25,36 @@ export const Route = createFileRoute('/question/')({
 
 function RouteComponent() {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
   const { data, isLoading, error } = useQuery(questionService.todayQuestionQuery())
+  const search = Route.useSearch()
 
   if (isLoading) return <div>Loading...</div>
   if (error || !data || data.level === undefined) return null
 
-  const [currentLevel, setCurrentLevel] = useState(Math.floor((data.level - 1) / 30))
+  const initialLevel = search.selectedLevel ?? data.level
+  const [currentLevel, setCurrentLevel] = useState(Math.floor((initialLevel - 1) / 30))
   const [selectedQuestion, setSelectedQuestion] = useState(data)
 
+  // 선택한 질문 포커스
   useEffect(() => {
-    if (data) {
-      setSelectedQuestion(data)
+    const levelFromSearch = search.selectedLevel
+    if (!data || !data.level) return
+
+    const targetLevel = levelFromSearch ?? data.level
+    setCurrentLevel(Math.floor((targetLevel - 1) / 30))
+
+    if (targetLevel < data.level) {
+      // 과거 질문인 경우 API 캐시에서 가져와 선택
+      queryClient
+        .ensureQueryData(questionService.pastQuestionQuery(targetLevel))
+        .then((question) => setSelectedQuestion({ ...question }))
+        .catch(() => setSelectedQuestion({ ...data }))
+    } else {
+      // 오늘 질문 또는 미래인 경우 최신으로 설정
+      setSelectedQuestion({ ...data })
     }
-  }, [data])
+  }, [search.selectedLevel, data, queryClient])
 
   const maxPage = Math.floor((data.level - 1) / 30)
 
@@ -39,7 +62,7 @@ function RouteComponent() {
     <div className="flex h-screen flex-col bg-gray-neutral-100 pb-[60px]">
       <HomeHeaderBar title="마음도감" />
 
-      <section className="overflow-y-auto bg-white">
+      <section className="overflow-y-auto overscroll-y-none bg-white">
         <div className="bg-white pt-3 pb-7">
           <div className="mb-4 flex items-center justify-between pr-5 pl-[14px]">
             <div className="flex items-center gap-1 py-[2px]">
@@ -73,8 +96,19 @@ function RouteComponent() {
                     if (data.level! > itemLevel) {
                       const question = await queryClient.ensureQueryData(questionService.pastQuestionQuery(itemLevel))
                       setSelectedQuestion({ ...question })
+                      // 포커스 유지
+                      navigate({
+                        to: '/question',
+                        replace: true,
+                        search: (prev) => ({ ...prev, selectedLevel: itemLevel }),
+                      })
                     } else if (data.level! === itemLevel) {
                       setSelectedQuestion({ ...data })
+                      navigate({
+                        to: '/question',
+                        replace: true,
+                        search: (prev) => ({ ...prev, selectedLevel: itemLevel }),
+                      })
                     }
                   }}
                 >

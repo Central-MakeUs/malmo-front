@@ -8,12 +8,6 @@ module.exports = () => {
     icon: './assets/images/icon.png',
     scheme: 'malmo',
     userInterfaceStyle: 'automatic',
-    splash: {
-      image: './assets/images/splash-icon.png',
-      resizeMode: 'contain',
-      backgroundColor: '#FFFFFF',
-      imageWidth: 200,
-    },
     assetBundlePatterns: ['**/*'],
     ios: {
       supportsTablet: false,
@@ -91,6 +85,7 @@ module.exports = () => {
       'expo-apple-authentication',
       'expo-font',
       'expo-router',
+      'expo-splash-screen',
     ],
     experiments: {
       typedRoutes: true,

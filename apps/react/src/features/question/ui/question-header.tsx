@@ -4,7 +4,7 @@ import { Badge } from '@/shared/ui'
 import { formatDate } from '@/shared/utils'
 
 export const QuestionHeader = ({ data }: { data?: PastAnswerData }) => (
-  <>
+  <div>
     <Badge variant="rasberry" className="mx-5 mt-6 mb-2">
       {data?.level}번째 마음 질문
     </Badge>
@@ -12,5 +12,5 @@ export const QuestionHeader = ({ data }: { data?: PastAnswerData }) => (
     <p className="body4-medium mb-8 pl-6 text-gray-iron-500">{formatDate(data?.createdAt, 'YYYY년 MM월 DD일')}</p>
 
     <hr className="mx-5 mb-5 h-1 rounded-[1px] border-gray-iron-200" />
-  </>
+  </div>
 )

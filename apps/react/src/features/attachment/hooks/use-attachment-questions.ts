@@ -1,11 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { useNavigate, useRouter } from '@tanstack/react-router'
 import { useState, useEffect, useRef } from 'react'
 
 import { useAuth } from '@/features/auth'
 import loveTypeService from '@/shared/services/love-type.service'
 import memberService from '@/shared/services/member.service'
-import { queryKeys } from '@/shared/services/query-keys'
 import { toast } from '@/shared/ui/toast'
 
 import { QUESTION_CONFIG } from '../models/constants'
@@ -63,7 +62,6 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const navigate = useNavigate()
   const router = useRouter()
   const auth = useAuth()
-  const queryClient = useQueryClient()
 
   // 질문 목록 상태
   const [questions, setQuestions] = useState<Question[]>([])
@@ -75,7 +73,6 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const submitLoveTypeTestMutation = useMutation({
     ...serviceOptions,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.member.userInfo() })
       await auth.refreshUserInfo()
 
       // 2초 후 결과 페이지로 이동

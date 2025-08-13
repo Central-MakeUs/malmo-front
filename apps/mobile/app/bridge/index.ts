@@ -5,6 +5,7 @@ import { kakaoLogin } from '../features/auth/social/kakao-login'
 import { appleLogin } from '../features/auth/social/apple-login'
 import { AuthStorage } from '../features/auth/lib/auth-storage'
 import { refreshToken } from '../features/auth/token/refresh-token'
+import { logout } from '../features/auth/token/logout'
 
 export type AppBridgeState = Bridge & BridgeStore & BridgeActions
 
@@ -44,17 +45,11 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
       }
     },
     async logout(): Promise<{ success: boolean; message?: string }> {
-      try {
-        await AuthStorage.clearAuth()
+      const result = await logout()
+      if (result.success) {
         set({ isLoggedIn: false })
-        return { success: true, message: '로그아웃 성공' }
-      } catch (error) {
-        console.error('로그아웃 오류:', error)
-        return {
-          success: false,
-          message: `로그아웃 중 오류가 발생했습니다: ${error instanceof Error ? error.message : String(error)}`,
-        }
       }
+      return result
     },
 
     async getAuthStatus(): Promise<{ isLoggedIn: boolean }> {
@@ -92,7 +87,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
     async setKeyboardHeight(height: number): Promise<void> {
       set({ keyboardHeight: height })
     },
-    
+
     async openWebView(url: string): Promise<void> {
       try {
         const { Linking } = require('react-native')
