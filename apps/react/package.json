@@ -17,6 +17,7 @@
     "@data/user-api-axios": "workspace:*",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-dialog": "^1.1.14",
+    "@tailwindcss/postcss": "^4.1.11",
     "@tanstack/react-query": "catalog:react",
     "@tanstack/react-router": "catalog:react",
     "@types/event-source-polyfill": "^1.0.5",
@@ -47,6 +48,7 @@
     "prettier-plugin-tailwindcss": "catalog:",
     "tailwindcss": "catalog:react",
     "tw-animate-css": "catalog:react",
+    "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plugin-svgr": "catalog:"
   }

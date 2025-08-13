@@ -23,5 +23,8 @@
     "eslint-plugin-unicorn": "^58",
     "globals": "^16.0.0",
     "typescript-eslint": "^8"
+  },
+  "dependencies": {
+    "eslint-plugin-import": "^2.32.0"
   }
 }
