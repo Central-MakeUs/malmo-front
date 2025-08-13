@@ -4,6 +4,7 @@ import {
   MemberDataLoveTypeCategoryEnum,
   MemberDataProviderEnum,
 } from '@data/user-api-axios/api'
+import { useQueryClient } from '@tanstack/react-query'
 import { createContext, ReactNode, useCallback, useEffect, useState, use } from 'react'
 
 import memberService from '@/shared/services/member.service'
@@ -59,6 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
   const [authenticated, setAuthenticated] = useState(false)
   const [userInfo, setUserInfo] = useState<UserInfo>(initialUserInfo)
+  const queryClient = useQueryClient()
 
   // 멤버 상태가 온보딩이 필요한지 여부
   const needsOnboarding = userInfo.memberState === MemberDataMemberStateEnum.BeforeOnboarding
@@ -122,6 +124,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     try {
       await authClient.logout()
+
+      await queryClient.cancelQueries({ predicate: () => true })
+      queryClient.clear()
+
       setAuthenticated(false)
       setUserInfo(initialUserInfo)
       return { success: true }
