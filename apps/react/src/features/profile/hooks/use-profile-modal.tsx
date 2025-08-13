@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 
 import MomoConnectedImage from '@/assets/images/momo-connected.png'
@@ -18,6 +18,7 @@ export function useProfileModal(): UseProfileModalReturn {
   const alertDialog = useAlertDialog()
   const { logout, refreshUserInfo } = useAuth()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   // 회원 탈퇴 뮤테이션
   const deleteMemberServiceOptions = memberService.deleteMemberMutation()
@@ -27,6 +28,10 @@ export function useProfileModal(): UseProfileModalReturn {
       if (result?.success) {
         // 로그아웃 처리
         await logout()
+
+        await queryClient.cancelQueries({ predicate: () => true })
+        queryClient.clear()
+
         navigate({ to: '/login' })
       } else {
         throw new Error(result?.message || '회원 탈퇴에 실패했습니다.')
