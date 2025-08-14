@@ -78,7 +78,7 @@ function HomePage() {
   return (
     <div className="has-bottom-nav flex h-full flex-col bg-white pt-[60px]">
       {/* 헤더 */}
-      <header className="fixed top-0 flex h-[60px] w-full items-center justify-between bg-white px-5">
+      <header className="fixed top-[var(--safe-top)] flex h-[60px] w-full items-center justify-between bg-white px-5">
         <img src={malmoLogo} alt="말모 로고" className="h-8 w-[94px]" />
 
         {/* D-day */}

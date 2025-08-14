@@ -2,7 +2,6 @@ import React, { useRef, useCallback, useEffect, useState } from 'react'
 import { View, StyleSheet, Platform, Keyboard, LayoutAnimation } from 'react-native'
 import { createWebView, useBridge, type BridgeWebView } from '@webview-bridge/react-native'
 import { appBridge, appSchema } from './bridge'
-import { DynamicStatusBar } from './features/status-bar/dynamic-status-bar'
 import { WebViewError } from './components/webview-error'
 import { CustomSplashScreen } from './components/splash-screen'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -56,8 +55,6 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <DynamicStatusBar />
-
       <WebView
         ref={webviewRef}
         source={{ uri: webviewUrl }}

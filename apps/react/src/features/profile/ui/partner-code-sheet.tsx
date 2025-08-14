@@ -29,7 +29,6 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
       await refreshUserInfo()
 
       // 성공시 시트 닫기
-      bridge.toggleOverlay(0)
       onOpenChange(false)
 
       // 커플 연결 성공 핸들러 호출
@@ -50,7 +49,6 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
 
   const handleClose = () => {
     setPartnerCode('')
-    bridge.toggleOverlay(0)
     onOpenChange(false)
   }
 

@@ -69,7 +69,11 @@ function RouteComponent() {
 
   return (
     <div className="flex h-full flex-col bg-white pt-[50px]">
-      <DetailHeaderBar right={exitButton()} showBackButton={fromHistory} className="fixed top-0 bg-malmo-rasberry-25" />
+      <DetailHeaderBar
+        right={exitButton()}
+        showBackButton={fromHistory}
+        className="fixed top-[var(--safe-top)] bg-malmo-rasberry-25"
+      />
 
       <div className="flex flex-col bg-malmo-rasberry-25 pt-3">
         <ChatResultHeader

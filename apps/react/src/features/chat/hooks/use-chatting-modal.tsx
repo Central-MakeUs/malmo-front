@@ -41,7 +41,6 @@ export function useChattingModal(): UseChattingModalReturn {
       }
 
       setShowChattingTutorial(true)
-      bridge.toggleOverlay?.(2)
     }
 
     fetchChatSeen()
@@ -149,7 +148,6 @@ export function useChattingModal(): UseChattingModalReturn {
             type="secondary"
             onClick={() => {
               setShowChattingTutorial(false)
-              bridge.toggleOverlay?.(0)
             }}
           />
           <Button
@@ -157,7 +155,6 @@ export function useChattingModal(): UseChattingModalReturn {
             onClick={() => {
               bridge.saveChatTutorialSeen?.()
               setShowChattingTutorial(false)
-              bridge.toggleOverlay?.(0)
             }}
           />
         </div>

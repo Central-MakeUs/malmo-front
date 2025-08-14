@@ -44,7 +44,7 @@ function RouteComponent() {
 
   return (
     <div className="has-bottom-nav flex min-h-[100dvh] flex-col pt-30">
-      <div className="fixed top-0 z-20 bg-white">
+      <div className="fixed top-[var(--safe-top)] z-20 bg-white">
         <HomeHeaderBar
           title="대화 기록"
           right={

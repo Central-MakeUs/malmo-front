@@ -17,7 +17,7 @@ export function AttachmentTestIntro({ nickname, from }: AttachmentTestIntroProps
 
   return (
     <div className="bg-malmo-rasberry-25 pt-[50px]">
-      <DetailHeaderBar onBackClick={handleGoToHome} className="fixed top-0 bg-malmo-rasberry-25" />
+      <DetailHeaderBar onBackClick={handleGoToHome} className="fixed top-[var(--safe-top)] bg-malmo-rasberry-25" />
 
       {/* 테스트 시작 이미지 */}
       <div className="mt-[36px] flex justify-center overflow-hidden">

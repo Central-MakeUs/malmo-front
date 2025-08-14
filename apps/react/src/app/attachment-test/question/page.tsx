@@ -10,7 +10,6 @@ import {
   QUESTION_CONFIG,
 } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
-import bridge from '@/shared/bridge'
 import loveTypeService from '@/shared/services/love-type.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -85,7 +84,6 @@ function AttachmentTestQuestionPage() {
       <AttachmentTestGuide
         isOpen={isGuideOpen}
         onClose={() => {
-          bridge.toggleOverlay(0)
           setIsGuideOpen(false)
         }}
       />

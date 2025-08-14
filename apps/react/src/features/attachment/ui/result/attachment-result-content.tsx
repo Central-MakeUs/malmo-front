@@ -68,7 +68,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
             <X className="h-6 w-6 text-gray-iron-950" />
           </button>
         }
-        className="fixed top-0"
+        className="fixed top-[var(--safe-top)]"
       />
 
       {/* 캐릭터 정보 섹션 */}

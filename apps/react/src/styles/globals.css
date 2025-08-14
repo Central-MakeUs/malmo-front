@@ -8,6 +8,7 @@
 
 :root {
   /* Safe-Area */
+  --safe-top-env: env(safe-area-inset-top, 0px);
   --safe-right-env: env(safe-area-inset-right, 0px);
   --safe-bottom-env: env(safe-area-inset-bottom, 0px);
   --safe-left-env: env(safe-area-inset-left, 0px);
