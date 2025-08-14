@@ -72,7 +72,7 @@ function IntroPage() {
   // 완료 처리
   const handleComplete = async () => {
     // 소개 후 자연스럽게 로그인으로 이동
-    navigate({ to: '/login' })
+    navigate({ to: '/login', replace: true })
   }
 
   // 건너뛰기

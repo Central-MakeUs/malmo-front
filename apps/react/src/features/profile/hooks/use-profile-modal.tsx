@@ -32,7 +32,7 @@ export function useProfileModal(): UseProfileModalReturn {
         await queryClient.cancelQueries({ predicate: () => true })
         queryClient.clear()
 
-        navigate({ to: '/login' })
+        navigate({ to: '/login', replace: true })
       } else {
         throw new Error(result?.message || '회원 탈퇴에 실패했습니다.')
       }
@@ -71,7 +71,7 @@ export function useProfileModal(): UseProfileModalReturn {
         try {
           const result = await logout()
           if (result.success) {
-            navigate({ to: '/login' })
+            navigate({ to: '/login', replace: true })
           }
         } catch {
           alertDialog.close()
