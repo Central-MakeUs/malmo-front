@@ -55,15 +55,18 @@ export function BottomNavigation() {
   const routerState = useRouterState()
   const currentPathname = routerState.location.pathname
 
-  const isActive = (path: string) => {
-    if (path === '/') {
-      return currentPathname === '/'
-    }
-    return currentPathname === path || currentPathname.startsWith(`${path}/`)
-  }
+  const isActive = (path: string) =>
+    path === '/' ? currentPathname === '/' : currentPathname === path || currentPathname.startsWith(`${path}/`)
 
   return (
-    <nav className="fixed right-0 bottom-0 left-0 mx-auto w-full max-w-[600px] border-t border-gray-200 bg-white">
+    <nav
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[600px] border-t border-gray-200 bg-white"
+      style={{
+        paddingBottom: 'var(--safe-bottom)',
+        paddingLeft: 'var(--safe-left)',
+        paddingRight: 'var(--safe-right)',
+      }}
+    >
       <div className="flex h-[60px]">
         {navigationItems.map((item) => {
           const active = isActive(item.path)

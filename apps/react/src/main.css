@@ -1,18 +1,5 @@
 @import './styles/globals.css';
 
-
-:root {
-  /* custom variable */
-  --auth-box-width: 452px;
-  --content-width: 1240px;
-}
-
-.no-bounce-scroll {
-  overflow-y: auto;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: auto;
-}
-
 body,
 a,
 button {
