@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRouter as createTanStackRouter } from '@tanstack/react-router'
-import React from 'react'
 
 import { NotFound } from '@/shared/ui/not-found'
 import { RouterError } from '@/shared/ui/router-error'
@@ -26,7 +25,7 @@ export function createRouter() {
     defaultNotFoundComponent: () => <NotFound />,
     defaultErrorComponent: ({ error }) => <RouterError error={error} />,
     context: {
-      auth: {} as any,
+      auth: {} as never,
       queryClient,
     },
     Wrap: ({ children }) => {

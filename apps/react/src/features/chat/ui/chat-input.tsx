@@ -60,7 +60,7 @@ function ChatInput(props: { disabled?: boolean }) {
 
     if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
       e.preventDefault()
-      handleSubmit(e as any)
+      handleSubmit(e)
     }
   }
 
