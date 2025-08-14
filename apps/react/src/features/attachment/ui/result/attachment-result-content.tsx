@@ -30,7 +30,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
   // 결과 데이터 확인
   if (!userInfo?.loveTypeCategory) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-white">
+      <div className="flex h-full w-full items-center justify-center bg-white">
         <div className="text-center">
           <p className="mb-4 text-gray-iron-600">
             {isMyResult ? '애착 검사 결과를 찾을 수 없습니다.' : '파트너의 검사 결과를 찾을 수 없습니다.'}
@@ -45,7 +45,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
 
   if (!attachmentData) {
     return (
-      <div className="flex h-screen w-full items-center justify-center bg-white">
+      <div className="flex h-full w-full items-center justify-center bg-white">
         <div className="text-center">
           <p className="mb-4 text-red-500">애착 유형 데이터를 찾을 수 없습니다.</p>
           <Button text="홈으로 이동" onClick={() => navigate({ to: '/' })} />
@@ -59,7 +59,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-white pt-[50px]">
+    <div className="flex h-full w-full flex-col bg-white pt-[50px]">
       {/* 헤더 네비게이션 */}
       <DetailHeaderBar
         showBackButton={false}

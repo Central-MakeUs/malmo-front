@@ -32,7 +32,7 @@ function AccountSettingsPage() {
   const { icon: ProviderIcon, text: providerText } = getProviderInfo()
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-full bg-white">
       {/* 헤더 */}
       <DetailHeaderBar title="계정 설정" />
 

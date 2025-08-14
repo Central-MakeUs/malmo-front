@@ -49,7 +49,7 @@ function TermsPage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 약관 전체화면 */}
       {selectedTermId !== null && selectedTermContent && (
         <TermsContentModal

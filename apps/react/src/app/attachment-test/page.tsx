@@ -35,7 +35,7 @@ function AttachmentTestPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-malmo-rasberry-25">
+    <div className="relative flex h-full w-full flex-col bg-malmo-rasberry-25">
       {/* 상단 라즈베리 배경 섹션 */}
       <AttachmentTestIntro nickname={nickname} from={from} />
 

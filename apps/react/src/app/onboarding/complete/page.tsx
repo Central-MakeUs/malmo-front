@@ -17,7 +17,7 @@ function ConnectCompletePage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 상단 여백 */}
       <div className="mt-[148px] flex flex-col items-center">
         {/* 이미지 */}

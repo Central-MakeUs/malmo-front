@@ -33,7 +33,7 @@ function NicknamePage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 헤더 및 타이틀 */}
       <DetailHeaderBar onBackClick={handlePrevious} />
       <TitleSection

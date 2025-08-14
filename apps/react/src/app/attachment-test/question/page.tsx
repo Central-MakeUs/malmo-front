@@ -45,7 +45,7 @@ function AttachmentTestQuestionPage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-[calc(100vh-var(--safe-top))] w-full flex-col bg-white">
       {/* 헤더 */}
       <DetailHeaderBar onBackClick={handleGoBack} />
 

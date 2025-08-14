@@ -60,7 +60,7 @@ function CoupleManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-full bg-white">
       {/* 헤더 */}
       <DetailHeaderBar title="커플 연동 관리" />
 

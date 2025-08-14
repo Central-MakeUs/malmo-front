@@ -53,7 +53,7 @@ function IntroPage() {
   // 데이터가 없는 경우 로딩 상태 또는 에러 처리
   if (!currentData) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center">
+      <div className="flex h-full w-full items-center justify-center">
         <div>잘못된 페이지입니다.</div>
       </div>
     )
@@ -81,7 +81,7 @@ function IntroPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 메인 콘텐츠 */}
       <div className="flex flex-1 flex-col">
         {/* 이미지 */}

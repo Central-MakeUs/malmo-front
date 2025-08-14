@@ -44,7 +44,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-white">
+    <div className="flex h-full w-full flex-col items-center justify-center bg-white">
       {/* 로고 영역 */}
       <div className="flex w-full flex-1 flex-col items-center justify-center px-5">
         <div className="w-full">
