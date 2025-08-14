@@ -5,7 +5,6 @@ import { useState } from 'react'
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
-import bridge from '@/shared/bridge'
 import memberService from '@/shared/services/member.service'
 import { queryKeys } from '@/shared/services/query-keys'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -53,7 +52,6 @@ function CoupleManagementPage() {
   const handleConnectPartner = () => {
     if (isConnected) return
 
-    bridge.toggleOverlay(3)
     setIsPartnerCodeSheetOpen(true)
   }
 
@@ -62,7 +60,7 @@ function CoupleManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-full bg-white">
       {/* 헤더 */}
       <DetailHeaderBar title="커플 연동 관리" />
 

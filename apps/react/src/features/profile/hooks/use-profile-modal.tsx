@@ -32,7 +32,7 @@ export function useProfileModal(): UseProfileModalReturn {
         await queryClient.cancelQueries({ predicate: () => true })
         queryClient.clear()
 
-        navigate({ to: '/login' })
+        navigate({ to: '/login', replace: true })
       } else {
         throw new Error(result?.message || '회원 탈퇴에 실패했습니다.')
       }
@@ -71,7 +71,7 @@ export function useProfileModal(): UseProfileModalReturn {
         try {
           const result = await logout()
           if (result.success) {
-            navigate({ to: '/login' })
+            navigate({ to: '/login', replace: true })
           }
         } catch {
           alertDialog.close()
@@ -102,9 +102,11 @@ export function useProfileModal(): UseProfileModalReturn {
     alertDialog.open({
       title: '정말 커플 연동을 끊으시겠어요?',
       description: (
-        <p>
-          커플 연결을 끊으면 데이터가 모두 삭제돼요. <br /> 30일 이내로 다시 연동하면 복구할 수 있어요.
-        </p>
+        <>
+          커플 연결을 끊으면 데이터가 모두 삭제돼요.
+          <br />
+          30일 이내로 다시 연동하면 복구할 수 있어요.
+        </>
       ),
       cancelText: '연결 끊기',
       confirmText: '취소하기',

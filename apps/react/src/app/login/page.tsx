@@ -44,7 +44,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-white">
+    <div className="flex h-full w-full flex-col items-center justify-center bg-white">
       {/* 로고 영역 */}
       <div className="flex w-full flex-1 flex-col items-center justify-center px-5">
         <div className="w-full">
@@ -58,7 +58,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <div className="w-full px-5 pb-[calc(32px+env(safe-area-inset-bottom,0px))]">
+      <div className="mt-auto mb-5 w-full px-5 pb-[var(--safe-bottom)]">
         {/* 카카오 로그인 버튼 */}
         {isWebView() ? (
           <button

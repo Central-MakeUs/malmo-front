@@ -56,7 +56,7 @@ function ProfileEditPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="h-full bg-white">
       {/* 헤더 */}
       <DetailHeaderBar title="내 정보" onBackClick={() => navigate({ to: '/my-page' })} />
 

@@ -34,7 +34,7 @@ function MyPage() {
   const { menuItems } = useMyPageMenu(terms, handleShowTerms)
 
   return (
-    <div className="mb-[80px] flex h-screen flex-col bg-white">
+    <div className="has-bottom-nav flex h-full flex-col bg-white">
       {/* 약관 모달 */}
       {selectedTermId !== null && selectedTermContent && selectedTermContent.title && selectedTermContent.details && (
         <TermsContentModal

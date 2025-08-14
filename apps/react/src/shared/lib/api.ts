@@ -7,8 +7,8 @@ const BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_API_URL : '/api'
 const AUTH_ROUTE = '/login'
 
 interface QueueItem {
-  resolve: (value: any) => void
-  reject: (reason?: any) => void
+  resolve: (value: unknown) => void
+  reject: (reason?: unknown) => void
   config: AxiosRequestConfig
 }
 

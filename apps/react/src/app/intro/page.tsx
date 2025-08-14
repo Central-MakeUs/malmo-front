@@ -53,7 +53,7 @@ function IntroPage() {
   // 데이터가 없는 경우 로딩 상태 또는 에러 처리
   if (!currentData) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center">
+      <div className="flex h-full w-full items-center justify-center">
         <div>잘못된 페이지입니다.</div>
       </div>
     )
@@ -72,7 +72,7 @@ function IntroPage() {
   // 완료 처리
   const handleComplete = async () => {
     // 소개 후 자연스럽게 로그인으로 이동
-    navigate({ to: '/login' })
+    navigate({ to: '/login', replace: true })
   }
 
   // 건너뛰기
@@ -81,7 +81,7 @@ function IntroPage() {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 메인 콘텐츠 */}
       <div className="flex flex-1 flex-col">
         {/* 이미지 */}
@@ -113,7 +113,7 @@ function IntroPage() {
       </div>
 
       {/* 하단 고정 영역 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col pb-[var(--safe-bottom)]">
         {/* 페이지 인디케이터 */}
         <div className="mb-8 flex justify-center space-x-2">
           {introPages.map((_, index) => (

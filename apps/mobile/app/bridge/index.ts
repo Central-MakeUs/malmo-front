@@ -67,14 +67,6 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
       return { accessToken }
     },
 
-    async toggleOverlay(level: 0 | 1 | 2 | 3): Promise<void> {
-      set({ overlayState: { visible: level > 0, opacity: level === 2 ? 0.8 : 0.4, upward: level === 3 } })
-    },
-
-    async changeStatusBarColor(color: string): Promise<void> {
-      set({ statusBarColor: color })
-    },
-
     async saveChatTutorialSeen(): Promise<void> {
       await AuthStorage.setChatTutorialSeen(true)
     },
@@ -90,6 +82,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
 
     async openWebView(url: string): Promise<void> {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { Linking } = require('react-native')
         await Linking.openURL(url)
       } catch (error) {
@@ -118,8 +111,6 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
 
   return {
     isLoggedIn: false,
-    overlayState: { visible: false, opacity: 0 },
-    statusBarColor: '#fff',
     keyboardHeight: 0,
     ...actions,
   }
@@ -152,11 +143,6 @@ export const appSchema = postMessageSchema({
   // 토큰 만료 알림 스키마
   notifyTokenExpired: {
     validate: () => {
-      return {}
-    },
-  },
-  toggleOverlay: {
-    validate: (value) => {
       return {}
     },
   },

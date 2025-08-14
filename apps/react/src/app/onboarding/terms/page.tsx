@@ -49,7 +49,7 @@ function TermsPage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 약관 전체화면 */}
       {selectedTermId !== null && selectedTermContent && (
         <TermsContentModal
@@ -79,7 +79,7 @@ function TermsPage() {
       />
 
       {/* 다음 버튼 */}
-      <div className="mt-auto mb-10 px-5">
+      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
         <Button text="다음" disabled={!isAllRequiredChecked} onClick={handleNext} />
       </div>
     </div>

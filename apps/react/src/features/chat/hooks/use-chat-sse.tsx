@@ -4,102 +4,180 @@ import { useEffect, useRef } from 'react'
 import bridge from '@/shared/bridge'
 
 const API_HOST = import.meta.env.PROD ? import.meta.env.VITE_API_URL : '/api'
-const EventSource = EventSourcePolyfill || NativeEventSource
+const EventSourceImpl = EventSourcePolyfill || (NativeEventSource as typeof EventSourcePolyfill)
 
 interface ChatSSECallbacks {
   onChatResponse: (chunk: string) => void
   onResponseId: (messageId: string) => void
   onLevelFinished: () => void
   onChatPaused: () => void
-  onError?: (error: any) => void
+  onError?: (error: unknown) => void
   onOpen?: () => void
 }
 
-export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean) => {
-  const eventSourceRef = useRef<EventSourcePolyfill | null>(null)
-  // 콜백 함수들을 저장하기 위한 ref를 생성합니다.
-  const callbacksRef = useRef(callbacks)
+const BACKOFF_STEPS = [1000, 2000, 5000, 10000] as const
+const INACTIVITY_MS = 55_000 // 서버 60s 타임아웃 대비 선제 재연결
+const HEARTBEAT_TIMEOUT = 65_000 // 폴리필 연결 정지 감지 시간
 
-  // 매 렌더링마다 ref에 최신 콜백 함수를 저장합니다.
-  // 이 useEffect는 의존성 배열이 없으므로 렌더링될 때마다 실행됩니다.
+export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean) => {
+  const esRef = useRef<EventSourcePolyfill | null>(null)
+  const callbacksRef = useRef(callbacks)
+  const reconnectAttemptRef = useRef(0)
+  const inactivityTimerRef = useRef<number | null>(null)
+  const closingRef = useRef(false)
+
+  // 최신 콜백 유지
   useEffect(() => {
     callbacksRef.current = callbacks
-  })
+  }, [callbacks])
 
-  // 이 useEffect는 의존성 배열이 비어있어, 오직 컴포넌트가 마운트될 때 "한 번"만 실행됩니다.
-  useEffect(() => {
-    if (!enabled) {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close()
-        eventSourceRef.current = null
-        console.log('SSE connection closed due to being disabled.')
-      }
-      return
+  const devLog = (...args: unknown[]) => {
+    if (import.meta.env.DEV) console.log(...args)
+  }
+
+  // 타이머 유틸
+  const clearInactivityTimer = () => {
+    if (inactivityTimerRef.current) {
+      window.clearTimeout(inactivityTimerRef.current)
+      inactivityTimerRef.current = null
     }
+  }
+  const armInactivityTimer = () => {
+    clearInactivityTimer()
+    inactivityTimerRef.current = window.setTimeout(() => {
+      devLog('[SSE] Inactivity → reconnect')
+      void safeReconnect()
+    }, INACTIVITY_MS)
+  }
 
-    const connect = async () => {
-      if (eventSourceRef.current) return
-
+  // 안전 종료
+  const closeES = () => {
+    clearInactivityTimer()
+    if (esRef.current) {
       try {
-        const { accessToken } = await bridge.getAuthToken()
-        if (!accessToken) {
-          callbacksRef.current.onError?.(new Error('Access token is missing.'))
+        esRef.current.close()
+      } catch {}
+      esRef.current = null
+    }
+  }
+
+  const delay = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+  // 401 처리: refresh → 즉시 재연결
+  const handle401AndReconnect = async () => {
+    try {
+      devLog('[SSE] 401 → refresh token')
+      await bridge.notifyTokenExpired() // storage의 토큰 갱신(실제 재발급 로직 포함)
+      devLog('[SSE] refresh ok → reconnect now')
+      reconnectAttemptRef.current = 0
+      await connect() // 새 토큰으로 새 연결
+    } catch (err) {
+      callbacksRef.current.onError?.(err ?? new Error('Token refresh failed'))
+      bridge.onAuthExpired?.()
+    }
+  }
+
+  // 백오프 재연결
+  const safeReconnect = async () => {
+    closeES()
+    if (closingRef.current) return
+    const attempt = reconnectAttemptRef.current
+    const wait = BACKOFF_STEPS[Math.min(attempt, BACKOFF_STEPS.length - 1)]
+    reconnectAttemptRef.current = attempt + 1
+    devLog(`[SSE] reconnect #${attempt + 1} in ${wait}ms`)
+    await delay(wait ?? 10000)
+    await connect()
+  }
+
+  // 실제 연결
+  const connect = async (): Promise<void> => {
+    if (!enabled || esRef.current) return
+
+    try {
+      const { accessToken } = await bridge.getAuthToken()
+      if (!accessToken) {
+        callbacksRef.current.onError?.(new Error('Access token is missing'))
+        return
+      }
+
+      const sse = new EventSourceImpl(`${API_HOST}/sse/connect`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        heartbeatTimeout: HEARTBEAT_TIMEOUT,
+      })
+      esRef.current = sse
+
+      sse.onopen = () => {
+        devLog('[SSE] open')
+        reconnectAttemptRef.current = 0
+        callbacksRef.current.onOpen?.()
+        armInactivityTimer()
+      }
+
+      // 메시지 핸들러
+      const onMessage = (e: MessageEvent<string>) => {
+        armInactivityTimer()
+        callbacksRef.current.onChatResponse(e.data)
+      }
+      const onId = (e: MessageEvent<string>) => {
+        armInactivityTimer()
+        callbacksRef.current.onResponseId(e.data)
+      }
+      const onFinish = () => {
+        armInactivityTimer()
+        callbacksRef.current.onLevelFinished()
+      }
+      const onPaused = () => {
+        armInactivityTimer()
+        callbacksRef.current.onChatPaused()
+      }
+
+      // 래퍼로 커스텀 이벤트 리스너 타입 충돌 해결 (polyfill EventListener 시그니처 차이)
+      const addCustomListener = (type: string, listener: (e: MessageEvent<string>) => void) => {
+        sse.addEventListener(type, (ev) => listener(ev as MessageEvent<string>))
+      }
+
+      addCustomListener('chat_response', onMessage)
+      addCustomListener('ai_response_id', onId)
+      addCustomListener('current_level_finished', onFinish)
+      addCustomListener('chat_room_paused', onPaused)
+
+      sse.onerror = (ev) => {
+        devLog('[SSE] error', ev)
+        clearInactivityTimer()
+
+        // ✅ fetch 인터셉터에서 던진 401 에러도 여기로 들어올 수 있음
+        const status = (ev as { status?: number }).status
+        if (status === 401) {
+          closeES()
+          void handle401AndReconnect()
           return
         }
 
-        const sse = new EventSource(`${API_HOST}/sse/connect`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          heartbeatTimeout: 600000,
-          withCredentials: true,
-        })
-
-        eventSourceRef.current = sse
-
-        sse.onopen = () => {
-          console.log('SSE connection opened.')
-          callbacksRef.current.onOpen?.()
-        }
-
-        sse.onerror = (error: any) => {
-          console.error('SSE Error:', error)
-          callbacksRef.current.onError?.(error)
-          if (error.status === 401) {
-            console.error('SSE connection failed with 401 Unauthorized. Closing connection.')
-            sse.close()
-            eventSourceRef.current = null
-          }
-        }
-
-        // 모든 이벤트 리스너는 ref를 통해 항상 최신 콜백을 호출합니다.
-        sse.addEventListener('chat_response', (event: any) => {
-          callbacksRef.current.onChatResponse(event.data)
-        })
-
-        sse.addEventListener('ai_response_id', (event: any) => {
-          callbacksRef.current.onResponseId(event.data)
-        })
-
-        sse.addEventListener('current_level_finished', () => {
-          callbacksRef.current.onLevelFinished()
-        })
-
-        sse.addEventListener('chat_room_paused', () => {
-          callbacksRef.current.onChatPaused()
-        })
-      } catch (error) {
-        callbacksRef.current.onError?.(error)
+        // 그 외 네트워크/타임아웃: 백오프 재연결
+        closeES()
+        void safeReconnect()
       }
+    } catch (err) {
+      devLog('[SSE] connect exception', err)
+      callbacksRef.current.onError?.(err)
+      await safeReconnect()
     }
+  }
 
-    connect()
-
-    // 컴포넌트가 언마운트될 때 연결을 정리합니다.
+  // 생명주기
+  useEffect(() => {
+    if (!enabled) {
+      closingRef.current = true
+      closeES()
+      closingRef.current = false
+      return
+    }
+    void connect()
     return () => {
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close()
-        eventSourceRef.current = null
-        console.log('SSE connection closed.')
-      }
+      closingRef.current = true
+      closeES()
+      closingRef.current = false
+      devLog('[SSE] unmounted/disabled → closed')
     }
-  }, [enabled]) // 빈 의존성 배열이 핵심입니다.
+  }, [enabled])
 }

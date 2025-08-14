@@ -57,7 +57,7 @@ function MyCodePage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 헤더 및 타이틀 */}
       <DetailHeaderBar onBackClick={goToPreviousStep} />
       <TitleSection
@@ -97,7 +97,7 @@ function MyCodePage() {
       </div>
 
       {/* 버튼 영역 */}
-      <div className="mt-auto px-5 pb-[34px]">
+      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
         <button
           onClick={handleConnectWithCode}
           className="body1-semibold flex h-[56px] w-full items-center justify-center rounded-[10px] border border-malmo-rasberry-500 text-malmo-rasberry-500"

@@ -48,7 +48,7 @@ function HomePage() {
   const hasAttachmentType = !!userInfo.loveTypeCategory
 
   // 파트너 연동 상태 확인
-  const isPartnerConnected = !partnerError || (partnerError as any)?.status !== 403
+  const isPartnerConnected = !partnerError || partnerError?.status !== 403
 
   const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
   const partnerAttachmentData = getAttachmentType(partnerInfo?.loveTypeCategory)
@@ -76,9 +76,9 @@ function HomePage() {
   }
 
   return (
-    <div className="flex h-full flex-col bg-white pt-[60px]">
+    <div className="has-bottom-nav flex h-full flex-col bg-white pt-[60px]">
       {/* 헤더 */}
-      <header className="fixed top-0 flex h-[60px] w-full items-center justify-between bg-white px-5">
+      <header className="fixed top-[var(--safe-top)] flex h-[60px] w-full items-center justify-between bg-white px-5">
         <img src={malmoLogo} alt="말모 로고" className="h-8 w-[94px]" />
 
         {/* D-day */}

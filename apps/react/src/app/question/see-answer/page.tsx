@@ -35,7 +35,7 @@ function RouteComponent() {
   const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-full flex-col">
       <DetailHeaderBar title="답변 보기" className="border-b-[1px] border-gray-iron-100" />
 
       <div className="flex-1">

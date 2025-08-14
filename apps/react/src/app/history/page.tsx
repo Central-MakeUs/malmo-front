@@ -43,33 +43,34 @@ function RouteComponent() {
   const isLoading = isFetching && !isFetchingNextPage
 
   return (
-    <div className="flex h-screen flex-col pb-15">
-      <HomeHeaderBar
-        title="대화 기록"
-        right={
-          <Link to={'/history/delete'}>
-            <p className="body2-medium text-gray-iron-700">삭제</p>
-          </Link>
-        }
-      />
-      <div className="px-5 pb-3">
-        <div className="relative flex items-center">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-            <LucideSearch size={20} className="text-gray-iron-800" />
-          </div>
-          <input
-            type="text"
-            placeholder="찾고싶은 대화 제목을 검색해보세요."
-            className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-          />
-          {/* isFetching 시 스피너 표시 */}
-          {isLoading && (
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-              <Spinner className="h-5 w-5 text-gray-iron-400" />
+    <div className="has-bottom-nav flex min-h-[100dvh] flex-col pt-30">
+      <div className="fixed top-[var(--safe-top)] z-20 bg-white">
+        <HomeHeaderBar
+          title="대화 기록"
+          right={
+            <Link to={'/history/delete'}>
+              <p className="body2-medium text-gray-iron-700">삭제</p>
+            </Link>
+          }
+        />
+        <div className="px-5 pb-3">
+          <div className="relative flex items-center">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+              <LucideSearch size={20} className="text-gray-iron-800" />
             </div>
-          )}
+            <input
+              type="text"
+              placeholder="찾고싶은 대화 제목을 검색해보세요."
+              className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
+            {isLoading && (
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                <Spinner className="h-5 w-5 text-gray-iron-400" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -99,7 +100,12 @@ function RouteComponent() {
       </section>
 
       <Link to={'/chat'}>
-        <div className="fixed right-5 bottom-21 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
+        <div
+          className="fixed right-5 z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700"
+          style={{
+            bottom: 'calc(var(--safe-bottom) + var(--bottom-nav-h) + 16px)',
+          }}
+        >
           <div
             className={cn(
               'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',

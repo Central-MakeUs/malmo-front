@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { useBridge } from '@webview-bridge/react'
 import { X } from 'lucide-react'
 import { useState } from 'react'
 
 import { useAuth } from '@/features/auth'
-import bridge from '@/shared/bridge'
+import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import coupleService from '@/shared/services/couple.service'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -18,9 +17,10 @@ interface PartnerCodeSheetProps {
 }
 
 export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConnected }: PartnerCodeSheetProps) {
-  const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
   const [partnerCode, setPartnerCode] = useState('')
   const { refreshUserInfo } = useAuth()
+
+  const { motionStyle } = useKeyboardSheetMotion()
 
   const connectCoupleMutation = useMutation({
     ...coupleService.connectCoupleMutation(),
@@ -29,7 +29,6 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
       await refreshUserInfo()
 
       // 성공시 시트 닫기
-      bridge.toggleOverlay(0)
       onOpenChange(false)
 
       // 커플 연결 성공 핸들러 호출
@@ -50,7 +49,6 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
 
   const handleClose = () => {
     setPartnerCode('')
-    bridge.toggleOverlay(0)
     onOpenChange(false)
   }
 
@@ -59,10 +57,7 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
       <SheetContent
         side="bottom"
         className="rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden"
-        style={{
-          bottom: keyboardHeight ?? 0,
-          transition: keyboardHeight && keyboardHeight > 0 ? 'bottom 250ms cubic-bezier(0.17,0.59,0.4,0.77)' : 'none',
-        }}
+        style={motionStyle}
       >
         {/* 접근성을 위한 숨겨진 제목 */}
         <SheetTitle className="sr-only">상대방 코드로 연결하기</SheetTitle>

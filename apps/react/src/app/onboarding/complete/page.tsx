@@ -17,7 +17,7 @@ function ConnectCompletePage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 상단 여백 */}
       <div className="mt-[148px] flex flex-col items-center">
         {/* 이미지 */}
@@ -31,7 +31,7 @@ function ConnectCompletePage() {
       </div>
 
       {/* 다음 버튼 */}
-      <div className="mt-auto mb-10 px-5">
+      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
         <Button text="시작하기" onClick={handleNext} />
       </div>
     </div>

@@ -42,7 +42,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-full flex-col pb-[var(--safe-bottom)]">
       <DetailHeaderBar
         title="답변 작성"
         className="border-b-[1px] border-gray-iron-100"

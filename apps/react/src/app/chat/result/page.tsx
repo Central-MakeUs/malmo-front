@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { useHistoryModal } from '@/features/history/hooks/use-history-modal'
-import bridge from '@/shared/bridge'
+import { useTheme } from '@/shared/contexts/theme.context'
 import historyService from '@/shared/services/history.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -32,16 +32,17 @@ function RouteComponent() {
   const { chatId: loaderChatId } = Route.useLoaderData()
   const { chatId, fromHistory } = Route.useSearch()
   const historyModal = useHistoryModal()
+  const { setStatusColor } = useTheme()
 
   const { data: chatResult } = useQuery(historyService.historySummaryQuery(chatId ?? loaderChatId))
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    bridge.changeStatusBarColor('#FDEDF0')
+    setStatusColor('#FDEDF0')
 
     return () => {
-      bridge.changeStatusBarColor('#fff')
+      setStatusColor('#fff')
     }
   }, [])
 
@@ -69,7 +70,11 @@ function RouteComponent() {
 
   return (
     <div className="flex h-full flex-col bg-white pt-[50px]">
-      <DetailHeaderBar right={exitButton()} showBackButton={fromHistory} className="fixed top-0 bg-malmo-rasberry-25" />
+      <DetailHeaderBar
+        right={exitButton()}
+        showBackButton={fromHistory}
+        className="fixed top-[var(--safe-top)] bg-malmo-rasberry-25"
+      />
 
       <div className="flex flex-col bg-malmo-rasberry-25 pt-3">
         <ChatResultHeader

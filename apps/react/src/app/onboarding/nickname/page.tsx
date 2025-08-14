@@ -33,7 +33,7 @@ function NicknamePage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white">
       {/* 헤더 및 타이틀 */}
       <DetailHeaderBar onBackClick={handlePrevious} />
       <TitleSection
@@ -58,7 +58,7 @@ function NicknamePage() {
       </div>
 
       {/* 다음 버튼 */}
-      <div className="mt-auto mb-10 px-5">
+      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
         <Button text="다음" onClick={handleNext} disabled={!isValid} />
       </div>
     </div>

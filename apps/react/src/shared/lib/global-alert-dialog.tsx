@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { createContext, useState } from 'react'
 
-import bridge from '../bridge'
 import { useAlertDialog } from '../hooks/use-alert-dialog'
 import {
   AlertDialog,
@@ -51,14 +50,11 @@ export function AlertDialogProvider({
   const [state, setState] = useState<AlertDialogOpenOptions>({ description: '' })
 
   const open = (options: AlertDialogOpenOptions) => {
-    console.log('AlertDialogProvider open', options)
-    bridge.toggleOverlay?.(options.overlayLevel ?? 1)
     setOpenAlertDialog(true)
     setState({ ...options })
   }
 
   const close = () => {
-    bridge.toggleOverlay?.(0)
     setOpenAlertDialog(false)
   }
 

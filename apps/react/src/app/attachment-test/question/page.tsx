@@ -10,7 +10,6 @@ import {
   QUESTION_CONFIG,
 } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
-import bridge from '@/shared/bridge'
 import loveTypeService from '@/shared/services/love-type.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -46,7 +45,7 @@ function AttachmentTestQuestionPage() {
   }
 
   return (
-    <div className="flex h-screen w-full flex-col bg-white">
+    <div className="flex h-[calc(100vh-var(--safe-top))] w-full flex-col bg-white">
       {/* 헤더 */}
       <DetailHeaderBar onBackClick={handleGoBack} />
 
@@ -85,7 +84,6 @@ function AttachmentTestQuestionPage() {
       <AttachmentTestGuide
         isOpen={isGuideOpen}
         onClose={() => {
-          bridge.toggleOverlay(0)
           setIsGuideOpen(false)
         }}
       />

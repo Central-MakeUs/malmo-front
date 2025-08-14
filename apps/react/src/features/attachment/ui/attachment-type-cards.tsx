@@ -46,7 +46,7 @@ export function AttachmentTypeCards({
   ]
 
   return (
-    <div className="-mx-5 mt-9 mb-[60px] h-[290px] bg-gray-neutral-100 px-5 pt-8">
+    <div className="-mx-5 mt-9 h-[290px] bg-gray-neutral-100 px-5 pt-8">
       <h2 className="heading2-semibold text-gray-iron-950">애착유형 카드</h2>
 
       {/* 카드 컨테이너 */}

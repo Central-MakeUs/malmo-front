@@ -1,5 +1,22 @@
-/* Title 1 - 28px/38px */
 @layer components {
+  /* 스크롤 bounce 방지  */
+  .no-bounce-scroll {
+    overflow-y: auto;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
+  }
+  /* safe area */
+  .app-safe {
+    padding-top: var(--safe-top);
+    padding-right: var(--safe-right);
+    padding-left: var(--safe-left);
+    min-height: 100dvh; /* 모바일 브라우저의 동적 vh 이슈 대응 */
+  }
+  /* 본문이 바텀 네비 뒤로 숨지지 않도록 여유를 확보 */
+  .has-bottom-nav {
+    padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom));
+  }
+  /* Title 1 - 28px/38px */
   .title1-bold {
     font-family: var(--font-pretendard);
     font-size: 28px;
@@ -263,5 +280,3 @@
     letter-spacing: -0.02em;
   }
 }
-
-

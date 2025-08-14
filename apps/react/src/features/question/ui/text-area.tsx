@@ -13,68 +13,73 @@ interface CustomTextareaProps {
 
 function CustomTextarea({ value, onChange, maxLength, minRows = 4 }: CustomTextareaProps) {
   const placeholderText = '여기에 답변을 적어주세요.\n모모가 답변 내용을 기억해서 상담해 드려요.'
-
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
 
   const wrapperRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const counterRef = useRef<HTMLParagraphElement>(null)
 
-  // 가용 영역 (px) 계산
-  const computeMaxHeight = () => {
-    const viewportH = window.innerHeight // 안드로이드 크롬/웹뷰는 키보드가 올라오면 보통 줄어듭니다
+  const readPxVar = (name: string) => {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(name)
+    const n = parseFloat(raw || '0')
+    return Number.isFinite(n) ? n : 0
+  }
+
+  // 키보드/세이프에어리어 하단 인셋 산출
+  const getEffectiveBottomInset = () => {
+    const safeBottom = readPxVar('--safe-bottom')
     const kb = Number.isFinite(keyboardHeight) ? keyboardHeight : 0
+    const vv = window.visualViewport
+    // VisualViewport가 있으면 키보드 영역이 이미 제외된 height가 들어오므로
+    // 여기서는 safe-bottom만 고려 (추가 여유는 아래 FUDGE로)
+    const kbInset = vv ? 0 : kb
+    return Math.max(safeBottom, kbInset)
+  }
+
+  const computeMaxHeight = () => {
+    const vv = window.visualViewport
+    const viewportH = vv ? vv.height : window.innerHeight
+
+    const bottomInset = getEffectiveBottomInset()
+    const FUDGE = 12 // ✨ 키보드와 겹침 방지 여유
 
     const wrapperTop = wrapperRef.current?.getBoundingClientRect().top ?? 0
     const counterH = counterRef.current?.getBoundingClientRect().height ?? 0
-
-    // 안전 여백(상하 패딩/마진 + 살짝의 숨쉬기 공간)
-    const SAFE_PADDING = 16
-    const INTERNAL_GAP = 8 // textarea와 카운터 사이 gap
+    const INTERNAL_GAP = 8
 
     // textarea가 차지할 수 있는 최대 높이
-    // = (뷰포트 높이 - 키보드) - (컴포넌트 상단 좌표) - (카운터 높이) - (여백들)
-    const available = viewportH - kb - wrapperTop - counterH - SAFE_PADDING - INTERNAL_GAP
+    // = (보이는 뷰포트 높이 - 하단 인셋 - 여유) - (컴포넌트 상단) - (카운터) - (내부 간격)
+    const available = viewportH - (bottomInset + FUDGE) - wrapperTop - counterH - INTERNAL_GAP
 
-    // 최소 4줄 시작을 보장하기 위해 너무 작게 계산될 경우 대비
-    return Math.max(available, 48 /* fallback 최소 높이 */)
+    return Math.max(available, 48) // 최소 안전 높이
   }
 
-  // 최소 rows 높이(px) 계산
   const getMinRowsHeight = () => {
     const ta = textareaRef.current
     if (!ta) return 0
-    // 한 줄 높이 추정 (line-height 사용)
     const style = window.getComputedStyle(ta)
     const line = parseFloat(style.lineHeight || '20')
     const paddingY = parseFloat(style.paddingTop || '0') + parseFloat(style.paddingBottom || '0')
-    return Math.ceil(line * minRows + paddingY)
+    return Math.ceil(line * (minRows ?? 4) + paddingY)
   }
 
   const adjustHeight = () => {
     const ta = textareaRef.current
     if (!ta) return
 
-    // 먼저 최소 높이로 초기화
     const minH = getMinRowsHeight()
     ta.style.height = 'auto'
     ta.style.overflowY = 'hidden'
 
     const maxH = computeMaxHeight()
-    // 내용 높이
     const contentH = Math.max(ta.scrollHeight, minH)
 
     const next = Math.min(contentH, maxH)
     ta.style.height = `${next}px`
     ta.style.maxHeight = `${maxH}px`
-
-    // 내용이 더 크면 내부 스크롤
-    if (contentH > maxH) {
-      ta.style.overflowY = 'auto'
-    }
+    if (contentH > maxH) ta.style.overflowY = 'auto'
   }
 
-  // 값 변경/키보드 변경/리사이즈마다 재조정
   useLayoutEffect(() => {
     adjustHeight()
   }, [value, keyboardHeight])
@@ -82,7 +87,25 @@ function CustomTextarea({ value, onChange, maxLength, minRows = 4 }: CustomTexta
   useEffect(() => {
     const onResize = () => adjustHeight()
     window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
+
+    // VisualViewport 변화에도 반응 (키보드 애니메이션 동안 값이 계속 변함)
+    const vv = window.visualViewport
+    if (vv) {
+      vv.addEventListener('resize', onResize)
+      vv.addEventListener('scroll', onResize)
+    }
+
+    // CSS 변수 주입/레이아웃 안정화 직후 한 번 더
+    const t = setTimeout(adjustHeight, 0)
+
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('resize', onResize)
+      if (vv) {
+        vv.removeEventListener('resize', onResize)
+        vv.removeEventListener('scroll', onResize)
+      }
+    }
   }, [])
 
   const commonStyles =
@@ -116,4 +139,5 @@ function CustomTextarea({ value, onChange, maxLength, minRows = 4 }: CustomTexta
     </div>
   )
 }
+
 export default CustomTextarea

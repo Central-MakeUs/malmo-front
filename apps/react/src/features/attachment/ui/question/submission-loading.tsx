@@ -8,7 +8,7 @@ interface SubmissionLoadingProps {
 
 export function SubmissionLoading({ nickname = '사용자' }: SubmissionLoadingProps) {
   return (
-    <div className="-mt-[30px] flex h-screen w-full flex-col items-center justify-center bg-white px-[20px]">
+    <div className="-mt-[30px] flex h-full w-full flex-col items-center justify-center bg-white px-[20px]">
       <Lottie animationData={noteAnimation} className="h-[236px] w-[320px]" />
       <div className="mt-[24px] text-center">
         <h1 className="heading1-bold break-keep text-gray-iron-950">

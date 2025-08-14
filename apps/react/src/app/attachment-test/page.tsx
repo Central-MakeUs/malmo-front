@@ -4,7 +4,7 @@ import z from 'zod'
 
 import { AttachmentTestIntro, AttachmentTestInfoSection, AttachmentTypesSection } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
-import bridge from '@/shared/bridge'
+import { useTheme } from '@/shared/contexts/theme.context'
 import { Button } from '@/shared/ui'
 
 const searchSchema = z.object({
@@ -18,25 +18,25 @@ export const Route = createFileRoute('/attachment-test/')({
 
 function AttachmentTestPage() {
   const navigate = useNavigate()
+  const { setStatusColor } = useTheme()
   const { from } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
   const nickname = userInfo.nickname || '사용자'
 
   useEffect(() => {
-    bridge.changeStatusBarColor('#FDEDF0')
+    setStatusColor('#FDEDF0')
 
     return () => {
-      bridge.changeStatusBarColor('#fff')
+      setStatusColor('#fff')
     }
   }, [])
 
   const handleStartTest = () => {
-    bridge.toggleOverlay(3)
     navigate({ to: '/attachment-test/question' })
   }
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-malmo-rasberry-25">
+    <div className="relative flex h-full w-full flex-col bg-malmo-rasberry-25">
       {/* 상단 라즈베리 배경 섹션 */}
       <AttachmentTestIntro nickname={nickname} from={from} />
 
@@ -55,7 +55,7 @@ function AttachmentTestPage() {
       </div>
 
       {/* 플로팅 버튼 */}
-      <div className="fixed right-0 bottom-0 left-0 z-10 flex justify-center px-5 py-4">
+      <div className="fixed right-0 bottom-[var(--safe-bottom)] left-0 z-10 flex justify-center px-5 py-4">
         <Button text="시작하기" onClick={handleStartTest} />
       </div>
     </div>

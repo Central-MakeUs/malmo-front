@@ -23,10 +23,12 @@ function RouteComponent() {
   const showEmpty = !isFetchingNextPage && histories.length === 0
 
   return (
-    <div className="flex h-screen flex-col">
-      <DetailHeaderBar title="삭제" left={backButton()} className="border-b-[1px] border-b-gray-iron-100" />
+    <div className="relative flex min-h-[100dvh] flex-col overflow-hidden pt-[50px]">
+      <div className="fixed top-[var(--safe-top)] z-20 bg-white">
+        <DetailHeaderBar title="삭제" left={backButton()} className="border-b-[1px] border-b-gray-iron-100" />
+      </div>
 
-      <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pb-20">
+      <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pb-28">
         {showEmpty ? (
           <EmptyState
             image={noResultImage}
@@ -49,7 +51,7 @@ function RouteComponent() {
         )}
       </section>
 
-      <div className="fixed right-0 bottom-0 left-0 p-5">
+      <div className="fixed inset-x-0 z-50 px-5" style={{ bottom: 'calc(var(--safe-bottom) + 20px)' }}>
         <Button
           onClick={handleDelete}
           text={selectedIds.length > 0 ? `${selectedIds.length}개 삭제` : '삭제'}
