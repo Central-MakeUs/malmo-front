@@ -4,7 +4,7 @@ import z from 'zod'
 
 import { AttachmentTestIntro, AttachmentTestInfoSection, AttachmentTypesSection } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
-import bridge from '@/shared/bridge'
+import { useTheme } from '@/shared/contexts/theme.context'
 import { Button } from '@/shared/ui'
 
 const searchSchema = z.object({
@@ -18,15 +18,16 @@ export const Route = createFileRoute('/attachment-test/')({
 
 function AttachmentTestPage() {
   const navigate = useNavigate()
+  const { setStatusColor } = useTheme()
   const { from } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
   const nickname = userInfo.nickname || '사용자'
 
   useEffect(() => {
-    bridge.changeStatusBarColor('#FDEDF0')
+    setStatusColor('#FDEDF0')
 
     return () => {
-      bridge.changeStatusBarColor('#fff')
+      setStatusColor('#fff')
     }
   }, [])
 

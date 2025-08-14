@@ -10,6 +10,8 @@ type ThemeContextType = {
   toggleTheme: () => void
   activeTheme: string
   setActiveTheme: (theme: string) => void
+  statusColor: string
+  setStatusColor: (color: string) => void
 }
 
 const initialState: ThemeContextType = {
@@ -18,6 +20,8 @@ const initialState: ThemeContextType = {
   toggleTheme: () => null,
   activeTheme: 'default',
   setActiveTheme: () => null,
+  statusColor: '#ffffff', // 기본값
+  setStatusColor: () => null,
 }
 
 const ThemeContext = createContext<ThemeContextType>(initialState)
@@ -40,6 +44,8 @@ export function ThemeProvider({
   const [activeTheme, setActiveThemeState] = useState<string>(
     () => localStorage.getItem(activeThemeStorageKey) || defaultActiveTheme
   )
+
+  const [statusColor, setStatusColorState] = useState<string>('#ffffff')
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -109,6 +115,8 @@ export function ThemeProvider({
     toggleTheme,
     activeTheme,
     setActiveTheme,
+    statusColor,
+    setStatusColor: setStatusColorState,
   }
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>

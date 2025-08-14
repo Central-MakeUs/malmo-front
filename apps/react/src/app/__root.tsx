@@ -3,6 +3,7 @@ import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-ro
 import { match } from 'path-to-regexp'
 
 import { AuthContext } from '@/features/auth/hooks/use-auth'
+import { useTheme } from '@/shared/contexts/theme.context'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -68,13 +69,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootComponent() {
+  const { statusColor } = useTheme()
   return (
     <div className="no-bounce-scroll main-scrollable app-safe flex h-screen w-full flex-col bg-white">
       <main className="relative mx-auto flex w-full max-w-[600px] flex-1 flex-col">
         <div
           aria-hidden
-          className={'pointer-events-none fixed inset-x-0 top-0 z-40 bg-white'}
-          style={{ height: 'var(--safe-top)' }}
+          className={'pointer-events-none fixed inset-x-0 top-0 z-40'}
+          style={{ height: 'var(--safe-top)', backgroundColor: statusColor }}
         />
         <Outlet />
       </main>
