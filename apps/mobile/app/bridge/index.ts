@@ -90,6 +90,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
 
     async openWebView(url: string): Promise<void> {
       try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
         const { Linking } = require('react-native')
         await Linking.openURL(url)
       } catch (error) {
