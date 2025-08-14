@@ -1,7 +1,9 @@
+import fs from 'fs'
+import path from 'path'
+
 import tailwindcss from '@tailwindcss/vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react-swc'
-import path from 'path'
 import { defineConfig, loadEnv } from 'vite'
 import svgr from 'vite-plugin-svgr'
 
@@ -49,6 +51,10 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 3001,
       host: env.VITE_HOST_URL,
+      https: {
+        key: fs.readFileSync(env.VITE_HTTPS_KEY || ''),
+        cert: fs.readFileSync(env.VITE_HTTPS_CERT || ''),
+      },
       allowedHosts: [env.VITE_HOST_URL || 'localhost'],
       proxy: {
         '/api': {

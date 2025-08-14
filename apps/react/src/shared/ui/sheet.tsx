@@ -27,7 +27,9 @@ function SheetOverlay({ className, ...props }: React.ComponentProps<typeof Sheet
     <SheetPrimitive.Overlay
       data-slot="sheet-overlay"
       className={cn(
-        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/40',
+        'fixed inset-0 z-50 bg-black/40',
+        'data-[state=open]:animate-in data-[state=open]:fade-in-0',
+        'data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
         className
       )}
       {...props}
@@ -41,25 +43,37 @@ function SheetContent({
   side = 'right',
   onOpenAutoFocus,
   onCloseAutoFocus,
+  style,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: 'top' | 'right' | 'bottom' | 'left'
 }) {
+  const safePadForBottom =
+    side === 'bottom'
+      ? {
+          paddingBottom: 'calc(var(--safe-bottom))',
+          paddingLeft: 'var(--safe-left)',
+          paddingRight: 'var(--safe-right)',
+        }
+      : undefined
+
   return (
     <SheetPortal>
       <SheetOverlay />
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          'data-[state=closed]:animate-out data-[state=open]:animate-in fixed z-50 flex flex-col gap-4 bg-background shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500',
+          'fixed z-50 flex flex-col gap-4 bg-background shadow-lg transition ease-in-out',
+          'data-[state=open]:animate-in data-[state=open]:duration-500',
+          'data-[state=closed]:animate-out data-[state=closed]:duration-300',
           side === 'right' &&
-            'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm',
+            'data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-sm',
           side === 'left' &&
-            'data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm',
+            'data-[state=open]:slide-in-from-left data-[state=closed]:slide-out-to-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm',
           side === 'top' &&
-            'data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b',
+            'data-[state=open]:slide-in-from-top data-[state=closed]:slide-out-to-top inset-x-0 top-0 h-auto border-b',
           side === 'bottom' &&
-            'data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t',
+            'data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom inset-x-0 bottom-0 h-auto border-t',
           className
         )}
         onOpenAutoFocus={(event) => {
@@ -70,6 +84,7 @@ function SheetContent({
           event.preventDefault()
           onCloseAutoFocus?.(event)
         }}
+        style={{ ...style, ...safePadForBottom }}
         {...props}
       >
         {children}
@@ -87,7 +102,19 @@ function SheetHeader({ className, ...props }: React.ComponentProps<'div'>) {
 }
 
 function SheetFooter({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div data-slot="sheet-footer" className={cn('mt-auto flex flex-col gap-2 p-4', className)} {...props} />
+  return (
+    <div
+      data-slot="sheet-footer"
+      className={cn(
+        'mt-auto flex flex-col gap-2',
+        'px-4 pt-4',
+        'pr-[calc(1rem_+_var(--safe-right))] pl-[calc(1rem_+_var(--safe-left))]',
+        'pb-[calc(var(--safe-bottom)_+_1rem)]',
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
 function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Title>) {

@@ -58,7 +58,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <div className="w-full px-5 pb-[calc(32px+env(safe-area-inset-bottom,0px))]">
+      <div className="mt-auto mb-5 w-full px-5 pb-[var(--safe-bottom)]">
         {/* 카카오 로그인 버튼 */}
         {isWebView() ? (
           <button

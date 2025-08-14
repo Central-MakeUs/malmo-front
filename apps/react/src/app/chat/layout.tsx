@@ -18,7 +18,9 @@ function ChatLayout() {
       className={cn('h-screen transition-[padding-bottom] duration-[250ms] ease-[cubic-bezier(0.17,0.59,0.4,0.77)]', {
         'pt-3': chattingModal.showChattingTutorial,
       })}
-      style={{ paddingBottom: keyboardHeight ?? 0 }}
+      style={{
+        paddingBottom: keyboardHeight ? `calc(${keyboardHeight}px + var(--safe-bottom))` : `var(--safe-bottom)`,
+      }}
     >
       <Outlet />
     </div>

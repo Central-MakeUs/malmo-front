@@ -59,7 +59,7 @@ function RouteComponent() {
   const maxPage = Math.floor((data.level - 1) / 30)
 
   return (
-    <div className="flex h-screen flex-col bg-gray-neutral-100 pb-[60px]">
+    <div className="has-bottom-nav flex h-screen flex-col bg-gray-neutral-100">
       <HomeHeaderBar title="마음도감" />
 
       <section className="overflow-y-auto overscroll-y-none bg-white">

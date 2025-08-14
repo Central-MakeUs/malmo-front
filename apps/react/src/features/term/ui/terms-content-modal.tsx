@@ -35,7 +35,7 @@ export function TermsContentModal({ title, details, onClose }: TermsContentModal
       <div className="flex-1 overflow-y-auto px-5">
         <h2 className="title1-bold mt-10 pb-[26px] text-gray-iron-950">{title}</h2>
 
-        <div className="text-gray-iron-950">
+        <div className="pb-[var(--safe-bottom)] text-gray-iron-950">
           {details?.map((detail, index) => <div key={index}>{renderDetailContent(detail)}</div>)}
         </div>
       </div>

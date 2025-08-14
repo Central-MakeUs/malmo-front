@@ -113,7 +113,7 @@ function IntroPage() {
       </div>
 
       {/* 하단 고정 영역 */}
-      <div className="flex flex-col">
+      <div className="flex flex-col pb-[var(--safe-bottom)]">
         {/* 페이지 인디케이터 */}
         <div className="mb-8 flex justify-center space-x-2">
           {introPages.map((_, index) => (

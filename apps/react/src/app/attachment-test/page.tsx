@@ -55,7 +55,7 @@ function AttachmentTestPage() {
       </div>
 
       {/* 플로팅 버튼 */}
-      <div className="fixed right-0 bottom-0 left-0 z-10 flex justify-center px-5 py-4">
+      <div className="fixed right-0 bottom-[var(--safe-bottom)] left-0 z-10 flex justify-center px-5 py-4">
         <Button text="시작하기" onClick={handleStartTest} />
       </div>
     </div>

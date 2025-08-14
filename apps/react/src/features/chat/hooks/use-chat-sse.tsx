@@ -11,7 +11,7 @@ interface ChatSSECallbacks {
   onResponseId: (messageId: string) => void
   onLevelFinished: () => void
   onChatPaused: () => void
-  onError?: (error: any) => void
+  onError?: (error: unknown) => void
   onOpen?: () => void
 }
 

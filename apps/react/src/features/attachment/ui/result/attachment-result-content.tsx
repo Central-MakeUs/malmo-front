@@ -135,7 +135,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
       </div>
 
       {/* 바텀 버튼 */}
-      <div className="px-[20px] pb-[20px]">
+      <div className="px-5 pb-[calc(var(--safe-bottom)_+_20px)]">
         <Button text="홈으로 이동하기" onClick={handleClose} />
       </div>
     </div>
