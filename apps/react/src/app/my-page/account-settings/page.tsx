@@ -34,7 +34,7 @@ function AccountSettingsPage() {
   return (
     <div className="h-full bg-white">
       {/* 헤더 */}
-      <DetailHeaderBar title="계정 설정" />
+      <DetailHeaderBar title="내 계정" />
 
       {/* 소셜 계정 */}
       <div className="flex h-16 items-center justify-between pr-6 pl-5">
