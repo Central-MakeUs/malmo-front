@@ -33,6 +33,7 @@ interface Options {
   defaultCurve?: Curve
   /** 효과 끄기(디버그/안드로이드용 등) */
   disabled?: boolean
+  gap?: number
 }
 
 /**
@@ -48,10 +49,11 @@ export function useKeyboardSheetMotion(opts: Options = {}) {
 
   const duration = Math.max(0, Math.round(reduced ? 1 : (opts.defaultDuration ?? 250)))
   const curve = curveToCss(opts.defaultCurve ?? 'keyboard')
+  const gap = Math.max(0, opts.gap ?? 0)
 
   const motionStyle = useMemo<React.CSSProperties>(() => {
     if (opts.disabled) return {}
-    const offset = Math.max(0, keyboardHeight)
+    const offset = Math.max(0, keyboardHeight) + gap
     return {
       bottom: 0, // 레이아웃 고정
       transform: `translate3d(0, ${-offset}px, 0)`,

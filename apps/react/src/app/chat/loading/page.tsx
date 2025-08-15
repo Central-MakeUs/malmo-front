@@ -24,11 +24,11 @@ function RouteComponent() {
       await new Promise((r) => setTimeout(r, 1500))
       queryClient.removeQueries({ queryKey: chatService.chatMessagesQuery().queryKey })
       await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
-      navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId, fromHistory: false } })
+      navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId, fromHistory: false }, replace: true })
     },
     onError: () => {
       chatServiceOptions.onError?.()
-      navigate({ to: '/' })
+      navigate({ to: '/', replace: true })
     },
   })
 
@@ -37,15 +37,7 @@ function RouteComponent() {
   }, [])
 
   return (
-    <div
-      className="app-safe fixed inset-0 z-0"
-      style={{
-        paddingBottom: 'var(--safe-bottom)',
-        paddingTop: 'var(--safe-top)',
-        paddingLeft: 'var(--safe-left)',
-        paddingRight: 'var(--safe-right)',
-      }}
-    >
+    <div className="app-safe fixed inset-0 z-0">
       <div className="flex h-full w-full items-center justify-center overflow-hidden overscroll-none">
         <div className="flex flex-col items-center justify-center gap-[47px]">
           <Lottie animationData={summaryAnimation} className="max-h-[40vh] max-w-[520px] px-[28px]" />

@@ -77,7 +77,6 @@ function RouteComponent() {
   const scrollRef = useChatScroll({
     chatId,
     isFetchingNextPage,
-    keyboardHeight,
     sendingMessage,
     messages,
     streamingMessage,
@@ -98,14 +97,19 @@ function RouteComponent() {
   }, [messages, navigate])
 
   return (
-    <div className="flex h-full flex-col">
+    <div
+      className="app-safe fixed top-0 flex h-screen flex-col pb-[var(--safe-bottom)] transition-[padding-bottom] duration-[250ms] ease-[cubic-bezier(0.17,0.59,0.4,0.77)]"
+      style={{
+        paddingBottom: keyboardHeight ? `calc(${keyboardHeight}px + var(--safe-bottom))` : 'var(--safe-bottom)',
+      }}
+    >
       <DetailHeaderBar
         right={chatId ? undefined : exitButton()}
         title={chatId ? formatDate(messages[0]?.createdAt, 'YYYY년 MM월 DD일') : ''}
         onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
       />
 
-      <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
+      <section className="no-bounce-scroll flex flex-1 flex-col" ref={scrollRef}>
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
           <p className="body3-medium text-center text-white">
             대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!
