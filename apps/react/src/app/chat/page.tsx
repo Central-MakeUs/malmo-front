@@ -113,7 +113,7 @@ function RouteComponent() {
         <section className="no-bounce-scroll flex flex-1 flex-col" ref={scrollRef}>
           <div className="bg-gray-iron-700 px-[20px] py-[9px]">
             <p className="body3-medium text-center text-white">
-              대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!
+              대화 내용은 연인에게 공유 또는 유출되지 않으니 안심하세요!
             </p>
           </div>
 

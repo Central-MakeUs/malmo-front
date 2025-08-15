@@ -60,7 +60,7 @@ function RouteComponent() {
             </div>
             <input
               type="text"
-              placeholder="찾고싶은 대화 제목을 검색해보세요."
+              placeholder="찾고 싶은 대화 제목을 검색해 보세요"
               className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
