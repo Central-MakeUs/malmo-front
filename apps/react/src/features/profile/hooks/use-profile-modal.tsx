@@ -70,6 +70,10 @@ export function useProfileModal(): UseProfileModalReturn {
       onCancel: async () => {
         try {
           const result = await logout()
+
+          await queryClient.cancelQueries({ predicate: () => true })
+          queryClient.clear()
+
           if (result.success) {
             navigate({ to: '/login', replace: true })
           }
