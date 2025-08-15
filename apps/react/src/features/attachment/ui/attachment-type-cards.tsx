@@ -27,7 +27,7 @@ export function AttachmentTypeCards({
       title: '나의 애착유형',
       attachmentData: myAttachmentData,
       attachmentType: myAttachmentType,
-      badgeText: myAttachmentType || '검사필요',
+      badgeText: myAttachmentType || '검사 필요',
       mysteryIcon: MyMysteryMomo,
       navigationTo: myAttachmentData ? '/attachment-test/result/my' : '/attachment-test',
     },
