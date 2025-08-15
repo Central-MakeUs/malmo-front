@@ -43,6 +43,7 @@ function AnniversaryPage() {
             언제인가요?
           </>
         }
+        description={'말모가 기념일을 기억하고 보여드릴게요!'}
       />
 
       {/* 날짜 선택 */}

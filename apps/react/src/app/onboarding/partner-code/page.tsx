@@ -53,7 +53,7 @@ function PartnerCodePage() {
       <TitleSection
         title={
           <>
-            상대방의 초대 코드를
+            연인의 커플 코드를
             <br />
             입력해주세요
           </>
@@ -67,12 +67,17 @@ function PartnerCodePage() {
           value={partnerCode}
           onChange={(e) => setPartnerCode(e.target.value)}
           placeholder="코드를 입력해주세요"
+          maxLength={7}
         />
       </div>
 
       {/* 다음 버튼 */}
       <div className="mt-auto mb-10 px-5 pb-[var(--safe-bottom)]">
-        <Button text="다음" onClick={handleNext} disabled={connectCoupleMutation.isPending} />
+        <Button
+          text="연결하기"
+          onClick={handleNext}
+          disabled={connectCoupleMutation.isPending || !partnerCode.trim()}
+        />
       </div>
     </div>
   )
