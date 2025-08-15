@@ -1,3 +1,4 @@
+import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { AnniversaryEditSheet } from '@/features/anniversary'
@@ -31,7 +32,8 @@ function ProfileEditPage() {
 
   // 커플 연동 상태 확인
   const { data: partnerInfo, isError } = usePartnerInfo()
-  const isCoupleConnected = !isError && !!partnerInfo
+  const isCoupleConnected =
+    !isError && !!partnerInfo && partnerInfo?.memberState === PartnerMemberDataMemberStateEnum.Alive
 
   const menuItems = [
     {
