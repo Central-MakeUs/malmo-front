@@ -3,6 +3,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
+import { useAuth } from '@/features/auth'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
 import memberService from '@/shared/services/member.service'
@@ -23,6 +24,7 @@ function CoupleManagementPage() {
   const { data: inviteCodeData } = useQuery(memberService.inviteCodeQuery())
   const inviteCode = inviteCodeData?.data?.coupleCode || ''
   const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
+  const { refreshUserInfo } = useAuth()
 
   // 프로필 모달 훅
   const { coupleDisconnectModal, coupleConnectedModal } = useProfileModal()
@@ -32,9 +34,10 @@ function CoupleManagementPage() {
   const isConnected = !!partnerInfo
 
   // 페이지 새로고침 함수
-  const handleRefreshPage = () => {
-    queryClient.setQueryData(queryKeys.member.partnerInfo(), null)
+  const handleRefreshPage = async () => {
+    await queryClient.setQueryData(queryKeys.member.partnerInfo(), null)
     queryClient.removeQueries({ queryKey: queryKeys.member.partnerInfo() })
+    await refreshUserInfo()
 
     // 페이지 로더 새로고침
     router.invalidate()
@@ -79,10 +82,10 @@ function CoupleManagementPage() {
         {/* 구분선 */}
         <hr className="h-px border-0 bg-gray-iron-100" />
 
-        {/* 상대방 코드로 연결하기 */}
+        {/* 연인 코드로 연결하기 */}
         <button onClick={handleConnectPartner} className="flex h-16 w-full items-center" disabled={isConnected}>
           <span className={`body1-medium ${isConnected ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}>
-            상대방 코드로 연결하기
+            연인 코드로 연결하기
           </span>
         </button>
 
@@ -97,7 +100,7 @@ function CoupleManagementPage() {
         </button>
       </div>
 
-      {/* 상대방 코드 입력 바텀시트 */}
+      {/* 연인 코드 입력 바텀시트 */}
       <PartnerCodeSheet
         isOpen={isPartnerCodeSheetOpen}
         onOpenChange={setIsPartnerCodeSheetOpen}
