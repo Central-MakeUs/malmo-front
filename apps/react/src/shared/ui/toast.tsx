@@ -42,9 +42,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         expand={false}
         toastOptions={{
           unstyled: true,
-          style: {
-            top: '35px',
-          },
+          style: { top: 'calc(var(--safe-top) + 50px)' },
         }}
       />
     </>
