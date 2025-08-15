@@ -59,14 +59,7 @@ export function BottomNavigation() {
     path === '/' ? currentPathname === '/' : currentPathname === path || currentPathname.startsWith(`${path}/`)
 
   return (
-    <nav
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[600px] border-t border-gray-200 bg-white"
-      style={{
-        paddingBottom: 'var(--safe-bottom)',
-        paddingLeft: 'var(--safe-left)',
-        paddingRight: 'var(--safe-right)',
-      }}
-    >
+    <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-[600px] border-t border-gray-200 bg-white pb-[var(--safe-bottom)]">
       <div className="flex h-[60px]">
         {navigationItems.map((item) => {
           const active = isActive(item.path)

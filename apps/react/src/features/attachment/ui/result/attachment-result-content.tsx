@@ -87,12 +87,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
               ? `${userInfo.nickname || '사용자'}님의 애착유형은`
               : `${userInfo.nickname || '연인'}님의 애착유형은`}
           </h1>
-          <h2
-            className="title2-bold"
-            style={{
-              color: attachmentData.color,
-            }}
-          >
+          <h2 className="title2-bold" style={{ color: attachmentData.color }}>
             {attachmentData.character}
           </h2>
         </div>

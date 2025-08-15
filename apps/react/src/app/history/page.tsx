@@ -100,12 +100,7 @@ function RouteComponent() {
       </section>
 
       <Link to={'/chat'}>
-        <div
-          className="fixed right-5 z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700"
-          style={{
-            bottom: 'calc(var(--safe-bottom) + var(--bottom-nav-h) + 16px)',
-          }}
-        >
+        <div className="fixed right-5 bottom-[calc(var(--safe-bottom)+var(--bottom-nav-h)+16px)] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
           <div
             className={cn(
               'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',

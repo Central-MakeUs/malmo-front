@@ -75,8 +75,8 @@ function RootComponent() {
       <main className="relative mx-auto flex w-full max-w-[600px] flex-1 flex-col">
         <div
           aria-hidden
-          className={'pointer-events-none fixed inset-x-0 top-0 z-40'}
-          style={{ height: 'var(--safe-top)', backgroundColor: statusColor }}
+          className="pointer-events-none fixed inset-x-0 top-0 z-40 h-[var(--safe-top)]"
+          style={{ backgroundColor: statusColor }}
         />
         <Outlet />
       </main>

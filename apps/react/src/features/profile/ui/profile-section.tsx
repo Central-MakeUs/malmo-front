@@ -34,10 +34,7 @@ export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
       <div className="mt-3 flex justify-center">
         <div className="relative cursor-pointer" onClick={handleProfileClick}>
           <h2 className="heading1-bold text-center text-gray-iron-950">{nickname || '사용자'}</h2>
-          <ChevronRight
-            className="absolute top-1/2 ml-1 h-6 w-6 -translate-y-1/2 text-gray-iron-700"
-            style={{ left: 'calc(100% + 4px)' }}
-          />
+          <ChevronRight className="absolute top-1/2 left-full ml-1 h-6 w-6 -translate-y-1/2 text-gray-iron-700" />
         </div>
       </div>
 
