@@ -84,7 +84,7 @@ function HomePage() {
         {/* D-day */}
         <div className="flex h-8 items-center rounded-[30px] border border-gray-iron-200 px-4 py-[5px]">
           <HeartIcon className="h-4 w-4" />
-          <span className="body3-medium ml-[9px] text-gray-iron-950">D+{dDay}</span>
+          <span className="body2-semibold ml-[9px] text-gray-iron-950">D+{dDay}</span>
         </div>
       </header>
 
