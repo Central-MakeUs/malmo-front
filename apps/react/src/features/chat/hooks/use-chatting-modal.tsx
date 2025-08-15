@@ -115,7 +115,7 @@ export function useChattingModal(): UseChattingModalReturn {
         >
           <div
             className="absolute right-2 flex h-[72px] w-[72px] items-center justify-center rounded-full border-[2px] border-malmo-rasberry-500 bg-white"
-            style={{ top: 'var(--safe-top)' }} // ✅ 핵심
+            style={{ top: 'calc(var(--safe-top) - 12px)' }}
           >
             <p className="body2-semibold text-malmo-rasberry-500">종료하기</p>
             <div className="absolute right-[72px] bottom-[-86px] h-[120px] w-[97px] border-t-2 border-l-2 border-dashed border-malmo-rasberry-400">
