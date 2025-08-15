@@ -74,7 +74,7 @@ function AttachmentTestQuestionPage() {
       {/* 다음 버튼 */}
       <div className="mt-auto mb-10 px-5">
         <Button
-          text={currentPage === totalPages ? '완료 하기' : '다음'}
+          text={currentPage === totalPages ? '완료하기' : '다음'}
           onClick={handleNext}
           disabled={loading || !isCurrentPageComplete}
         />
