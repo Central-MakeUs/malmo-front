@@ -7,7 +7,9 @@ import { z } from 'zod'
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { useHistoryModal } from '@/features/history/hooks/use-history-modal'
 import { useTheme } from '@/shared/contexts/theme.context'
+import { cn } from '@/shared/lib/cn'
 import historyService from '@/shared/services/history.service'
+import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
@@ -82,7 +84,7 @@ function RouteComponent() {
           description={'모모가 고민을 해결하는 데<br /> 도움을 주었길 바라요'}
         />
 
-        <div className="rounded-t-[24px] bg-white px-5 py-10">
+        <div className={cn('rounded-t-[24px] bg-white px-5 pt-10', chatId ? 'pb-5' : 'pb-20')}>
           {!chatResult ? (
             <div className="flex flex-1 items-center justify-center bg-white">
               <p className="body1-regular text-gray-500">요약 결과를 불러오는 중입니다...</p>
@@ -106,6 +108,12 @@ function RouteComponent() {
               />
             ))}
           </div>
+
+          {chatId && (
+            <div className="mt-20">
+              <Button text="홈으로 이동하기" onClick={() => navigate({ to: '/' })} />
+            </div>
+          )}
         </div>
       </div>
     </div>

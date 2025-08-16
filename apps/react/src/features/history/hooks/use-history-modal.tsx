@@ -26,7 +26,13 @@ export function useHistoryModal(): UseHistoryModalReturn {
   const deleteChatHistoryModal = (id: number) => {
     alertDialog.open({
       title: '대화 기록을 삭제할까요?',
-      description: '삭제하면 기록을 되돌릴 수 없어요.',
+      description: (
+        <>
+          삭제하면 기록을 되돌릴 수 없고
+          <br />
+          모모가 이 기록을 상담에 반영하지 않아요.
+        </>
+      ),
       cancelText: '삭제하기',
       confirmText: '취소하기',
       onCancel: async () => {

@@ -30,14 +30,14 @@ export function QuestionProgress({ currentPage, totalPages, questionsPerPage }: 
       <p className="body3-medium mt-[12px] text-gray-iron-500">
         {currentPage === 1 ? (
           <>
-            총 <span className="text-malmo-rasberry-500">36</span>개의 질문에 솔직하게 응답해주시면
+            총 <span className="text-malmo-rasberry-500">36개</span>의 질문에 솔직하게 응답해주시면
             <br />
             정확한 결과를 알려드릴게요!
           </>
         ) : (
           <>
-            지금까지 <span className="text-malmo-rasberry-500"> 36개 중 {(currentPage - 1) * questionsPerPage}</span>
-            개의 질문에
+            지금까지 <span className="text-malmo-rasberry-500"> 36개 중 {(currentPage - 1) * questionsPerPage}개</span>
+            의 질문에
             <br />
             응답 완료했어요!
           </>

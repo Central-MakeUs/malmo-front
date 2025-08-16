@@ -1,5 +1,8 @@
 import { ChatRoomMessageData } from '@data/user-api-axios/api'
+import { useBridge } from '@webview-bridge/react'
 import { useCallback, useLayoutEffect, useRef, useEffect } from 'react'
+
+import bridge from '@/shared/bridge'
 
 function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T | undefined>(undefined)
@@ -12,7 +15,6 @@ function usePrevious<T>(value: T): T | undefined {
 type UseChatScrollProps = {
   chatId?: number
   isFetchingNextPage: boolean
-  keyboardHeight: number
   sendingMessage: boolean
   messages: ChatRoomMessageData[]
   streamingMessage: ChatRoomMessageData | null
@@ -21,11 +23,12 @@ type UseChatScrollProps = {
 export function useChatScroll({
   chatId,
   isFetchingNextPage,
-  keyboardHeight,
   sendingMessage,
   messages,
   streamingMessage,
 }: UseChatScrollProps) {
+  const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
+
   const scrollRef = useRef<HTMLDivElement>(null)
   const scrollHeightRef = useRef(0)
   const prevIsFetchingNextPage = usePrevious(isFetchingNextPage)

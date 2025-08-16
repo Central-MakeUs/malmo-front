@@ -49,8 +49,18 @@ export function formatDate(dateString?: string | Date, format?: string): string 
 }
 
 // D-day 계산
-export function calculateDDay(startLoveDate: string | undefined | null): number {
+export function calculateDDay(startLoveDate?: string | null): number {
   if (!startLoveDate) return 0
 
-  return Math.floor((Date.now() - new Date(startLoveDate).getTime()) / (1000 * 60 * 60 * 24)) + 1
+  // 'YYYY-MM-DD'를 로컬 자정으로 생성 (UTC 파싱 피하기)
+  const [y, m, d] = startLoveDate.split('-').map(Number)
+  if (!y || !m || !d) return 0
+
+  const startLocalMidnight = new Date(y, m - 1, d) // 로컬 00:00
+  const now = new Date()
+  const todayLocalMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+  const days = Math.floor((todayLocalMidnight.getTime() - startLocalMidnight.getTime()) / 86400000) + 1
+
+  return days
 }

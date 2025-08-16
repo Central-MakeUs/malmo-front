@@ -60,7 +60,7 @@ function RouteComponent() {
             </div>
             <input
               type="text"
-              placeholder="찾고싶은 대화 제목을 검색해보세요."
+              placeholder="찾고 싶은 대화 제목을 검색해 보세요"
               className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
@@ -100,12 +100,7 @@ function RouteComponent() {
       </section>
 
       <Link to={'/chat'}>
-        <div
-          className="fixed right-5 z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700"
-          style={{
-            bottom: 'calc(var(--safe-bottom) + var(--bottom-nav-h) + 16px)',
-          }}
-        >
+        <div className="fixed right-5 bottom-[calc(var(--safe-bottom)+var(--bottom-nav-h)+16px)] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
           <div
             className={cn(
               'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',

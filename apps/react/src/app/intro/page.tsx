@@ -6,6 +6,7 @@ import coupleConsultationImage from '@/assets/images/introduce/couple-consultati
 import dailyQuestionImage from '@/assets/images/introduce/daily-question.png'
 import momoIntroImage from '@/assets/images/introduce/momo-intro.png'
 import { Button } from '@/shared/ui/button'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 // 데이터 타입 정의
 interface IntroPageData {
@@ -80,12 +81,20 @@ function IntroPage() {
     handleComplete()
   }
 
+  const handlePrevious = () => {
+    if (currentPage > 0) {
+      setCurrentPage((prev) => prev - 1)
+    }
+  }
+
   return (
     <div className="flex h-full w-full flex-col bg-white">
+      <DetailHeaderBar onBackClick={handlePrevious} showBackButton={currentPage > 0} />
+
       {/* 메인 콘텐츠 */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col justify-center">
         {/* 이미지 */}
-        <div className="mt-[100px] flex justify-center">
+        <div className="flex justify-center">
           <div className="h-[236px] w-[320px]">
             <img src={currentData.image} alt={currentData.title} className="h-full w-full object-contain" />
           </div>

@@ -77,7 +77,6 @@ function RouteComponent() {
   const scrollRef = useChatScroll({
     chatId,
     isFetchingNextPage,
-    keyboardHeight,
     sendingMessage,
     messages,
     streamingMessage,
@@ -98,63 +97,73 @@ function RouteComponent() {
   }, [messages, navigate])
 
   return (
-    <div className="flex h-full flex-col">
-      <DetailHeaderBar
-        right={chatId ? undefined : exitButton()}
-        title={chatId ? formatDate(messages[0]?.createdAt, 'YYYY년 MM월 DD일') : ''}
-        onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
-      />
+    <>
+      <div
+        className="app-safe fixed top-0 flex h-screen flex-col pb-[var(--safe-bottom)] transition-[padding-bottom] duration-[250ms] ease-[cubic-bezier(0.17,0.59,0.4,0.77)]"
+        style={{
+          paddingBottom: keyboardHeight ? `calc(${keyboardHeight}px + var(--safe-bottom))` : 'var(--safe-bottom)',
+        }}
+      >
+        <DetailHeaderBar
+          right={chatId ? undefined : exitButton()}
+          title={chatId ? formatDate(messages[0]?.createdAt, 'YYYY년 MM월 DD일') : ''}
+          onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
+        />
 
-      <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
-        <div className="bg-gray-iron-700 px-[20px] py-[9px]">
-          <p className="body3-medium text-center text-white">
-            대화 내용은 상대에게 공유 또는 유출되지 않으니 안심하세요!
-          </p>
-        </div>
-
-        {isLoading && (
-          <div className="flex flex-1 items-center justify-center">
-            <LoadingIndicator isFetching={true} />
+        <section className="no-bounce-scroll flex flex-1 flex-col" ref={scrollRef}>
+          <div className="bg-gray-iron-700 px-[20px] py-[9px]">
+            <p className="body3-medium text-center text-white">
+              대화 내용은 연인에게 공유 또는 유출되지 않으니 안심하세요!
+            </p>
           </div>
-        )}
 
-        {!chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
-
-        <div className="flex flex-col gap-6 px-5 py-[22px]">
-          {messages.map((chat, index) => {
-            const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
-            return (
-              <React.Fragment key={`${chat.messageId}-${index}`}>
-                <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
-                {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
-                  <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
-                ) : (
-                  <MyChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
-                )}
-              </React.Fragment>
-            )
-          })}
-
-          {streamingMessage && (
-            <AiChatBubble message={streamingMessage.content} timestamp={formatTimestamp(streamingMessage.createdAt)} />
+          {isLoading && (
+            <div className="flex flex-1 items-center justify-center">
+              <LoadingIndicator isFetching={true} />
+            </div>
           )}
 
-          {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
-            <Link
-              to="/my-page"
-              className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
-            >
-              <p className="body3-semibold">마이페이지로 이동하기</p>
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          )}
-        </div>
+          {!chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
 
-        {chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
-      </section>
+          <div className="flex flex-col gap-6 px-5 py-[22px]">
+            {messages.map((chat, index) => {
+              const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
+              return (
+                <React.Fragment key={`${chat.messageId}-${index}`}>
+                  <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
+                  {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
+                    <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
+                  ) : (
+                    <MyChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
+                  )}
+                </React.Fragment>
+              )
+            })}
 
-      <ChatInput disabled={!!chatId} />
+            {streamingMessage && (
+              <AiChatBubble
+                message={streamingMessage.content}
+                timestamp={formatTimestamp(streamingMessage.createdAt)}
+              />
+            )}
+
+            {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
+              <Link
+                to="/my-page"
+                className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
+              >
+                <p className="body3-semibold">마이페이지로 이동하기</p>
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            )}
+          </div>
+
+          {chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
+        </section>
+
+        <ChatInput disabled={!!chatId} />
+      </div>
       {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
-    </div>
+    </>
   )
 }

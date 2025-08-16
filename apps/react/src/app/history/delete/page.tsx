@@ -51,7 +51,7 @@ function RouteComponent() {
         )}
       </section>
 
-      <div className="fixed inset-x-0 z-50 px-5" style={{ bottom: 'calc(var(--safe-bottom) + 20px)' }}>
+      <div className="fixed inset-x-0 bottom-[calc(var(--safe-bottom)+20px)] z-50 px-5">
         <Button
           onClick={handleDelete}
           text={selectedIds.length > 0 ? `${selectedIds.length}개 삭제` : '삭제'}

@@ -60,7 +60,7 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
         style={motionStyle}
       >
         {/* 접근성을 위한 숨겨진 제목 */}
-        <SheetTitle className="sr-only">상대방 코드로 연결하기</SheetTitle>
+        <SheetTitle className="sr-only">연인 코드로 연결하기</SheetTitle>
 
         {/* 커스텀 X 버튼 */}
         <button onClick={handleClose} className="absolute top-4 right-5 z-10 flex h-6 w-6 items-center justify-center">
@@ -69,11 +69,11 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
 
         <div className="flex h-full flex-col px-5 pt-10">
           {/* 제목 */}
-          <h2 className="heading1-bold text-center text-gray-iron-950">상대방 코드로 연결하기</h2>
+          <h2 className="heading1-bold text-center text-gray-iron-950">연인 코드로 연결하기</h2>
 
           {/* 설명 */}
           <p className="body1-medium mt-1 text-center text-gray-iron-700">
-            <span className="text-malmo-rasberry-500"> 연인에게 받은 코드</span>를 입력해주세요
+            <span className="text-malmo-rasberry-500"> 연인에게 받은 커플 코드</span>를 입력해주세요
           </p>
 
           {/* 코드 입력 */}
@@ -83,6 +83,7 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
               value={partnerCode}
               onChange={(e) => setPartnerCode(e.target.value)}
               placeholder="코드를 입력해 주세요"
+              maxLength={7}
             />
           </div>
 

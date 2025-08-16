@@ -29,7 +29,7 @@ function PartnerStatusPage() {
   }
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
+    <div className="flex h-full w-full flex-col bg-white pb-[var(--safe-bottom)]">
       {/* 헤더 */}
       <DetailHeaderBar onBackClick={handleGoToHome} />
 

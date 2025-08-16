@@ -10,7 +10,7 @@ import chatService from '@/shared/services/chat.service'
 import historyService from '@/shared/services/history.service'
 
 const CONNECTED_REQUIRED_MESSAGE =
-  '알려줘서 고마워! 그런데, 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 상대방에게 공유해봐!'
+  '알려줘서 고마워! 그런데, 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 연인에게 공유해봐!'
 
 // === QUERIES ===
 export const useChatRoomStatusQuery = () => {

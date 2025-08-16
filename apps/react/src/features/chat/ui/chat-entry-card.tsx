@@ -37,7 +37,7 @@ export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
                 <p className="body2-semibold text-gray-iron-900">
                   모모와 연애 고민 상담을
                   <br />
-                  시작해 보세요
+                  {isChatActive ? '이어가 보세요' : '시작해 보세요'}
                 </p>
               </div>
             </div>

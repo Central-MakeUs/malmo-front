@@ -104,26 +104,15 @@ export function useChattingModal(): UseChattingModalReturn {
       <div className="fixed inset-0 z-50 text-white">
         <div className="fixed inset-0 bg-black/80" />
 
-        <div
-          className="relative flex h-full w-full flex-col items-center justify-center"
-          style={{
-            paddingTop: 'var(--safe-top)',
-            paddingLeft: 'var(--safe-left)',
-            paddingRight: 'var(--safe-right)',
-            paddingBottom: 'calc(var(--safe-bottom) + 72px)',
-          }}
-        >
-          <div
-            className="absolute right-2 flex h-[72px] w-[72px] items-center justify-center rounded-full border-[2px] border-malmo-rasberry-500 bg-white"
-            style={{ top: 'var(--safe-top)' }} // ✅ 핵심
-          >
+        <div className="relative flex h-full w-full flex-col items-center justify-center">
+          <div className="absolute top-[calc(var(--safe-top)-12px)] right-2 flex h-[72px] w-[72px] items-center justify-center rounded-full border-2 border-malmo-rasberry-500 bg-white">
             <p className="body2-semibold text-malmo-rasberry-500">종료하기</p>
             <div className="absolute right-[72px] bottom-[-86px] h-[120px] w-[97px] border-t-2 border-l-2 border-dashed border-malmo-rasberry-400">
               <div className="absolute bottom-0 left-[-5px] h-2 w-2 rounded-full bg-malmo-rasberry-300" />
             </div>
           </div>
 
-          <p className="absolute text-center" style={{ top: 'calc(var(--safe-top) + 160px)' }}>
+          <p className="absolute top-[calc(var(--safe-top)+160px)] text-center">
             1. 모모와 <span className={highlightedText}>대화를 종료</span>하고 싶다면
             <span className={highlightedText}> 버튼</span>을 눌러주세요!
             <br />
@@ -157,10 +146,7 @@ export function useChattingModal(): UseChattingModalReturn {
           </div>
 
           {/* 하단 CTA: safe-bottom 위로 띄우기 */}
-          <div
-            className="absolute inset-x-0 flex w-full gap-2 px-5"
-            style={{ bottom: 'calc(var(--safe-bottom) + 12px)' }}
-          >
+          <div className="absolute inset-x-0 bottom-[calc(var(--safe-bottom)+12px)] flex w-full gap-2 px-5">
             <Button text="확인" type="secondary" onClick={() => setShowChattingTutorial(false)} />
             <Button
               text="다시 보지 않기"

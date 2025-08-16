@@ -68,6 +68,7 @@ function MyCodePage() {
             말모를 시작해보세요
           </>
         }
+        description="연인에게 커플 코드를 보내 커플연결을 해주세요!"
       />
 
       {/* 러브레터 이미지 */}
@@ -80,7 +81,7 @@ function MyCodePage() {
         <div className="rounded-[10px] bg-gray-neutral-100">
           <div className="flex items-center justify-center px-[10px] py-[22px]">
             <div className="flex flex-col items-center">
-              <p className="body3-medium text-gray-iron-500">나의 커플 초대 코드</p>
+              <p className="body3-medium text-gray-iron-500">나의 커플 코드</p>
               <div className="mt-2 flex items-center">
                 {isLoadingInviteCode ? (
                   <span className="heading1-semibold text-gray-iron-500">로딩 중...</span>
@@ -103,7 +104,7 @@ function MyCodePage() {
           className="body1-semibold flex h-[56px] w-full items-center justify-center rounded-[10px] border border-malmo-rasberry-500 text-malmo-rasberry-500"
           disabled={isSubmitting}
         >
-          상대방 코드로 연결하기
+          연인 코드로 연결하기
         </button>
 
         <div className="mt-[20px] flex justify-center">
