@@ -25,13 +25,14 @@ interface ChattingContextType {
 const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
 
 export function ChattingProvider({ children }: { children: ReactNode }) {
-  const chattingModal = useChattingModal()
   const queryClient = useQueryClient()
   const [sendingMessage, setSendingMessage] = useState<boolean>(false)
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
 
   const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
+
+  const chattingModal = useChattingModal(chatStatus)
 
   const handleChatResponse = useCallback((chunk: string) => {
     setStreamingMessage((prev) => {

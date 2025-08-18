@@ -1,3 +1,4 @@
+import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useQueryClient } from '@tanstack/react-query'
 import { useLocation, useRouter } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
@@ -16,7 +17,7 @@ export interface UseChattingModalReturn {
   showChattingTutorial: boolean
 }
 
-export function useChattingModal(): UseChattingModalReturn {
+export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum): UseChattingModalReturn {
   const alertDialog = useAlertDialog()
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -35,7 +36,7 @@ export function useChattingModal(): UseChattingModalReturn {
       }
 
       const seen = await bridge.getChatTutorialSeen()
-      if (seen) {
+      if (seen || chatStatus !== ChatRoomStateDataChatRoomStateEnum.BeforeInit) {
         setShowChattingTutorial(false)
         return
       }
