@@ -5,6 +5,7 @@ import {
   BaseListSwaggerResponseChatRoomMessageData,
 } from '@data/user-api-axios/api'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
+import { useLocation } from '@tanstack/react-router'
 import { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react'
 
 import { useChatSSE } from '@/features/chat/hooks/use-chat-sse'
@@ -28,6 +29,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
   const [sendingMessage, setSendingMessage] = useState<boolean>(false)
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
+  const { pathname } = useLocation()
 
   const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
@@ -93,7 +95,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         setStreamingMessage(null)
       }, []),
     },
-    isChatStatusSuccess
+    isChatStatusSuccess && pathname === '/chat'
   )
 
   useEffect(() => {
