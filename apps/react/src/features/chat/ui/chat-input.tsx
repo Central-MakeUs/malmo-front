@@ -69,7 +69,7 @@ function ChatInput(props: { disabled?: boolean }) {
   const disabled = props.disabled || paused || isPending || sendingMessage
 
   return (
-    <form onSubmit={handleSubmit} className="w-full bg-white px-5 py-[10px]">
+    <form onSubmit={handleSubmit} className="relative w-full bg-white px-5 py-[10px]">
       {/* 포커스 시에만 글자 수 카운터를 표시합니다. */}
       {isFocused && (
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-[12px] border border-gray-200 bg-white px-2 py-[2px] shadow-[1px_2px_12px_0px_#00000014]">
