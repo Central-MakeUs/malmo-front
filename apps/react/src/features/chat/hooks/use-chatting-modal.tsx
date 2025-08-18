@@ -137,8 +137,8 @@ export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum
             </div>
 
             <div className="relative">
-              <div className="absolute top-[-25px] left-0 h-[24px] border-l-2 border-dashed border-l-malmo-rasberry-400">
-                <div className="absolute bottom-0 left-[-5px] h-2 w-2 rounded-full bg-malmo-rasberry-300" />
+              <div className="absolute top-[-25px] left-0 h-[24px] w-[2px] bg-[repeating-linear-gradient(to_bottom,#ec5c7a_0_4px,transparent_4px_8px)]">
+                <div className="absolute bottom-0 left-[-3.5px] h-2 w-2 rounded-full bg-malmo-rasberry-300" />
               </div>
               <p className="mt-1">
                 2. 종료 후에는 모모와 나눈 <span className={highlightedText}>대화를 요약</span>해서 보여줘요.
