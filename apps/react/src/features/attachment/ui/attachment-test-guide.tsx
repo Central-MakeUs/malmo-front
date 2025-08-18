@@ -27,7 +27,7 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
         <div className="h-10" />
 
         {/* 컨텐츠 영역 */}
-        <div className="px-5">
+        <div className="px-5 pb-5">
           <div className="mb-3 flex justify-center">
             <StarIcon className="h-[32px] w-[32px]" />
           </div>
