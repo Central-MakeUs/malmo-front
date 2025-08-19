@@ -3,6 +3,7 @@ import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-ro
 import { match } from 'path-to-regexp'
 
 import { AuthContext } from '@/features/auth/hooks/use-auth'
+import { CoupleStatusProvider } from '@/features/member'
 import { useTheme } from '@/shared/contexts/theme.context'
 
 interface RouterContext {
@@ -78,7 +79,9 @@ function RootComponent() {
           className="pointer-events-none fixed inset-x-0 top-0 z-40 h-[var(--safe-top)]"
           style={{ backgroundColor: statusColor }}
         />
-        <Outlet />
+        <CoupleStatusProvider>
+          <Outlet />
+        </CoupleStatusProvider>
       </main>
     </div>
   )
