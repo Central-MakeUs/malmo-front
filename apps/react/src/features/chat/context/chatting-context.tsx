@@ -6,9 +6,9 @@ import {
 } from '@data/user-api-axios/api'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
 import { useLocation } from '@tanstack/react-router'
-import { createContext, useContext, ReactNode, useCallback, useEffect, useState } from 'react'
+import { createContext, useContext, ReactNode, useCallback, useEffect, useState, useRef } from 'react'
 
-import { useChatSSE } from '@/features/chat/hooks/use-chat-sse'
+import { useChatSSE, UseChatSSEReturn } from '@/features/chat/hooks/use-chat-sse'
 import chatService from '@/shared/services/chat.service'
 
 import { useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
@@ -21,15 +21,17 @@ interface ChattingContextType {
   setSendingMessageTrue: () => void
   streamingMessage: ChatRoomMessageData | null
   isChatStatusSuccess: boolean
+  reconnectSSE: () => Promise<void>
 }
 
-const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
+export const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
 
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
   const [sendingMessage, setSendingMessage] = useState<boolean>(false)
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
   const { pathname } = useLocation()
+  const sseRef = useRef<UseChatSSEReturn | null>(null)
 
   const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
@@ -56,7 +58,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
         const finalMessage = { ...streamingMessage, messageId: parseInt(messageId, 10) }
 
-        // 불변성을 유지하며 새로운 데이터 생성
         const newData = {
           ...oldData,
           pages: oldData.pages.map((page, index) => {
@@ -84,7 +85,8 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
   }, [queryClient])
 
-  useChatSSE(
+  // useChatSSE 훅의 반환값을 ref에 저장합니다.
+  const sse = useChatSSE(
     {
       onChatResponse: handleChatResponse,
       onResponseId: handleResponseId,
@@ -97,6 +99,14 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     },
     isChatStatusSuccess && pathname === '/chat'
   )
+  sseRef.current = sse
+
+  // 컨텍스트를 통해 제공할 재연결 함수
+  const reconnectSSE = useCallback(async () => {
+    if (sseRef.current) {
+      await sseRef.current.reconnect()
+    }
+  }, [])
 
   useEffect(() => {
     if (chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
@@ -117,6 +127,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         setSendingMessageTrue,
         streamingMessage,
         isChatStatusSuccess,
+        reconnectSSE,
       }}
     >
       {children}

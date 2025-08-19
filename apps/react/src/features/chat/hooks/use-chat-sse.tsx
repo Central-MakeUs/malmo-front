@@ -1,5 +1,5 @@
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 
 import bridge from '@/shared/bridge'
 
@@ -16,10 +16,15 @@ interface ChatSSECallbacks {
 }
 
 const BACKOFF_STEPS = [1000, 2000, 5000, 10000] as const
-const INACTIVITY_MS = 55_000 // 서버 60s 타임아웃 대비 선제 재연결
+const INACTIVITY_MS = 50_000 // 서버 60s 타임아웃 대비 선제 재연결
 const HEARTBEAT_TIMEOUT = 65_000 // 폴리필 연결 정지 감지 시간
 
-export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean) => {
+// useChatSSE 훅의 반환 타입을 정의합니다.
+export interface UseChatSSEReturn {
+  reconnect: () => Promise<void>
+}
+
+export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean): UseChatSSEReturn => {
   const esRef = useRef<EventSourcePolyfill | null>(null)
   const callbacksRef = useRef(callbacks)
   const reconnectAttemptRef = useRef(0)
@@ -77,20 +82,8 @@ export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean) => {
     }
   }
 
-  // 백오프 재연결
-  const safeReconnect = async () => {
-    closeES()
-    if (closingRef.current) return
-    const attempt = reconnectAttemptRef.current
-    const wait = BACKOFF_STEPS[Math.min(attempt, BACKOFF_STEPS.length - 1)]
-    reconnectAttemptRef.current = attempt + 1
-    devLog(`[SSE] reconnect #${attempt + 1} in ${wait}ms`)
-    await delay(wait ?? 10000)
-    await connect()
-  }
-
   // 실제 연결
-  const connect = async (): Promise<void> => {
+  const connect = useCallback(async (): Promise<void> => {
     if (!enabled || esRef.current) return
 
     try {
@@ -145,7 +138,7 @@ export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean) => {
         devLog('[SSE] error', ev)
         clearInactivityTimer()
 
-        // ✅ fetch 인터셉터에서 던진 401 에러도 여기로 들어올 수 있음
+        // fetch 인터셉터에서 던진 401 에러도 여기로 들어올 수 있음
         const status = (ev as { status?: number }).status
         if (status === 401) {
           closeES()
@@ -162,7 +155,19 @@ export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean) => {
       callbacksRef.current.onError?.(err)
       await safeReconnect()
     }
-  }
+  }, [enabled]) // safeReconnect를 의존성 배열에서 제거합니다.
+
+  // 백오프 재연결
+  const safeReconnect = useCallback(async () => {
+    closeES()
+    if (closingRef.current) return
+    const attempt = reconnectAttemptRef.current
+    const wait = BACKOFF_STEPS[Math.min(attempt, BACKOFF_STEPS.length - 1)]
+    reconnectAttemptRef.current = attempt + 1
+    devLog(`[SSE] reconnect #${attempt + 1} in ${wait}ms`)
+    await delay(wait ?? 10000)
+    await connect()
+  }, [connect])
 
   // 생명주기
   useEffect(() => {
@@ -179,5 +184,15 @@ export const useChatSSE = (callbacks: ChatSSECallbacks, enabled: boolean) => {
       closingRef.current = false
       devLog('[SSE] unmounted/disabled → closed')
     }
-  }, [enabled])
+  }, [enabled, connect])
+
+  // 외부에서 호출할 재연결 함수
+  const reconnect = useCallback(async () => {
+    devLog('[SSE] Manual reconnect triggered')
+    closeES()
+    reconnectAttemptRef.current = 0 // 재연결 시도 횟수 초기화
+    await connect()
+  }, [connect])
+
+  return { reconnect }
 }
