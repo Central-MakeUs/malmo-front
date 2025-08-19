@@ -20,7 +20,7 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
   const [partnerCode, setPartnerCode] = useState('')
   const { refreshUserInfo } = useAuth()
 
-  const { motionStyle } = useKeyboardSheetMotion()
+  const { motionKeyboardBottom } = useKeyboardSheetMotion()
 
   const connectCoupleMutation = useMutation({
     ...coupleService.connectCoupleMutation(),
@@ -57,7 +57,7 @@ export function PartnerCodeSheet({ isOpen, onOpenChange, onSuccess, onCoupleConn
       <SheetContent
         side="bottom"
         className="rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden"
-        style={motionStyle}
+        style={motionKeyboardBottom}
       >
         {/* 접근성을 위한 숨겨진 제목 */}
         <SheetTitle className="sr-only">연인 코드로 연결하기</SheetTitle>

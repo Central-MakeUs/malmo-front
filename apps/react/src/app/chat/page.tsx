@@ -1,6 +1,5 @@
 import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router'
-import { useBridge } from '@webview-bridge/react'
 import { ChevronRight } from 'lucide-react'
 import React, { useCallback, useMemo } from 'react'
 import { z } from 'zod'
@@ -13,8 +12,8 @@ import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import ChatInput from '@/features/chat/ui/chat-input'
 import { DateDivider } from '@/features/chat/ui/date-divider'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
-import bridge from '@/shared/bridge'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
+import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import { cn } from '@/shared/lib/cn'
 import chatService from '@/shared/services/chat.service'
 import historyService from '@/shared/services/history.service'
@@ -56,8 +55,8 @@ function RouteComponent() {
   const router = useRouter()
   const navigate = useNavigate()
   const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage } = useChatting()
-  const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
   const auth = useAuth()
+  const { keyboardBottom } = useKeyboardSheetMotion()
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
@@ -98,12 +97,7 @@ function RouteComponent() {
 
   return (
     <>
-      <div
-        className="app-safe fixed top-0 flex h-screen flex-col pb-[var(--safe-bottom)] transition-[padding-bottom] duration-[250ms] ease-[cubic-bezier(0.17,0.59,0.4,0.77)]"
-        style={{
-          paddingBottom: keyboardHeight ? `calc(${keyboardHeight}px + var(--safe-bottom))` : 'var(--safe-bottom)',
-        }}
-      >
+      <div className="app-safe fixed top-0 flex h-screen flex-col" style={keyboardBottom}>
         <DetailHeaderBar
           right={chatId ? undefined : exitButton()}
           title={chatId ? formatDate(messages[0]?.createdAt, 'YYYY년 MM월 DD일') : ''}

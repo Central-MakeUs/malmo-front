@@ -51,7 +51,7 @@ export function useKeyboardSheetMotion(opts: Options = {}) {
   const curve = curveToCss(opts.defaultCurve ?? 'keyboard')
   const gap = Math.max(0, opts.gap ?? 0)
 
-  const motionStyle = useMemo<React.CSSProperties>(() => {
+  const motionKeyboardBottom = useMemo<React.CSSProperties>(() => {
     if (opts.disabled) return {}
     const offset = Math.max(0, keyboardHeight) + gap
     return {
@@ -64,9 +64,21 @@ export function useKeyboardSheetMotion(opts: Options = {}) {
     }
   }, [keyboardHeight, duration, curve, opts.disabled])
 
+  const keyboardBottom = useMemo<React.CSSProperties>(() => {
+    if (opts.disabled) {
+      return { paddingBottom: 'var(--safe-bottom)' }
+    }
+
+    return {
+      paddingBottom: keyboardHeight ? `calc(${keyboardHeight + gap}px + var(--safe-bottom))` : 'var(--safe-bottom)',
+      transition: `padding-bottom ${duration}ms ${curve}`,
+    }
+  }, [keyboardHeight, duration, curve, opts.disabled, gap])
+
   return {
-    motionStyle,
-    keyboardHeight, // 필요시 노출
+    motionKeyboardBottom,
+    keyboardHeight,
+    keyboardBottom,
     duration,
     curveCss: curve,
   }
