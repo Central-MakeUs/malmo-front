@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import CheckIcon from '@/assets/icons/check.svg'
 import StarIcon from '@/assets/icons/star.svg'
 import { Button } from '@/shared/ui'
@@ -8,6 +10,17 @@ interface AttachmentTestGuideProps {
 }
 
 export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProps) {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      // 컴포넌트가 마운트된 후 애니메이션 시작
+      setTimeout(() => setIsVisible(true), 10)
+    } else {
+      setIsVisible(false)
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
   const guideItems = [
@@ -19,10 +32,19 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
   return (
     <div className="fixed inset-0 z-50 flex items-end">
       {/* 배경 오버레이 */}
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      <div
+        className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ease-out ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
+        onClick={onClose}
+      />
 
       {/* 바텀 시트 */}
-      <div className="animate-in slide-in-from-bottom relative h-[476px] w-full rounded-t-[20px] bg-white duration-300">
+      <div
+        className={`relative h-[476px] w-full rounded-t-[20px] bg-white transition-transform duration-300 ease-out ${
+          isVisible ? 'translate-y-0' : 'translate-y-full'
+        }`}
+      >
         {/* 상단 40px 간격 */}
         <div className="h-10" />
 
