@@ -24,7 +24,7 @@ export function QuestionItem({ question, answers, onSelectAnswer, isDisabled, re
       {/* 질문 텍스트 */}
       <div className="w-[284px] pl-1">
         <p
-          className={`text-[16px] font-semibold break-keep ${isDisabled ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}
+          className={`body1-semibold text-[16px] break-keep ${isDisabled ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}
         >
           {question.content}
         </p>
