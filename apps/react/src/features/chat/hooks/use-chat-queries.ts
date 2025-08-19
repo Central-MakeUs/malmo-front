@@ -11,7 +11,7 @@ import chatService from '@/shared/services/chat.service'
 import historyService from '@/shared/services/history.service'
 
 export interface ChatMessageTempStatus {
-  status: 'failed' | 'sent' | 'pending'
+  status?: 'failed' | 'sent' | 'pending'
 }
 
 const CONNECTED_REQUIRED_MESSAGE =

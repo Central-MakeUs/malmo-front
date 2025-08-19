@@ -26,6 +26,8 @@ interface ChattingContextType {
 
 export const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
 
+const TERMINATION_MESSAGE_START = '이제 대화가 종료되었어!'
+
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
   const [sendingMessage, setSendingMessage] = useState<boolean>(false)
@@ -38,16 +40,50 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
   const chattingModal = useChattingModal(chatStatus)
 
-  const handleChatResponse = useCallback((chunk: string) => {
-    setStreamingMessage((prev) => {
-      const baseMessage = {
-        messageId: prev?.messageId || Date.now(),
-        createdAt: prev?.createdAt || new Date().toISOString(),
-        senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+  const handleChatResponse = useCallback(
+    (chunk: string) => {
+      if (chunk.startsWith(TERMINATION_MESSAGE_START)) {
+        const queryKey = chatService.chatMessagesQuery().queryKey
+
+        const terminationMessage: ChatRoomMessageData = {
+          messageId: Date.now(),
+          content: chunk,
+          createdAt: new Date().toISOString(),
+          senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+        }
+
+        // streamingMessage 상태를 건너뛰고 react-query 캐시에 직접 저장
+        queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+          if (!oldData) return oldData
+
+          const newData = { ...oldData, pages: [...oldData.pages] }
+          if (newData.pages.length > 0) {
+            const firstPage = { ...newData.pages[0], list: [...(newData.pages[0]?.list ?? [])] }
+            firstPage.list.unshift(terminationMessage)
+            newData.pages[0] = firstPage
+          } else {
+            newData.pages.push({ list: [terminationMessage], page: 0, size: 1, totalCount: 1 })
+          }
+          return newData
+        })
+
+        // 다른 스트리밍 관련 상태는 확실하게 초기화
+        setStreamingMessage(null)
+        return // 여기서 함수 실행 종료
       }
-      return { ...baseMessage, content: (prev?.content || '') + chunk }
-    })
-  }, [])
+
+      // 기존의 일반 스트리밍 메시지 처리 로직
+      setStreamingMessage((prev) => {
+        const baseMessage = {
+          messageId: prev?.messageId || Date.now(),
+          createdAt: prev?.createdAt || new Date().toISOString(),
+          senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+        }
+        return { ...baseMessage, content: (prev?.content || '') + chunk }
+      })
+    },
+    [queryClient]
+  )
 
   const handleResponseId = useCallback(
     (messageId: string) => {

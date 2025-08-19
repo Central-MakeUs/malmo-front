@@ -1,4 +1,8 @@
-import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
+import {
+  ChatRoomMessageData,
+  ChatRoomMessageDataSenderTypeEnum,
+  ChatRoomStateDataChatRoomStateEnum,
+} from '@data/user-api-axios/api'
 import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import React, { useCallback, useMemo } from 'react'
@@ -6,7 +10,11 @@ import { z } from 'zod'
 
 import { useAuth } from '@/features/auth'
 import { useChatting } from '@/features/chat/context/chatting-context'
-import { useChatMessagesQuery } from '@/features/chat/hooks/use-chat-queries'
+import {
+  ChatMessageTempStatus,
+  useChatMessagesQuery,
+  useSendMessageMutation,
+} from '@/features/chat/hooks/use-chat-queries'
 import { useChatScroll } from '@/features/chat/hooks/use-chat-scroll'
 import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import ChatInput from '@/features/chat/ui/chat-input'
@@ -63,6 +71,7 @@ function RouteComponent() {
     chatStatus,
     chatId
   )
+  const { mutate: sendMessage } = useSendMessageMutation()
 
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
@@ -71,7 +80,7 @@ function RouteComponent() {
     if (!data || !auth.userInfo.loveTypeCategory) return []
     const allMessages = data.pages.flatMap((page) => page?.list ?? [])
     return chatId ? allMessages : [...allMessages].reverse()
-  }, [data, chatId, chattingModal.showChattingTutorial])
+  }, [data, chatId, chattingModal.showChattingTutorial, auth.userInfo.loveTypeCategory])
 
   const scrollRef = useChatScroll({
     chatId,
@@ -95,6 +104,10 @@ function RouteComponent() {
     )
   }, [messages, navigate])
 
+  const handleRetry = (content: string) => {
+    sendMessage(content)
+  }
+
   return (
     <>
       <div className="app-safe fixed top-0 flex h-screen flex-col" style={keyboardBottom}>
@@ -104,7 +117,7 @@ function RouteComponent() {
           onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
         />
 
-        <section className="no-bounce-scroll flex flex-1 flex-col" ref={scrollRef}>
+        <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
           <div className="bg-gray-iron-700 px-[20px] py-[9px]">
             <p className="body3-medium text-center text-white">
               대화 내용은 연인에게 공유 또는 유출되지 않으니 안심하세요!
@@ -128,7 +141,12 @@ function RouteComponent() {
                   {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
                     <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
                   ) : (
-                    <MyChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
+                    <MyChatBubble
+                      message={chat.content}
+                      timestamp={formatTimestamp(chat.createdAt)}
+                      status={(chat as ChatRoomMessageData & ChatMessageTempStatus).status ?? 'sent'}
+                      onRetry={() => handleRetry(chat.content!)}
+                    />
                   )}
                 </React.Fragment>
               )
