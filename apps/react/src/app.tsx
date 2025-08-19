@@ -1,6 +1,7 @@
 import { RouterProvider } from '@tanstack/react-router'
 
 import { AuthProvider, useAuth } from '@/features/auth'
+import { SSEProvider } from '@/shared/contexts/sse-context'
 import { ThemeProvider } from '@/shared/contexts/theme.context'
 import { ToastProvider } from '@/shared/ui/toast'
 
@@ -25,9 +26,11 @@ export function App() {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
-          <AlertDialogProvider>
-            <InnerApp />
-          </AlertDialogProvider>
+          <SSEProvider>
+            <AlertDialogProvider>
+              <InnerApp />
+            </AlertDialogProvider>
+          </SSEProvider>
         </AuthProvider>
       </ToastProvider>
     </ThemeProvider>
