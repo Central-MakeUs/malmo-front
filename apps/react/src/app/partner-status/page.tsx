@@ -34,12 +34,10 @@ function PartnerStatusPage() {
       <DetailHeaderBar onBackClick={handleGoToHome} />
 
       {/* 메인 콘텐츠 */}
-      <div className="flex flex-1 flex-col px-6">
+      <div className="flex flex-1 -translate-y-[80px] flex-col items-center justify-center px-6">
         {/* 이미지 */}
-        <div className="mt-[98px] flex justify-center">
-          <div className="h-[236px] w-[320px]">
-            <img src={momoEmptyStateImage} className="h-full w-full object-contain" />
-          </div>
+        <div className="h-[236px] w-[320px]">
+          <img src={momoEmptyStateImage} className="h-full w-full object-contain" />
         </div>
 
         {/* 타이틀 */}

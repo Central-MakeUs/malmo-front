@@ -73,18 +73,16 @@ interface EmptyStateProps {
 }
 
 export const EmptyState = ({ image, title, description, className }: EmptyStateProps) => (
-  <div className={className}>
-    <div className="mb-5 px-7 pt-14">
-      <div className="mx-auto h-[220px] w-full">
-        <img
-          src={image}
-          alt="Empty State"
-          loading="eager"
-          decoding="async"
-          className="h-full w-full object-contain"
-          draggable={false}
-        />
-      </div>
+  <div className={`flex h-full -translate-y-[60px] flex-col items-center justify-center ${className || ''}`}>
+    <div className="mx-auto mb-5 h-[220px] w-full px-7">
+      <img
+        src={image}
+        alt="Empty State"
+        loading="eager"
+        decoding="async"
+        className="h-full w-full object-contain"
+        draggable={false}
+      />
     </div>
     <div className="text-center">
       <p className="heading1-bold mb-1">{title}</p>
