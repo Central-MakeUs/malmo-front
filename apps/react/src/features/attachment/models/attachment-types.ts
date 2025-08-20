@@ -20,8 +20,8 @@ export const STABLE_TYPE_DATA: AttachmentTypeData = {
   color: '#EC4665',
   badgeBackgroundColor: 'bg-malmo-rasberry-25',
   badgeTextColor: 'text-malmo-rasberry-500',
-  anxietyThreshold: '2.33 미만',
-  avoidanceThreshold: '2.66 미만',
+  anxietyThreshold: '2.61 미만',
+  avoidanceThreshold: '2.33 미만',
   description: `평온이 성격을 가진 사람은 연인과 가까워질 때 안정감을 느껴요. 연애 중에도 나만의 삶과 영역을 균형 있게 유지하는 편이에요.
 
 연인이 고민을 털어놓을 때는 든든하게 곁을 지켜주고, 갈등이 생겨도 감정에 솔직하면서 차분히 대화로 해결하려는 태도를 보여요.
@@ -56,8 +56,8 @@ export const ANXIETY_TYPE_DATA: AttachmentTypeData = {
   color: '#FF8400',
   badgeBackgroundColor: 'bg-malmo-orange-50',
   badgeTextColor: 'text-malmo-orange-500',
-  anxietyThreshold: '2.33 이상',
-  avoidanceThreshold: '2.61 미만',
+  anxietyThreshold: '2.61 이상',
+  avoidanceThreshold: '2.33 미만',
   description: `걱정이 성격을 가진 사람은 상대의 반응에 쉽게 불안해져요. '사랑받고 있는 게 맞을까?'라는 의심이 자주 들고, 끊임없이 애정을 확인받고 싶어 해요.
 
 자신의 속마음은 잘 이야기하지만, 동시에 정서적 의존도도 높은 편이에요. 상대의 작은 필요에 과도하게 맞춰주며 애정을 얻으려 할 때가 있어요.
@@ -92,8 +92,8 @@ export const AVOIDANCE_TYPE_DATA: AttachmentTypeData = {
   color: '#EC4665',
   badgeBackgroundColor: 'bg-malmo-rasberry-25',
   badgeTextColor: 'text-malmo-rasberry-500',
-  anxietyThreshold: '2.33 미만',
-  avoidanceThreshold: '2.61 이상',
+  anxietyThreshold: '2.61 미만',
+  avoidanceThreshold: '2.33 이상',
   description: `도망이 성격을 가진 사람은 혼자만의 시간과 독립성을 무엇보다 중요하게 여겨요. 그래서 연애보다는 일이나 취미에서 더 큰 만족을 느끼는 경우도 많아요.
 
 나를 드러내거나 감정을 솔직하게 표현하는 게 익숙하지 않다 보니, 연인이 감정적으로 다가올 때 어떻게 받아줘야 할지 몰라서 부담을 느끼기도 해요. 그래서 자연스럽게 공감보다는 해결 중심의 대화를 하게 되는 편이에요.
@@ -128,8 +128,8 @@ export const CONFUSION_TYPE_DATA: AttachmentTypeData = {
   color: '#FF8400',
   badgeBackgroundColor: 'bg-malmo-orange-50',
   badgeTextColor: 'text-malmo-orange-500',
-  anxietyThreshold: '2.33 이상',
-  avoidanceThreshold: '2.61 이상',
+  anxietyThreshold: '2.61 이상',
+  avoidanceThreshold: '2.33 이상',
   description: `갈팡이 성격을 가진 사람은 "사랑받고 싶다"는 마음과 "상처받을까봐 두렵다"는 마음이 자주 충돌해요. 그래서 연인에게 강하게 끌리다가도, 갑자기 밀어내거나 비판하는 모습을 보일 수 있어요.
 
 나를 온전히 드러내면 떠날까 봐 두려워, 마음을 숨기기도 해요. 스스로도 연인도 믿기 어려워서 관계를 유지하는 것이 어렵게 느껴질 수 있어요.
