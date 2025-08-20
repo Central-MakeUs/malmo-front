@@ -3,7 +3,7 @@ module.exports = () => {
   return {
     name: '말모',
     slug: 'malmo-app',
-    version: '1.0.0',
+    version: '1.1.0',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'malmo',
@@ -12,6 +12,7 @@ module.exports = () => {
     ios: {
       supportsTablet: false,
       bundleIdentifier: 'com.malmo.app',
+      buildNumber: '3',
       usesAppleSignIn: true,
       infoPlist: {
         CFBundleURLTypes: [
@@ -48,6 +49,7 @@ module.exports = () => {
         backgroundColor: '#FFFFFF',
       },
       package: 'com.malmo.app',
+      versionCode: 3,
       intentFilters: [
         {
           action: 'VIEW',

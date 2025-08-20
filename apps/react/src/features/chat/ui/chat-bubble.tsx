@@ -1,8 +1,10 @@
+import { AlertTriangle } from 'lucide-react'
 import { useMemo } from 'react'
 
 import momoChat from '@/assets/images/momo-chat.png'
 import { cn } from '@/shared/lib/cn'
 
+import { ChatMessageTempStatus } from '../hooks/use-chat-queries'
 import { groupSentences } from '../util/chat-format'
 
 interface AiChatBubbleProps {
@@ -43,14 +45,35 @@ export function AiChatBubble(props: AiChatBubbleProps) {
 interface MyChatBubbleProps {
   message?: string
   timestamp: string
+  onRetry?: () => void
 }
 
-export function MyChatBubble({ message = '', timestamp }: MyChatBubbleProps) {
+export function MyChatBubble({
+  message = '',
+  timestamp,
+  status = 'sent',
+  onRetry,
+}: MyChatBubbleProps & ChatMessageTempStatus) {
   return (
     <div className="flex w-full justify-end">
       <div className="flex items-end gap-2">
-        <p className="flex-shrink-0 text-[11px] leading-[20px] text-gray-600">{timestamp}</p>
-        <div className="w-fit max-w-full rounded-[10px] rounded-br-none bg-[#FFF2F4] px-[14px] py-[10px]">
+        {status === 'failed' && (
+          <div className="flex flex-col items-center gap-1">
+            <AlertTriangle className="h-4 w-4 text-red-500" />
+            <button onClick={onRetry} className="label2-regular text-gray-600 hover:underline">
+              재시도
+            </button>
+          </div>
+        )}
+        <p className="flex-shrink-0 text-[11px] leading-[20px] text-gray-600">
+          {status === 'pending' ? '전송 중...' : timestamp}
+        </p>
+        <div
+          className={cn('w-fit max-w-full rounded-[10px] rounded-br-none bg-[#FFF2F4] px-[14px] py-[10px]', {
+            'bg-gray-200': status === 'pending',
+            'border border-red-300': status === 'failed',
+          })}
+        >
           <p className="body2-regular break-words break-keep text-gray-800">{message}</p>
         </div>
       </div>

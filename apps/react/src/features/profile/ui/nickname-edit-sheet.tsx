@@ -24,7 +24,7 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: { isOpen: boolean; o
     },
   })
 
-  const { motionStyle } = useKeyboardSheetMotion()
+  const { motionKeyboardBottom } = useKeyboardSheetMotion()
 
   const handleSubmit = () => {
     if (!isValid || updateNicknameMutation.isPending) return
@@ -36,7 +36,7 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: { isOpen: boolean; o
       <SheetContent
         side="bottom"
         className="rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden"
-        style={motionStyle}
+        style={motionKeyboardBottom}
       >
         <SheetTitle className="sr-only">닉네임 변경</SheetTitle>
 

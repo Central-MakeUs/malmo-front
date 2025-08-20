@@ -4,6 +4,7 @@ import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useNicknameInput, NicknameInput } from '@/features/profile'
+import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -14,6 +15,7 @@ export const Route = createFileRoute('/onboarding/nickname/')({
 function NicknamePage() {
   const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
   const { data, updateNickname } = useOnboarding()
+  const { keyboardBottom } = useKeyboardSheetMotion()
 
   const { nickname, handleNicknameChange, isValid, maxLength } = useNicknameInput({
     initialValue: data.nickname || '',
@@ -58,7 +60,7 @@ function NicknamePage() {
       </div>
 
       {/* 다음 버튼 */}
-      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
+      <div className="mt-auto mb-5 px-5" style={keyboardBottom}>
         <Button text="다음" onClick={handleNext} disabled={!isValid} />
       </div>
     </div>

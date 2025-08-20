@@ -24,7 +24,7 @@ export default function App() {
   const insets = useSafeAreaInsets()
   const [showSplash, setShowSplash] = useState(true)
 
-  // const webviewUrl =  process.env.EXPO_PUBLIC_WEB_VIEW_URL
+  // const webviewUrl = process.env.EXPO_PUBLIC_WEB_VIEW_URL
   const webviewUrl =
     Platform.OS === 'ios' ? process.env.EXPO_PUBLIC_LOCAL_URL : process.env.EXPO_PUBLIC_ANDROID_WEB_VIEW_URL
   if (!webviewUrl) throw new Error('Webview URL is not set')

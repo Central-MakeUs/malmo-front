@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
+import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import coupleService from '@/shared/services/couple.service'
 import { Button, Input } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -16,6 +17,7 @@ export const Route = createFileRoute('/onboarding/partner-code/')({
 function PartnerCodePage() {
   const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
   const { data, updatePartnerCode, completeOnboarding } = useOnboarding()
+  const { keyboardBottom } = useKeyboardSheetMotion()
 
   const [partnerCode, setPartnerCode] = useState(data.partnerCode || '')
 
@@ -72,7 +74,7 @@ function PartnerCodePage() {
       </div>
 
       {/* 다음 버튼 */}
-      <div className="mt-auto mb-10 px-5 pb-[var(--safe-bottom)]">
+      <div className="mt-auto mb-5 px-5" style={keyboardBottom}>
         <Button
           text="연결하기"
           onClick={handleNext}

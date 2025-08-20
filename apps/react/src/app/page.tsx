@@ -42,7 +42,10 @@ function HomePage() {
 
   // 채팅방 상태 확인
   const { data: chatRoomStatus } = useChatRoomStatusQuery()
-  const isChatActive = chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.Alive
+  const isChatActive =
+    chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.Alive ||
+    chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.Paused ||
+    chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion
 
   // 애착유형이 있는지 확인
   const hasAttachmentType = !!userInfo.loveTypeCategory
