@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouter } from '@tanstack/react-router'
 
 import MomoConnectedImage from '@/assets/images/momo-connected.png'
 import { useAuth } from '@/features/auth'
@@ -12,12 +12,14 @@ export interface UseProfileModalReturn {
   withdrawModal: () => void
   coupleDisconnectModal: (onSuccess?: () => void) => void
   coupleConnectedModal: () => void
+  coupleDisconnectedNotificationModal: () => void
 }
 
 export function useProfileModal(): UseProfileModalReturn {
   const alertDialog = useAlertDialog()
   const { logout, refreshUserInfo } = useAuth()
   const navigate = useNavigate()
+  const router = useRouter()
   const queryClient = useQueryClient()
 
   // 회원 탈퇴 뮤테이션
@@ -132,6 +134,31 @@ export function useProfileModal(): UseProfileModalReturn {
       confirmText: '확인',
       onConfirm: async () => {
         await refreshUserInfo()
+        router.invalidate()
+      },
+    })
+  }
+
+  const coupleDisconnectedNotificationModal = () => {
+    alertDialog.open({
+      title: '커플 연결이 끊어졌어요',
+      description: (
+        <>
+          말모가 이전 기록을 그대로 보여 드릴게요.
+          <br />
+          모모와 상담하며 관계를 회복해 보아요!
+        </>
+      ),
+      confirmText: '확인',
+      cancelText: '마이페이지 가기',
+      onConfirm: async () => {
+        await refreshUserInfo()
+        router.invalidate()
+      },
+      onCancel: async () => {
+        await refreshUserInfo()
+        navigate({ to: '/my-page' })
+        router.invalidate()
       },
     })
   }
@@ -141,5 +168,6 @@ export function useProfileModal(): UseProfileModalReturn {
     withdrawModal,
     coupleDisconnectModal,
     coupleConnectedModal,
+    coupleDisconnectedNotificationModal,
   }
 }
