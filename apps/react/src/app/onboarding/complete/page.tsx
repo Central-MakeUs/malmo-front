@@ -18,8 +18,8 @@ function ConnectCompletePage() {
 
   return (
     <div className="flex h-full w-full flex-col bg-white">
-      {/* 상단 여백 */}
-      <div className="mt-[148px] flex flex-col items-center">
+      {/* 컨텐츠 */}
+      <div className="flex flex-1 -translate-y-[80px] flex-col items-center justify-center">
         {/* 이미지 */}
         <img src={onboardingEndImage} alt="온보딩 완료" className="h-[236px] w-[320px] object-contain" />
 

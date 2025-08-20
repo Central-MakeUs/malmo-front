@@ -9,7 +9,7 @@ interface StatsSectionProps {
 export function StatsSection({ totalChatRoomCount, totalCoupleQuestionCount }: StatsSectionProps) {
   return (
     <div className="mt-5 px-5">
-      <div className="rounded-xl bg-gray-neutral-100 px-5 pt-4 pb-5">
+      <div className="rounded-xl bg-gray-neutral-100 pt-4 pb-5">
         <div className="relative flex items-center justify-center">
           {/* 가운데 세로 구분선 */}
           <div className="absolute left-1/2 h-[36px] w-px -translate-x-1/2 bg-gray-iron-300"></div>

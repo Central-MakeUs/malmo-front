@@ -1,13 +1,20 @@
 'use client'
 
 import * as SheetPrimitive from '@radix-ui/react-dialog'
+import { motion, AnimatePresence } from 'framer-motion'
 import { XIcon } from 'lucide-react'
 import * as React from 'react'
 
 import { cn } from '@/shared/lib/cn'
 
-function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
-  return <SheetPrimitive.Root data-slot="sheet" {...props} />
+const SheetContext = React.createContext<{ open: boolean }>({ open: false })
+
+function Sheet({ open, onOpenChange, ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
+  return (
+    <SheetContext.Provider value={{ open: open || false }}>
+      <SheetPrimitive.Root data-slot="sheet" open={open} onOpenChange={onOpenChange} {...props} />
+    </SheetContext.Provider>
+  )
 }
 
 function SheetTrigger({ ...props }: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
@@ -24,11 +31,15 @@ function SheetPortal({ ...props }: React.ComponentProps<typeof SheetPrimitive.Po
 
 function SheetOverlay({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Overlay>) {
   return (
-    <SheetPrimitive.Overlay
-      data-slot="sheet-overlay"
-      className={cn('fixed inset-0 z-50 bg-black/40', className)}
-      {...props}
-    />
+    <SheetPrimitive.Overlay data-slot="sheet-overlay" asChild {...props}>
+      <motion.div
+        className={cn('fixed inset-0 z-50 bg-black/40', className)}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.2 }}
+      />
+    </SheetPrimitive.Overlay>
   )
 }
 
@@ -39,11 +50,12 @@ function SheetContent({
   onOpenAutoFocus,
   onCloseAutoFocus,
   style,
-
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: 'top' | 'right' | 'bottom' | 'left'
 }) {
+  const { open } = React.useContext(SheetContext)
+
   const safePadForBottom =
     side === 'bottom'
       ? {
@@ -53,33 +65,89 @@ function SheetContent({
         }
       : undefined
 
+  // 애니메이션 설정
+  const getMotionProps = () => {
+    switch (side) {
+      case 'bottom':
+        return {
+          initial: { y: '100%' },
+          animate: { y: 0 },
+          exit: { y: '100%' },
+        }
+      case 'top':
+        return {
+          initial: { y: '-100%' },
+          animate: { y: 0 },
+          exit: { y: '-100%' },
+        }
+      case 'left':
+        return {
+          initial: { x: '-100%' },
+          animate: { x: 0 },
+          exit: { x: '-100%' },
+        }
+      case 'right':
+        return {
+          initial: { x: '100%' },
+          animate: { x: 0 },
+          exit: { x: '100%' },
+        }
+      default:
+        return {
+          initial: { y: '100%' },
+          animate: { y: 0 },
+          exit: { y: '100%' },
+        }
+    }
+  }
+
   return (
-    <SheetPortal>
-      <SheetOverlay />
-      <SheetPrimitive.Content
-        data-slot="sheet-content"
-        className={cn(
-          'fixed z-50 flex flex-col gap-4 bg-background shadow-lg',
-          side === 'bottom' && 'inset-x-0 bottom-0 h-auto border-t',
-          className
+    <SheetPortal forceMount>
+      <AnimatePresence>
+        {open && (
+          <>
+            <SheetOverlay key="overlay" />
+            <SheetPrimitive.Content
+              key="content"
+              data-slot="sheet-content"
+              className={cn(
+                'fixed z-50 flex flex-col gap-4 bg-background shadow-lg',
+                side === 'bottom' && 'inset-x-0 bottom-0 h-auto border-t',
+                side === 'top' && 'inset-x-0 top-0 h-auto border-b',
+                side === 'left' && 'inset-y-0 left-0 w-auto border-r',
+                side === 'right' && 'inset-y-0 right-0 w-auto border-l',
+                className
+              )}
+              asChild
+              onOpenAutoFocus={(event) => {
+                event.preventDefault()
+                onOpenAutoFocus?.(event)
+              }}
+              onCloseAutoFocus={(event) => {
+                event.preventDefault()
+                onCloseAutoFocus?.(event)
+              }}
+              style={{ ...style, ...safePadForBottom }}
+              {...props}
+            >
+              <motion.div
+                {...getMotionProps()}
+                transition={{
+                  type: 'spring',
+                  damping: 30,
+                  stiffness: 300,
+                }}
+              >
+                {children}
+                <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 focus:outline-hidden disabled:pointer-events-none">
+                  <XIcon className="size-4" />
+                  <span className="sr-only">Close</span>
+                </SheetPrimitive.Close>
+              </motion.div>
+            </SheetPrimitive.Content>
+          </>
         )}
-        onOpenAutoFocus={(event) => {
-          event.preventDefault()
-          onOpenAutoFocus?.(event)
-        }}
-        onCloseAutoFocus={(event) => {
-          event.preventDefault()
-          onCloseAutoFocus?.(event)
-        }}
-        style={{ ...style, ...safePadForBottom }}
-        {...props}
-      >
-        {children}
-        <SheetPrimitive.Close className="absolute top-4 right-4 rounded-xs opacity-70 focus:outline-hidden disabled:pointer-events-none">
-          <XIcon className="size-4" />
-          <span className="sr-only">Close</span>
-        </SheetPrimitive.Close>
-      </SheetPrimitive.Content>
+      </AnimatePresence>
     </SheetPortal>
   )
 }

@@ -19,10 +19,11 @@ class CoupleService extends CouplesApi {
         return data
       },
       onError: (error: any) => {
-        // 잠못된 초대 코드 에러 코드들 (40002: 존재하지 않음, 40006: 이미 사용됨)
         const errorCode = error?.response?.data?.code
-        if (errorCode === 40002 || errorCode === 40006) {
+        if (errorCode === 40002 || errorCode === 40006 || errorCode === 40011) {
           toast.error('잘못된 초대 코드입니다')
+        } else if (errorCode === 40000) {
+          toast.error('초대 코드 형식이 올바르지 않습니다.')
         } else {
           toast.error('커플 연결 중 오류가 발생했습니다')
         }

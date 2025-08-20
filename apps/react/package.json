@@ -26,6 +26,7 @@
     "axios": "catalog:",
     "clsx": "catalog:react",
     "event-source-polyfill": "^1.0.31",
+    "framer-motion": "^12.23.12",
     "lottie-react": "^2.4.1",
     "lucide-react": "catalog:react",
     "path-to-regexp": "catalog:",

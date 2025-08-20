@@ -43,7 +43,7 @@ function RouteComponent() {
   const isLoading = isFetching && !isFetchingNextPage
 
   return (
-    <div className="has-bottom-nav flex min-h-[100dvh] flex-col pt-30">
+    <div className="has-bottom-nav flex h-[calc(100dvh-var(--bottom-nav-h))] flex-col pt-30">
       <div className="fixed top-[var(--safe-top)] z-20 bg-white">
         <HomeHeaderBar
           title="대화 기록"
@@ -74,7 +74,9 @@ function RouteComponent() {
         </div>
       </div>
 
-      <section className="flex-1 overflow-y-auto bg-gray-neutral-100 transition-opacity">
+      <section
+        className={`flex-1 bg-gray-neutral-100 transition-opacity ${histories.length === 0 || isLoading ? 'overflow-hidden' : 'overflow-y-auto'}`}
+      >
         {isLoading ? (
           <div className="flex h-full items-center justify-center">
             <Spinner className="h-5 w-5 text-gray-400" />
