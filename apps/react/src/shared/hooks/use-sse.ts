@@ -44,6 +44,10 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
     handlersRef.current = handlers
   }, [handlers])
 
+  const devLog = (...args: unknown[]) => {
+    if (import.meta.env.DEV) console.log(...args)
+  }
+
   // 타이머 유틸
   const clearInactivityTimer = () => {
     if (inactivityTimerRef.current) {
@@ -52,142 +56,149 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
     }
   }
 
-  const armInactivityTimer = () => {
+  const armInactivityTimer = useCallback(() => {
     clearInactivityTimer()
     inactivityTimerRef.current = window.setTimeout(() => {
-      void reconnect()
+      devLog('[SSE] Inactivity → reconnect')
+      void safeReconnect()
     }, INACTIVITY_MS)
-  }
+  }, [])
 
   // 연결 종료
   const closeConnection = useCallback(() => {
+    clearInactivityTimer()
     if (esRef.current) {
-      closingRef.current = true
-      clearInactivityTimer()
       esRef.current.close()
       esRef.current = null
     }
   }, [])
 
-  // 재연결 함수
-  const reconnect = useCallback(async (): Promise<void> => {
-    if (closingRef.current) {
-      return
-    }
+  const delay = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
-    closeConnection()
+  const connect = useCallback(async (): Promise<void> => {
+    if (!enabled || esRef.current || closingRef.current) return
 
     try {
       let accessToken: string | null = null
-
       if (isWebView()) {
-        const tokenData = await bridge.getAuthToken()
-        accessToken = tokenData.accessToken
+        accessToken = (await bridge.getAuthToken()).accessToken
       } else {
         accessToken = localStorage.getItem('accessToken')
       }
 
       if (!accessToken) {
-        return
+        throw new Error('Access token is missing')
       }
 
-      const backoffMs = BACKOFF_STEPS[Math.min(reconnectAttemptRef.current, BACKOFF_STEPS.length - 1)]
-
-      if (reconnectAttemptRef.current > 0) {
-        await new Promise((resolve) => setTimeout(resolve, backoffMs))
-      }
-
-      const es = new EventSourceImpl(`${API_HOST}/sse/connect`, {
+      const sse = new EventSourceImpl(`${API_HOST}/sse/connect`, {
         headers: { Authorization: `Bearer ${accessToken}` },
         heartbeatTimeout: HEARTBEAT_TIMEOUT,
       })
+      esRef.current = sse
 
-      es.onopen = () => {
+      sse.onopen = () => {
+        devLog('[SSE] open')
         reconnectAttemptRef.current = 0
-        armInactivityTimer()
         handlersRef.current.onOpen?.()
+        armInactivityTimer()
       }
 
-      es.onerror = async (error) => {
-        // 401 오류인 경우 토큰 갱신 시도 (웹뷰 환경에서만)
-        if (error && typeof error === 'object' && 'status' in error && error.status === 401 && isWebView()) {
-          try {
-            const { accessToken: newAccessToken } = await bridge.notifyTokenExpired()
-            if (newAccessToken) {
-              // 현재 연결 완전히 종료 후 재연결
-              closeConnection()
-              // 잠시 후 재연결 (토큰 갱신 완료 후)
-              setTimeout(() => {
-                void reconnect()
-              }, 1000)
-              return
-            }
-          } catch {
-            // 토큰 갱신 실패는 onError로 전달
-          }
-        }
-
-        handlersRef.current.onError?.(error)
-        reconnectAttemptRef.current++
-        // 자동 재연결은 브라우저가 처리하므로 여기서는 로그만
+      const addCustomListener = (type: string, listener: (e: MessageEvent<string>) => void) => {
+        sse.addEventListener(type, (ev) => listener(ev as MessageEvent<string>))
       }
 
-      // 채팅 이벤트 구독
-      es.addEventListener('chat_response', (event) => {
-        const messageEvent = event as MessageEvent
+      // 이벤트 핸들러 등록
+      const onMessage = (e: MessageEvent<string>) => {
         armInactivityTimer()
-        handlersRef.current.onChatResponse?.(messageEvent.data)
-      })
-
-      es.addEventListener('ai_response_id', (event) => {
-        const messageEvent = event as MessageEvent
+        handlersRef.current.onChatResponse?.(e.data)
+      }
+      const onId = (e: MessageEvent<string>) => {
         armInactivityTimer()
-        handlersRef.current.onResponseId?.(messageEvent.data)
-      })
-
-      es.addEventListener('current_level_finished', () => {
+        handlersRef.current.onResponseId?.(e.data)
+      }
+      const onFinish = () => {
         armInactivityTimer()
         handlersRef.current.onLevelFinished?.()
-      })
-
-      es.addEventListener('chat_room_paused', () => {
+      }
+      const onPaused = () => {
         armInactivityTimer()
         handlersRef.current.onChatPaused?.()
-      })
-
-      // 커플 상태 이벤트 구독
-      es.addEventListener('couple_connected', () => {
+      }
+      const onCoupleConnected = () => {
         armInactivityTimer()
         handlersRef.current.onCoupleConnected?.()
-      })
-
-      es.addEventListener('couple_disconnected', () => {
+      }
+      const onCoupleDisconnected = () => {
         armInactivityTimer()
         handlersRef.current.onCoupleDisconnected?.()
-      })
+      }
 
-      esRef.current = es
-    } catch (error) {
-      handlersRef.current.onError?.(error)
-      reconnectAttemptRef.current++
-      // 재시도
-      const retryBackoff = BACKOFF_STEPS[Math.min(reconnectAttemptRef.current, BACKOFF_STEPS.length - 1)]
-      setTimeout(() => void reconnect(), retryBackoff)
+      addCustomListener('chat_response', onMessage)
+      addCustomListener('ai_response_id', onId)
+      addCustomListener('current_level_finished', onFinish)
+      addCustomListener('chat_room_paused', onPaused)
+      addCustomListener('couple_connected', onCoupleConnected)
+      addCustomListener('couple_disconnected', onCoupleDisconnected)
+
+      sse.onerror = (error) => {
+        devLog('[SSE] error', error)
+        closeConnection()
+        const status = (error as { status?: number }).status
+        if (status === 401) {
+          void handle401AndReconnect()
+        } else {
+          void safeReconnect()
+        }
+      }
+    } catch (err) {
+      devLog('[SSE] connect exception', err)
+      handlersRef.current.onError?.(err)
+      void safeReconnect()
     }
-  }, [closeConnection])
+  }, [enabled, closeConnection, armInactivityTimer])
 
-  // 초기 연결 및 정리
+  const safeReconnect = useCallback(async () => {
+    if (closingRef.current) return
+    const attempt = reconnectAttemptRef.current
+    const wait = BACKOFF_STEPS[Math.min(attempt, BACKOFF_STEPS.length - 1)] ?? 1000
+    reconnectAttemptRef.current = attempt + 1
+    devLog(`[SSE] reconnect #${attempt + 1} in ${wait}ms`)
+    await delay(wait)
+    await connect()
+  }, [connect])
+
+  const handle401AndReconnect = useCallback(async () => {
+    try {
+      devLog('[SSE] 401 → refresh token')
+      if (isWebView()) await bridge.notifyTokenExpired()
+      // 웹 환경 토큰 갱신 로직 추가 필요
+
+      devLog('[SSE] refresh ok → reconnect now')
+      reconnectAttemptRef.current = 0
+      await connect()
+    } catch (err) {
+      handlersRef.current.onError?.(err)
+    }
+  }, [connect])
+
+  const reconnect = useCallback(async () => {
+    devLog('[SSE] Manual reconnect triggered')
+    closeConnection()
+    reconnectAttemptRef.current = 0
+    await connect()
+  }, [closeConnection, connect])
+
   useEffect(() => {
     if (enabled) {
       closingRef.current = false
-      void reconnect()
+      void connect()
     }
-
     return () => {
       closingRef.current = true
       closeConnection()
+      devLog('[SSE] unmounted/disabled → closed')
     }
-  }, [enabled, reconnect, closeConnection])
+  }, [enabled, connect, closeConnection])
 
   return { reconnect }
 }
