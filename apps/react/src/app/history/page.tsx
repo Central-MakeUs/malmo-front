@@ -43,7 +43,7 @@ function RouteComponent() {
   const isLoading = isFetching && !isFetchingNextPage
 
   return (
-    <div className="has-bottom-nav flex min-h-[100dvh] flex-col pt-30">
+    <div className="has-bottom-nav flex h-full flex-col pt-30">
       <div className="fixed top-[var(--safe-top)] z-20 bg-white">
         <HomeHeaderBar
           title="대화 기록"

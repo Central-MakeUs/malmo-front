@@ -10,11 +10,7 @@ import { z } from 'zod'
 
 import { useAuth } from '@/features/auth'
 import { useChatting } from '@/features/chat/context/chatting-context'
-import {
-  ChatMessageTempStatus,
-  useChatMessagesQuery,
-  useSendMessageMutation,
-} from '@/features/chat/hooks/use-chat-queries'
+import { ChatMessageTempStatus, useChatMessagesQuery } from '@/features/chat/hooks/use-chat-queries'
 import { useChatScroll } from '@/features/chat/hooks/use-chat-scroll'
 import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import ChatInput from '@/features/chat/ui/chat-input'
@@ -38,15 +34,10 @@ export const Route = createFileRoute('/chat/')({
   loaderDeps: (search) => search,
   loader: async ({ context, deps }) => {
     const { chatId } = deps.search
-
-    // 채팅방 상태 조회
     await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
-
-    // chatId가 있으면 해당 히스토리 메시지도 미리 캐시에 저장
     if (chatId) {
       await context.queryClient.ensureInfiniteQueryData(historyService.historyMessagesQuery(chatId))
     }
-
     return { chatId }
   },
 })
@@ -62,7 +53,9 @@ function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const navigate = useNavigate()
-  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage } = useChatting()
+  // ✨ useSendMessageMutation 대신 context에서 sendMessage를 가져옵니다.
+  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage, sendMessage } =
+    useChatting()
   const auth = useAuth()
   const { keyboardBottom } = useKeyboardSheetMotion()
 
@@ -71,7 +64,6 @@ function RouteComponent() {
     chatStatus,
     chatId
   )
-  const { mutate: sendMessage } = useSendMessageMutation()
 
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
@@ -105,7 +97,7 @@ function RouteComponent() {
   }, [messages, navigate])
 
   const handleRetry = (content: string) => {
-    sendMessage(content)
+    sendMessage(content) // ✨ mutation 대신 context의 sendMessage 사용
   }
 
   return (

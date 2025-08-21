@@ -28,7 +28,7 @@ function RouteComponent() {
         <DetailHeaderBar title="삭제" left={backButton()} className="border-b-[1px] border-b-gray-iron-100" />
       </div>
 
-      <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pb-28">
+      <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pt-[88px] pb-28">
         {showEmpty ? (
           <EmptyState
             image={noResultImage}

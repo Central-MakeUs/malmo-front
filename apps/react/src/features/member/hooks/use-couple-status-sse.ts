@@ -16,7 +16,7 @@ export function useCoupleStatusSSE(handlers: CoupleStatusSSEHandlers, enabled: b
   }
 
   // 통합 SSE에 구독
-  const reconnect = useSSESubscription('couple-status', coupleHandlers)
+  const { reconnect } = useSSESubscription('couple-status', coupleHandlers)
 
   return reconnect
 }

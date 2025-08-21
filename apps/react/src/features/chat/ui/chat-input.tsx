@@ -7,16 +7,12 @@ import { cn } from '@/shared/lib/cn'
 import chatService from '@/shared/services/chat.service'
 
 import { useChatting } from '../context/chatting-context'
-import { useSendMessageMutation } from '../hooks/use-chat-queries'
 
 function ChatInput(props: { disabled?: boolean }) {
   const queryClient = useQueryClient()
-
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { setSendingMessageTrue, sendingMessage } = useChatting()
-
-  const { mutate: sendMessage, isPending } = useSendMessageMutation()
+  const { sendingMessage, sendMessage } = useChatting()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -27,14 +23,12 @@ function ChatInput(props: { disabled?: boolean }) {
     }
   }
 
-  // 텍스트 길이에 따라 textarea 높이를 자동으로 조절합니다.
   useEffect(() => {
     const textarea = textareaRef.current
     if (textarea) {
       textarea.style.height = 'auto'
       const scrollHeight = textarea.scrollHeight
-      const maxHeight = 120 // 최대 높이 (약 5줄)
-
+      const maxHeight = 120
       if (scrollHeight > maxHeight) {
         textarea.style.height = `${maxHeight}px`
         textarea.style.overflowY = 'auto'
@@ -45,19 +39,16 @@ function ChatInput(props: { disabled?: boolean }) {
     }
   }, [text])
 
-  // 메시지 전송 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (text.trim() && !isPending) {
+    if (text.trim()) {
       sendMessage(text)
-      setSendingMessageTrue()
       setText('')
     }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-
     if (e.key === 'Enter' && !e.shiftKey && !isMobile) {
       e.preventDefault()
       handleSubmit(e)
@@ -66,11 +57,10 @@ function ChatInput(props: { disabled?: boolean }) {
 
   const paused =
     queryClient.getQueryData(chatService.chatRoomStatusQuery().queryKey) === ChatRoomStateDataChatRoomStateEnum.Paused
-  const disabled = props.disabled || paused || isPending || sendingMessage
+  const disabled = props.disabled || paused || sendingMessage
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full bg-white px-5 py-[10px]">
-      {/* 포커스 시에만 글자 수 카운터를 표시합니다. */}
       {isFocused && (
         <div className="absolute -top-6 left-1/2 -translate-x-1/2 rounded-[12px] border border-gray-200 bg-white px-2 py-[2px] shadow-[1px_2px_12px_0px_#00000014]">
           <p className="label1-medium text-gray-500">{text.length}/500자</p>
@@ -78,7 +68,6 @@ function ChatInput(props: { disabled?: boolean }) {
       )}
 
       <div className="flex w-full items-end gap-2">
-        {/* 커스텀 Textarea 컨테이너 */}
         <div
           className={cn(
             'relative flex w-full items-end gap-4 rounded-[22px] border border-gray-300 bg-white py-2.5 pr-2.5 pl-3 transition-colors'
@@ -105,7 +94,6 @@ function ChatInput(props: { disabled?: boolean }) {
             rows={1}
           />
 
-          {/* 텍스트가 있을 때만 전송 버튼을 표시합니다. */}
           <button
             type="submit"
             className={cn('absolute right-[10px] rounded-full bg-malmo-rasberry-50 p-1 text-malmo-rasberry-500', {
