@@ -1,18 +1,16 @@
 import {
-  BaseListSwaggerResponseChatRoomMessageData,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
+  BaseListSwaggerResponseChatRoomMessageData,
 } from '@data/user-api-axios/api'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
-import { createContext, ReactNode, useCallback, useContext, useState } from 'react'
+import { createContext, useContext, ReactNode, useCallback, useState } from 'react'
 
 import { useSSESubscription } from '@/shared/contexts/sse-context'
-import { ConnectionStatus } from '@/shared/hooks/use-sse'
 import chatService from '@/shared/services/chat.service'
-import { toast } from '@/shared/ui/toast'
 
-import { ChatMessageTempStatus, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
+import { useChatRoomStatusQuery, useSendMessageMutation, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
 import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
 
 interface ChattingContextType {
@@ -21,10 +19,7 @@ interface ChattingContextType {
   sendingMessage: boolean
   streamingMessage: ChatRoomMessageData | null
   isChatStatusSuccess: boolean
-  reconnectSSE: () => Promise<void>
-  resetStreamingMessage: () => void
-  sseStatus: ConnectionStatus
-  sendMessage: (messageText: string) => void
+  sendMessageWithReconnect: (message: string) => Promise<void>
 }
 
 export const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
@@ -33,12 +28,15 @@ const TERMINATION_MESSAGE_START = '이제 대화가 종료되었어!'
 
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
+  const [sendingMessage, setSendingMessage] = useState<boolean>(false)
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
+  const { mutate: sendMessage } = useSendMessageMutation()
 
   const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
+
   const chattingModal = useChattingModal(chatStatus)
-  const queryKey = chatService.chatMessagesQuery().queryKey
+
   const handleChatResponse = useCallback(
     (chunk: string) => {
       if (chunk.startsWith(TERMINATION_MESSAGE_START)) {
@@ -107,6 +105,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       })
 
       setStreamingMessage(null)
+      setSendingMessage(false)
     },
     [queryClient, streamingMessage]
   )
@@ -119,94 +118,36 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
   }, [queryClient])
 
-  const { reconnect: reconnectSSE, status: sseStatus } = useSSESubscription('chat', {
+  const { reconnect, disconnect } = useSSESubscription('chat', {
     onChatResponse: handleChatResponse,
     onResponseId: handleResponseId,
     onLevelFinished: handleLevelFinished,
     onChatPaused: handleChatPaused,
-    onError: () => setStreamingMessage(null),
+    onError: useCallback(() => {
+      setSendingMessage(false)
+      setStreamingMessage(null)
+    }, []),
   })
 
-  const resetStreamingMessage = useCallback(() => setStreamingMessage(null), [])
-
-  const sendMessage = useCallback(
-    async (messageText: string) => {
-      resetStreamingMessage()
-      const optimisticId = Date.now()
-
-      // 1. UI에 낙관적 업데이트를 먼저 적용합니다.
-      const optimisticMessage: ChatRoomMessageData & ChatMessageTempStatus = {
-        messageId: optimisticId,
-        content: messageText,
-        createdAt: new Date().toISOString(),
-        senderType: ChatRoomMessageDataSenderTypeEnum.User,
-        status: 'pending', // 상태를 'pending'으로 설정
-      }
-
-      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
-        const newData = oldData ? { ...oldData, pages: [...oldData.pages] } : { pages: [], pageParams: [] }
-        if (newData.pages.length > 0) {
-          const firstPage = { ...newData.pages[0], list: [optimisticMessage, ...(newData.pages[0]?.list ?? [])] }
-          newData.pages[0] = firstPage
-        } else {
-          newData.pages.push({ list: [optimisticMessage], page: 0, size: 1, totalCount: 1 })
-        }
-        return newData
-      })
-
-      // 2. SSE 연결 상태를 확인하고, 끊어져 있다면 재연결을 시도합니다.
-      if (sseStatus !== 'OPEN') {
-        try {
-          await reconnectSSE() // 재연결이 완료될 때까지 기다립니다.
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (error) {
-          toast.error('메시지 전송에 실패했어요. 연결을 확인해주세요.')
-          // 실패 시 UI 업데이트
-          queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
-            if (!oldData) return oldData
-            return {
-              ...oldData,
-              pages: oldData.pages.map((page) => ({
-                ...page,
-                list: page.list?.map((msg) => (msg.messageId === optimisticId ? { ...msg, status: 'failed' } : msg)),
-              })),
-            }
-          })
-          return // 전송 실패로 함수 종료
-        }
-      }
-
-      // 3. 연결이 확인된 후, 메시지를 전송합니다.
+  const sendMessageWithReconnect = useCallback(
+    async (message: string) => {
       try {
-        await chatService.sendMessageMutation().mutationFn(messageText)
-        // 성공 시 UI 업데이트
-        queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
-          if (!oldData) return oldData
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              list: page.list?.map((msg) => (msg.messageId === optimisticId ? { ...msg, status: 'sent' } : msg)),
-            })),
-          }
-        })
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        setSendingMessage(true)
+
+        // 1. 기존 SSE 연결 종료
+        disconnect()
+
+        // 2. 새로운 SSE 연결 및 완료 대기
+        await reconnect()
+
+        // 3. 연결 완료 후 메시지 전송
+        sendMessage(message)
       } catch (error) {
-        toast.error('메시지 전송에 실패했어요. 다시 시도해주세요.')
-        // 실패 시 UI 업데이트
-        queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
-          if (!oldData) return oldData
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page) => ({
-              ...page,
-              list: page.list?.map((msg) => (msg.messageId === optimisticId ? { ...msg, status: 'failed' } : msg)),
-            })),
-          }
-        })
+        console.error('Failed to reconnect and send message:', error)
+        setSendingMessage(false) // 에러 발생 시 전송 상태 해제
       }
     },
-    [queryClient, queryKey, resetStreamingMessage, sseStatus, reconnectSSE]
+    [disconnect, reconnect, sendMessage]
   )
 
   return (
@@ -214,13 +155,10 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       value={{
         chatStatus,
         chattingModal,
-        sendingMessage: streamingMessage != null,
+        sendingMessage,
         streamingMessage,
         isChatStatusSuccess,
-        reconnectSSE,
-        resetStreamingMessage,
-        sseStatus,
-        sendMessage,
+        sendMessageWithReconnect,
       }}
     >
       {children}

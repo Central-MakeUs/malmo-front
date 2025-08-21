@@ -7,12 +7,14 @@ import { cn } from '@/shared/lib/cn'
 import chatService from '@/shared/services/chat.service'
 
 import { useChatting } from '../context/chatting-context'
+import { useSendMessageMutation } from '../hooks/use-chat-queries'
 
 function ChatInput(props: { disabled?: boolean }) {
   const queryClient = useQueryClient()
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { sendingMessage, sendMessage } = useChatting()
+  const { sendingMessage, sendMessageWithReconnect } = useChatting()
+  const { isPending } = useSendMessageMutation()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -41,8 +43,8 @@ function ChatInput(props: { disabled?: boolean }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (text.trim()) {
-      sendMessage(text)
+    if (text.trim() && !isPending && !sendingMessage) {
+      void sendMessageWithReconnect(text.trim()) // 새로운 함수 호출
       setText('')
     }
   }
@@ -57,7 +59,7 @@ function ChatInput(props: { disabled?: boolean }) {
 
   const paused =
     queryClient.getQueryData(chatService.chatRoomStatusQuery().queryKey) === ChatRoomStateDataChatRoomStateEnum.Paused
-  const disabled = props.disabled || paused || sendingMessage
+  const disabled = props.disabled || paused || isPending || sendingMessage
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full bg-white px-5 py-[10px]">

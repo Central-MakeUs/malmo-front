@@ -56,12 +56,100 @@ export const useChatMessagesQuery = (
   })
 }
 
-export const useUpgradeChatRoomMutation = () => {
+// === MUTATIONS ===
+
+// 메시지 전송
+
+export const useSendMessageMutation = () => {
+  const queryClient = useQueryClient()
+  const queryKey = chatService.chatMessagesQuery().queryKey
+
+  return useMutation({
+    ...chatService.sendMessageMutation(),
+    onMutate: async (newMessageText) => {
+      await queryClient.cancelQueries({ queryKey })
+      const previousMessages = queryClient.getQueryData(queryKey)
+      const optimisticMessage: ChatRoomMessageData & ChatMessageTempStatus = {
+        messageId: Date.now(),
+        content: newMessageText,
+        createdAt: new Date().toISOString(),
+        senderType: ChatRoomMessageDataSenderTypeEnum.User,
+        status: 'pending',
+      }
+
+      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+        const newData = oldData ? { ...oldData, pages: [...oldData.pages] } : { pages: [], pageParams: [] }
+
+        if (newData.pages.length > 0) {
+          const firstPage = { ...newData.pages[0], list: [...(newData.pages[0]?.list ?? [])] }
+          firstPage.list.unshift(optimisticMessage)
+          newData.pages[0] = firstPage
+        } else {
+          newData.pages.push({
+            list: [optimisticMessage],
+            page: 0,
+            size: 1,
+            totalCount: 1,
+          })
+        }
+
+        return newData
+      })
+
+      return { previousMessages, optimisticMessageId: optimisticMessage.messageId }
+    },
+
+    onSuccess: (data, variables, context) => {
+      // 낙관적 업데이트된 메시지의 상태를 'sent'로 변경
+      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+        if (!oldData) return oldData
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            list: page.list?.map((msg) =>
+              msg.messageId === context.optimisticMessageId ? { ...msg, status: 'sent' } : msg
+            ),
+          })),
+        }
+      })
+    },
+
+    onError: (err, newMessage, context) => {
+      // 이전 메시지 상태로 복원하는 대신, 실패한 메시지 상태를 'failed'로 변경
+
+      if (context?.optimisticMessageId) {
+        queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+          if (!oldData) return oldData
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => ({
+              ...page,
+              list: page.list?.map((msg) =>
+                msg.messageId === context.optimisticMessageId ? { ...msg, status: 'failed' } : msg
+              ),
+            })),
+          }
+        })
+      }
+
+      console.error('Message sending failed:', err)
+    },
+  })
+}
+
+// 채팅방 업그레이드
+
+export const useUpgradeChatRoomMutation = (options?: { onSuccess?: () => void; onError?: () => void }) => {
   const queryClient = useQueryClient()
   return useMutation({
     ...chatService.upgradeChatRoomMutation(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
+      options?.onSuccess?.()
+    },
+    onError: () => {
+      options?.onError?.()
     },
   })
 }

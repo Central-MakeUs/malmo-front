@@ -10,7 +10,11 @@ import { z } from 'zod'
 
 import { useAuth } from '@/features/auth'
 import { useChatting } from '@/features/chat/context/chatting-context'
-import { ChatMessageTempStatus, useChatMessagesQuery } from '@/features/chat/hooks/use-chat-queries'
+import {
+  ChatMessageTempStatus,
+  useChatMessagesQuery,
+  useSendMessageMutation,
+} from '@/features/chat/hooks/use-chat-queries'
 import { useChatScroll } from '@/features/chat/hooks/use-chat-scroll'
 import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import ChatInput from '@/features/chat/ui/chat-input'
@@ -53,9 +57,7 @@ function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const navigate = useNavigate()
-  // ✨ useSendMessageMutation 대신 context에서 sendMessage를 가져옵니다.
-  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage, sendMessage } =
-    useChatting()
+  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage } = useChatting()
   const auth = useAuth()
   const { keyboardBottom } = useKeyboardSheetMotion()
 
@@ -96,8 +98,10 @@ function RouteComponent() {
     )
   }, [messages, navigate])
 
+  const { mutate: sendMessage } = useSendMessageMutation()
+
   const handleRetry = (content: string) => {
-    sendMessage(content) // ✨ mutation 대신 context의 sendMessage 사용
+    sendMessage(content)
   }
 
   return (

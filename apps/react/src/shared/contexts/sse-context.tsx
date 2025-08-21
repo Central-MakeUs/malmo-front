@@ -1,12 +1,11 @@
 import { createContext, useContext, ReactNode, useCallback, useRef, useEffect } from 'react'
 
 import { useAuth } from '@/features/auth'
-import { useSSE, SSEEventHandlers, ConnectionStatus } from '@/shared/hooks/use-sse'
+import { useSSE, SSEEventHandlers, UseSSEReturn } from '@/shared/hooks/use-sse'
 
-interface SSEContextType {
+// Context 타입에 disconnect 추가
+interface SSEContextType extends UseSSEReturn {
   subscribe: (id: string, handlers: SSEEventHandlers) => () => void
-  reconnect: () => Promise<void>
-  status: ConnectionStatus
 }
 
 const SSEContext = createContext<SSEContextType | undefined>(undefined)
@@ -51,18 +50,19 @@ export function SSEProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const { reconnect, status } = useSSE(createCombinedHandlers(), authenticated)
+  const { reconnect, disconnect } = useSSE(createCombinedHandlers(), authenticated)
 
-  return <SSEContext.Provider value={{ subscribe, reconnect, status }}>{children}</SSEContext.Provider>
+  return <SSEContext.Provider value={{ subscribe, reconnect, disconnect }}>{children}</SSEContext.Provider>
 }
 
-export function useSSESubscription(id: string, handlers: SSEEventHandlers) {
+// 훅이 { reconnect, disconnect } 객체를 반환하도록 수정
+export function useSSESubscription(id: string, handlers: SSEEventHandlers): UseSSEReturn {
   const context = useContext(SSEContext)
   if (context === undefined) {
     throw new Error('useSSESubscription must be used within an SSEProvider')
   }
 
-  const { subscribe, reconnect, status } = context
+  const { subscribe, reconnect, disconnect } = context
   const handlersRef = useRef(handlers)
 
   useEffect(() => {
@@ -85,5 +85,5 @@ export function useSSESubscription(id: string, handlers: SSEEventHandlers) {
     return () => unsubscribe()
   }, [id, subscribe])
 
-  return { reconnect, status }
+  return { reconnect, disconnect }
 }
