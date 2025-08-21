@@ -4,7 +4,6 @@ import { match } from 'path-to-regexp'
 
 import { AuthContext } from '@/features/auth/hooks/use-auth'
 import { CoupleStatusProvider } from '@/features/member'
-import { useAppNotifications } from '@/features/notification'
 import { useTheme } from '@/shared/contexts/theme.context'
 
 interface RouterContext {
@@ -72,9 +71,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootComponent() {
   const { statusColor } = useTheme()
-
-  // 알림 시스템 초기화 (모달은 기존 AlertDialog 시스템 사용)
-  useAppNotifications()
 
   return (
     <div className="no-bounce-scroll main-scrollable app-safe flex h-screen w-full flex-col bg-white">
