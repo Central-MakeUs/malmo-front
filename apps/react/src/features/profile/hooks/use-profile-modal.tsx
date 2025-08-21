@@ -11,8 +11,8 @@ export interface UseProfileModalReturn {
   logoutModal: () => void
   withdrawModal: () => void
   coupleDisconnectModal: (onSuccess?: () => void) => void
-  coupleConnectedModal: () => void
-  coupleDisconnectedNotificationModal: () => void
+  coupleConnectedModal: (onSuccess?: () => void) => void
+  coupleDisconnectedNotificationModal: (onSuccess?: () => void, onCancel?: () => void) => void
 }
 
 export function useProfileModal(): UseProfileModalReturn {
@@ -126,7 +126,7 @@ export function useProfileModal(): UseProfileModalReturn {
     })
   }
 
-  const coupleConnectedModal = () => {
+  const coupleConnectedModal = (onSuccess?: () => void) => {
     alertDialog.open({
       title: '커플 연동이 완료되었어요!',
       description: '이제 말모를 제한 없이 사용할 수 있어요!',
@@ -135,11 +135,12 @@ export function useProfileModal(): UseProfileModalReturn {
       onConfirm: async () => {
         await refreshUserInfo()
         router.invalidate()
+        onSuccess?.()
       },
     })
   }
 
-  const coupleDisconnectedNotificationModal = () => {
+  const coupleDisconnectedNotificationModal = (onSuccess?: () => void, onCancel?: () => void) => {
     alertDialog.open({
       title: '커플 연결이 끊어졌어요',
       description: (
@@ -154,11 +155,13 @@ export function useProfileModal(): UseProfileModalReturn {
       onConfirm: async () => {
         await refreshUserInfo()
         router.invalidate()
+        onSuccess?.()
       },
       onCancel: async () => {
         await refreshUserInfo()
         navigate({ to: '/my-page' })
         router.invalidate()
+        onCancel?.()
       },
     })
   }

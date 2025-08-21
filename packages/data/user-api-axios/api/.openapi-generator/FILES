@@ -6,6 +6,7 @@ apis/chatroom-api.ts
 apis/couples-api.ts
 apis/logins-api.ts
 apis/love-types-api.ts
+apis/members-alarms-api.ts
 apis/members-api.ts
 apis/questions-api.ts
 apis/refresh-api.ts
@@ -26,6 +27,7 @@ models/apple-login-request-dto.ts
 models/base-list-swagger-response-chat-room-message-data.ts
 models/base-list-swagger-response-get-chat-room-list-response.ts
 models/base-list-swagger-response-love-type-question-data.ts
+models/base-list-swagger-response-pending-notification-data.ts
 models/base-list-swagger-response-terms-data.ts
 models/base-list-swagger-response-terms-response-data.ts
 models/base-swagger-response.ts
@@ -49,11 +51,15 @@ models/get-chat-room-list-response.ts
 models/get-chat-room-summary-data.ts
 models/get-chat-room-summary-response.ts
 models/get-invite-code-success-response.ts
+models/get-pending-member-notification-success-response.ts
 models/index.ts
 models/invite-code-response-data.ts
 models/kakao-login-request-dto.ts
 models/login-data.ts
 models/login-success-response.ts
+models/logout-success-response.ts
+models/love-type-question-calculate-success-response.ts
+models/love-type-question-calculation-data.ts
 models/love-type-question-data.ts
 models/love-type-question-success-response.ts
 models/love-type-test-result.ts
@@ -66,8 +72,11 @@ models/past-answer-data.ts
 models/past-answer-success-response.ts
 models/past-question-data.ts
 models/past-question-success-response.ts
+models/pending-notification-data.ts
+models/process-notifications-request-dto.ts
 models/question-data.ts
 models/question-success-response.ts
+models/read-member-notification-success-response.ts
 models/refresh-request-dto.ts
 models/refresh-token-success-response.ts
 models/register-love-type-request-dto.ts
