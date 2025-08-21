@@ -15,19 +15,13 @@
 /**
  *
  * @export
- * @interface AppleLoginRequestDto
+ * @interface ProcessNotificationsRequestDto
  */
-export interface AppleLoginRequestDto {
+export interface ProcessNotificationsRequestDto {
   /**
    *
-   * @type {string}
-   * @memberof AppleLoginRequestDto
+   * @type {Array<number>}
+   * @memberof ProcessNotificationsRequestDto
    */
-  idToken: string
-  /**
-   *
-   * @type {string}
-   * @memberof AppleLoginRequestDto
-   */
-  authorizationCode?: string
+  pendingNotifications?: Array<number>
 }

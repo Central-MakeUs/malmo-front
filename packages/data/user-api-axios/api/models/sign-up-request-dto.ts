@@ -40,4 +40,10 @@ export interface SignUpRequestDto {
    * @memberof SignUpRequestDto
    */
   loveStartDate: string
+  /**
+   *
+   * @type {number}
+   * @memberof SignUpRequestDto
+   */
+  loveTypeId?: number
 }
