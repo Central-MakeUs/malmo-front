@@ -57,6 +57,7 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
     return new Promise((r) => setTimeout(r, ms + jitter))
   }
 
+  // 1. connect 함수가 401 발생 시 명시적으로 에러를 throw 하도록 수정
   const connect = useCallback((): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!enabled || statusRef.current === 'OPEN' || statusRef.current === 'CONNECTING' || closingRef.current) {
@@ -82,7 +83,7 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
             statusRef.current = 'OPEN'
             reconnectAttemptRef.current = 0
             handlersRef.current.onOpen?.()
-            resolve() // 연결 성공 시 Promise를 resolve
+            resolve()
           }
 
           const createListener = (handler?: (data: string) => void) => (event: unknown) => {
@@ -102,18 +103,20 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
           sse.onerror = (error) => {
             devLog('[SSE] Error', error)
             closeConnection()
+            handlersRef.current.onError?.(error)
+
             const status = (error as { status?: number }).status
             if (status === 401) {
-              handle401AndReconnect().catch(reject)
+              reject(new Error('401 Unauthorized')) // 401 에러 발생 시 Promise reject
             } else {
-              safeReconnect().catch(reject)
+              void safeReconnect() // 다른 에러는 기존대로 자동 재연결 시도
             }
           }
         } catch (err) {
           devLog('[SSE] Connect exception', err)
           statusRef.current = 'CLOSED'
           handlersRef.current.onError?.(err)
-          safeReconnect().catch(reject)
+          reject(err)
         }
       }
       void doConnect()
@@ -130,30 +133,36 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
     await connect()
   }, [connect])
 
-  const handle401AndReconnect = useCallback(async () => {
-    try {
-      devLog('[SSE] 401 -> Refreshing token')
-      if (isWebView()) await bridge.notifyTokenExpired()
-
-      devLog('[SSE] Refresh OK -> Reconnecting now')
-      reconnectAttemptRef.current = 0
-      await connect()
-    } catch (err) {
-      handlersRef.current.onError?.(err)
+  // 2. 토큰 갱신만 책임지는 별도 함수 생성
+  const refreshToken = useCallback(async () => {
+    devLog('[SSE] Refreshing token via bridge')
+    if (isWebView()) {
+      await bridge.notifyTokenExpired()
     }
-  }, [connect])
+  }, [])
 
+  // 3. reconnect 함수가 401 에러를 잡아서 토큰 갱신 후 재시도하도록 수정
   const reconnect = useCallback(async () => {
     devLog('[SSE] Manual reconnect triggered')
     closeConnection()
     reconnectAttemptRef.current = 0
-    await connect()
-  }, [closeConnection, connect])
+    try {
+      await connect()
+    } catch (error: any) {
+      if (error.message.includes('401')) {
+        devLog('[SSE] Reconnect failed with 401, refreshing token and retrying...')
+        await refreshToken()
+        await connect() // 토큰 갱신 후 다시 연결 시도
+      } else {
+        throw error // 401이 아닌 다른 에러는 그대로 throw
+      }
+    }
+  }, [closeConnection, connect, refreshToken])
 
   useEffect(() => {
     if (enabled) {
       closingRef.current = false
-      void connect()
+      void connect().catch(() => {})
     }
     return () => {
       closingRef.current = true
