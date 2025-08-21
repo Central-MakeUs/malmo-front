@@ -14,61 +14,35 @@ export function SSEProvider({ children }: { children: ReactNode }) {
   const { authenticated } = useAuth()
   const subscribersRef = useRef<Map<string, SSEEventHandlers>>(new Map())
 
-  // 구독 함수
+  // 구독 함수 (기존과 동일)
   const subscribe = useCallback((id: string, handlers: SSEEventHandlers) => {
     subscribersRef.current.set(id, handlers)
-
-    // 구독 해제 함수 반환
     return () => {
       subscribersRef.current.delete(id)
     }
   }, [])
 
-  // 통합 핸들러 생성
-  const createCombinedHandlers = useCallback((): SSEEventHandlers => {
+  // useCallback을 제거하여 항상 최신 subscribersRef를 참조
+  const createCombinedHandlers = (): SSEEventHandlers => {
     return {
-      onChatResponse: (chunk: string) => {
-        const subscribers = Array.from(subscribersRef.current.values())
-        subscribers.forEach((s) => s.onChatResponse?.(chunk))
-      },
-      onResponseId: (messageId: string) => {
-        const subscribers = Array.from(subscribersRef.current.values())
-        subscribers.forEach((s) => s.onResponseId?.(messageId))
-      },
-      onLevelFinished: () => {
-        const subscribers = Array.from(subscribersRef.current.values())
-        subscribers.forEach((s) => s.onLevelFinished?.())
-      },
-      onChatPaused: () => {
-        const subscribers = Array.from(subscribersRef.current.values())
-        subscribers.forEach((s) => s.onChatPaused?.())
-      },
-      onCoupleConnected: () => {
-        const subscribers = Array.from(subscribersRef.current.values())
-        subscribers.forEach((s) => s.onCoupleConnected?.())
-      },
-      onCoupleDisconnected: () => {
-        const subscribers = Array.from(subscribersRef.current.values())
-        subscribers.forEach((s) => s.onCoupleDisconnected?.())
-      },
-      onError: (error: unknown) => {
-        const subscribers = Array.from(subscribersRef.current.values())
-        subscribers.forEach((s) => s.onError?.(error))
-      },
-      onOpen: () => {
-        const subscribers = Array.from(subscribersRef.current.values())
-        subscribers.forEach((s) => s.onOpen?.())
-      },
+      onChatResponse: (chunk: string) => subscribersRef.current.forEach((s) => s.onChatResponse?.(chunk)),
+      onResponseId: (messageId: string) => subscribersRef.current.forEach((s) => s.onResponseId?.(messageId)),
+      onLevelFinished: () => subscribersRef.current.forEach((s) => s.onLevelFinished?.()),
+      onChatPaused: () => subscribersRef.current.forEach((s) => s.onChatPaused?.()),
+      onCoupleConnected: () => subscribersRef.current.forEach((s) => s.onCoupleConnected?.()),
+      onCoupleDisconnected: () => subscribersRef.current.forEach((s) => s.onCoupleDisconnected?.()),
+      onError: (error: unknown) => subscribersRef.current.forEach((s) => s.onError?.(error)),
+      onOpen: () => subscribersRef.current.forEach((s) => s.onOpen?.()),
     }
-  }, [])
+  }
 
-  // SSE 훅 사용
+  // 수정된 부분: createCombinedHandlers()를 직접 호출하여 최신 핸들러를 전달
   const { reconnect } = useSSE(createCombinedHandlers(), authenticated)
 
   return <SSEContext.Provider value={{ subscribe, reconnect }}>{children}</SSEContext.Provider>
 }
 
-// SSE 구독을 위한 훅
+// SSE 구독을 위한 훅 (기존과 동일)
 export function useSSESubscription(id: string, handlers: SSEEventHandlers) {
   const context = useContext(SSEContext)
   if (context === undefined) {
@@ -83,7 +57,6 @@ export function useSSESubscription(id: string, handlers: SSEEventHandlers) {
   }, [handlers])
 
   useEffect(() => {
-    // 핸들러 프록시 생성
     const stableHandlers: SSEEventHandlers = {
       onChatResponse: (chunk: string) => handlersRef.current.onChatResponse?.(chunk),
       onResponseId: (messageId: string) => handlersRef.current.onResponseId?.(messageId),

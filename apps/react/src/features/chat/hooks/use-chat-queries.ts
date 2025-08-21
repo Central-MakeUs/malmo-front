@@ -6,7 +6,6 @@ import {
 } from '@data/user-api-axios/api'
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery, InfiniteData } from '@tanstack/react-query'
 
-import { useChatting } from '@/features/chat/context/chatting-context' // ChattingContext를 import 합니다.
 import chatService from '@/shared/services/chat.service'
 import historyService from '@/shared/services/history.service'
 
@@ -66,7 +65,6 @@ export const useChatMessagesQuery = (
 export const useSendMessageMutation = () => {
   const queryClient = useQueryClient()
   const queryKey = chatService.chatMessagesQuery().queryKey
-  const { reconnectSSE } = useChatting()
 
   return useMutation({
     ...chatService.sendMessageMutation(),
@@ -103,9 +101,6 @@ export const useSendMessageMutation = () => {
       return { previousMessages, optimisticMessageId: optimisticMessage.messageId }
     },
     onSuccess: (data, variables, context) => {
-      // 메시지 전송 성공 시 SSE 재연결
-      reconnectSSE()
-
       // 낙관적 업데이트된 메시지의 상태를 'sent'로 변경
       queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
         if (!oldData) return oldData
