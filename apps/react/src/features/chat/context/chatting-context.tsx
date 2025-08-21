@@ -5,23 +5,21 @@ import {
   BaseListSwaggerResponseChatRoomMessageData,
 } from '@data/user-api-axios/api'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
-import { useLocation } from '@tanstack/react-router'
-import { createContext, useContext, ReactNode, useCallback, useEffect, useState, useRef } from 'react'
+import { createContext, useContext, ReactNode, useCallback, useState } from 'react'
 
-import { useChatSSE, UseChatSSEReturn } from '@/features/chat/hooks/use-chat-sse'
+import { useSSESubscription } from '@/shared/contexts/sse-context'
 import chatService from '@/shared/services/chat.service'
 
-import { useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
+import { useChatRoomStatusQuery, useSendMessageMutation, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
 import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
 
 interface ChattingContextType {
   chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined
   chattingModal: UseChattingModalReturn
   sendingMessage: boolean
-  setSendingMessageTrue: () => void
   streamingMessage: ChatRoomMessageData | null
   isChatStatusSuccess: boolean
-  reconnectSSE: () => Promise<void>
+  sendMessageWithReconnect: (message: string) => Promise<void>
 }
 
 export const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
@@ -32,8 +30,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
   const [sendingMessage, setSendingMessage] = useState<boolean>(false)
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
-  const { pathname } = useLocation()
-  const sseRef = useRef<UseChatSSEReturn | null>(null)
+  const { mutate: sendMessage } = useSendMessageMutation()
 
   const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
@@ -121,38 +118,37 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
   }, [queryClient])
 
-  // useChatSSE 훅의 반환값을 ref에 저장합니다.
-  const sse = useChatSSE(
-    {
-      onChatResponse: handleChatResponse,
-      onResponseId: handleResponseId,
-      onLevelFinished: handleLevelFinished,
-      onChatPaused: handleChatPaused,
-      onError: useCallback(() => {
-        setSendingMessage(false)
-        setStreamingMessage(null)
-      }, []),
+  const { reconnect, disconnect } = useSSESubscription('chat', {
+    onChatResponse: handleChatResponse,
+    onResponseId: handleResponseId,
+    onLevelFinished: handleLevelFinished,
+    onChatPaused: handleChatPaused,
+    onError: useCallback(() => {
+      setSendingMessage(false)
+      setStreamingMessage(null)
+    }, []),
+  })
+
+  const sendMessageWithReconnect = useCallback(
+    async (message: string) => {
+      try {
+        setSendingMessage(true)
+
+        // 1. 기존 SSE 연결 종료
+        disconnect()
+
+        // 2. 새로운 SSE 연결 및 완료 대기
+        await reconnect()
+
+        // 3. 연결 완료 후 메시지 전송
+        sendMessage(message)
+      } catch (error) {
+        console.error('Failed to reconnect and send message:', error)
+        setSendingMessage(false) // 에러 발생 시 전송 상태 해제
+      }
     },
-    isChatStatusSuccess && pathname === '/chat'
+    [disconnect, reconnect, sendMessage]
   )
-  sseRef.current = sse
-
-  // 컨텍스트를 통해 제공할 재연결 함수
-  const reconnectSSE = useCallback(async () => {
-    if (sseRef.current) {
-      await sseRef.current.reconnect()
-    }
-  }, [])
-
-  useEffect(() => {
-    if (chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion) {
-      upgradeChatRoom()
-    }
-  }, [chatStatus, upgradeChatRoom])
-
-  const setSendingMessageTrue = useCallback(() => {
-    setSendingMessage(true)
-  }, [])
 
   return (
     <ChattingContext.Provider
@@ -160,10 +156,9 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         chatStatus,
         chattingModal,
         sendingMessage,
-        setSendingMessageTrue,
         streamingMessage,
         isChatStatusSuccess,
-        reconnectSSE,
+        sendMessageWithReconnect,
       }}
     >
       {children}

@@ -14,9 +14,8 @@ function ChatInput(props: { disabled?: boolean }) {
 
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
-  const { setSendingMessageTrue, sendingMessage } = useChatting()
-
-  const { mutate: sendMessage, isPending } = useSendMessageMutation()
+  const { sendingMessage, sendMessageWithReconnect } = useChatting()
+  const { isPending } = useSendMessageMutation()
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -48,9 +47,8 @@ function ChatInput(props: { disabled?: boolean }) {
   // 메시지 전송 핸들러
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (text.trim() && !isPending) {
-      sendMessage(text)
-      setSendingMessageTrue()
+    if (text.trim() && !isPending && !sendingMessage) {
+      void sendMessageWithReconnect(text.trim()) // 새로운 함수 호출
       setText('')
     }
   }
