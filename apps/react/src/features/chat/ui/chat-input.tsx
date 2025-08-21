@@ -7,6 +7,7 @@ import { cn } from '@/shared/lib/cn'
 import chatService from '@/shared/services/chat.service'
 
 import { useChatting } from '../context/chatting-context'
+import { useSendMessageMutation } from '../hooks/use-chat-queries'
 
 function ChatInput(props: { disabled?: boolean }) {
   const queryClient = useQueryClient()
@@ -58,7 +59,7 @@ function ChatInput(props: { disabled?: boolean }) {
 
   const paused =
     queryClient.getQueryData(chatService.chatRoomStatusQuery().queryKey) === ChatRoomStateDataChatRoomStateEnum.Paused
-  const disabled = props.disabled || paused || sendingMessage
+  const disabled = props.disabled || paused || isPending || sendingMessage
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full bg-white px-5 py-[10px]">

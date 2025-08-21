@@ -1,5 +1,5 @@
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 import bridge from '@/shared/bridge'
 import { isWebView } from '@/shared/utils/webview'
@@ -18,7 +18,7 @@ export interface SSEEventHandlers {
   onOpen?: () => void
 }
 
-export type ConnectionStatus = 'CONNECTING' | 'OPEN' | 'CLOSED'
+type ConnectionStatus = 'CONNECTING' | 'OPEN' | 'CLOSED'
 
 const BACKOFF_STEPS = [1000, 2000, 5000, 10000] as const
 const HEARTBEAT_TIMEOUT = 60_000
@@ -30,7 +30,6 @@ export interface UseSSEReturn {
 
 export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): UseSSEReturn => {
   const esRef = useRef<EventSourcePolyfill | null>(null)
-  const [status, setStatus] = useState<ConnectionStatus>('CLOSED')
   const statusRef = useRef<ConnectionStatus>('CLOSED')
   const handlersRef = useRef(handlers)
   const reconnectAttemptRef = useRef(0)
