@@ -56,6 +56,12 @@ export const queryKeys = {
   couple: {
     all: ['couple'] as const,
   },
+
+  // === Notification 관련 ===
+  notification: {
+    all: ['notification'] as const,
+    pending: () => [...queryKeys.notification.all, 'pending'] as const,
+  },
 } as const
 
 // 타입 추출

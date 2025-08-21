@@ -23,14 +23,30 @@ export function SSEProvider({ children }: { children: ReactNode }) {
 
   const createCombinedHandlers = (): SSEEventHandlers => {
     return {
-      onChatResponse: (chunk: string) => subscribersRef.current.forEach((s) => s.onChatResponse?.(chunk)),
-      onResponseId: (messageId: string) => subscribersRef.current.forEach((s) => s.onResponseId?.(messageId)),
-      onLevelFinished: () => subscribersRef.current.forEach((s) => s.onLevelFinished?.()),
-      onChatPaused: () => subscribersRef.current.forEach((s) => s.onChatPaused?.()),
-      onCoupleConnected: () => subscribersRef.current.forEach((s) => s.onCoupleConnected?.()),
-      onCoupleDisconnected: () => subscribersRef.current.forEach((s) => s.onCoupleDisconnected?.()),
-      onError: (error: unknown) => subscribersRef.current.forEach((s) => s.onError?.(error)),
-      onOpen: () => subscribersRef.current.forEach((s) => s.onOpen?.()),
+      onChatResponse: (chunk: string) => {
+        subscribersRef.current.forEach((s) => s.onChatResponse?.(chunk))
+      },
+      onResponseId: (messageId: string) => {
+        subscribersRef.current.forEach((s) => s.onResponseId?.(messageId))
+      },
+      onLevelFinished: () => {
+        subscribersRef.current.forEach((s) => s.onLevelFinished?.())
+      },
+      onChatPaused: () => {
+        subscribersRef.current.forEach((s) => s.onChatPaused?.())
+      },
+      onCoupleConnected: () => {
+        subscribersRef.current.forEach((s) => s.onCoupleConnected?.())
+      },
+      onCoupleDisconnected: () => {
+        subscribersRef.current.forEach((s) => s.onCoupleDisconnected?.())
+      },
+      onError: (error: unknown) => {
+        subscribersRef.current.forEach((s) => s.onError?.(error))
+      },
+      onOpen: () => {
+        subscribersRef.current.forEach((s) => s.onOpen?.())
+      },
     }
   }
 

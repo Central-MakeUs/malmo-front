@@ -1,5 +1,6 @@
 {
   "멤버 관리 API": "members",
+  "멤버 알람 관리 API": "members-alarms",
   "소셜 로그인 API": "logins",
   "애착유형 검사 API": "love-types",
   "약관 관리 API": "terms",

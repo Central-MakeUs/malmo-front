@@ -1,14 +1,15 @@
 import {
+  BaseListSwaggerResponseChatRoomMessageData,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
-  BaseListSwaggerResponseChatRoomMessageData,
 } from '@data/user-api-axios/api'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
 import { createContext, useContext, ReactNode, useCallback, useState } from 'react'
 
 import { useSSESubscription } from '@/shared/contexts/sse-context'
 import chatService from '@/shared/services/chat.service'
+import { toast } from '@/shared/ui/toast'
 
 import { useChatRoomStatusQuery, useSendMessageMutation, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
 import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
@@ -28,15 +29,13 @@ const TERMINATION_MESSAGE_START = '이제 대화가 종료되었어!'
 
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
-  const [sendingMessage, setSendingMessage] = useState<boolean>(false)
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
   const { mutate: sendMessage } = useSendMessageMutation()
 
   const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
-
   const chattingModal = useChattingModal(chatStatus)
-
+  const queryKey = chatService.chatMessagesQuery().queryKey
   const handleChatResponse = useCallback(
     (chunk: string) => {
       if (chunk.startsWith(TERMINATION_MESSAGE_START)) {
@@ -105,7 +104,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       })
 
       setStreamingMessage(null)
-      setSendingMessage(false)
     },
     [queryClient, streamingMessage]
   )

@@ -36,7 +36,6 @@ export function AiChatBubble(props: AiChatBubbleProps) {
             >
               <p className="body2-regular break-words text-gray-800">{group}</p>
             </div>
-            {/* 마지막 말풍선일 때만 타임스탬프를 렌더링합니다. */}
             {index === messageGroups.length - 1 && <p className="label2-regular text-gray-600">{timestamp}</p>}
           </div>
         ))}
@@ -68,9 +67,7 @@ export function MyChatBubble({
             </button>
           </div>
         )}
-        <p className="flex-shrink-0 text-[11px] leading-[20px] text-gray-600">
-          {status === 'pending' ? '전송 중...' : timestamp}
-        </p>
+        <p className="flex-shrink-0 text-[11px] leading-[20px] text-gray-600">{timestamp}</p>
         <div
           className={cn('w-fit max-w-full rounded-[10px] rounded-br-none bg-[#FFF2F4] px-[14px] py-[10px]', {
             'border border-red-300': status === 'failed',
