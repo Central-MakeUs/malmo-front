@@ -10,6 +10,7 @@ import { useAuth } from '@/features/auth'
 import { useChatRoomStatusQuery } from '@/features/chat/hooks/use-chat-queries'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { usePartnerInfo } from '@/features/member'
+import { useAppNotifications } from '@/features/notification'
 import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
 import chatService from '@/shared/services/chat.service'
 import memberService from '@/shared/services/member.service'
@@ -33,6 +34,9 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   const { userInfo } = useAuth()
   const navigate = useNavigate()
+
+  // 알림 시스템 초기화
+  useAppNotifications()
 
   const { data: todayQuestion } = useTodayQuestion()
   const { data: partnerInfo, error: partnerError } = usePartnerInfo()
