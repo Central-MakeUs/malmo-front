@@ -5,7 +5,7 @@ import {
   ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
-import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useState } from 'react'
 
 import { useSSESubscription } from '@/shared/contexts/sse-context'
 import { ConnectionStatus } from '@/shared/hooks/use-sse'
@@ -14,11 +14,6 @@ import { toast } from '@/shared/ui/toast'
 
 import { ChatMessageTempStatus, useChatRoomStatusQuery, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
 import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
-
-interface QueuedMessage {
-  optimisticId: number
-  content: string
-}
 
 interface ChattingContextType {
   chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined
@@ -39,8 +34,6 @@ const TERMINATION_MESSAGE_START = '이제 대화가 종료되었어!'
 export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
-  const [messageQueue, setMessageQueue] = useState<QueuedMessage[]>([])
-  const [isProcessingQueue, setIsProcessingQueue] = useState(false)
 
   const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
@@ -137,16 +130,17 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const resetStreamingMessage = useCallback(() => setStreamingMessage(null), [])
 
   const sendMessage = useCallback(
-    (messageText: string) => {
+    async (messageText: string) => {
       resetStreamingMessage()
       const optimisticId = Date.now()
 
+      // 1. UI에 낙관적 업데이트를 먼저 적용합니다.
       const optimisticMessage: ChatRoomMessageData & ChatMessageTempStatus = {
         messageId: optimisticId,
         content: messageText,
         createdAt: new Date().toISOString(),
         senderType: ChatRoomMessageDataSenderTypeEnum.User,
-        status: sseStatus === 'OPEN' ? 'pending' : 'queued',
+        status: 'pending', // 상태를 'pending'으로 설정
       }
 
       queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
@@ -160,69 +154,67 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         return newData
       })
 
-      setMessageQueue((prev) => [...prev, { optimisticId, content: messageText }])
-    },
-    [queryClient, queryKey, resetStreamingMessage, sseStatus]
-  )
-
-  useEffect(() => {
-    const processQueue = async () => {
-      if (isProcessingQueue || messageQueue.length === 0 || sseStatus !== 'OPEN') {
-        return
+      // 2. SSE 연결 상태를 확인하고, 끊어져 있다면 재연결을 시도합니다.
+      if (sseStatus !== 'OPEN') {
+        try {
+          await reconnectSSE() // 재연결이 완료될 때까지 기다립니다.
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          toast.error('메시지 전송에 실패했어요. 연결을 확인해주세요.')
+          // 실패 시 UI 업데이트
+          queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+            if (!oldData) return oldData
+            return {
+              ...oldData,
+              pages: oldData.pages.map((page) => ({
+                ...page,
+                list: page.list?.map((msg) => (msg.messageId === optimisticId ? { ...msg, status: 'failed' } : msg)),
+              })),
+            }
+          })
+          return // 전송 실패로 함수 종료
+        }
       }
 
-      setIsProcessingQueue(true)
-      const messageToSend = messageQueue[0]
-      if (!messageToSend) {
-        setIsProcessingQueue(false)
-        return
-      }
-
+      // 3. 연결이 확인된 후, 메시지를 전송합니다.
       try {
-        await chatService.sendMessageMutation().mutationFn(messageToSend.content)
+        await chatService.sendMessageMutation().mutationFn(messageText)
+        // 성공 시 UI 업데이트
         queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
           if (!oldData) return oldData
           return {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
-              list: page.list?.map((msg) =>
-                msg.messageId === messageToSend.optimisticId ? { ...msg, status: 'sent' } : msg
-              ),
+              list: page.list?.map((msg) => (msg.messageId === optimisticId ? { ...msg, status: 'sent' } : msg)),
             })),
           }
         })
-        setMessageQueue((prev) => prev.slice(1))
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error('메시지 전송에 실패했어요. 다시 시도해주세요.')
+        // 실패 시 UI 업데이트
         queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
           if (!oldData) return oldData
           return {
             ...oldData,
             pages: oldData.pages.map((page) => ({
               ...page,
-              list: page.list?.map((msg) =>
-                msg.messageId === messageToSend.optimisticId ? { ...msg, status: 'failed' } : msg
-              ),
+              list: page.list?.map((msg) => (msg.messageId === optimisticId ? { ...msg, status: 'failed' } : msg)),
             })),
           }
         })
-        setMessageQueue((prev) => prev.slice(1))
-      } finally {
-        setIsProcessingQueue(false)
       }
-    }
-
-    void processQueue()
-  }, [messageQueue, isProcessingQueue, sseStatus, queryClient, queryKey])
+    },
+    [queryClient, queryKey, resetStreamingMessage, sseStatus, reconnectSSE]
+  )
 
   return (
     <ChattingContext.Provider
       value={{
         chatStatus,
         chattingModal,
-        sendingMessage: isProcessingQueue || streamingMessage != null,
+        sendingMessage: streamingMessage != null,
         streamingMessage,
         isChatStatusSuccess,
         reconnectSSE,
