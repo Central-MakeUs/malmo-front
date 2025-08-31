@@ -32,9 +32,10 @@ MZ세대는 연인과의 갈등 원인으로 '의사소통 방식'과 '성향 �
 
 ## 🖼️ 스크린샷
 
+
 <div align="center">
-   <img width="800" alt="스크린샷" src="https://github.com/user-attachments/assets/e0960f87-1ba4-453c-ab97-2dd3254727de" />
-   <img width="800" alt="Frame 1948756838" src="https://github.com/user-attachments/assets/4d61401f-020c-4da2-8260-465331d66fa4" />
+   <img width="800" alt="표지" src="https://github.com/user-attachments/assets/bb6f9ada-2ee3-4c13-8822-195dd7a3b5c3" />
+   <img width="800" alt="표지2" src="https://github.com/user-attachments/assets/a8d3f968-1bb3-4637-babc-77ebe6c2e56e" />
 </div>
 
 ---
