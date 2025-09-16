@@ -79,6 +79,7 @@ export default function App() {
       <WebView
         ref={webviewRef}
         source={{ uri: webviewUrl }}
+        overScrollMode="never"
         style={styles.webview}
         bounces={false}
         scrollEnabled={false}
