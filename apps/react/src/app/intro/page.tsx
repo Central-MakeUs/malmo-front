@@ -5,6 +5,8 @@ import attachmentTypeImage from '@/assets/images/introduce/attachment-type.png'
 import coupleConsultationImage from '@/assets/images/introduce/couple-consultation.png'
 import dailyQuestionImage from '@/assets/images/introduce/daily-question.png'
 import momoIntroImage from '@/assets/images/introduce/momo-intro.png'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Button } from '@/shared/ui/button'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -61,14 +63,18 @@ function IntroPage() {
   }
 
   // 다음 페이지로 이동
-  const handleNext = () => {
-    if (isLastPage) {
-      // 마지막 페이지에서 완료 처리
-      handleComplete()
-    } else {
-      setCurrentPage((prev) => prev + 1)
+  const handleNext = wrapWithTracking(
+    isLastPage ? BUTTON_NAMES.START_INTRO : BUTTON_NAMES.NEXT_INTRO,
+    CATEGORIES.AUTH,
+    () => {
+      if (isLastPage) {
+        // 마지막 페이지에서 완료 처리
+        handleComplete()
+      } else {
+        setCurrentPage((prev) => prev + 1)
+      }
     }
-  }
+  )
 
   // 완료 처리
   const handleComplete = async () => {
@@ -77,15 +83,13 @@ function IntroPage() {
   }
 
   // 건너뛰기
-  const handleSkip = () => {
-    handleComplete()
-  }
+  const handleSkip = wrapWithTracking(BUTTON_NAMES.SKIP_INTRO, CATEGORIES.AUTH, handleComplete)
 
-  const handlePrevious = () => {
+  const handlePrevious = wrapWithTracking(BUTTON_NAMES.PREV_INTRO, CATEGORIES.AUTH, () => {
     if (currentPage > 0) {
       setCurrentPage((prev) => prev - 1)
     }
-  }
+  })
 
   return (
     <div className="flex h-full w-full flex-col bg-white">

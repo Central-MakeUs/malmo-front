@@ -4,6 +4,8 @@ import z from 'zod'
 
 import { AttachmentTestIntro, AttachmentTestInfoSection, AttachmentTypesSection } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useTheme } from '@/shared/contexts/theme.context'
 import { Button } from '@/shared/ui'
 
@@ -31,9 +33,9 @@ function AttachmentTestPage() {
     }
   }, [])
 
-  const handleStartTest = () => {
+  const handleStartTest = wrapWithTracking(BUTTON_NAMES.START_TEST, CATEGORIES.ATTACHMENT, () =>
     navigate({ to: '/attachment-test/question' })
-  }
+  )
 
   return (
     <div className="relative flex h-full w-full flex-col bg-malmo-rasberry-25">

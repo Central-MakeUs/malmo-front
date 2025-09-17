@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { useState, useEffect, useMemo } from 'react'
 
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import termsService from '@/shared/services/terms.service'
 
 import { convertToTerms, findTermById } from '../lib/converters'
@@ -36,14 +38,14 @@ export function useTerms(initialAgreements: TermAgreements = {}) {
   }, [termsListData])
 
   // 약관 상세보기 모달 열기
-  const handleShowTerms = (termsId: number) => {
+  const handleShowTerms = wrapWithTracking(BUTTON_NAMES.OPEN_TERMS_MODAL, CATEGORIES.ONBOARDING, (termsId: number) =>
     setSelectedTermId(termsId)
-  }
+  )
 
   // 약관 상세보기 모달 닫기
-  const handleCloseTerms = () => {
+  const handleCloseTerms = wrapWithTracking(BUTTON_NAMES.CLOSE_TERMS_MODAL, CATEGORIES.ONBOARDING, () =>
     setSelectedTermId(null)
-  }
+  )
 
   // 선택된 약관의 제목과 상세 내용
   const selectedTermContent = useMemo(() => {
@@ -69,22 +71,39 @@ export function useTerms(initialAgreements: TermAgreements = {}) {
   }, [agreements, termsData])
 
   // 전체 동의 처리
-  const handleAllAgreements = () => {
+  const handleAllAgreements = wrapWithTracking(BUTTON_NAMES.AGREE_ALL, CATEGORIES.ONBOARDING, () => {
     const newValue = !isAllChecked
     const newAgreements: TermAgreements = {}
     termsData.forEach((term) => {
       newAgreements[term.termsId] = newValue
     })
     setAgreements(newAgreements)
-  }
+  })
 
   // 개별 약관 동의 처리
-  const handleAgreement = (termsId: number) => {
-    setAgreements((prev) => ({
-      ...prev,
-      [termsId]: !prev[termsId],
-    }))
-  }
+  const handleAgreement = wrapWithTracking(
+    (termsId: number) => {
+      // 약관 종류에 따라 다른 동의 이벤트 결정
+      const term = termsData.find((t) => t.termsId === termsId)
+      if (term) {
+        if (term.title.includes('서비스')) {
+          return BUTTON_NAMES.AGREE_SERVICE
+        } else if (term.title.includes('개인정보')) {
+          return BUTTON_NAMES.AGREE_PRIVACY
+        } else if (term.title.includes('마케팅')) {
+          return BUTTON_NAMES.AGREE_MARKETING
+        }
+      }
+      return undefined
+    },
+    CATEGORIES.ONBOARDING,
+    (termsId: number) => {
+      setAgreements((prev) => ({
+        ...prev,
+        [termsId]: !prev[termsId],
+      }))
+    }
+  )
 
   return {
     terms: termsData,

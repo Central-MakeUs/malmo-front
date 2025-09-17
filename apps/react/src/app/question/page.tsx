@@ -7,6 +7,8 @@ import { z } from 'zod'
 // internal imports
 import { TodayQuestionSection } from '@/features/question'
 import CalendarItem from '@/features/question/ui/calendar-item'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { Badge, BottomNavigation } from '@/shared/ui'
@@ -68,16 +70,20 @@ function RouteComponent() {
             <div className="flex items-center gap-1 py-[2px]">
               <ChevronLeft
                 className={cn('h-5 w-5 text-gray-iron-950', { 'text-gray-iron-300': currentLevel === 0 })}
-                onClick={() => {
-                  if (currentLevel > 0) setCurrentLevel((prev) => prev - 1)
-                }}
+                onClick={wrapWithTracking(BUTTON_NAMES.PREV_CALENDAR, CATEGORIES.QUESTION, () => {
+                  if (currentLevel > 0) {
+                    setCurrentLevel((prev) => prev - 1)
+                  }
+                })}
               />
               <p className="body1-semibold">도감 {currentLevel + 1}페이지</p>
               <ChevronRight
                 className={cn('h-5 w-5 text-gray-iron-950', { 'text-gray-iron-300': currentLevel >= maxPage })}
-                onClick={() => {
-                  if (currentLevel < maxPage) setCurrentLevel((prev) => prev + 1)
-                }}
+                onClick={wrapWithTracking(BUTTON_NAMES.NEXT_CALENDAR, CATEGORIES.QUESTION, () => {
+                  if (currentLevel < maxPage) {
+                    setCurrentLevel((prev) => prev + 1)
+                  }
+                })}
               />
             </div>
 
@@ -92,7 +98,7 @@ function RouteComponent() {
               return (
                 <div
                   key={i}
-                  onClick={async () => {
+                  onClick={wrapWithTracking(BUTTON_NAMES.SELECT_DATE, CATEGORIES.QUESTION, async () => {
                     if (data.level! > itemLevel) {
                       const question = await queryClient.ensureQueryData(questionService.pastQuestionQuery(itemLevel))
                       setSelectedQuestion({ ...question })
@@ -110,7 +116,7 @@ function RouteComponent() {
                         search: (prev) => ({ ...prev, selectedLevel: itemLevel }),
                       })
                     }
-                  }}
+                  })}
                 >
                   <CalendarItem
                     props={{
@@ -144,6 +150,11 @@ function RouteComponent() {
           <Link
             to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
             search={{ coupleQuestionId: selectedQuestion?.coupleQuestionId || 0, isEdit: false }}
+            onClick={wrapWithTracking(
+              selectedQuestion.meAnswered ? BUTTON_NAMES.VIEW_ANSWER : BUTTON_NAMES.WRITE_ANSWER,
+              CATEGORIES.QUESTION,
+              () => {}
+            )}
           >
             <TodayQuestionSection todayQuestion={selectedQuestion} level={selectedQuestion.level} />
           </Link>

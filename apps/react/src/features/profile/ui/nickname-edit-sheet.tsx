@@ -3,6 +3,8 @@ import { X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 import { useAuth } from '@/features/auth'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import memberService from '@/shared/services/member.service'
 import { Button } from '@/shared/ui/button'
@@ -11,7 +13,15 @@ import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
 import { NicknameInput } from './nickname-input'
 import { useNicknameInput } from '../hooks/use-nickname-input'
 
-export function NicknameEditSheet({ isOpen, onOpenChange }: { isOpen: boolean; onOpenChange: (o: boolean) => void }) {
+export function NicknameEditSheet({
+  isOpen,
+  onOpenChange,
+  onSave,
+}: {
+  isOpen: boolean
+  onOpenChange: (o: boolean) => void
+  onSave?: () => void
+}) {
   const { nickname, handleNicknameChange, clearNickname, isValid, maxLength } = useNicknameInput()
   const { refreshUserInfo } = useAuth()
 
@@ -64,10 +74,11 @@ export function NicknameEditSheet({ isOpen, onOpenChange }: { isOpen: boolean; o
     },
   })
 
-  const handleSubmit = () => {
+  const handleSubmit = wrapWithTracking(BUTTON_NAMES.SAVE_NICKNAME, CATEGORIES.PROFILE, () => {
     if (!isValid || updateNicknameMutation.isPending) return
+    onSave?.()
     updateNicknameMutation.mutate({ nickname })
-  }
+  })
 
   // 시트 닫기 요청 처리
   const handleOpenChange = (open: boolean) => {

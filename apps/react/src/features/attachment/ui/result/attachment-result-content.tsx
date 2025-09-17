@@ -8,6 +8,8 @@ import { ATTACHMENT_TYPE_DATA } from '@/features/attachment/models/attachment-da
 import { ResultAttitudeSection } from '@/features/attachment/ui/result/result-attitude-section'
 import { ResultDetailBox } from '@/features/attachment/ui/result/result-detail-box'
 import { ResultScoreBox } from '@/features/attachment/ui/result/result-score-box'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -35,7 +37,12 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
           <p className="mb-4 text-gray-iron-600">
             {isMyResult ? '애착 검사 결과를 찾을 수 없습니다.' : '파트너의 검사 결과를 찾을 수 없습니다.'}
           </p>
-          <Button text="홈으로 이동" onClick={() => navigate({ to: '/' })} />
+          <Button
+            text="홈으로 이동"
+            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, () =>
+              navigate({ to: '/' })
+            )}
+          />
         </div>
       </div>
     )
@@ -48,7 +55,12 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
       <div className="flex h-full w-full items-center justify-center bg-white">
         <div className="text-center">
           <p className="mb-4 text-red-500">애착 유형 데이터를 찾을 수 없습니다.</p>
-          <Button text="홈으로 이동" onClick={() => navigate({ to: '/' })} />
+          <Button
+            text="홈으로 이동"
+            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, () =>
+              navigate({ to: '/' })
+            )}
+          />
         </div>
       </div>
     )
@@ -131,7 +143,10 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
 
       {/* 바텀 버튼 */}
       <div className="px-5 pb-[calc(var(--safe-bottom)_+_20px)]">
-        <Button text="홈으로 이동하기" onClick={handleClose} />
+        <Button
+          text="홈으로 이동하기"
+          onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, handleClose)}
+        />
       </div>
     </div>
   )

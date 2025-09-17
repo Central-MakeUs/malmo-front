@@ -9,6 +9,8 @@ import noResultImage from '@/assets/images/characters/no-result.png'
 import { useChatRoomStatusQuery } from '@/features/chat/hooks/use-chat-queries'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
 import { EmptyState, LinkedChatHistoryItem } from '@/features/history/ui/chat-history-item'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useDebounce } from '@/shared/hooks/use-debounce'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 import { cn } from '@/shared/lib/cn'
@@ -42,13 +44,24 @@ function RouteComponent() {
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
   const isLoading = isFetching && !isFetchingNextPage
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value)
+    if (e.target.value) {
+      wrapWithTracking(BUTTON_NAMES.SEARCH_HISTORY, CATEGORIES.MAIN, () => {})()
+    }
+  }
+
+  const handleDeleteMode = wrapWithTracking(BUTTON_NAMES.DELETE_MODE, CATEGORIES.MAIN, () => {})
+
+  const handleChatFAB = wrapWithTracking(BUTTON_NAMES.OPEN_CHAT_FAB, CATEGORIES.MAIN, () => {})
+
   return (
     <div className="has-bottom-nav flex h-full flex-col pt-30">
       <div className="fixed top-[var(--safe-top)] z-20 bg-white">
         <HomeHeaderBar
           title="대화 기록"
           right={
-            <Link to={'/history/delete'}>
+            <Link to={'/history/delete'} onClick={handleDeleteMode}>
               <p className="body2-medium text-gray-iron-700">삭제</p>
             </Link>
           }
@@ -63,7 +76,7 @@ function RouteComponent() {
               placeholder="찾고 싶은 대화 제목을 검색해 보세요"
               className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
               value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
+              onChange={handleSearchChange}
             />
             {isLoading && (
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
@@ -101,7 +114,7 @@ function RouteComponent() {
         )}
       </section>
 
-      <Link to={'/chat'}>
+      <Link to={'/chat'} onClick={handleChatFAB}>
         <div className="fixed right-5 bottom-[calc(var(--safe-bottom)+var(--bottom-nav-h)+16px)] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
           <div
             className={cn(

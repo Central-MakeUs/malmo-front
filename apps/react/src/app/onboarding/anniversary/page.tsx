@@ -4,6 +4,8 @@ import { useAnniversary, DatePicker } from '@/features/anniversary'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -17,19 +19,19 @@ function AnniversaryPage() {
 
   const { state, actions } = useAnniversary(data.anniversary)
 
-  const handlePrevious = () => {
+  const handlePrevious = wrapWithTracking(BUTTON_NAMES.BACK_ANNIVERSARY, CATEGORIES.ONBOARDING, () => {
     // 현재 보이는 날짜로 업데이트 후 이전 페이지로 이동
     const currentVisibleDate = new Date(state.visibleYear, state.visibleMonth - 1, state.visibleDay)
     updateAnniversary(currentVisibleDate)
     goToPreviousStep()
-  }
+  })
 
-  const handleNext = () => {
+  const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_ANNIVERSARY, CATEGORIES.ONBOARDING, () => {
     // 현재 보이는 날짜로 최종 선택하고 다음 페이지로 이동
     const finalDate = new Date(state.visibleYear, state.visibleMonth - 1, state.visibleDay)
     updateAnniversary(finalDate)
     goToNextStep()
-  }
+  })
 
   return (
     <div className="flex h-full w-full flex-col bg-white">

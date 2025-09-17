@@ -6,6 +6,8 @@ import { z } from 'zod'
 import { useQuestionModal } from '@/features/question/hooks/use-question-modal'
 import { QuestionHeader } from '@/features/question/ui/question-header'
 import CustomTextarea from '@/features/question/ui/text-area'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import questionService from '@/shared/services/question.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -37,17 +39,17 @@ function RouteComponent() {
   const [answer, setAnswer] = useState(data?.me?.answer || '')
   const MAX_LENGTH = 100
 
-  const handleSave = () => {
+  const handleSave = wrapWithTracking(BUTTON_NAMES.SAVE_ANSWER, CATEGORIES.QUESTION, () =>
     historyModal.saveQuestionModal(answer, isEdit)
-  }
+  )
+
+  const handleBack = wrapWithTracking(BUTTON_NAMES.BACK_WRITE, CATEGORIES.QUESTION, () =>
+    historyModal.exitQuestionModal()
+  )
 
   return (
     <div className="flex h-full flex-col pb-[var(--safe-bottom)]">
-      <DetailHeaderBar
-        title="답변 작성"
-        className="border-b-[1px] border-gray-iron-100"
-        onBackClick={() => historyModal.exitQuestionModal()}
-      />
+      <DetailHeaderBar title="답변 작성" className="border-b-[1px] border-gray-iron-100" onBackClick={handleBack} />
 
       <QuestionHeader data={data} />
 

@@ -7,6 +7,8 @@ import { z } from 'zod'
 import MyHeart from '@/assets/icons/my-heart.svg'
 import OtherHeart from '@/assets/icons/other-heart.svg'
 import { QuestionHeader } from '@/features/question/ui/question-header'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import bridge from '@/shared/bridge'
 import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
@@ -55,10 +57,10 @@ function RouteComponent() {
                   "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']",
                   { hidden: !showHelp || !data?.me?.updatable }
                 )}
-                onClick={async () => {
+                onClick={wrapWithTracking(BUTTON_NAMES.CLOSE_TOOLTIP, CATEGORIES.QUESTION, async () => {
                   await bridge.setQuestionHelpFalse()
                   setShowHelp(false)
-                }}
+                })}
               >
                 <div className="flex gap-[2px] text-gray-iron-200">
                   <p className="label1-medium">
@@ -76,6 +78,7 @@ function RouteComponent() {
                 disabled={!data?.me?.updatable}
                 hidden={!data?.me?.updatable}
                 search={{ coupleQuestionId, isEdit: true }}
+                onClick={wrapWithTracking(BUTTON_NAMES.EDIT_ANSWER, CATEGORIES.QUESTION, () => {})}
               >
                 <Pen className="h-4 w-4" />
                 <p className="body4-medium">수정하기</p>

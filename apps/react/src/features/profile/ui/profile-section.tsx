@@ -4,6 +4,8 @@ import { ChevronRight } from 'lucide-react'
 import HeartIcon from '@/assets/icons/heart.svg'
 import momoProfile from '@/assets/images/momo-profile.png'
 import { usePartnerInfo } from '@/features/member'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { withParticle } from '@/shared/utils'
 
 interface ProfileSectionProps {
@@ -15,9 +17,9 @@ export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
   const navigate = useNavigate()
   const { data: partnerInfo } = usePartnerInfo()
 
-  const handleProfileClick = () => {
+  const handleProfileClick = wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_EDIT, CATEGORIES.PROFILE, () =>
     navigate({ to: '/my-page/profile' })
-  }
+  )
 
   // 연인의 닉네임이 있으면 표시하고, 없으면 "연인" 표시
   const partnerName = partnerInfo?.nickname || '연인'

@@ -3,10 +3,12 @@ import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 
 import CheckedCircle from '@/assets/icons/checked-circle.svg'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Badge } from '@/shared/ui'
 import { formatDate } from '@/shared/utils'
 
-// 1. 공통 UI를 Base 컴포넌트로 추출
+// 공통 UI를 Base 컴포넌트로 추출
 const ChatHistoryItemBase = ({ history }: { history: GetChatRoomListResponse }) => (
   <>
     <div className="flex-1">
@@ -22,19 +24,24 @@ const ChatHistoryItemBase = ({ history }: { history: GetChatRoomListResponse }) 
   </>
 )
 
-// 2. '대화 기록' 페이지용 링크 아이템
-export const LinkedChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => (
-  <Link
-    className="flex items-center justify-between gap-16 bg-white px-5 pt-6 pb-7"
-    to={'/chat/result'}
-    search={{ chatId: history.chatRoomId, fromHistory: true }}
-  >
-    <ChatHistoryItemBase history={history} />
-    <ChevronRight className="text-gray-iron-700" size={24} />
-  </Link>
-)
+// '대화 기록' 페이지용 링크 아이템
+export const LinkedChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => {
+  const handleClick = wrapWithTracking(BUTTON_NAMES.SELECT_HISTORY, CATEGORIES.MAIN)
 
-// 3. '삭제' 페이지용 선택 가능 아이템
+  return (
+    <Link
+      className="flex items-center justify-between gap-16 bg-white px-5 pt-6 pb-7"
+      to={'/chat/result'}
+      search={{ chatId: history.chatRoomId, fromHistory: true }}
+      onClick={handleClick}
+    >
+      <ChatHistoryItemBase history={history} />
+      <ChevronRight className="text-gray-iron-700" size={24} />
+    </Link>
+  )
+}
+
+// '삭제' 페이지용 선택 가능 아이템
 export const CheckIcon = ({ isChecked }: { isChecked: boolean }) =>
   isChecked ? (
     <CheckedCircle className="h-[22px] w-[22px]" />
@@ -64,7 +71,7 @@ export const SelectableChatHistoryItem = ({
   </div>
 )
 
-// 4. 일반화된 EmptyState 컴포넌트
+// 일반화된 빈 상태 컴포넌트
 interface EmptyStateProps {
   image: string
   title: string

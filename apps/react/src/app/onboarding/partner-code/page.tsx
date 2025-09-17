@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import coupleService from '@/shared/services/couple.service'
 import { Button, Input } from '@/shared/ui'
@@ -25,14 +27,14 @@ function PartnerCodePage() {
     ...coupleService.connectCoupleMutation(),
   })
 
-  const handlePrevious = () => {
+  const handlePrevious = wrapWithTracking(BUTTON_NAMES.BACK_PARTNER_CODE, CATEGORIES.ONBOARDING, () => {
     if (partnerCode.trim()) {
       updatePartnerCode(partnerCode)
     }
     goToPreviousStep()
-  }
+  })
 
-  const handleNext = async () => {
+  const handleNext = wrapWithTracking(BUTTON_NAMES.CONNECT_PARTNER, CATEGORIES.ONBOARDING, async () => {
     if (!partnerCode.trim()) {
       alert('코드를 입력해주세요.')
       return
@@ -46,7 +48,7 @@ function PartnerCodePage() {
     // 회원가입 완료 처리
     const success = await completeOnboarding()
     if (success) goToNextStep()
-  }
+  })
 
   return (
     <div className="flex h-full w-full flex-col bg-white">

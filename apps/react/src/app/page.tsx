@@ -12,6 +12,8 @@ import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { usePartnerInfo } from '@/features/member'
 import { useAppNotifications } from '@/features/notification'
 import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import chatService from '@/shared/services/chat.service'
 import memberService from '@/shared/services/member.service'
 import questionService from '@/shared/services/question.service'
@@ -64,7 +66,7 @@ function HomePage() {
   const partnerAttachmentType = partnerAttachmentData?.character
 
   // 오늘의 질문 클릭 핸들러
-  const handleTodayQuestionClick = () => {
+  const handleTodayQuestionClick = wrapWithTracking(BUTTON_NAMES.OPEN_TODAY_QUESTION, CATEGORIES.MAIN, () => {
     if (!todayQuestion?.coupleQuestionId) return
 
     if (todayQuestion.meAnswered) {
@@ -80,7 +82,7 @@ function HomePage() {
         search: { coupleQuestionId: todayQuestion.coupleQuestionId },
       })
     }
-  }
+  })
 
   return (
     <div className="has-bottom-nav flex h-full flex-col bg-white pt-[60px]">

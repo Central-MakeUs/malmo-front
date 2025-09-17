@@ -2,6 +2,8 @@ import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { z } from 'zod'
 
 import momoEmptyStateImage from '@/assets/images/momo-empty-state.png'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Button } from '@/shared/ui/button'
 // 상태별 이미지 import
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -24,9 +26,7 @@ function PartnerStatusPage() {
     navigate({ to: '/' })
   }
 
-  const handleGoToMyPage = () => {
-    navigate({ to: '/my-page' })
-  }
+  const handleGoToMyPage = wrapWithTracking(BUTTON_NAMES.GO_MYPAGE, CATEGORIES.MAIN, () => navigate({ to: '/my-page' }))
 
   return (
     <div className="flex h-full w-full flex-col bg-white pb-[var(--safe-bottom)]">

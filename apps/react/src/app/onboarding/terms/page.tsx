@@ -5,6 +5,8 @@ import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import termsService from '@/shared/services/terms.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -35,18 +37,18 @@ function TermsPage() {
   } = useTerms(data.termsAgreements)
 
   // 다음 단계로 이동
-  const handleNext = () => {
+  const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_TERMS, CATEGORIES.ONBOARDING, () => {
     if (isAllRequiredChecked) {
       // 다음 단계로 이동하기 전에 약관 동의 상태 업데이트
       updateTermsAgreements(agreements)
       goToNextStep()
     }
-  }
+  })
 
-  const handleBack = async () => {
+  const handleBack = wrapWithTracking(BUTTON_NAMES.BACK_TERMS, CATEGORIES.ONBOARDING, async () => {
     await auth.logout()
     navigate({ to: '/login' })
-  }
+  })
 
   return (
     <div className="flex h-full w-full flex-col bg-white">

@@ -2,6 +2,8 @@ import { Link } from '@tanstack/react-router'
 
 import momoChatting from '@/assets/images/momo-home-chatting.png'
 import momoIdle from '@/assets/images/momo-home-idle.png'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { cn } from '@/shared/lib/cn'
 
 interface ChatEntryCardProps {
@@ -9,6 +11,11 @@ interface ChatEntryCardProps {
 }
 
 export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
+  const handleChatClick = wrapWithTracking(
+    isChatActive ? BUTTON_NAMES.CONTINUE_CHAT : BUTTON_NAMES.START_NEW_CHAT,
+    CATEGORIES.MAIN
+  )
+
   return (
     <>
       {/* 연애고민상담 타이틀 */}
@@ -50,6 +57,7 @@ export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
           <Link to="/chat">
             <button
               className={cn('h-[44px] w-full rounded-[32px]', isChatActive ? 'bg-malmo-rasberry-500' : 'bg-white')}
+              onClick={handleChatClick}
             >
               <span className={cn('body2-semibold', isChatActive ? 'text-white' : 'text-malmo-rasberry-500')}>
                 {isChatActive ? '대화 이어서 하기' : '새 대화 시작하기'}

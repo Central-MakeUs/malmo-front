@@ -1,11 +1,12 @@
-import { SocialLoginType } from '@bridge/types'
-import { createFileRoute, useRouter } from '@tanstack/react-router' // useNavigate 제거, useRouter 사용
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
 import AppleLogo from '@/assets/icons/apple-logo.svg'
 import KakaoLogo from '@/assets/icons/kakao-logo.svg'
 import malmoLogo from '@/assets/images/malmo-logo.png'
 import { useAuth } from '@/features/auth'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { isWebView } from '@/shared/utils/webview'
 
 export const Route = createFileRoute('/login/')({
@@ -14,7 +15,7 @@ export const Route = createFileRoute('/login/')({
 
 export default function LoginPage() {
   const auth = useAuth()
-  const router = useRouter() // router 인스턴스 가져오기
+  const router = useRouter() // 라우터 인스턴스 가져오기
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isIos, setIsIos] = useState(false)
 
@@ -22,26 +23,37 @@ export default function LoginPage() {
     setIsIos(/iPhone|iPad|iPod/i.test(navigator.userAgent))
   }, [])
 
-  const handleLogin = async (provider: SocialLoginType) => {
+  const handleKakaoLogin = wrapWithTracking(BUTTON_NAMES.LOGIN_KAKAO, CATEGORIES.AUTH, async () => {
     if (isSubmitting) return
-
     try {
       setIsSubmitting(true)
       if (isWebView()) {
-        const result = await auth.socialLogin(provider)
+        const result = await auth.socialLogin('kakao')
         if (result.success) {
-          // 로그인 성공 시, 라우터 상태를 갱신하여
-          // __root.tsx의 beforeLoad가 새 상태로 다시 실행되도록 함
           await router.invalidate()
           router.navigate({ to: '/' })
         }
-      } else {
-        // ToDo: 웹뷰가 아닌 경우 처리
       }
     } finally {
       setIsSubmitting(false)
     }
-  }
+  })
+
+  const handleAppleLogin = wrapWithTracking(BUTTON_NAMES.LOGIN_APPLE, CATEGORIES.AUTH, async () => {
+    if (isSubmitting) return
+    try {
+      setIsSubmitting(true)
+      if (isWebView()) {
+        const result = await auth.socialLogin('apple')
+        if (result.success) {
+          await router.invalidate()
+          router.navigate({ to: '/' })
+        }
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
+  })
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-white">
@@ -62,7 +74,7 @@ export default function LoginPage() {
         {/* 카카오 로그인 버튼 */}
         {isWebView() ? (
           <button
-            onClick={() => handleLogin('kakao')}
+            onClick={handleKakaoLogin}
             className="mb-3 flex h-[52px] w-full items-center justify-center rounded-[8px] bg-[#FEE500]"
             disabled={isSubmitting}
           >
@@ -76,7 +88,7 @@ export default function LoginPage() {
         {/* 애플 로그인 버튼 */}
         {isIos && (
           <button
-            onClick={() => handleLogin('apple')}
+            onClick={handleAppleLogin}
             className="flex h-[52px] w-full items-center justify-center rounded-[8px] bg-black text-white"
             disabled={isSubmitting}
           >

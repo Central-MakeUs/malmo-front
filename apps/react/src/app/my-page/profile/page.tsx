@@ -4,6 +4,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { AnniversaryEditSheet } from '@/features/anniversary'
 import { usePartnerInfo } from '@/features/member'
 import { NicknameEditSheet, useProfileEdit } from '@/features/profile'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Badge } from '@/shared/ui/badge'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -38,15 +40,21 @@ function ProfileEditPage() {
   const menuItems = [
     {
       label: '닉네임 변경',
-      onClick: profileEdit.openNicknameSheet,
+      onClick: wrapWithTracking(BUTTON_NAMES.OPEN_NICKNAME_SHEET, CATEGORIES.PROFILE, () =>
+        profileEdit.openNicknameSheet()
+      ),
     },
     {
       label: '디데이 변경',
-      onClick: profileEdit.openAnniversarySheet,
+      onClick: wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
+        profileEdit.openAnniversarySheet()
+      ),
     },
     {
       label: '커플 연동 관리',
-      onClick: () => navigate({ to: '/my-page/couple-management' }),
+      onClick: wrapWithTracking(BUTTON_NAMES.OPEN_COUPLE_MANAGE, CATEGORIES.PROFILE, () =>
+        navigate({ to: '/my-page/couple-management' })
+      ),
       rightElement: (
         <Badge
           className={isCoupleConnected ? 'bg-malmo-rasberry-25 text-malmo-rasberry-500' : 'bg-gray-100 text-gray-600'}
@@ -73,10 +81,15 @@ function ProfileEditPage() {
       </div>
 
       {/* 바텀시트 */}
-      <NicknameEditSheet isOpen={profileEdit.isNicknameSheetOpen} onOpenChange={profileEdit.setNicknameSheetOpen} />
+      <NicknameEditSheet
+        isOpen={profileEdit.isNicknameSheetOpen}
+        onOpenChange={profileEdit.setNicknameSheetOpen}
+        onSave={wrapWithTracking(BUTTON_NAMES.SAVE_NICKNAME, CATEGORIES.PROFILE)}
+      />
       <AnniversaryEditSheet
         isOpen={profileEdit.isAnniversarySheetOpen}
         onOpenChange={profileEdit.setAnniversarySheetOpen}
+        onSave={wrapWithTracking(BUTTON_NAMES.SAVE_ANNIVERSARY, CATEGORIES.PROFILE)}
       />
     </div>
   )
