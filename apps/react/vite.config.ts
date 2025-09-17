@@ -1,3 +1,4 @@
+import fs from 'fs'
 import path from 'path'
 
 import tailwindcss from '@tailwindcss/vite'
@@ -76,6 +77,13 @@ export default defineConfig(({ mode }) => {
       port: 3001,
       host: env.VITE_HOST_URL,
       allowedHosts: [env.VITE_HOST_URL || 'localhost'],
+      https:
+        env.VITE_SSL_KEY_PATH && env.VITE_SSL_CERT_PATH
+          ? {
+              key: fs.readFileSync(path.resolve(__dirname, env.VITE_SSL_KEY_PATH)),
+              cert: fs.readFileSync(path.resolve(__dirname, env.VITE_SSL_CERT_PATH)),
+            }
+          : undefined,
       proxy: {
         '/api': {
           target: env.VITE_API_URL,
