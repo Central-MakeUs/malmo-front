@@ -3,8 +3,32 @@ import path from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react-swc'
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 import svgr from 'vite-plugin-svgr'
+
+// HTML 변환 플러그인
+function htmlPlugin(mode: string, amplitudeKey: string | undefined): Plugin {
+  return {
+    name: 'html-transform',
+    transformIndexHtml(html) {
+      return html.replace(
+        '<!-- AMPLITUDE_SCRIPT -->',
+        mode === 'production' && amplitudeKey
+          ? `
+          <script src="https://cdn.amplitude.com/script/${amplitudeKey}.js"></script>
+          <script>
+            window.amplitude.add(window.sessionReplay.plugin({sampleRate: 1}));
+            window.amplitude.init('${amplitudeKey}', {
+              "fetchRemoteConfig": false,
+              "autocapture": false
+            });
+          </script>
+          `
+          : '<!-- Amplitude disabled in development -->'
+      )
+    },
+  }
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -18,6 +42,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [
+      htmlPlugin(mode, env.VITE_AMPLITUDE_API_KEY),
       TanStackRouterVite({
         target: 'react',
         autoCodeSplitting: true,
