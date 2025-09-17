@@ -1,6 +1,7 @@
-import React from 'react'
+import { useEffect } from 'react'
 
 import momoErrorImage from '@/assets/images/momo-error.png'
+import { trackError } from '@/shared/analytics'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 interface RouterErrorProps {
@@ -8,6 +9,16 @@ interface RouterErrorProps {
 }
 
 export function RouterError({ error }: RouterErrorProps) {
+  useEffect(() => {
+    // Amplitude 추적
+    if (error) {
+      const errorMessage = `${error.name}: ${error.message}`
+      const stackTrace = error.stack
+
+      trackError('runtime_error', `${errorMessage} | Stack: ${stackTrace}`)
+    }
+  }, [error])
+
   // 401 에러는 로그인 페이지로 리다이렉트
   if (error?.message?.includes('401') || error?.message?.includes('Unauthorized')) {
     window.location.href = '/login'

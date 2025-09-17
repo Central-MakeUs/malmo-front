@@ -41,7 +41,16 @@ export interface ButtonClickProperties {
 
 // 에러 이벤트 속성
 export interface ErrorProperties {
-  error_type: 'api_error' | 'validation_error' | 'network_error' | 'unknown_error'
+  error_type:
+    | 'api_error'
+    | 'validation_error'
+    | 'network_error'
+    | 'unknown_error'
+    | 'not_found'
+    | 'forbidden'
+    | 'timeout'
+    | 'token_refresh_failed'
+    | 'runtime_error'
   error_message: string
   page_name: PageName
   category: Category

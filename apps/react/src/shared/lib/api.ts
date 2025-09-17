@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
+import { trackError } from '../analytics'
 import { bridge } from '../bridge'
 import { isWebView } from '../utils/webview'
 
@@ -81,6 +82,27 @@ export function initApi(): AxiosInstance {
 
       const { response } = error
 
+      // API 에러 추적
+      if (response) {
+        const errorMessage = `[${response.status}] ${originalRequest?.url || 'Unknown URL'}: ${
+          response.data?.message || response.statusText || 'Unknown error'
+        }`
+
+        if (response.status >= 500) {
+          trackError('api_error', errorMessage)
+        } else if (response.status === 404) {
+          trackError('not_found', errorMessage)
+        } else if (response.status === 403) {
+          trackError('forbidden', errorMessage)
+        } else if (response.status === 401) {
+          // 401은 토큰 갱신 로직이 있으므로 갱신 실패 시에만 추적
+        }
+      } else if (error.code === 'ECONNABORTED') {
+        trackError('timeout', `Request timeout: ${originalRequest?.url || 'Unknown URL'}`)
+      } else if (!navigator.onLine) {
+        trackError('network_error', 'No internet connection')
+      }
+
       if (response?.status === 401 && isWebView() && !originalRequest._retry) {
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
@@ -104,6 +126,7 @@ export function initApi(): AxiosInstance {
           return apiInstance(originalRequest)
         } catch (refreshError) {
           processQueue(refreshError as Error, null)
+          trackError('token_refresh_failed', 'Failed to refresh authentication token')
           redirectToAuth()
           return Promise.reject(refreshError)
         } finally {
