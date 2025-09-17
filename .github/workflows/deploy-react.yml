@@ -47,6 +47,7 @@ jobs:
         env:
           # 환경변수 설정
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          VITE_AMPLITUDE_API_KEY: ${{ secrets.VITE_AMPLITUDE_API_KEY }}
 
       # AWS 자격 증명 설정
       - name: Configure AWS credentials
