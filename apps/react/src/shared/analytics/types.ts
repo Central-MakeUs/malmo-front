@@ -1,9 +1,9 @@
 import type { ButtonName, Category, PageName } from './constants'
 
-// Re-export types from constants
-export type { ButtonName, Category, PageName } from './constants'
+// Re-export for convenience
+export type { ButtonName, Category, PageName }
 
-// Amplitude 글로벌 타입
+// Window.amplitude 타입 정의
 declare global {
   interface Window {
     amplitude: {
@@ -11,6 +11,9 @@ declare global {
       identify: (userId: string, userProperties?: Record<string, any>) => void
       setUserId: (userId: string | null) => void
       setUserProperties: (userProperties: Record<string, any>) => void
+      setGroup: (groupType: string, groupName: string | string[]) => void
+      groupIdentify: (groupType: string, groupName: string | string[], groupProperties: Record<string, any>) => void
+      revenue: (revenue: any) => void
       reset: () => void
       getSessionId: () => number | undefined
       getUserId: () => string | undefined
@@ -19,15 +22,12 @@ declare global {
   }
 }
 
-// 이벤트 타입
-export type EventType = 'page_view' | 'button_click' | 'error_occurred'
-
 // 페이지뷰 이벤트 속성
 export interface PageViewProperties {
   page_name: PageName
   category: Category
   page_path: string
-  referrer?: string
+  referrer: string
   timestamp?: string
 }
 
@@ -36,29 +36,27 @@ export interface ButtonClickProperties {
   button_name: ButtonName
   category: Category
   page_name: PageName
-  position?: 'header' | 'main' | 'footer' | 'modal' | 'sheet' | 'fab'
   timestamp?: string
 }
 
 // 에러 이벤트 속성
 export interface ErrorProperties {
-  error_type: 'api_fail' | 'validation' | 'timeout' | 'network' | 'unknown'
+  error_type: 'api_error' | 'validation_error' | 'network_error' | 'unknown_error'
   error_message: string
   page_name: PageName
   category: Category
   timestamp?: string
+  stack_trace?: string
 }
 
 // 사용자 속성
 export interface UserProperties {
   user_id?: string
   nickname?: string
-  couple_status?: 'single' | 'connected' | 'pending'
-  partner_id?: string
-  partner_nickname?: string
+  love_type_category?: string
+  partner_connected?: boolean
   anniversary_date?: string
-  attachment_type?: string
   onboarding_completed?: boolean
-  signup_date?: string
-  last_active?: string
+  created_at?: string
+  [key: string]: any
 }
