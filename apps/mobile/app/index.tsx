@@ -1,11 +1,12 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react'
-import { View, StyleSheet, Platform, Keyboard, LayoutAnimation } from 'react-native'
+import { View, StyleSheet, Platform, Keyboard, LayoutAnimation, BackHandler } from 'react-native'
 import { createWebView, useBridge, type BridgeWebView } from '@webview-bridge/react-native'
 import { appBridge, appSchema } from './bridge'
 import { WebViewError } from './components/webview-error'
 import { CustomSplashScreen } from './components/splash-screen'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import * as SplashScreen from 'expo-splash-screen'
+import type { WebViewNavigation } from 'react-native-webview'
 
 export const { WebView, postMessage } = createWebView({
   bridge: appBridge,
@@ -23,10 +24,10 @@ export default function App() {
   const { setKeyboardHeight } = useBridge(appBridge)
   const insets = useSafeAreaInsets()
   const [showSplash, setShowSplash] = useState(true)
+  const [canGoBack, setCanGoBack] = useState(false)
 
   // const webviewUrl = process.env.EXPO_PUBLIC_WEB_VIEW_URL
-  const webviewUrl =
-    Platform.OS === 'ios' ? process.env.EXPO_PUBLIC_LOCAL_URL : process.env.EXPO_PUBLIC_ANDROID_WEB_VIEW_URL
+  const webviewUrl = process.env.EXPO_PUBLIC_LOCAL_URL
   if (!webviewUrl) throw new Error('Webview URL is not set')
 
   useEffect(() => {
@@ -52,12 +53,33 @@ export default function App() {
   }, [])
   const handleLoadEnd = useCallback(() => {}, [])
   const handleSplashFinish = useCallback(() => setShowSplash(false), [])
+  const handleNavigationStateChange = useCallback((navState: WebViewNavigation) => {
+    setCanGoBack(navState.canGoBack)
+  }, [])
+
+  useEffect(() => {
+    if (Platform.OS !== 'android') return
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (canGoBack) {
+        webviewRef.current?.goBack()
+        return true
+      }
+
+      return false
+    })
+
+    return () => {
+      subscription.remove()
+    }
+  }, [canGoBack])
 
   return (
     <View style={styles.container}>
       <WebView
         ref={webviewRef}
         source={{ uri: webviewUrl }}
+        overScrollMode="never"
         style={styles.webview}
         bounces={false}
         scrollEnabled={false}
@@ -68,8 +90,9 @@ export default function App() {
         mediaPlaybackRequiresUserAction={false}
         originWhitelist={['*']}
         mixedContentMode="compatibility"
-        allowsBackForwardNavigationGestures={false}
+        allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
         onShouldStartLoadWithRequest={() => true}
+        onNavigationStateChange={handleNavigationStateChange}
         renderError={() => <WebViewError onRetry={handleRetry} />}
         startInLoadingState={false}
         onLoadEnd={handleLoadEnd}

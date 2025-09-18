@@ -29,6 +29,29 @@ export function useChatScroll({
 }: UseChatScrollProps) {
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
 
+  useEffect(() => {
+    if (!('visualViewport' in window)) return
+    const viewport = window.visualViewport
+    if (!viewport) return
+    let prevHeight = viewport.height
+
+    const handleResize = () => {
+      const heightReduced = viewport.height < prevHeight
+      prevHeight = viewport.height
+      if (!scrollRef.current) return
+
+      if (heightReduced && keyboardHeight === 0) {
+        // Android 키보드가 올라오면 바로 최하단으로 스크롤
+        requestAnimationFrame(() => {
+          scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight
+        })
+      }
+    }
+
+    viewport.addEventListener('resize', handleResize)
+    return () => viewport.removeEventListener('resize', handleResize)
+  }, [keyboardHeight])
+
   const scrollRef = useRef<HTMLDivElement>(null)
   const scrollHeightRef = useRef(0)
   const prevIsFetchingNextPage = usePrevious(isFetchingNextPage)
