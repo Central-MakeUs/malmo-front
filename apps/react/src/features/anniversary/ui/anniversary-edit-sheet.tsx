@@ -11,9 +11,10 @@ import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
 interface AnniversaryEditSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
+  onSave?: () => void
 }
 
-export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSheetProps) {
+export function AnniversaryEditSheet({ isOpen, onOpenChange, onSave }: AnniversaryEditSheetProps) {
   const { userInfo, refreshUserInfo } = useAuth()
 
   // startLoveDate가 있으면 Date 객체로 변환해서 초기값으로 사용
@@ -79,6 +80,7 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange }: AnniversaryEditSh
     const startLoveDate = selectedDate.toISOString().split('T')[0]
     if (!startLoveDate) return
 
+    onSave?.()
     updateStartDateMutation.mutate({ startLoveDate })
   }
 

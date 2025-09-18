@@ -4,6 +4,8 @@ import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useNicknameInput, NicknameInput } from '@/features/profile'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -22,17 +24,17 @@ function NicknamePage() {
     onNicknameChange: updateNickname,
   })
 
-  const handleNext = () => {
+  const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_NICKNAME, CATEGORIES.ONBOARDING, () => {
     if (isValid) {
       updateNickname(nickname)
       goToNextStep()
     }
-  }
+  })
 
-  const handlePrevious = () => {
+  const handlePrevious = wrapWithTracking(BUTTON_NAMES.BACK_NICKNAME, CATEGORIES.ONBOARDING, () => {
     updateNickname(nickname)
     goToPreviousStep()
-  }
+  })
 
   return (
     <div className="flex h-full w-full flex-col bg-white">

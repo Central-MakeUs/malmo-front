@@ -7,6 +7,8 @@ import loveLetter from '@/assets/images/love-letter.png'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import memberService from '@/shared/services/member.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { toast } from '@/shared/ui/toast'
@@ -29,17 +31,17 @@ function MyCodePage() {
   const { data: inviteCodeData, isLoading: isLoadingInviteCode } = useQuery(memberService.inviteCodeQuery())
   const inviteCode = inviteCodeData?.data?.coupleCode || ''
 
-  const handleCopyCode = () => {
+  const handleCopyCode = wrapWithTracking(BUTTON_NAMES.COPY_MY_CODE, CATEGORIES.ONBOARDING, () => {
     navigator.clipboard.writeText(inviteCode)
     toast.success('초대 코드 복사 완료! 연인에게 공유해 주세요')
-  }
+  })
 
-  const handleConnectWithCode = () => {
+  const handleConnectWithCode = wrapWithTracking(BUTTON_NAMES.GO_PARTNER_CODE, CATEGORIES.ONBOARDING, () => {
     // 코드 입력 페이지로 이동
     goToNextStep()
-  }
+  })
 
-  const handleSkip = async () => {
+  const handleSkip = wrapWithTracking(BUTTON_NAMES.SKIP_PARTNER, CATEGORIES.ONBOARDING, async () => {
     setIsSubmitting(true)
 
     try {
@@ -54,12 +56,14 @@ function MyCodePage() {
     } finally {
       setIsSubmitting(false)
     }
-  }
+  })
 
   return (
     <div className="flex h-full w-full flex-col bg-white">
       {/* 헤더 및 타이틀 */}
-      <DetailHeaderBar onBackClick={goToPreviousStep} />
+      <DetailHeaderBar
+        onBackClick={wrapWithTracking(BUTTON_NAMES.BACK_MY_CODE, CATEGORIES.ONBOARDING, () => goToPreviousStep())}
+      />
       <TitleSection
         title={
           <>

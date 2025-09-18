@@ -6,6 +6,8 @@ import { z } from 'zod'
 
 import { ChatResultHeader, ChatResultMainInfo, ChatResultSummarySection } from '@/features/chat-result/ui'
 import { useHistoryModal } from '@/features/history/hooks/use-history-modal'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useTheme } from '@/shared/contexts/theme.context'
 import { cn } from '@/shared/lib/cn'
 import historyService from '@/shared/services/history.service'
@@ -57,15 +59,15 @@ function RouteComponent() {
   const exitButton = () =>
     fromHistory ? (
       <div
-        onClick={() => {
+        onClick={wrapWithTracking(BUTTON_NAMES.DELETE_HISTORY, CATEGORIES.CHAT, () => {
           if (!chatId) return
           historyModal.deleteChatHistoryModal(chatId)
-        }}
+        })}
       >
         <p className="body2-medium text-gray-iron-700">{chatId ? '삭제' : '로딩중'}</p>
       </div>
     ) : (
-      <Link to="/">
+      <Link to="/" onClick={wrapWithTracking(BUTTON_NAMES.CLOSE_RESULT, CATEGORIES.CHAT, () => {})}>
         <X className="h-[24px] w-[24px]" />
       </Link>
     )
@@ -93,7 +95,9 @@ function RouteComponent() {
             <ChatResultMainInfo
               date={chatResult.createdAt}
               subject={chatResult.totalSummary}
-              onViewChat={() => navigate({ to: '/chat', search: { chatId: chatResult.chatRoomId } })}
+              onViewChat={wrapWithTracking(BUTTON_NAMES.VIEW_CHAT, CATEGORIES.CHAT, () =>
+                navigate({ to: '/chat', search: { chatId: chatResult.chatRoomId } })
+              )}
             />
           )}
 
@@ -111,7 +115,12 @@ function RouteComponent() {
 
           {chatId && (
             <div className="mt-20">
-              <Button text="홈으로 이동하기" onClick={() => navigate({ to: '/' })} />
+              <Button
+                text="홈으로 이동하기"
+                onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.CHAT, () =>
+                  navigate({ to: '/' })
+                )}
+              />
             </div>
           )}
         </div>

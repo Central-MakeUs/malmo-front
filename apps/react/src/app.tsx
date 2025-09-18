@@ -1,6 +1,7 @@
 import { RouterProvider } from '@tanstack/react-router'
 
 import { AuthProvider, useAuth } from '@/features/auth'
+import { setupRouteTracking } from '@/shared/analytics/route-tracker'
 import { SSEProvider } from '@/shared/contexts/sse-context'
 import { ThemeProvider } from '@/shared/contexts/theme.context'
 import { ToastProvider } from '@/shared/ui/toast'
@@ -15,6 +16,9 @@ declare module '@tanstack/react-router' {
 }
 
 const router = createRouter()
+
+// 라우트 추적 설정
+setupRouteTracking(router)
 
 function InnerApp() {
   const auth = useAuth()

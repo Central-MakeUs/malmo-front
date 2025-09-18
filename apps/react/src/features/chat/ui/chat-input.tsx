@@ -3,6 +3,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { cn } from '@/shared/lib/cn'
 import chatService from '@/shared/services/chat.service'
 
@@ -41,13 +43,13 @@ function ChatInput(props: { disabled?: boolean }) {
     }
   }, [text])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = wrapWithTracking(BUTTON_NAMES.SEND_MESSAGE, CATEGORIES.CHAT, (e: React.FormEvent) => {
     e.preventDefault()
     if (text.trim() && !isPending && !sendingMessage) {
       void sendMessageWithReconnect(text.trim()) // 새로운 함수 호출
       setText('')
     }
-  }
+  })
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)

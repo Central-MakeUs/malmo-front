@@ -7,6 +7,8 @@ import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { useAuth } from '@/features/auth'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import memberService from '@/shared/services/member.service'
 import { queryKeys } from '@/shared/services/query-keys'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -44,24 +46,23 @@ function CoupleManagementPage() {
     router.invalidate()
   }
 
-  const handleCopyInviteCode = async () => {
+  const handleCopyInviteCode = wrapWithTracking(BUTTON_NAMES.COPY_INVITE_CODE, CATEGORIES.PROFILE, async () => {
     try {
       await navigator.clipboard.writeText(inviteCode)
       toast.success('초대 코드 복사 완료! 연인에게 공유해 주세요')
     } catch (error) {
       console.error('클립보드 복사 실패:', error)
     }
-  }
+  })
 
-  const handleConnectPartner = () => {
+  const handleConnectPartner = wrapWithTracking(BUTTON_NAMES.OPEN_PARTNER_SHEET, CATEGORIES.PROFILE, () => {
     if (isConnected) return
-
     setIsPartnerCodeSheetOpen(true)
-  }
+  })
 
-  const handleDisconnectCouple = () => {
+  const handleDisconnectCouple = wrapWithTracking(BUTTON_NAMES.DISCONNECT_COUPLE, CATEGORIES.PROFILE, () =>
     coupleDisconnectModal(handleRefreshPage)
-  }
+  )
 
   return (
     <div className="h-full bg-white">

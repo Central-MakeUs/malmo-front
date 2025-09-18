@@ -2,11 +2,16 @@ import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 
 import noteImage from '@/assets/images/note-home.png'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 
 export function AttachmentTestBanner() {
   return (
     <Link to="/attachment-test">
-      <div className="-mx-5 mt-4 h-[68px] cursor-pointer overflow-hidden bg-gray-neutral-100 pl-[28px]">
+      <div
+        className="-mx-5 mt-4 h-[68px] cursor-pointer overflow-hidden bg-gray-neutral-100 pl-[28px]"
+        onClick={wrapWithTracking(BUTTON_NAMES.GO_ATTACHMENT_TEST, CATEGORIES.MAIN, () => {})}
+      >
         <div className="relative flex h-full items-center">
           <img src={noteImage} alt="Note" className="h-[68px] w-[96px] object-contain" />
           {/* 텍스트와 아이콘 */}

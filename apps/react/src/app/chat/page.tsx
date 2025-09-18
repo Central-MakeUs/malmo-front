@@ -20,6 +20,8 @@ import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import ChatInput from '@/features/chat/ui/chat-input'
 import { DateDivider } from '@/features/chat/ui/date-divider'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import { cn } from '@/shared/lib/cn'
@@ -89,9 +91,11 @@ function RouteComponent() {
     return (
       <p
         className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}
-        onClick={() => {
-          if (actived) navigate({ to: '/chat/loading', replace: true })
-        }}
+        onClick={wrapWithTracking(BUTTON_NAMES.EXIT_CHAT, CATEGORIES.CHAT, () => {
+          if (actived) {
+            navigate({ to: '/chat/loading', replace: true })
+          }
+        })}
       >
         종료하기
       </p>
@@ -100,9 +104,9 @@ function RouteComponent() {
 
   const { mutate: sendMessage } = useSendMessageMutation()
 
-  const handleRetry = (content: string) => {
+  const handleRetry = wrapWithTracking(BUTTON_NAMES.RETRY_MESSAGE, CATEGORIES.CHAT, (content: string) =>
     sendMessage(content)
-  }
+  )
 
   return (
     <>
@@ -159,6 +163,7 @@ function RouteComponent() {
               <Link
                 to="/my-page"
                 className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
+                onClick={wrapWithTracking(BUTTON_NAMES.GO_MYPAGE_FROM_CHAT, CATEGORIES.CHAT)}
               >
                 <p className="body3-semibold">마이페이지로 이동하기</p>
                 <ChevronRight className="h-4 w-4" />

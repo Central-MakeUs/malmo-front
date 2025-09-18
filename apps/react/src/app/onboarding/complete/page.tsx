@@ -2,6 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import onboardingEndImage from '@/assets/images/onboarding-end.png'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Button } from '@/shared/ui'
 
 export const Route = createFileRoute('/onboarding/complete/')({
@@ -11,10 +13,10 @@ export const Route = createFileRoute('/onboarding/complete/')({
 function ConnectCompletePage() {
   const { goToHome } = useOnboardingNavigation()
 
-  const handleNext = () => {
+  const handleNext = wrapWithTracking(BUTTON_NAMES.START_SERVICE, CATEGORIES.ONBOARDING, () => {
     // 홈으로 이동
     goToHome()
-  }
+  })
 
   return (
     <div className="flex h-full w-full flex-col bg-white">
