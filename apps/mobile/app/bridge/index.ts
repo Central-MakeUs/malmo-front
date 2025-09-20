@@ -67,6 +67,10 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
       return { accessToken }
     },
 
+    async setCurrentUserEmail(email: string | null): Promise<void> {
+      await AuthStorage.setCurrentUserEmail(email)
+    },
+
     async saveChatTutorialSeen(): Promise<void> {
       await AuthStorage.setChatTutorialSeen(true)
     },

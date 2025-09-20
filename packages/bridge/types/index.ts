@@ -20,6 +20,7 @@ export interface BridgeActions {
   getAuthToken(): Promise<{ accessToken: string | null }>
   logout(): Promise<{ success: boolean; message?: string }>
   notifyTokenExpired(): Promise<{ accessToken: string | null }>
+  setCurrentUserEmail(email: string | null): Promise<void>
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
   setKeyboardHeight(height: number): Promise<void>
