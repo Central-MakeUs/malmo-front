@@ -6,6 +6,7 @@ import {
 } from '@data/user-api-axios/api'
 import { createContext, ReactNode, useCallback, useEffect, useState, use } from 'react'
 
+import bridge from '@/shared/bridge'
 import memberService from '@/shared/services/member.service'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -25,6 +26,7 @@ export type UserInfo = {
   avoidanceRate?: number
   totalChatRoomCount?: number
   totalCoupleQuestionCount?: number
+  email?: string
 }
 
 export interface AuthContext {
@@ -53,6 +55,7 @@ const initialUserInfo: UserInfo = {
   avoidanceRate: undefined,
   totalChatRoomCount: undefined,
   totalCoupleQuestionCount: undefined,
+  email: undefined,
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -79,13 +82,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           avoidanceRate: memberInfo.data.data.avoidanceRate || undefined,
           totalChatRoomCount: memberInfo.data.data.totalChatRoomCount || 0,
           totalCoupleQuestionCount: memberInfo.data.data.totalCoupleQuestionCount || 0,
+          email: memberInfo.data.data.email || undefined,
         }
         setUserInfo(newUserInfo)
+        await bridge.setCurrentUserEmail(newUserInfo.email ?? null)
         return newUserInfo
       }
       // 데이터가 없는 경우도 실패로 처리
       throw new Error('User info not found')
     } catch {
+      await bridge.setCurrentUserEmail(null)
       // 실패 시 인증 상태를 확실히 초기화
       setAuthenticated(false)
       setUserInfo(initialUserInfo)
@@ -122,6 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     try {
       await authClient.logout()
+      await bridge.setCurrentUserEmail(null)
       setAuthenticated(false)
       setUserInfo(initialUserInfo)
       return { success: true }

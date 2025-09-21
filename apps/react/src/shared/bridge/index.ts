@@ -13,6 +13,7 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   getAuthToken(): Promise<{ accessToken: string | null }>
   logout(): Promise<{ success: boolean; message?: string }>
   notifyTokenExpired(): Promise<{ accessToken: string | null }>
+  setCurrentUserEmail(email: string | null): Promise<void>
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
   openWebView(url: string): Promise<void>
@@ -35,6 +36,7 @@ export const bridge = linkBridge<WebBridge>({
     getAuthToken: async () => ({ accessToken: null }),
     logout: async () => ({ success: false, message: '로그아웃 실패' }),
     notifyTokenExpired: async () => ({ accessToken: null }),
+    setCurrentUserEmail: async () => {},
     saveChatTutorialSeen: async () => {},
     getChatTutorialSeen: async () => false,
     openWebView: async (url: string) => {
