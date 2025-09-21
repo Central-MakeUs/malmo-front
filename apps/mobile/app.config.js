@@ -50,6 +50,7 @@ module.exports = () => {
       },
       package: 'com.malmo.app',
       versionCode: 3,
+      networkSecurityConfig: './network_security_config.xml',
       intentFilters: [
         {
           action: 'VIEW',
