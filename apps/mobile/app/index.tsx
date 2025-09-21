@@ -21,7 +21,7 @@ SplashScreen.preventAutoHideAsync()
 
 export default function App() {
   const webviewRef = useRef<BridgeWebView>(null)
-  const { setKeyboardHeight } = useBridge(appBridge)
+  const { setKeyboardHeight, isModalOpen, setModalOpen } = useBridge(appBridge)
   const insets = useSafeAreaInsets()
   const [showSplash, setShowSplash] = useState(true)
   const [canGoBack, setCanGoBack] = useState(false)
@@ -61,6 +61,11 @@ export default function App() {
     if (Platform.OS !== 'android') return
 
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (isModalOpen) {
+        void setModalOpen(false)
+        return true
+      }
+
       if (canGoBack) {
         webviewRef.current?.goBack()
         return true
@@ -72,7 +77,7 @@ export default function App() {
     return () => {
       subscription.remove()
     }
-  }, [canGoBack])
+  }, [canGoBack, isModalOpen, setModalOpen])
 
   return (
     <View style={styles.container}>
@@ -90,7 +95,7 @@ export default function App() {
         mediaPlaybackRequiresUserAction={false}
         originWhitelist={['*']}
         mixedContentMode="compatibility"
-        allowsBackForwardNavigationGestures={Platform.OS === 'ios'}
+        allowsBackForwardNavigationGestures={Platform.OS === 'ios' && !isModalOpen}
         onShouldStartLoadWithRequest={() => true}
         onNavigationStateChange={handleNavigationStateChange}
         renderError={() => <WebViewError onRetry={handleRetry} />}

@@ -6,6 +6,7 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   // 상태
   isLoggedIn: boolean
   keyboardHeight: number
+  isModalOpen: boolean
 
   // 액션
   socialLogin(type: SocialLoginType): Promise<SocialLoginResult>
@@ -21,6 +22,7 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   setQuestionHelpFalse(): Promise<void>
   getIntroSeen(): Promise<boolean>
   setIntroSeen(): Promise<void>
+  setModalOpen(isOpen: boolean): Promise<void>
   [key: string]: any
 }
 
@@ -31,6 +33,7 @@ export const bridge = linkBridge<WebBridge>({
   initialBridge: {
     isLoggedIn: false,
     keyboardHeight: 0,
+    isModalOpen: false,
     socialLogin: async () => ({ success: false }),
     getAuthStatus: async () => ({ isLoggedIn: false }),
     getAuthToken: async () => ({ accessToken: null }),
@@ -53,6 +56,7 @@ export const bridge = linkBridge<WebBridge>({
       // 웹에서는 localStorage 사용
       localStorage.setItem('intro_seen', 'true')
     },
+    setModalOpen: async () => {},
   },
 })
 

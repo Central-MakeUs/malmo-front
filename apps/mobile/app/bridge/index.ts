@@ -84,6 +84,10 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
       set({ keyboardHeight: height })
     },
 
+    async setModalOpen(isOpen: boolean): Promise<void> {
+      set({ isModalOpen: isOpen })
+    },
+
     async openWebView(url: string): Promise<void> {
       try {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -116,6 +120,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
   return {
     isLoggedIn: false,
     keyboardHeight: 0,
+    isModalOpen: false,
     ...actions,
   }
 })

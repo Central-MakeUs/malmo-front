@@ -1,5 +1,8 @@
+import { useBridge } from '@webview-bridge/react'
 import * as React from 'react'
-import { createContext, useState } from 'react'
+import { createContext, useState, useCallback, useEffect, useRef } from 'react'
+
+import bridge from '@/shared/bridge'
 
 import { useAlertDialog } from '../hooks/use-alert-dialog'
 import {
@@ -48,15 +51,34 @@ export function AlertDialogProvider({
 }) {
   const [openAlertDialog, setOpenAlertDialog] = useState(false)
   const [state, setState] = useState<AlertDialogOpenOptions>({ description: '' })
+  const isModalOpenOnNative = useBridge(bridge.store, (store) => store.isModalOpen)
+  const previousIsModalOpenRef = useRef(isModalOpenOnNative)
 
-  const open = (options: AlertDialogOpenOptions) => {
+  const open = useCallback((options: AlertDialogOpenOptions) => {
     setOpenAlertDialog(true)
     setState({ ...options })
-  }
+  }, [])
 
-  const close = () => {
+  const close = useCallback(() => {
     setOpenAlertDialog(false)
-  }
+  }, [])
+
+  useEffect(() => {
+    const previousIsModalOpen = previousIsModalOpenRef.current
+
+    if (!isModalOpenOnNative && previousIsModalOpen && openAlertDialog) {
+      state.onCancel?.()
+      setOpenAlertDialog(false)
+    } else if (isModalOpenOnNative && !openAlertDialog) {
+      setOpenAlertDialog(true)
+    }
+
+    previousIsModalOpenRef.current = isModalOpenOnNative
+  }, [isModalOpenOnNative, openAlertDialog, state])
+
+  useEffect(() => {
+    void bridge.setModalOpen(openAlertDialog)
+  }, [openAlertDialog])
 
   const { cancelText, confirmText, ...rest } = state
 

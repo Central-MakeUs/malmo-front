@@ -11,6 +11,7 @@ export interface SocialLoginResult {
 export interface BridgeStore {
   isLoggedIn: boolean
   keyboardHeight: number
+  isModalOpen: boolean
 }
 
 // 브릿지 액션 타입 (함수)
@@ -29,4 +30,5 @@ export interface BridgeActions {
   setQuestionHelpFalse(): Promise<void>
   getIntroSeen(): Promise<boolean>
   setIntroSeen(): Promise<void>
+  setModalOpen(isOpen: boolean): Promise<void>
 }
