@@ -3,7 +3,7 @@ module.exports = () => {
   return {
     name: '말모',
     slug: 'malmo-app',
-    version: '1.1.0',
+    version: '1.1.3',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
     scheme: 'malmo',
@@ -12,7 +12,7 @@ module.exports = () => {
     ios: {
       supportsTablet: false,
       bundleIdentifier: 'com.malmo.app',
-      buildNumber: '3',
+      buildNumber: '6',
       usesAppleSignIn: true,
       infoPlist: {
         CFBundleURLTypes: [
@@ -49,7 +49,7 @@ module.exports = () => {
         backgroundColor: '#FFFFFF',
       },
       package: 'com.malmo.app',
-      versionCode: 3,
+      versionCode: 6,
       networkSecurityConfig: './network_security_config.xml',
       intentFilters: [
         {
@@ -85,6 +85,7 @@ module.exports = () => {
           },
         },
       ],
+      'expo-secure-store',
       'expo-apple-authentication',
       'expo-font',
       'expo-router',
