@@ -143,7 +143,7 @@ export class AuthStorage {
         this.deleteScopedItem(this.CHAT_TUTORIAL_KEY),
         this.deleteScopedItem(this.QUESTION_HELP_KEY),
         this.deleteScopedItem(this.INTRO_SEEN_KEY),
-        this.deleteScopedItem(this.CURRENT_EMAIL_KEY),
+        SecureStore.deleteItemAsync(this.CURRENT_EMAIL_KEY),
       ])
     } catch (error) {
       console.error('인증 정보 삭제 중 오류 발생:', error)
@@ -211,7 +211,7 @@ export class AuthStorage {
 
   static async setCurrentUserEmail(email: string | null): Promise<void> {
     try {
-      if (!email || email.trim().length === 0) {
+      if (!email?.trim()) {
         await SecureStore.deleteItemAsync(this.CURRENT_EMAIL_KEY)
         return
       }
