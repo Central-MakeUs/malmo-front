@@ -133,18 +133,33 @@ export class AuthStorage {
     return !!token
   }
 
-  // 모든 인증 정보 삭제
+  // 모든 인증 관련 정보 삭제
   static async clearAuth(): Promise<void> {
     try {
-      await Promise.all([
-        this.deleteScopedItem(this.ACCESS_TOKEN_KEY),
-        this.deleteScopedItem(this.REFRESH_TOKEN_KEY),
-        this.deleteScopedItem(this.USER_INFO_KEY),
-        this.deleteScopedItem(this.CHAT_TUTORIAL_KEY),
-        this.deleteScopedItem(this.QUESTION_HELP_KEY),
-        this.deleteScopedItem(this.INTRO_SEEN_KEY),
-        SecureStore.deleteItemAsync(this.CURRENT_EMAIL_KEY),
-      ])
+      const currentEmail = await this.getCurrentUserEmail()
+
+      const keysToDelete = [
+        this.ACCESS_TOKEN_KEY,
+        this.REFRESH_TOKEN_KEY,
+        this.USER_INFO_KEY,
+        this.CHAT_TUTORIAL_KEY,
+        this.QUESTION_HELP_KEY,
+        this.INTRO_SEEN_KEY,
+      ]
+
+      const deletionPromises: Promise<void>[] = []
+
+      for (const baseKey of keysToDelete) {
+        deletionPromises.push(SecureStore.deleteItemAsync(baseKey))
+        if (currentEmail) {
+          const emailKey = this.buildEmailKey(baseKey, currentEmail)
+          deletionPromises.push(SecureStore.deleteItemAsync(emailKey))
+        }
+      }
+
+      deletionPromises.push(SecureStore.deleteItemAsync(this.CURRENT_EMAIL_KEY))
+
+      await Promise.all(deletionPromises)
     } catch (error) {
       console.error('인증 정보 삭제 중 오류 발생:', error)
       throw error
