@@ -12,7 +12,7 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   socialLogin(type: SocialLoginType): Promise<SocialLoginResult>
   getAuthStatus(): Promise<{ isLoggedIn: boolean }>
   getAuthToken(): Promise<{ accessToken: string | null }>
-  logout(): Promise<{ success: boolean; message?: string }>
+  logout({ clearAll }: { clearAll?: boolean }): Promise<{ success: boolean; message?: string }>
   notifyTokenExpired(): Promise<{ accessToken: string | null }>
   setCurrentUserEmail(email: string | null): Promise<void>
   saveChatTutorialSeen(): Promise<void>

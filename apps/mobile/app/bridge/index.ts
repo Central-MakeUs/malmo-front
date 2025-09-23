@@ -44,8 +44,8 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
         }
       }
     },
-    async logout(): Promise<{ success: boolean; message?: string }> {
-      const result = await logout()
+    async logout({ clearAll }: { clearAll?: boolean }): Promise<{ success: boolean; message?: string }> {
+      const result = await logout({ clearAll })
       if (result.success) {
         set({ isLoggedIn: false })
       }

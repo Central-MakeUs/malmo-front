@@ -29,7 +29,7 @@ export function useProfileModal(): UseProfileModalReturn {
     onSuccess: async (result) => {
       if (result?.success) {
         // 로그아웃 처리
-        await logout()
+        await logout({ clearAll: true })
 
         await queryClient.cancelQueries({ predicate: () => true })
         queryClient.clear()
@@ -71,7 +71,7 @@ export function useProfileModal(): UseProfileModalReturn {
       confirmText: '취소',
       onCancel: async () => {
         try {
-          const result = await logout()
+          const result = await logout({ clearAll: false })
 
           await queryClient.cancelQueries({ predicate: () => true })
           queryClient.clear()
