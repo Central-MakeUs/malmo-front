@@ -20,8 +20,8 @@ export async function kakaoLogin(): Promise<SocialLoginResult> {
       if (apiResponse.data && apiResponse.data.data) {
         const { accessToken, refreshToken } = apiResponse.data.data
 
-        const member = await axios.post(`${process.env.EXPO_PUBLIC_API_BASE_URL}/members`, {
-          Headers: { Authorization: `Bearer ${accessToken}` },
+        const member = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/members`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
         })
 
         await AuthStorage.setCurrentUserEmail(member.data.data.email)
