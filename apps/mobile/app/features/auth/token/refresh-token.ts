@@ -18,7 +18,7 @@ export async function refreshToken(): Promise<{ accessToken: string | null }> {
       accessToken: apiResponse.data.data?.accessToken || null,
     }
   } catch (apiError) {
-    await AuthStorage.clearAuth()
+    await AuthStorage.clearSession()
     await AuthStorage.setCurrentUserEmail(null)
 
     if (isAxiosError(apiError)) {

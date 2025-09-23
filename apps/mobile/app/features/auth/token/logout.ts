@@ -24,7 +24,7 @@ export async function logout(): Promise<{ success: boolean; message?: string }> 
     }
 
     // 로컬 인증 정보 초기화
-    await AuthStorage.clearAuth()
+    await AuthStorage.clearSession()
     await AuthStorage.setCurrentUserEmail(null)
 
     return { success: true, message: '로그아웃 성공' }
