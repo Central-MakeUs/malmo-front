@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 import momoErrorImage from '@/assets/images/momo-error.png'
-import { trackError } from '@/shared/analytics'
+import { ErrorReporter } from '@/shared/analytics'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 interface RouterErrorProps {
@@ -10,12 +10,14 @@ interface RouterErrorProps {
 
 export function RouterError({ error }: RouterErrorProps) {
   useEffect(() => {
-    // Amplitude 추적
+    // 통합 에러 리포팅
     if (error) {
-      const errorMessage = `${error.name}: ${error.message}`
-      const stackTrace = error.stack
-
-      trackError('runtime_error', `${errorMessage} | Stack: ${stackTrace}`)
+      ErrorReporter.report(error, {
+        source: 'router',
+        route: window.location.pathname,
+        severity: 'high',
+        userAgent: navigator.userAgent,
+      })
     }
   }, [error])
 

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
-import { trackError } from '../analytics'
+import { ErrorReporter } from '../analytics'
 import { bridge } from '../bridge'
 import { isWebView } from '../utils/webview'
 
@@ -23,6 +23,19 @@ const redirectToAuth = () => {
   if (typeof window !== 'undefined') {
     window.location.href = AUTH_ROUTE
   }
+}
+
+const extractFeatureFromUrl = (url?: string): string => {
+  if (!url) return 'unknown'
+
+  if (url.includes('/auth/')) return 'authentication'
+  if (url.includes('/chat/')) return 'chat'
+  if (url.includes('/member/')) return 'member'
+  if (url.includes('/question/')) return 'question'
+  if (url.includes('/love-type/')) return 'attachment'
+  if (url.includes('/couple/')) return 'couple'
+
+  return 'api'
 }
 
 export function initApi(): AxiosInstance {
@@ -84,23 +97,36 @@ export function initApi(): AxiosInstance {
 
       // API 에러 추적
       if (response) {
-        const errorMessage = `[${response.status}] ${originalRequest?.url || 'Unknown URL'}: ${
-          response.data?.message || response.statusText || 'Unknown error'
-        }`
+        const severity =
+          response.status >= 500
+            ? 'critical'
+            : response.status === 404
+              ? 'medium'
+              : response.status === 403
+                ? 'high'
+                : 'medium'
 
-        if (response.status >= 500) {
-          trackError('api_error', errorMessage)
-        } else if (response.status === 404) {
-          trackError('not_found', errorMessage)
-        } else if (response.status === 403) {
-          trackError('forbidden', errorMessage)
-        } else if (response.status === 401) {
-          // 401은 토큰 갱신 로직이 있으므로 갱신 실패 시에만 추적
-        }
+        ErrorReporter.report(error, {
+          source: 'api',
+          endpoint: originalRequest?.url,
+          severity,
+          feature: extractFeatureFromUrl(originalRequest?.url),
+          statusCode: response.status,
+          responseData: response.data,
+        })
       } else if (error.code === 'ECONNABORTED') {
-        trackError('timeout', `Request timeout: ${originalRequest?.url || 'Unknown URL'}`)
+        ErrorReporter.report(error, {
+          source: 'api',
+          endpoint: originalRequest?.url,
+          severity: 'medium',
+          errorType: 'timeout',
+        })
       } else if (!navigator.onLine) {
-        trackError('network_error', 'No internet connection')
+        ErrorReporter.report(error, {
+          source: 'api',
+          severity: 'high',
+          errorType: 'network_offline',
+        })
       }
 
       if (response?.status === 401 && isWebView() && !originalRequest._retry) {
@@ -126,7 +152,12 @@ export function initApi(): AxiosInstance {
           return apiInstance(originalRequest)
         } catch (refreshError) {
           processQueue(refreshError as Error, null)
-          trackError('token_refresh_failed', 'Failed to refresh authentication token')
+          ErrorReporter.report(refreshError as Error, {
+            source: 'api',
+            severity: 'critical',
+            errorType: 'token_refresh_failed',
+            feature: 'authentication',
+          })
           redirectToAuth()
           return Promise.reject(refreshError)
         } finally {
