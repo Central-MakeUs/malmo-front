@@ -32,7 +32,9 @@ export const Route = createFileRoute('/question/see-answer/')({
 
 function RouteComponent() {
   const { coupleQuestionId, showHelpInit } = Route.useLoaderData()
-  const [showHelp, setShowHelp] = useState(showHelpInit)
+  const [showHelp, setShowHelp] = useState(false)
+
+  const shouldShowHelp = showHelpInit && !showHelp
 
   const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
 
@@ -55,11 +57,11 @@ function RouteComponent() {
                 className={cn(
                   'absolute top-[-72px] right-0 rounded-[12px] bg-gray-iron-900 py-2.5 pr-[10px] pl-4 whitespace-nowrap',
                   "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']",
-                  { hidden: !showHelp || !data?.me?.updatable }
+                  { hidden: !shouldShowHelp || !data?.me?.updatable }
                 )}
                 onClick={wrapWithTracking(BUTTON_NAMES.CLOSE_TOOLTIP, CATEGORIES.QUESTION, async () => {
                   await bridge.setQuestionHelpFalse()
-                  setShowHelp(false)
+                  setShowHelp(true)
                 })}
               >
                 <div className="flex gap-[2px] text-gray-iron-200">

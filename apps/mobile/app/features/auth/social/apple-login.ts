@@ -25,6 +25,11 @@ export async function appleLogin(): Promise<SocialLoginResult> {
       if (apiResponse.data && apiResponse.data.data) {
         const { accessToken, refreshToken } = apiResponse.data.data
 
+        const member = await axios.get(`${process.env.EXPO_PUBLIC_API_BASE_URL}/members`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+
+        await AuthStorage.setCurrentUserEmail(member.data.data.email)
         await AuthStorage.setAccessToken(accessToken)
         await AuthStorage.setRefreshToken(refreshToken)
       }

@@ -34,10 +34,10 @@ class AuthClient {
     }
   }
 
-  async logout() {
+  async logout({ clearAll }: { clearAll?: boolean } = {}) {
     if (isWebView()) {
       try {
-        const result = await bridge.logout()
+        const result = await bridge.logout({ clearAll })
         if (!result.success) {
           throw new Error(result.message || '로그아웃에 실패했습니다.')
         }

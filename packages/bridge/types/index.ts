@@ -11,6 +11,7 @@ export interface SocialLoginResult {
 export interface BridgeStore {
   isLoggedIn: boolean
   keyboardHeight: number
+  isModalOpen: boolean
 }
 
 // 브릿지 액션 타입 (함수)
@@ -18,7 +19,7 @@ export interface BridgeActions {
   socialLogin(type: SocialLoginType): Promise<SocialLoginResult>
   getAuthStatus(): Promise<{ isLoggedIn: boolean }>
   getAuthToken(): Promise<{ accessToken: string | null }>
-  logout(): Promise<{ success: boolean; message?: string }>
+  logout({ clearAll }: { clearAll?: boolean }): Promise<{ success: boolean; message?: string }>
   notifyTokenExpired(): Promise<{ accessToken: string | null }>
   setCurrentUserEmail(email: string | null): Promise<void>
   saveChatTutorialSeen(): Promise<void>
@@ -29,4 +30,5 @@ export interface BridgeActions {
   setQuestionHelpFalse(): Promise<void>
   getIntroSeen(): Promise<boolean>
   setIntroSeen(): Promise<void>
+  setModalOpen(isOpen: boolean): Promise<void>
 }

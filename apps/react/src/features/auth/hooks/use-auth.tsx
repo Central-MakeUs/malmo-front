@@ -38,7 +38,7 @@ export interface AuthContext {
     message?: string
     needsOnboarding?: boolean
   }>
-  logout: () => Promise<{ success: boolean; message?: string }>
+  logout: ({ clearAll }: { clearAll?: boolean }) => Promise<{ success: boolean; message?: string }>
   refreshUserInfo: () => Promise<UserInfo | null>
 }
 
@@ -125,10 +125,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [] // 의존성 배열을 비워 stale closure 문제 해결
   )
 
-  const logout = useCallback(async () => {
+  const logout = useCallback(async ({ clearAll }: { clearAll?: boolean }) => {
     try {
-      await authClient.logout()
-      await bridge.setCurrentUserEmail(null)
+      await authClient.logout({ clearAll })
       setAuthenticated(false)
       setUserInfo(initialUserInfo)
       return { success: true }

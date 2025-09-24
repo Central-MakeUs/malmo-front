@@ -46,7 +46,7 @@ function TermsPage() {
   })
 
   const handleBack = wrapWithTracking(BUTTON_NAMES.BACK_TERMS, CATEGORIES.ONBOARDING, async () => {
-    await auth.logout()
+    await auth.logout({ clearAll: true })
     navigate({ to: '/login' })
   })
 

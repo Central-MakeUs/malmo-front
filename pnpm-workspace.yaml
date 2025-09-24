@@ -5,6 +5,15 @@ packages:
   - packages/ui/*
   - packages/bridge
 
+publicHoistPattern:
+  - 'expo'
+  - 'expo-*'
+  - '@expo/*'
+  - '*expo-modules-core'
+  - '*expo-modules-autolinking'
+  - '*babel-preset-expo'
+nodeLinker: hoisted
+
 catalog:
   '@types/node': ^22
   '@types/mime-types': ^2

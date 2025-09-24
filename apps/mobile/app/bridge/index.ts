@@ -44,8 +44,8 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
         }
       }
     },
-    async logout(): Promise<{ success: boolean; message?: string }> {
-      const result = await logout()
+    async logout({ clearAll }: { clearAll?: boolean }): Promise<{ success: boolean; message?: string }> {
+      const result = await logout({ clearAll })
       if (result.success) {
         set({ isLoggedIn: false })
       }
@@ -84,6 +84,10 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
       set({ keyboardHeight: height })
     },
 
+    async setModalOpen(isOpen: boolean): Promise<void> {
+      set({ isModalOpen: isOpen })
+    },
+
     async openWebView(url: string): Promise<void> {
       try {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -116,6 +120,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
   return {
     isLoggedIn: false,
     keyboardHeight: 0,
+    isModalOpen: false,
     ...actions,
   }
 })

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { AuthStorage } from '../lib/auth-storage'
 
-export async function logout(): Promise<{ success: boolean; message?: string }> {
+export async function logout({ clearAll }: { clearAll?: boolean }): Promise<{ success: boolean; message?: string }> {
   try {
     const baseUrl = process.env.EXPO_PUBLIC_API_BASE_URL
     const accessToken = await AuthStorage.getAccessToken()
@@ -24,7 +24,11 @@ export async function logout(): Promise<{ success: boolean; message?: string }> 
     }
 
     // 로컬 인증 정보 초기화
-    await AuthStorage.clearAuth()
+    if (clearAll) {
+      await AuthStorage.clearAuth()
+    } else {
+      await AuthStorage.clearSession()
+    }
     await AuthStorage.setCurrentUserEmail(null)
 
     return { success: true, message: '로그아웃 성공' }
