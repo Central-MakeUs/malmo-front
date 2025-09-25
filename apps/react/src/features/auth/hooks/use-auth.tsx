@@ -6,7 +6,6 @@ import {
 } from '@data/user-api-axios/api'
 import { createContext, ReactNode, useCallback, useEffect, useState, use } from 'react'
 
-import bridge from '@/shared/bridge'
 import memberService from '@/shared/services/member.service'
 import { Skeleton } from '@/shared/ui/skeleton'
 
@@ -85,13 +84,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           email: memberInfo.data.data.email || undefined,
         }
         setUserInfo(newUserInfo)
-        await bridge.setCurrentUserEmail(newUserInfo.email ?? null)
         return newUserInfo
       }
       // 데이터가 없는 경우도 실패로 처리
       throw new Error('User info not found')
     } catch {
-      await bridge.setCurrentUserEmail(null)
       // 실패 시 인증 상태를 확실히 초기화
       setAuthenticated(false)
       setUserInfo(initialUserInfo)
@@ -107,7 +104,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (result.success) {
           setAuthenticated(true) // 먼저 인증 상태를 true로 설정
           const currentUserInfo = await _fetchUserInfo() // 그 다음 사용자 정보를 가져옴
-
           const currentNeedsOnboarding = currentUserInfo?.memberState === MemberDataMemberStateEnum.BeforeOnboarding
 
           return {
