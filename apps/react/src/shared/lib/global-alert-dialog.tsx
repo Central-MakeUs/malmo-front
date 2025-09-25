@@ -33,6 +33,7 @@ interface AlertDialogContextType {
   image?: React.ReactNode
   cancelText?: string
   confirmText: string
+  isOpen: boolean
   onConfirm?: () => void | Promise<void>
   onCancel?: () => void | Promise<void>
   open: (options: AlertDialogOpenOptions) => void
@@ -48,15 +49,32 @@ export function AlertDialogProvider({
   defaultConfirmText?: string
   children: React.ReactNode
 }) {
+  const [isOpen, setIsOpen] = useState(false)
   const [state, setState] = useState<AlertDialogOpenOptions>({ description: '' })
 
+  const isNativeOpen = useBridge(bridge.store, (store) => store.isModalOpen)
+
+  React.useEffect(() => {
+    if (isNativeOpen !== null && isNativeOpen !== undefined) {
+      setIsOpen(isNativeOpen)
+    }
+  }, [isNativeOpen])
+
   const open = (options: AlertDialogOpenOptions) => {
-    bridge.setModalOpen(true)
+    setIsOpen(true)
     setState({ ...options })
+
+    if (typeof bridge?.setModalOpen === 'function') {
+      bridge.setModalOpen(true)
+    }
   }
 
   const close = () => {
-    bridge.setModalOpen(false)
+    setIsOpen(false)
+
+    if (typeof bridge?.setModalOpen === 'function') {
+      bridge.setModalOpen(false)
+    }
   }
 
   const { cancelText, confirmText, ...rest } = state
@@ -65,6 +83,7 @@ export function AlertDialogProvider({
     <AlertDialogContext.Provider
       value={{
         ...rest,
+        isOpen,
         cancelText,
         confirmText: confirmText ?? defaultConfirmText,
         open,
@@ -78,11 +97,42 @@ export function AlertDialogProvider({
 }
 
 export function GlobalAlertDialog() {
-  const { title, description, image, cancelText, confirmText, onConfirm, onCancel, close } = useAlertDialog()
-  const isOpen = useBridge(bridge.store, (store) => store.isModalOpen)
+  const { isOpen, title, description, image, cancelText, confirmText, onConfirm, onCancel, close } = useAlertDialog()
+
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+
+  const handleConfirm = async () => {
+    if (isSubmitting) return
+
+    try {
+      setIsSubmitting(true)
+      await onConfirm?.()
+    } finally {
+      setIsSubmitting(false)
+      close()
+    }
+  }
+
+  const handleCancel = async () => {
+    if (isSubmitting) return
+
+    try {
+      setIsSubmitting(true)
+      await onCancel?.()
+    } finally {
+      setIsSubmitting(false)
+      close()
+    }
+  }
+
+  React.useEffect(() => {
+    if (!isOpen) {
+      setIsSubmitting(false)
+    }
+  }, [isOpen])
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={close}>
+    <AlertDialog open={isOpen} onOpenChange={isSubmitting ? undefined : close}>
       <AlertDialogContent>
         <div className="mb-5 flex justify-center">{image}</div>
         <AlertDialogHeader>
@@ -90,8 +140,12 @@ export function GlobalAlertDialog() {
           {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          {cancelText && <AlertDialogCancel onClick={() => onCancel?.()}>{cancelText}</AlertDialogCancel>}
-          <AlertDialogAction onClick={() => onConfirm?.()}>{confirmText}</AlertDialogAction>
+          <AlertDialogCancel onClick={handleCancel} disabled={isSubmitting}>
+            {cancelText}
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={handleConfirm} disabled={isSubmitting}>
+            {confirmText}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
