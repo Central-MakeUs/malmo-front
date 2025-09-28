@@ -140,9 +140,11 @@ export function GlobalAlertDialog() {
           {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleCancel} disabled={isSubmitting}>
-            {cancelText}
-          </AlertDialogCancel>
+          {cancelText && (
+            <AlertDialogCancel onClick={handleCancel} disabled={isSubmitting}>
+              {cancelText}
+            </AlertDialogCancel>
+          )}
           <AlertDialogAction onClick={handleConfirm} disabled={isSubmitting}>
             {confirmText}
           </AlertDialogAction>
