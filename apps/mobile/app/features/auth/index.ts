@@ -1,8 +1,5 @@
-// 카카오 로그인
-export { kakaoLogin } from './social/kakao-login'
-
-// 애플 로그인
-export { appleLogin } from './social/apple-login'
-
-// 로그아웃
+export { processSocialLogin } from './lib/social-login'
+export { appleProvider } from './social/apple-provider'
+export { kakaoProvider } from './social/kakao-provider'
 export { logout } from './token/logout'
+export { refreshToken } from './token/refresh-token'
