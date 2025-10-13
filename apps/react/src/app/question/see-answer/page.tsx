@@ -89,7 +89,7 @@ function RouteComponent() {
           </div>
 
           <div className="rounded-[10px] bg-gray-neutral-100 px-5 py-4">
-            <p className="body20reading-regular text-gray-iron-900">{data?.me?.answer}</p>
+            <p className="body2-reading-regular whitespace-pre-line text-gray-iron-900">{data?.me?.answer}</p>
           </div>
         </div>
 
@@ -103,15 +103,13 @@ function RouteComponent() {
 
           <div className="rounded-[10px] bg-gray-neutral-100 px-5 py-4">
             <p
-              className={cn('body20reading-regular text-gray-iron-900', {
+              className={cn('body2-reading-regular whitespace-pre-line text-gray-iron-900', {
                 'text-gray-iron-500': !data?.partner || !data?.partner?.answer,
               })}
             >
-              {data?.partner ? (
-                data?.partner?.answer || '아직 답변을 작성하지 않았어요!'
-              ) : (
-                <>아직 커플 연동을 하지 않았어요! 마이페이지 &gt; 프로필 &gt; 커플 연동 관리에서 연동이 가능해요.</>
-              )}
+              {!data?.partner
+                ? data?.partner?.answer || '아직 답변을 작성하지 않았어요!'
+                : `아직 커플 연동을 하지 않았어요!\n연동하면 마음질문 답변을 기반으로 성향을 기억해,\n더 정확한 상담을 할 수 있어요.`}
             </p>
           </div>
         </div>
