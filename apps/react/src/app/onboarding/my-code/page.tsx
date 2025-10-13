@@ -102,24 +102,22 @@ function MyCodePage() {
       </div>
 
       {/* 버튼 영역 */}
-      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
+      <div className="mt-auto mb-5 space-y-2 px-5 pb-[var(--safe-bottom)]">
         <button
           onClick={handleConnectWithCode}
-          className="body1-semibold flex h-[56px] w-full items-center justify-center rounded-[10px] border border-malmo-rasberry-500 text-malmo-rasberry-500"
+          className="body1-semibold flex h-[56px] w-full items-center justify-center rounded-[10px] bg-malmo-rasberry-500 text-white"
           disabled={isSubmitting}
         >
           연인 코드로 연결하기
         </button>
 
-        <div className="mt-[20px] flex justify-center">
-          <button
-            onClick={handleSkip}
-            className="body3-medium text-gray-iron-400 underline decoration-1"
-            disabled={isSubmitting}
-          >
-            일단 혼자 사용해볼게요
-          </button>
-        </div>
+        <button
+          onClick={handleSkip}
+          className="body1-semibold flex h-[56px] w-full items-center justify-center rounded-[10px] border border-malmo-rasberry-500 text-malmo-rasberry-500"
+          disabled={isSubmitting}
+        >
+          일단 혼자 사용해볼게요
+        </button>
       </div>
     </div>
   )
