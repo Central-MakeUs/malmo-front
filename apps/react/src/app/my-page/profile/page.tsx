@@ -1,12 +1,8 @@
-import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
-import { AnniversaryEditSheet } from '@/features/anniversary'
-import { usePartnerInfo } from '@/features/member'
 import { NicknameEditSheet, useProfileEdit } from '@/features/profile'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
-import { Badge } from '@/shared/ui/badge'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/my-page/profile/')({
@@ -32,35 +28,11 @@ function ProfileEditPage() {
   const navigate = useNavigate()
   const profileEdit = useProfileEdit()
 
-  // 커플 연동 상태 확인
-  const { data: partnerInfo, isError } = usePartnerInfo()
-  const isCoupleConnected =
-    !isError && !!partnerInfo && partnerInfo?.memberState === PartnerMemberDataMemberStateEnum.Alive
-
   const menuItems = [
     {
       label: '닉네임 변경',
       onClick: wrapWithTracking(BUTTON_NAMES.OPEN_NICKNAME_SHEET, CATEGORIES.PROFILE, () =>
         profileEdit.openNicknameSheet()
-      ),
-    },
-    {
-      label: '디데이 변경',
-      onClick: wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
-        profileEdit.openAnniversarySheet()
-      ),
-    },
-    {
-      label: '커플 연동 관리',
-      onClick: wrapWithTracking(BUTTON_NAMES.OPEN_COUPLE_MANAGE, CATEGORIES.PROFILE, () =>
-        navigate({ to: '/my-page/couple-management' })
-      ),
-      rightElement: (
-        <Badge
-          className={isCoupleConnected ? 'bg-malmo-rasberry-25 text-malmo-rasberry-500' : 'bg-gray-100 text-gray-600'}
-        >
-          {isCoupleConnected ? '연동 중' : '연동 필요'}
-        </Badge>
       ),
     },
   ]
@@ -75,7 +47,7 @@ function ProfileEditPage() {
         {menuItems.map((item, index) => (
           <div key={item.label}>
             {index > 0 && <hr className="h-px border-0 bg-gray-iron-100" />}
-            <MenuItem label={item.label} onClick={item.onClick} rightElement={item.rightElement} />
+            <MenuItem label={item.label} onClick={item.onClick} />
           </div>
         ))}
       </div>
@@ -85,11 +57,6 @@ function ProfileEditPage() {
         isOpen={profileEdit.isNicknameSheetOpen}
         onOpenChange={profileEdit.setNicknameSheetOpen}
         onSave={wrapWithTracking(BUTTON_NAMES.SAVE_NICKNAME, CATEGORIES.PROFILE)}
-      />
-      <AnniversaryEditSheet
-        isOpen={profileEdit.isAnniversarySheetOpen}
-        onOpenChange={profileEdit.setAnniversarySheetOpen}
-        onSave={wrapWithTracking(BUTTON_NAMES.SAVE_ANNIVERSARY, CATEGORIES.PROFILE)}
       />
     </div>
   )

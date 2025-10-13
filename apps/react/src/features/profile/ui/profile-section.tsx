@@ -1,3 +1,4 @@
+import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { useNavigate } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 
@@ -15,7 +16,9 @@ interface ProfileSectionProps {
 
 export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
   const navigate = useNavigate()
+  // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
+  const isPartnerConnected = !!partnerInfo && partnerInfo.memberState === PartnerMemberDataMemberStateEnum.Alive
 
   const handleProfileClick = wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_EDIT, CATEGORIES.PROFILE, () =>
     navigate({ to: '/my-page/profile' })
@@ -41,13 +44,15 @@ export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
       </div>
 
       {/* 연인과 D-day */}
-      <div className="mt-[18px] flex h-8 justify-center">
-        <div className="flex items-center rounded-[30px] border border-gray-iron-200 px-4">
-          <span className="body2-semibold text-gray-iron-950">{partnerDisplayText}</span>
-          <HeartIcon className="mx-[9px] h-4 w-4" />
-          <span className="body2-semibold text-gray-iron-950">D+{dDay}</span>
+      {isPartnerConnected && (
+        <div className="mt-[18px] flex h-8 justify-center">
+          <div className="flex items-center rounded-[30px] border border-gray-iron-200 px-4">
+            <span className="body2-semibold text-gray-iron-950">{partnerDisplayText}</span>
+            <HeartIcon className="mx-[9px] h-4 w-4" />
+            <span className="body2-semibold text-gray-iron-950">D+{dDay}</span>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
