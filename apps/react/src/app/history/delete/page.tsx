@@ -25,7 +25,12 @@ function RouteComponent() {
   return (
     <div className="relative flex h-full flex-col overflow-hidden pt-[50px]">
       <div className="fixed top-[var(--safe-top)] z-20 bg-white">
-        <DetailHeaderBar title="삭제" left={backButton()} className="border-b-[1px] border-b-gray-iron-100" />
+        <DetailHeaderBar
+          title="삭제"
+          showBackButton={false}
+          right={backButton()}
+          className="border-b-[1px] border-b-gray-iron-100"
+        />
       </div>
 
       <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pb-28">
