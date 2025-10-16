@@ -4,6 +4,7 @@ import Lottie from 'lottie-react'
 import { useEffect } from 'react'
 
 import summaryAnimation from '@/assets/lottie/summary.json'
+import { Screen } from '@/shared/layout/screen'
 import chatService from '@/shared/services/chat.service'
 
 export const Route = createFileRoute('/chat/loading/')({
@@ -37,14 +38,14 @@ function RouteComponent() {
   }, [])
 
   return (
-    <div className="app-safe fixed inset-0 z-0">
-      <div className="flex h-full w-full -translate-y-[60px] flex-col items-center justify-center gap-6">
+    <Screen>
+      <Screen.Content className="flex h-full w-full -translate-y-[60px] flex-col items-center justify-center gap-6">
         <Lottie animationData={summaryAnimation} className="px-7" />
         <div className="text-center">
           <h1 className="heading1-bold text-gray-iron-950">모모가 대화를 요약하고 있어요</h1>
           <p className="body2-medium text-gray-iron-500">조금만 기다려주세요!</p>
         </div>
-      </div>
-    </div>
+      </Screen.Content>
+    </Screen>
   )
 }
