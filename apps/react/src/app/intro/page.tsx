@@ -7,6 +7,8 @@ import dailyQuestionImage from '@/assets/images/introduce/daily-question.png'
 import momoIntroImage from '@/assets/images/introduce/momo-intro.png'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import { Button } from '@/shared/ui/button'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -48,6 +50,7 @@ export const Route = createFileRoute('/intro/')({
 function IntroPage() {
   const [currentPage, setCurrentPage] = useState(0)
   const navigate = useNavigate()
+  const goBack = useGoBack()
 
   // 현재 페이지 데이터
   const currentData = introPages[currentPage]
@@ -88,69 +91,67 @@ function IntroPage() {
   const handlePrevious = wrapWithTracking(BUTTON_NAMES.PREV_INTRO, CATEGORIES.AUTH, () => {
     if (currentPage > 0) {
       setCurrentPage((prev) => prev - 1)
+    } else {
+      goBack()
     }
   })
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
-      <DetailHeaderBar onBackClick={handlePrevious} showBackButton={currentPage > 0} />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar onBackClick={handlePrevious} showBackButton={true} />
+      </Screen.Header>
 
-      {/* 메인 콘텐츠 */}
-      <div className="flex flex-1 flex-col justify-center">
-        {/* 이미지 */}
-        <div className="flex justify-center">
-          <div className="h-[236px] w-[320px]">
-            <img src={currentData.image} alt={currentData.title} className="h-full w-full object-contain" />
+      <Screen.Content className="flex flex-1 flex-col bg-white">
+        <div className="flex flex-1 flex-col justify-center">
+          <div className="flex justify-center">
+            <div className="h-[236px] w-[320px]">
+              <img src={currentData.image} alt={currentData.title} className="h-full w-full object-contain" />
+            </div>
+          </div>
+
+          <h1 className="title2-bold mt-6 text-center text-gray-iron-950">
+            {currentData.title.split('\n').map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                {index < currentData.title.split('\n').length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </h1>
+
+          <p className="body2-medium mt-4 text-center text-gray-iron-400">
+            {currentData.description.split('\n').map((line, index) => (
+              <React.Fragment key={index}>
+                {line}
+                {index < currentData.description.split('\n').length - 1 && <br />}
+              </React.Fragment>
+            ))}
+          </p>
+        </div>
+
+        <div className="flex flex-col pb-[var(--safe-bottom)]">
+          <div className="mb-8 flex justify-center space-x-2">
+            {introPages.map((_, index) => (
+              <div
+                key={index}
+                className={`h-2 rounded-full ${
+                  index === currentPage ? 'w-4 bg-malmo-rasberry-500' : 'w-2 bg-gray-neutral-200'
+                }`}
+              />
+            ))}
+          </div>
+
+          <div className="mb-5 px-6">
+            <Button text={isLastPage ? '시작하기' : '다음'} onClick={handleNext} className="w-full" />
+          </div>
+
+          <div className="mb-5 flex justify-center">
+            <button onClick={handleSkip} className="body3-medium text-gray-iron-400">
+              건너뛰기
+            </button>
           </div>
         </div>
-
-        {/* 타이틀 */}
-        <h1 className="title2-bold mt-6 text-center text-gray-iron-950">
-          {currentData.title.split('\n').map((line, index) => (
-            <React.Fragment key={index}>
-              {line}
-              {index < currentData.title.split('\n').length - 1 && <br />}
-            </React.Fragment>
-          ))}
-        </h1>
-
-        {/* 설명 */}
-        <p className="body2-medium mt-4 text-center text-gray-iron-400">
-          {currentData.description.split('\n').map((line, index) => (
-            <React.Fragment key={index}>
-              {line}
-              {index < currentData.description.split('\n').length - 1 && <br />}
-            </React.Fragment>
-          ))}
-        </p>
-      </div>
-
-      {/* 하단 고정 영역 */}
-      <div className="flex flex-col pb-[var(--safe-bottom)]">
-        {/* 페이지 인디케이터 */}
-        <div className="mb-8 flex justify-center space-x-2">
-          {introPages.map((_, index) => (
-            <div
-              key={index}
-              className={`h-2 rounded-full ${
-                index === currentPage ? 'w-4 bg-malmo-rasberry-500' : 'w-2 bg-gray-neutral-200'
-              }`}
-            />
-          ))}
-        </div>
-
-        {/* 다음/시작하기 버튼 */}
-        <div className="mb-5 px-6">
-          <Button text={isLastPage ? '시작하기' : '다음'} onClick={handleNext} className="w-full" />
-        </div>
-
-        {/* 건너뛰기 */}
-        <div className="mb-5 flex justify-center">
-          <button onClick={handleSkip} className="body3-medium text-gray-iron-400">
-            건너뛰기
-          </button>
-        </div>
-      </div>
-    </div>
+      </Screen.Content>
+    </Screen>
   )
 }
