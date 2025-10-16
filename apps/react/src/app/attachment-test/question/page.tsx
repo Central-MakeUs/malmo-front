@@ -12,6 +12,7 @@ import {
 import { useAuth } from '@/features/auth'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
 import loveTypeService from '@/shared/services/love-type.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -77,43 +78,41 @@ function AttachmentTestQuestionPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-var(--safe-top))] w-full flex-col bg-white">
-      {/* 헤더 */}
-      <DetailHeaderBar onBackClick={handleGoBackWithTracking} />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar onBackClick={handleGoBackWithTracking} />
+      </Screen.Header>
 
-      {/* 진행 상태 표시 */}
-      <QuestionProgress
-        currentPage={currentPage}
-        totalPages={totalPages}
-        questionsPerPage={QUESTION_CONFIG.QUESTIONS_PER_PAGE}
-      />
-
-      {/* 구분선 */}
-      <hr className="mx-[20px] mt-[40px] mb-[16px] h-[1px] border-0 bg-gray-iron-200" />
-
-      {/* 질문 목록 */}
-      <div className="flex-1 overflow-y-auto">
-        <QuestionList
-          questions={currentQuestions}
-          answers={answers}
-          onSelectAnswer={handleSelectAnswerWithTracking}
-          setQuestionRef={setQuestionRef}
-          loading={loading}
-          error={error}
+      <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">
+        <QuestionProgress
+          currentPage={currentPage}
+          totalPages={totalPages}
+          questionsPerPage={QUESTION_CONFIG.QUESTIONS_PER_PAGE}
         />
-      </div>
 
-      {/* 다음 버튼 */}
-      <div className="mt-auto mb-10 px-5">
-        <Button
-          text={currentPage === totalPages ? '완료하기' : '다음'}
-          onClick={handleNextWithTracking}
-          disabled={loading || !isCurrentPageComplete}
-        />
-      </div>
+        <hr className="mx-[20px] mt-[40px] mb-[16px] h-[1px] border-0 bg-gray-iron-200" />
 
-      {/* 애착유형 검사 가이드 바텀 시트 */}
+        <div className="flex-1 overflow-y-auto">
+          <QuestionList
+            questions={currentQuestions}
+            answers={answers}
+            onSelectAnswer={handleSelectAnswerWithTracking}
+            setQuestionRef={setQuestionRef}
+            loading={loading}
+            error={error}
+          />
+        </div>
+
+        <div className="mt-auto mb-10 px-5">
+          <Button
+            text={currentPage === totalPages ? '완료하기' : '다음'}
+            onClick={handleNextWithTracking}
+            disabled={loading || !isCurrentPageComplete}
+          />
+        </div>
+      </Screen.Content>
+
       <AttachmentTestGuide isOpen={isGuideOpen} onClose={handleCloseGuide} />
-    </div>
+    </Screen>
   )
 }

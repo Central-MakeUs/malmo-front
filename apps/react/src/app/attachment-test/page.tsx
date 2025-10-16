@@ -7,7 +7,10 @@ import { useAuth } from '@/features/auth'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useTheme } from '@/shared/contexts/theme.context'
+import { Screen } from '@/shared/layout/screen'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import { Button } from '@/shared/ui'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
   from: z.string().optional(),
@@ -20,6 +23,7 @@ export const Route = createFileRoute('/attachment-test/')({
 
 function AttachmentTestPage() {
   const navigate = useNavigate()
+  const goBack = useGoBack()
   const { setStatusColor } = useTheme()
   const { from } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
@@ -38,28 +42,43 @@ function AttachmentTestPage() {
   )
 
   return (
-    <div className="relative flex h-full w-full flex-col bg-malmo-rasberry-25">
-      {/* 상단 라즈베리 배경 섹션 */}
-      <AttachmentTestIntro nickname={nickname} from={from} />
-
-      {/* 흰색 섹션 */}
-      <div className="-mt-1 flex-1 rounded-t-[24px] bg-white">
-        <div className="mt-[48px] px-[20px]">
-          {/* 애착유형 검사 소개 섹션 */}
-          <AttachmentTestInfoSection />
-
-          {/* 애착유형 소개 섹션 */}
-          <AttachmentTypesSection />
-
-          {/* 플로팅 버튼을 위한 하단 여백 */}
-          <div className="pb-[154px]"></div>
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <div className="bg-malmo-rasberry-25">
+          <DetailHeaderBar
+            onBackClick={() => {
+              if (from) {
+                navigate({ to: from })
+              } else {
+                goBack()
+              }
+            }}
+            className="bg-malmo-rasberry-25"
+          />
         </div>
-      </div>
+      </Screen.Header>
 
-      {/* 플로팅 버튼 */}
-      <div className="fixed right-0 bottom-[var(--safe-bottom)] left-0 z-10 flex justify-center px-5 py-4">
-        <Button text="시작하기" onClick={handleStartTest} />
-      </div>
-    </div>
+      <Screen.Content className="relative flex h-full w-full flex-col bg-malmo-rasberry-25">
+        {/* 상단 라즈베리 배경 섹션 */}
+        <AttachmentTestIntro nickname={nickname} from={from} />
+
+        {/* 흰색 섹션 */}
+        <div className="-mt-1 flex-1 rounded-t-[24px] bg-white">
+          <div className="mt-[48px] px-[20px]">
+            {/* 애착유형 검사 소개 섹션 */}
+            <AttachmentTestInfoSection />
+
+            {/* 애착유형 소개 섹션 */}
+            <AttachmentTypesSection />
+            <div className="pb-[154px]"></div>
+          </div>
+        </div>
+
+        {/* 플로팅 버튼 */}
+        <div className="fixed right-0 bottom-[var(--safe-bottom)] left-0 z-10 flex justify-center px-5 py-4">
+          <Button text="시작하기" onClick={handleStartTest} />
+        </div>
+      </Screen.Content>
+    </Screen>
   )
 }
