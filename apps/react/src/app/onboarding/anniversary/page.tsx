@@ -6,6 +6,7 @@ import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboard
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -34,37 +35,39 @@ function AnniversaryPage() {
   })
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
-      {/* 헤더 및 타이틀 */}
-      <DetailHeaderBar onBackClick={handlePrevious} />
-      <TitleSection
-        title={
-          <>
-            둘의 만남을 시작한 날짜는
-            <br />
-            언제인가요?
-          </>
-        }
-        description={'말모가 기념일을 기억하고 보여드릴게요!'}
-      />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar onBackClick={handlePrevious} />
+      </Screen.Header>
 
-      {/* 날짜 선택 */}
-      <div className="mt-[68px] px-5">
-        <DatePicker
-          state={state}
-          actions={{
-            handleYearScroll: actions.handleYearScroll,
-            handleMonthScroll: actions.handleMonthScroll,
-            handleDayScroll: actions.handleDayScroll,
-            handleDateChange: actions.handleDateChange,
-          }}
+      <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">
+        <TitleSection
+          title={
+            <>
+              둘의 만남을 시작한 날짜는
+              <br />
+              언제인가요?
+            </>
+          }
+          description={'말모가 기념일을 기억하고 보여드릴게요!'}
         />
-      </div>
 
-      {/* 다음 버튼 */}
-      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-        <Button text="다음" onClick={handleNext} />
-      </div>
-    </div>
+        <div className="mt-[68px] px-5">
+          <DatePicker
+            state={state}
+            actions={{
+              handleYearScroll: actions.handleYearScroll,
+              handleMonthScroll: actions.handleMonthScroll,
+              handleDayScroll: actions.handleDayScroll,
+              handleDateChange: actions.handleDateChange,
+            }}
+          />
+        </div>
+
+        <div className="mt-auto mb-5 px-5">
+          <Button text="다음" onClick={handleNext} />
+        </div>
+      </Screen.Content>
+    </Screen>
   )
 }
