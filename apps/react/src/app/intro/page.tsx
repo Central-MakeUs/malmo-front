@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import React, { useState } from 'react'
+import React from 'react'
+import z from 'zod'
 
 import attachmentTypeImage from '@/assets/images/introduce/attachment-type.png'
 import coupleConsultationImage from '@/assets/images/introduce/couple-consultation.png'
@@ -43,14 +44,20 @@ const introPages: IntroPageData[] = [
   },
 ]
 
+const searchSchema = z.object({
+  step: z.number().int().min(0).catch(0),
+})
+
 export const Route = createFileRoute('/intro/')({
+  validateSearch: searchSchema,
   component: IntroPage,
 })
 
 function IntroPage() {
-  const [currentPage, setCurrentPage] = useState(0)
   const navigate = useNavigate()
   const goBack = useGoBack()
+  const { step } = Route.useSearch()
+  const currentPage = Math.min(step ?? 0, introPages.length - 1)
 
   // 현재 페이지 데이터
   const currentData = introPages[currentPage]
@@ -74,7 +81,10 @@ function IntroPage() {
         // 마지막 페이지에서 완료 처리
         handleComplete()
       } else {
-        setCurrentPage((prev) => prev + 1)
+        navigate({
+          to: '/intro',
+          search: (prev) => ({ ...prev, step: currentPage + 1 }),
+        })
       }
     }
   )
@@ -90,7 +100,8 @@ function IntroPage() {
 
   const handlePrevious = wrapWithTracking(BUTTON_NAMES.PREV_INTRO, CATEGORIES.AUTH, () => {
     if (currentPage > 0) {
-      setCurrentPage((prev) => prev - 1)
+      // 이전 단계는 히스토리 pop으로 back 애니메이션
+      goBack()
     } else {
       goBack()
     }
