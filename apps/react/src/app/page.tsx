@@ -14,6 +14,7 @@ import { useAppNotifications } from '@/features/notification'
 import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
 import chatService from '@/shared/services/chat.service'
 import memberService from '@/shared/services/member.service'
 import questionService from '@/shared/services/question.service'
@@ -85,20 +86,18 @@ function HomePage() {
   })
 
   return (
-    <div className="has-bottom-nav flex h-full flex-col bg-white pt-[60px]">
-      {/* 헤더 */}
-      <header className="fixed top-[var(--safe-top)] flex h-[60px] w-full items-center justify-between bg-white px-5">
-        <img src={malmoLogo} alt="말모 로고" className="h-8 w-[94px]" />
-
-        {/* D-day */}
-        <div className="flex h-8 items-center rounded-[30px] border border-gray-iron-200 px-4 py-[5px]">
-          <HeartIcon className="h-4 w-4" />
-          <span className="body2-semibold ml-[9px] text-gray-iron-950">D+{dDay}</span>
+    <Screen>
+      <Screen.Header behavior="overlay" className="bg-white">
+        <div className="pt-safe-top flex h-[60px] items-center justify-between px-5">
+          <img src={malmoLogo} alt="말모 로고" className="h-8 w-[94px]" />
+          <div className="flex h-8 items-center rounded-[30px] border border-gray-iron-200 px-4 py-[5px]">
+            <HeartIcon className="h-4 w-4" />
+            <span className="body2-semibold ml-[9px] text-gray-iron-950">D+{dDay}</span>
+          </div>
         </div>
-      </header>
+      </Screen.Header>
 
-      {/* 메인 컨텐츠  */}
-      <div className="mt-3 flex-1 px-5">
+      <Screen.Content className="no-bounce-scroll has-bottom-nav pt-safe-top flex-1 px-5">
         {/* 연애 고민 상담 섹션 */}
         <ChatEntryCard isChatActive={isChatActive} />
 
@@ -118,10 +117,10 @@ function HomePage() {
           partnerAttachmentType={partnerAttachmentType}
           isPartnerConnected={isPartnerConnected}
         />
-      </div>
+      </Screen.Content>
 
       {/* 하단 네비게이션 */}
       <BottomNavigation />
-    </div>
+    </Screen>
   )
 }
