@@ -59,7 +59,8 @@ function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const router = useRouter()
   const navigate = useNavigate()
-  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage } = useChatting()
+  const { chatStatus, chattingModal, streamingMessage, awaitingResponse, isChatStatusSuccess, sendingMessage } =
+    useChatting()
   const auth = useAuth()
   const { keyboardBottom } = useKeyboardSheetMotion()
 
@@ -84,6 +85,7 @@ function RouteComponent() {
     sendingMessage,
     messages,
     streamingMessage,
+    awaitingResponse,
   })
 
   const exitButton = useCallback(() => {
@@ -151,6 +153,8 @@ function RouteComponent() {
                 </React.Fragment>
               )
             })}
+
+            {awaitingResponse && !streamingMessage && <AiChatBubble isTyping />}
 
             {streamingMessage && (
               <AiChatBubble

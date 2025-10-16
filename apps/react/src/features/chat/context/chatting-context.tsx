@@ -18,6 +18,7 @@ interface ChattingContextType {
   chattingModal: UseChattingModalReturn
   sendingMessage: boolean
   streamingMessage: ChatRoomMessageData | null
+  awaitingResponse: boolean
   isChatStatusSuccess: boolean
   sendMessageWithReconnect: (message: string) => Promise<void>
 }
@@ -30,6 +31,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
   const [sendingMessage, setSendingMessage] = useState<boolean>(false)
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
+  const [awaitingResponse, setAwaitingResponse] = useState<boolean>(false)
   const { mutate: sendMessage } = useSendMessageMutation()
 
   const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
@@ -40,6 +42,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const handleChatResponse = useCallback(
     (chunk: string) => {
       if (chunk.startsWith(TERMINATION_MESSAGE_START)) {
+        setAwaitingResponse(false)
         const queryKey = chatService.chatMessagesQuery().queryKey
 
         const terminationMessage: ChatRoomMessageData = {
@@ -70,6 +73,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       }
 
       // 기존의 일반 스트리밍 메시지 처리 로직
+      setAwaitingResponse(false)
       setStreamingMessage((prev) => {
         const baseMessage = {
           messageId: prev?.messageId || Date.now(),
@@ -85,7 +89,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const handleResponseId = useCallback(
     (messageId: string) => {
       const queryKey = chatService.chatMessagesQuery().queryKey
-
       queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
         if (!oldData || !streamingMessage) return oldData
 
@@ -106,6 +109,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
       setStreamingMessage(null)
       setSendingMessage(false)
+      setAwaitingResponse(false)
     },
     [queryClient, streamingMessage]
   )
@@ -126,6 +130,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     onError: useCallback(() => {
       setSendingMessage(false)
       setStreamingMessage(null)
+      setAwaitingResponse(false)
     }, []),
   })
 
@@ -133,6 +138,8 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     async (message: string) => {
       try {
         setSendingMessage(true)
+        setAwaitingResponse(true)
+        setStreamingMessage(null)
 
         // 1. 기존 SSE 연결 종료
         disconnect()
@@ -141,10 +148,18 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         await reconnect()
 
         // 3. 연결 완료 후 메시지 전송
-        sendMessage(message)
+        sendMessage(message, {
+          onError: () => {
+            setSendingMessage(false)
+            setAwaitingResponse(false)
+            setStreamingMessage(null)
+          },
+        })
       } catch (error) {
         console.error('Failed to reconnect and send message:', error)
         setSendingMessage(false) // 에러 발생 시 전송 상태 해제
+        setAwaitingResponse(false)
+        setStreamingMessage(null)
       }
     },
     [disconnect, reconnect, sendMessage]
@@ -157,6 +172,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         chattingModal,
         sendingMessage,
         streamingMessage,
+        awaitingResponse,
         isChatStatusSuccess,
         sendMessageWithReconnect,
       }}
