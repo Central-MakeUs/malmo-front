@@ -1,0 +1,38 @@
+# .github/workflows/discord-pr-notify.yml
+
+name: Discord PR Notifications
+
+# 이 워크플로우를 실행할 이벤트를 지정합니다.
+on:
+  pull_request:
+    types: [review_requested] # 리뷰어가 지정되었을 때
+  pull_request_review:
+    types: [submitted]        # 리뷰가 제출되었을 때
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord Notification for Review Request
+        # '리뷰 요청' 이벤트일 때만 이 스텝을 실행합니다.
+        if: github.event.action == 'review_requested'
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: "🙏 **리뷰 요청**\n리뷰어: `${{ github.event.requested_reviewer.login }}`\n요청자: `${{ github.actor }}`\n[PR 바로가기](${{ github.event.pull_request.html_url }})"
+
+      - name: Send Discord Notification for Approved
+        # '리뷰 제출' 이벤트이고, 상태가 'approved'일 때만 실행합니다.
+        if: github.event.review.state == 'approved'
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: "✅ **리뷰 승인 (Approved)**\n리뷰어: `${{ github.actor }}`\n[PR 바로가기](${{ github.event.pull_request.html_url }})"
+
+      - name: Send Discord Notification for Changes Requested
+        # '리뷰 제출' 이벤트이고, 상태가 'changes_requested'일 때만 실행합니다.
+        if: github.event.review.state == 'changes_requested'
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          content: "📝 **변경 요청 (Changes Requested)**\n리뷰어: `${{ github.actor }}`\n> `${{ github.event.review.body }}`\n[PR 바로가기](${{ github.event.pull_request.html_url }})"
