@@ -47,7 +47,7 @@ export function useOnboardingNavigation() {
 
   // 홈으로 이동
   const goToHome = () => {
-    navigate({ to: '/' })
+    navigate({ to: '/', replace: true })
   }
 
   return {

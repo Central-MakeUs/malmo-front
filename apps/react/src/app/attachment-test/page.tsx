@@ -60,7 +60,7 @@ function AttachmentTestPage() {
 
       <Screen.Content className="relative flex h-full w-full flex-col bg-malmo-rasberry-25">
         {/* 상단 라즈베리 배경 섹션 */}
-        <AttachmentTestIntro nickname={nickname} from={from} />
+        <AttachmentTestIntro nickname={nickname} />
 
         {/* 흰색 섹션 */}
         <div className="-mt-1 flex-1 rounded-t-[24px] bg-white">
