@@ -9,6 +9,7 @@ import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
 import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
 import memberService from '@/shared/services/member.service'
 import { queryKeys } from '@/shared/services/query-keys'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -65,50 +66,47 @@ function CoupleManagementPage() {
   )
 
   return (
-    <div className="h-full bg-white">
-      {/* 헤더 */}
-      <DetailHeaderBar title="커플 연동 관리" />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar title="커플 연동 관리" />
+      </Screen.Header>
 
-      <div className="px-5">
-        {/* 내 커플 코드 */}
-        <div className="flex h-16 items-center pr-1">
-          <span className="body1-medium text-gray-iron-950">내 커플 코드</span>
-          <div className="ml-auto flex items-center">
-            <span className="body2-medium text-gray-iron-950">{inviteCode}</span>
-            <button onClick={handleCopyInviteCode} className="ml-2">
-              <ClipBoardIcon className="h-4 w-4" />
-            </button>
+      <Screen.Content className="bg-white">
+        <div className="px-5">
+          <div className="flex h-16 items-center pr-1">
+            <span className="body1-medium text-gray-iron-950">내 커플 코드</span>
+            <div className="ml-auto flex items-center">
+              <span className="body2-medium text-gray-iron-950">{inviteCode}</span>
+              <button onClick={handleCopyInviteCode} className="ml-2">
+                <ClipBoardIcon className="h-4 w-4" />
+              </button>
+            </div>
           </div>
+
+          <hr className="h-px border-0 bg-gray-iron-100" />
+
+          <button onClick={handleConnectPartner} className="flex h-16 w-full items-center" disabled={isConnected}>
+            <span className={`body1-medium ${isConnected ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}>
+              연인 코드로 연결하기
+            </span>
+          </button>
+
+          <hr className="h-px border-0 bg-gray-iron-100" />
+
+          <button onClick={handleDisconnectCouple} className="flex h-16 w-full items-center" disabled={!isConnected}>
+            <span className={`body1-medium ${isConnected ? 'text-gray-iron-950' : 'text-gray-iron-400'}`}>
+              커플 연결 끊기
+            </span>
+          </button>
         </div>
+      </Screen.Content>
 
-        {/* 구분선 */}
-        <hr className="h-px border-0 bg-gray-iron-100" />
-
-        {/* 연인 코드로 연결하기 */}
-        <button onClick={handleConnectPartner} className="flex h-16 w-full items-center" disabled={isConnected}>
-          <span className={`body1-medium ${isConnected ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}>
-            연인 코드로 연결하기
-          </span>
-        </button>
-
-        {/* 구분선 */}
-        <hr className="h-px border-0 bg-gray-iron-100" />
-
-        {/* 커플 연결 끊기 */}
-        <button onClick={handleDisconnectCouple} className="flex h-16 w-full items-center" disabled={!isConnected}>
-          <span className={`body1-medium ${isConnected ? 'text-gray-iron-950' : 'text-gray-iron-400'}`}>
-            커플 연결 끊기
-          </span>
-        </button>
-      </div>
-
-      {/* 연인 코드 입력 바텀시트 */}
       <PartnerCodeSheet
         isOpen={isPartnerCodeSheetOpen}
         onOpenChange={setIsPartnerCodeSheetOpen}
         onSuccess={handleRefreshPage}
         onCoupleConnected={coupleConnectedModal}
       />
-    </div>
+    </Screen>
   )
 }

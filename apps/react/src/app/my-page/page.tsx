@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useAuth } from '@/features/auth'
 import { useMyPageMenu, ProfileSection, StatsSection, MenuList } from '@/features/profile'
 import { useTerms, TermsContentModal } from '@/features/term'
+import { Screen } from '@/shared/layout/screen'
 import termsService from '@/shared/services/terms.service'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
@@ -34,7 +35,7 @@ function MyPage() {
   const { menuItems } = useMyPageMenu(terms, handleShowTerms)
 
   return (
-    <div className="has-bottom-nav flex h-full flex-col bg-white">
+    <Screen>
       {/* 약관 모달 */}
       {selectedTermId !== null && selectedTermContent && selectedTermContent.title && selectedTermContent.details && (
         <TermsContentModal
@@ -45,24 +46,28 @@ function MyPage() {
       )}
 
       {/* 헤더 */}
-      <HomeHeaderBar title="마이페이지" />
+      <Screen.Header>
+        <HomeHeaderBar title="마이페이지" />
+      </Screen.Header>
 
       {/* 프로필 섹션 */}
-      <ProfileSection nickname={userInfo.nickname || ''} dDay={dDay} />
+      <Screen.Content className="bg-white">
+        <ProfileSection nickname={userInfo.nickname || ''} dDay={dDay} />
 
-      {/* 통계 박스 */}
-      <StatsSection
-        totalChatRoomCount={userInfo.totalChatRoomCount || 0}
-        totalCoupleQuestionCount={userInfo.totalCoupleQuestionCount || 0}
-      />
+        {/* 통계 박스 */}
+        <StatsSection
+          totalChatRoomCount={userInfo.totalChatRoomCount || 0}
+          totalCoupleQuestionCount={userInfo.totalCoupleQuestionCount || 0}
+        />
 
-      {/* 메뉴 리스트 */}
-      <div className="pb-[60px]">
-        <MenuList menuItems={menuItems} />
-      </div>
+        {/* 메뉴 리스트 */}
+        <div className="pb-[60px]">
+          <MenuList menuItems={menuItems} />
+        </div>
+      </Screen.Content>
 
       {/* 하단 네비게이션 */}
       <BottomNavigation />
-    </div>
+    </Screen>
   )
 }
