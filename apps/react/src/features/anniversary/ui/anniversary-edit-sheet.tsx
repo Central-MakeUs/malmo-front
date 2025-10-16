@@ -104,7 +104,7 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange, onSave }: Anniversa
 
           {/* 설명 */}
           <p className="body1-medium mt-1 text-center text-gray-iron-700">
-            <span className="text-malmo-rasberry-500">두 사람이 만난 날짜</span>를 입력해주세요
+            <span className="text-malmo-rasberry-500">두 사람이 만난 날짜</span>를 입력해 주세요
           </p>
 
           {/* 날짜 선택 컴포넌트 */}
