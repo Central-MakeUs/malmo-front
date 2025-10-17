@@ -89,3 +89,23 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           echo "React app successfully deployed to AWS"
+          
+      # 병합된 PR 제목 추출
+      - name: Extract PR Title
+        id: extract_pr_title
+        if: github.ref == 'refs/heads/main'
+        run: |
+          TITLE=$(echo "${{ github.event.head_commit.message }}" | tail -n 1)
+          echo "pr_title=$TITLE" >> $GITHUB_OUTPUT
+
+      # 배포 완료 알림 디스코드 봇
+      - name: Send Discord Notification for Deployment Success
+        if: github.ref == 'refs/heads/main'
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          embed-title: "🚀 배포 완료 (Merged & Deployed)"
+          embed-description: |
+            **PR:** `${{ steps.extract_pr_title.outputs.pr_title }}`
+            **실행자:** `${{ github.actor }}`
+          embed-color: 8923138 # 보라색
