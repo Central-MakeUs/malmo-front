@@ -17,18 +17,35 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          content: "🙏 **리뷰 요청**\n---\n**PR:** `${{ github.event.pull_request.title }}`\n**리뷰어:** `${{ github.event.requested_reviewer.login }}`\n**요청자:** `${{ github.actor }}`\n\n[🔗 PR 바로가기](${{ github.event.pull_request.html_url }})"
+          embed-title: "🙏 리뷰 요청"
+          embed-description: |
+            **[${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})**
+            
+            **리뷰어:** `${{ github.event.requested_reviewer.login }}`
+            **요청자:** `${{ github.actor }}`
+          embed-color: 3447003 # 파란색
 
       - name: Send Discord Notification for Approved
         if: github.event.review.state == 'approved'
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          content: "✅ **리뷰 승인 (Approved)**\n---\n**PR:** `${{ github.event.pull_request.title }}`\n**리뷰어:** `${{ github.actor }}`"
+          embed-title: "✅ 리뷰 승인 (Approved)"
+          embed-description: |
+            **PR:** `${{ github.event.pull_request.title }}`
+            **리뷰어:** `${{ github.actor }}`
+          embed-color: 65280 # 초록색
 
       - name: Send Discord Notification for Changes Requested
         if: github.event.review.state == 'changes_requested'
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          content: "📝 **변경/거절 요청 (Changes Requested)**\n---\n**PR:** `${{ github.event.pull_request.title }}`\n**리뷰어:** `${{ github.actor }}`\n\n**코멘트:**\n> ${{ github.event.review.body }}"
+          embed-title: "📝 변경/거절 요청"
+          embed-description: |
+            **PR:** `${{ github.event.pull_request.title }}`
+            **리뷰어:** `${{ github.actor }}`
+
+            **코멘트:**
+            > ${{ github.event.review.body || '코멘트가 없습니다.' }}
+          embed-color: 16753920 # 주황색
