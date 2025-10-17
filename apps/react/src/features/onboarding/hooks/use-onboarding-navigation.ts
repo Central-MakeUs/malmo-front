@@ -4,7 +4,7 @@ import { useNavigate } from '@tanstack/react-router'
 const ONBOARDING_STEPS = [
   '/onboarding/terms',
   '/onboarding/nickname',
-  '/onboarding/anniversary',
+  // '/onboarding/anniversary',
   '/onboarding/my-code',
   '/onboarding/partner-code',
   '/onboarding/complete',

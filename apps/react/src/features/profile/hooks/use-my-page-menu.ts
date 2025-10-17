@@ -31,6 +31,13 @@ export function useMyPageMenu(terms: Term[], handleShowTerms: (termsId: number) 
       ),
     },
     {
+      label: '커플 연동 관리',
+      group: MenuGroup.BASIC,
+      onClick: wrapWithTracking(BUTTON_NAMES.OPEN_COUPLE_MANAGE, CATEGORIES.PROFILE, () =>
+        navigate({ to: '/my-page/couple-management' })
+      ),
+    },
+    {
       label: '문의하기',
       group: MenuGroup.BASIC,
       onClick: wrapWithTracking('contact_support' as any, CATEGORIES.PROFILE, () =>

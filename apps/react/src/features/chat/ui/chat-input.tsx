@@ -93,7 +93,7 @@ function ChatInput(props: { disabled?: boolean }) {
                   ? '커플 연동이 완료된 후에 채팅이 가능해요'
                   : sendingMessage
                     ? '모모의 답변이 완료된 후 채팅이 가능해요'
-                    : '메시지를 입력해주세요'
+                    : '메시지를 입력해 주세요'
             }
             rows={1}
           />

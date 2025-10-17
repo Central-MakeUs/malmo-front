@@ -18,6 +18,7 @@ type UseChatScrollProps = {
   sendingMessage: boolean
   messages: ChatRoomMessageData[]
   streamingMessage: ChatRoomMessageData | null
+  awaitingResponse: boolean
 }
 
 export function useChatScroll({
@@ -26,6 +27,7 @@ export function useChatScroll({
   sendingMessage,
   messages,
   streamingMessage,
+  awaitingResponse,
 }: UseChatScrollProps) {
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
 
@@ -112,6 +114,7 @@ export function useChatScroll({
     isFetchingNextPage,
     prevIsFetchingNextPage,
     streamingMessage,
+    awaitingResponse,
     keyboardHeight,
     prevKeyboardHeight,
     smoothScrollTo,

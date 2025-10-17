@@ -129,7 +129,11 @@ export function useProfileModal(): UseProfileModalReturn {
   const coupleConnectedModal = (onSuccess?: () => void) => {
     alertDialog.open({
       title: '커플 연동이 완료되었어요!',
-      description: '이제 말모를 제한 없이 사용할 수 있어요!',
+      description: (
+        <p className="body2-regular text-gray-iron-700">
+          <span className="text-malmo-rasberry-500">마이페이지</span>에서 디데이를 설정할 수 있어요
+        </p>
+      ),
       image: <img src={MomoConnectedImage} alt="연결 완료" className="h-[164px] w-[184px]" />,
       confirmText: '확인',
       onConfirm: async () => {

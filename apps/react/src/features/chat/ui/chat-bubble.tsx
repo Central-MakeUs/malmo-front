@@ -9,14 +9,15 @@ import { groupSentences } from '../util/chat-format'
 
 interface AiChatBubbleProps {
   message?: string
-  timestamp: string
+  timestamp?: string
   senderName?: string
+  isTyping?: boolean
 }
 
 export function AiChatBubble(props: AiChatBubbleProps) {
-  const { message = '', senderName = '모모', timestamp } = props
+  const { message = '', senderName = '모모', timestamp = '', isTyping = false } = props
 
-  const messageGroups = useMemo(() => groupSentences(message, 3), [message])
+  const messageGroups = useMemo(() => (isTyping ? [] : groupSentences(message, 3)), [isTyping, message])
 
   return (
     <div className="flex w-full items-start gap-3">
@@ -24,21 +25,35 @@ export function AiChatBubble(props: AiChatBubbleProps) {
 
       <div className="flex-1">
         <p className="body3-semibold mb-[6px] text-malmo-rasberry-500">{senderName}</p>
-        {messageGroups.map((group, index) => (
-          <div
-            key={index}
-            className={cn('flex flex-nowrap items-end gap-2', { 'mr-9': index < messageGroups.length - 1 })}
-          >
-            <div
-              className={cn('w-fit max-w-full rounded-[10px] rounded-tl-none bg-gray-100 px-[14px] py-[10px]', {
-                'mb-2': index < messageGroups.length - 1,
-              })}
-            >
-              <p className="body2-regular break-words text-gray-800">{group}</p>
+        {isTyping ? (
+          <div className="flex items-end gap-2">
+            <div className="w-fit max-w-full rounded-[10px] rounded-tl-none bg-gray-100 px-[16px] py-[12px]">
+              <div className="flex items-center gap-[5px]">
+                <span className="h-1 w-1 animate-pulse rounded-full bg-gray-iron-500" />
+                <span className="h-1 w-1 animate-pulse rounded-full bg-gray-iron-500 [animation-delay:150ms]" />
+                <span className="h-1 w-1 animate-pulse rounded-full bg-gray-iron-500 [animation-delay:300ms]" />
+              </div>
             </div>
-            {index === messageGroups.length - 1 && <p className="label2-regular text-gray-600">{timestamp}</p>}
           </div>
-        ))}
+        ) : (
+          messageGroups.map((group, index) => (
+            <div
+              key={index}
+              className={cn('flex flex-nowrap items-end gap-2', { 'mr-9': index < messageGroups.length - 1 })}
+            >
+              <div
+                className={cn('w-fit max-w-full rounded-[10px] rounded-tl-none bg-gray-100 px-[14px] py-[10px]', {
+                  'mb-2': index < messageGroups.length - 1,
+                })}
+              >
+                <p className="body2-regular break-words text-gray-800">{group}</p>
+              </div>
+              {index === messageGroups.length - 1 && timestamp && (
+                <p className="label2-regular text-gray-600">{timestamp}</p>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   )

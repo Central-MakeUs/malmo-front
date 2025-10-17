@@ -22,6 +22,9 @@ export function AttachmentTypeCards({
   partnerAttachmentType,
   isPartnerConnected,
 }: AttachmentTypeCardsProps) {
+  const safePartnerAttachmentData = isPartnerConnected ? partnerAttachmentData : null
+  const safePartnerAttachmentType = isPartnerConnected ? partnerAttachmentType : undefined
+
   const cards = [
     {
       title: '나의 애착유형',
@@ -33,11 +36,11 @@ export function AttachmentTypeCards({
     },
     {
       title: '연인의 애착유형',
-      attachmentData: partnerAttachmentData,
-      attachmentType: partnerAttachmentType,
-      badgeText: partnerAttachmentType || (!isPartnerConnected ? '연동 필요' : '검사 필요'),
+      attachmentData: safePartnerAttachmentData,
+      attachmentType: safePartnerAttachmentType,
+      badgeText: safePartnerAttachmentType || (!isPartnerConnected ? '연동 필요' : '검사 필요'),
       mysteryIcon: PartnerMysteryMomo,
-      navigationTo: partnerAttachmentData
+      navigationTo: safePartnerAttachmentData
         ? '/attachment-test/result/partner'
         : !isPartnerConnected
           ? '/partner-status?type=not-connected'

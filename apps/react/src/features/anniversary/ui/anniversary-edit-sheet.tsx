@@ -88,7 +88,7 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange, onSave }: Anniversa
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className="h-[466px] rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden">
         {/* 접근성을 위한 숨겨진 제목 */}
-        <SheetTitle className="sr-only">디데이 변경</SheetTitle>
+        <SheetTitle className="sr-only">디데이 설정</SheetTitle>
 
         {/* 커스텀 X 버튼 */}
         <button
@@ -100,11 +100,11 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange, onSave }: Anniversa
 
         <div className="flex h-full flex-col px-5 pt-10">
           {/* 제목 */}
-          <h2 className="heading1-bold text-center text-gray-iron-950">디데이 변경</h2>
+          <h2 className="heading1-bold text-center text-gray-iron-950">디데이 설정</h2>
 
           {/* 설명 */}
           <p className="body1-medium mt-1 text-center text-gray-iron-700">
-            <span className="text-malmo-rasberry-500">두 사람이 만난 날짜</span>를 입력해주세요
+            <span className="text-malmo-rasberry-500">두 사람이 만난 날짜</span>를 입력해 주세요
           </p>
 
           {/* 날짜 선택 컴포넌트 */}
@@ -115,7 +115,7 @@ export function AnniversaryEditSheet({ isOpen, onOpenChange, onSave }: Anniversa
           {/* 변경하기 버튼 */}
           <div className="mt-auto mb-5">
             <Button
-              text={'변경하기'}
+              text={'설정하기'}
               onClick={handleSubmit}
               disabled={!hasChanged || updateStartDateMutation.isPending}
             />

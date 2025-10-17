@@ -94,9 +94,11 @@ export function initApi(): AxiosInstance {
       const originalRequest = error.config
 
       const { response } = error
+      const errorCode = response?.data?.code
+      const shouldSkipReporting = response?.status === 403 && errorCode === 40301
 
       // API 에러 추적
-      if (response) {
+      if (response && !shouldSkipReporting) {
         const severity =
           response.status >= 500
             ? 'critical'

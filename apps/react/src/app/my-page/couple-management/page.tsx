@@ -4,9 +4,10 @@ import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
+import { AnniversaryEditSheet } from '@/features/anniversary'
 import { useAuth } from '@/features/auth'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
-import { PartnerCodeSheet, useProfileModal } from '@/features/profile'
+import { PartnerCodeSheet, useProfileEdit, useProfileModal } from '@/features/profile'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import memberService from '@/shared/services/member.service'
@@ -28,13 +29,14 @@ function CoupleManagementPage() {
   const inviteCode = inviteCodeData?.data?.coupleCode || ''
   const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
   const { refreshUserInfo } = useAuth()
+  const profileEdit = useProfileEdit()
 
   // 프로필 모달 훅
   const { coupleDisconnectModal, coupleConnectedModal } = useProfileModal()
 
   // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
-  const isConnected = !!partnerInfo && partnerInfo.memberState === PartnerMemberDataMemberStateEnum.Alive
+  const isPartnerConnected = !!partnerInfo && partnerInfo.memberState === PartnerMemberDataMemberStateEnum.Alive
 
   // 페이지 새로고침 함수
   const handleRefreshPage = async () => {
@@ -55,8 +57,12 @@ function CoupleManagementPage() {
     }
   })
 
+  const handleAniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
+    profileEdit.openAnniversarySheet()
+  )
+
   const handleConnectPartner = wrapWithTracking(BUTTON_NAMES.OPEN_PARTNER_SHEET, CATEGORIES.PROFILE, () => {
-    if (isConnected) return
+    if (isPartnerConnected) return
     setIsPartnerCodeSheetOpen(true)
   })
 
@@ -85,8 +91,18 @@ function CoupleManagementPage() {
         <hr className="h-px border-0 bg-gray-iron-100" />
 
         {/* 연인 코드로 연결하기 */}
-        <button onClick={handleConnectPartner} className="flex h-16 w-full items-center" disabled={isConnected}>
-          <span className={`body1-medium ${isConnected ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}>
+        <button onClick={handleAniversaryEdit} className="flex h-16 w-full items-center" disabled={!isPartnerConnected}>
+          <span className={`body1-medium ${isPartnerConnected ? 'text-gray-iron-950' : 'text-gray-iron-400'}`}>
+            디데이 설정
+          </span>
+        </button>
+
+        {/* 구분선 */}
+        <hr className="h-px border-0 bg-gray-iron-100" />
+
+        {/* 연인 코드로 연결하기 */}
+        <button onClick={handleConnectPartner} className="flex h-16 w-full items-center" disabled={isPartnerConnected}>
+          <span className={`body1-medium ${isPartnerConnected ? 'text-gray-iron-400' : 'text-gray-iron-950'}`}>
             연인 코드로 연결하기
           </span>
         </button>
@@ -95,8 +111,12 @@ function CoupleManagementPage() {
         <hr className="h-px border-0 bg-gray-iron-100" />
 
         {/* 커플 연결 끊기 */}
-        <button onClick={handleDisconnectCouple} className="flex h-16 w-full items-center" disabled={!isConnected}>
-          <span className={`body1-medium ${isConnected ? 'text-gray-iron-950' : 'text-gray-iron-400'}`}>
+        <button
+          onClick={handleDisconnectCouple}
+          className="flex h-16 w-full items-center"
+          disabled={!isPartnerConnected}
+        >
+          <span className={`body1-medium ${isPartnerConnected ? 'text-gray-iron-950' : 'text-gray-iron-400'}`}>
             커플 연결 끊기
           </span>
         </button>
@@ -108,6 +128,12 @@ function CoupleManagementPage() {
         onOpenChange={setIsPartnerCodeSheetOpen}
         onSuccess={handleRefreshPage}
         onCoupleConnected={coupleConnectedModal}
+      />
+
+      <AnniversaryEditSheet
+        isOpen={profileEdit.isAnniversarySheetOpen}
+        onOpenChange={profileEdit.setAnniversarySheetOpen}
+        onSave={wrapWithTracking(BUTTON_NAMES.SAVE_ANNIVERSARY, CATEGORIES.PROFILE)}
       />
     </div>
   )
