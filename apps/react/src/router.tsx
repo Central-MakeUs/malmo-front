@@ -23,7 +23,13 @@ export function createRouter() {
     scrollToTopSelectors: ['.main-scrollable'],
     defaultStructuralSharing: true,
     defaultNotFoundComponent: () => <NotFound />,
-    defaultErrorComponent: ({ error }) => <RouterError error={error} />,
+    defaultErrorComponent: ({ error }) => (
+      <div className="main-scrollable app-safe flex h-screen w-full flex-col overflow-hidden bg-white">
+        <main className="relative mx-auto flex min-h-0 w-full max-w-[600px] flex-1 flex-col">
+          <RouterError error={error} />
+        </main>
+      </div>
+    ),
     context: {
       auth: {} as never,
       queryClient,

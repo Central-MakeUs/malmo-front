@@ -1,12 +1,13 @@
 import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { useLocation, useRouter } from '@tanstack/react-router'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 import { useAuth } from '@/features/auth'
 import bridge from '@/shared/bridge'
 import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import chatService from '@/shared/services/chat.service'
 import { Button } from '@/shared/ui'
 
@@ -19,7 +20,8 @@ export interface UseChattingModalReturn {
 
 export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum): UseChattingModalReturn {
   const alertDialog = useAlertDialog()
-  const router = useRouter()
+  const navigate = useNavigate()
+  const goBack = useGoBack()
   const queryClient = useQueryClient()
   const { pathname } = useLocation()
   const auth = useAuth()
@@ -65,11 +67,11 @@ export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum
       confirmText: '검사하러 가기',
       onCancel: () => {
         alertDialog.close()
-        router.history.back()
+        goBack()
       },
       onConfirm: () => {
         alertDialog.close()
-        router.navigate({ to: '/attachment-test' })
+        navigate({ to: '/attachment-test' })
       },
     })
   }
@@ -93,7 +95,7 @@ export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum
       onCancel: () => {
         queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
         alertDialog.close()
-        router.history.back()
+        goBack()
       },
     })
   }

@@ -74,7 +74,7 @@ function RootComponent() {
 
   return (
     <div className="no-bounce-scroll main-scrollable app-safe flex h-screen w-full flex-col bg-white">
-      <main className="relative mx-auto flex w-full max-w-[600px] flex-1 flex-col">
+      <main className="relative mx-auto flex min-h-0 w-full max-w-[600px] flex-1 flex-col">
         <div
           aria-hidden
           className="pointer-events-none fixed inset-x-0 top-0 z-40 h-[var(--safe-top)]"

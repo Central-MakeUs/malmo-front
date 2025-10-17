@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 
 import momoErrorImage from '@/assets/images/momo-error.png'
 import { ErrorReporter } from '@/shared/analytics'
+import { Screen } from '@/shared/layout/screen'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 interface RouterErrorProps {
@@ -32,25 +33,19 @@ export function RouterError({ error }: RouterErrorProps) {
   }
 
   return (
-    <div className="flex h-screen flex-col bg-white">
-      {/* 헤더 네비게이션바 */}
-      <DetailHeaderBar showBackButton={true} />
+    <Screen>
+      <Screen.Header className="pt-safe-top bg-white">
+        <DetailHeaderBar showBackButton={true} />
+      </Screen.Header>
 
-      {/* 컨텐츠 */}
-      <div className="mt-[106px] flex flex-1 flex-col items-center px-5">
-        {/* 에러 이미지 */}
-        <img src={momoErrorImage} alt="에러 이미지" className="h-[236px] w-[320px] object-contain" />
+      <Screen.Content className="flex flex-col items-center justify-between px-5">
+        <div className="mt-[106px] flex flex-col items-center">
+          <img src={momoErrorImage} alt="에러 이미지" className="h-[236px] w-[320px] object-contain" />
+          <h1 className="heading1-bold mt-6 text-gray-iron-950">일시적인 오류가 발생했어요</h1>
+          <p className="body2-medium mt-1 text-gray-iron-500">잠시 후에 다시 시도해 주세요!</p>
+        </div>
 
-        {/* 제목 */}
-        <h1 className="heading1-bold mt-6 text-gray-iron-950">일시적인 오류가 발생했어요</h1>
-
-        {/* 설명 */}
-        <p className="body2-medium mt-1 text-gray-iron-500">잠시 후에 다시 시도해 주세요!</p>
-
-        <div className="flex-1" />
-
-        {/* 버튼 */}
-        <div className="mb-5 w-full">
+        <div className="w-full pb-5">
           <button
             onClick={handleGoHome}
             className="body1-semibold h-[54px] w-full rounded-lg bg-gray-iron-700 text-white"
@@ -58,7 +53,7 @@ export function RouterError({ error }: RouterErrorProps) {
             홈으로 돌아가기
           </button>
         </div>
-      </div>
-    </div>
+      </Screen.Content>
+    </Screen>
   )
 }

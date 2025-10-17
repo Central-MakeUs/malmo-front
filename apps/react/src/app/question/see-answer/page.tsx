@@ -10,6 +10,7 @@ import { QuestionHeader } from '@/features/question/ui/question-header'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import bridge from '@/shared/bridge'
+import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -39,10 +40,12 @@ function RouteComponent() {
   const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
 
   return (
-    <div className="flex h-full flex-col">
-      <DetailHeaderBar title="답변 보기" className="border-b-[1px] border-gray-iron-100" />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar title="답변 보기" className="border-b border-gray-iron-100" />
+      </Screen.Header>
 
-      <div className="flex-1">
+      <Screen.Content className="flex flex-1 flex-col bg-white">
         <QuestionHeader data={data} />
 
         <div className="mb-15 px-5">
@@ -115,7 +118,7 @@ function RouteComponent() {
             </p>
           </div>
         </div>
-      </div>
-    </div>
+      </Screen.Content>
+    </Screen>
   )
 }

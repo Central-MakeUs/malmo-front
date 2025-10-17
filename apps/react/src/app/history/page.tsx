@@ -13,6 +13,7 @@ import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useDebounce } from '@/shared/hooks/use-debounce'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
+import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import chatService from '@/shared/services/chat.service'
 import { BottomNavigation } from '@/shared/ui'
@@ -56,39 +57,41 @@ function RouteComponent() {
   const handleChatFAB = wrapWithTracking(BUTTON_NAMES.OPEN_CHAT_FAB, CATEGORIES.MAIN, () => {})
 
   return (
-    <div className="has-bottom-nav flex h-full flex-col pt-30">
-      <div className="fixed top-[var(--safe-top)] z-20 bg-white">
-        <HomeHeaderBar
-          title="대화 기록"
-          right={
-            <Link to={'/history/delete'} onClick={handleDeleteMode}>
-              <p className="body2-medium text-gray-iron-700">삭제</p>
-            </Link>
-          }
-        />
-        <div className="px-5 pb-3">
-          <div className="relative flex items-center">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-              <LucideSearch size={20} className="text-gray-iron-800" />
-            </div>
-            <input
-              type="text"
-              placeholder="찾고 싶은 대화 제목을 검색해 보세요"
-              className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
-              value={keyword}
-              onChange={handleSearchChange}
-            />
-            {isLoading && (
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
-                <Spinner className="h-5 w-5 text-gray-iron-400" />
+    <Screen>
+      <Screen.Header>
+        <div className="bg-white">
+          <HomeHeaderBar
+            title="대화 기록"
+            right={
+              <Link to={'/history/delete'} state={{ skipTransition: true }} onClick={handleDeleteMode}>
+                <p className="body2-medium text-gray-iron-700">삭제</p>
+              </Link>
+            }
+          />
+          <div className="px-5 pb-3">
+            <div className="relative flex items-center">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                <LucideSearch size={20} className="text-gray-iron-800" />
               </div>
-            )}
+              <input
+                type="text"
+                placeholder="찾고 싶은 대화 제목을 검색해 보세요"
+                className="w-full rounded-[42px] bg-gray-neutral-100 py-[13px] pr-10 pl-12 text-gray-iron-900 placeholder:text-gray-iron-400 focus:outline-none"
+                value={keyword}
+                onChange={handleSearchChange}
+              />
+              {isLoading && (
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+                  <Spinner className="h-5 w-5 text-gray-iron-400" />
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </Screen.Header>
 
-      <section
-        className={`min-h-0 flex-1 bg-gray-neutral-100 transition-opacity ${histories.length === 0 || isLoading ? 'overflow-hidden' : 'overflow-y-auto'}`}
+      <Screen.Content
+        className={`has-bottom-nav min-h-0 flex-1 bg-gray-neutral-100 transition-opacity ${histories.length === 0 || isLoading ? 'overflow-hidden' : 'overflow-y-auto'}`}
       >
         {isLoading ? (
           <div className="flex h-full items-center justify-center">
@@ -112,7 +115,7 @@ function RouteComponent() {
             {isFetchingNextPage && <p className="p-5 text-center">더 불러오는 중...</p>}
           </>
         )}
-      </section>
+      </Screen.Content>
 
       <Link to={'/chat'} onClick={handleChatFAB}>
         <div className="fixed right-5 bottom-[calc(var(--safe-bottom)+var(--bottom-nav-h)+16px)] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
@@ -131,6 +134,6 @@ function RouteComponent() {
       </Link>
 
       <BottomNavigation />
-    </div>
+    </Screen>
   )
 }

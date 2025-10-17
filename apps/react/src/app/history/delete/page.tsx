@@ -5,6 +5,7 @@ import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-q
 import { useChatSelect } from '@/features/history/hooks/use-chat-select'
 import { EmptyState, SelectableChatHistoryItem } from '@/features/history/ui/chat-history-item'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
+import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -23,12 +24,17 @@ function RouteComponent() {
   const showEmpty = !isFetchingNextPage && histories.length === 0
 
   return (
-    <div className="relative flex h-full flex-col overflow-hidden pt-[50px]">
-      <div className="fixed top-[var(--safe-top)] z-20 bg-white">
-        <DetailHeaderBar title="삭제" left={backButton()} className="border-b-[1px] border-b-gray-iron-100" />
-      </div>
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar
+          title="삭제"
+          left={backButton()}
+          onBackClick={() => backButton()?.props?.onClick?.({ state: { skipTransition: true } })}
+          className="border-b border-b-gray-iron-100 bg-white"
+        />
+      </Screen.Header>
 
-      <section className="flex-1 overflow-y-auto bg-gray-neutral-100 pb-28">
+      <Screen.Content className="relative overflow-y-auto bg-gray-neutral-100 pt-[calc(var(--safe-top)+50px)] pb-[calc(var(--safe-bottom)+96px)]">
         {showEmpty ? (
           <EmptyState
             image={noResultImage}
@@ -49,16 +55,20 @@ function RouteComponent() {
             {isFetchingNextPage && <p className="p-5 text-center">더 불러오는 중...</p>}
           </>
         )}
-      </section>
+      </Screen.Content>
 
-      <div className="fixed inset-x-0 bottom-[calc(var(--safe-bottom)+20px)] z-50 px-5">
-        <Button
-          onClick={handleDelete}
-          text={selectedIds.length > 0 ? `${selectedIds.length}개 삭제` : '삭제'}
-          disabled={selectedIds.length === 0}
-          className={cn('bg-gray-iron-700', { 'cursor-not-allowed bg-gray-neutral-300': selectedIds.length === 0 })}
-        />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-50">
+        <div className="pointer-events-auto px-5 pb-[calc(var(--safe-bottom)+20px)]">
+          <Button
+            onClick={handleDelete}
+            text={selectedIds.length > 0 ? `${selectedIds.length}개 삭제` : '삭제'}
+            disabled={selectedIds.length === 0}
+            className={cn('bg-gray-iron-700', {
+              'cursor-not-allowed bg-gray-neutral-300': selectedIds.length === 0,
+            })}
+          />
+        </div>
       </div>
-    </div>
+    </Screen>
   )
 }
