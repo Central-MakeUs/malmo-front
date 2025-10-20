@@ -32,6 +32,7 @@
     "lodash-es": "^4.17.21",
     "lottie-react": "^2.4.1",
     "lucide-react": "catalog:react",
+    "motion": "^12.23.24",
     "path-to-regexp": "catalog:",
     "react": "catalog:react",
     "react-dom": "catalog:react",
