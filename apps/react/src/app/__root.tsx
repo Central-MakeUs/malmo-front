@@ -1,10 +1,13 @@
 import { QueryClient } from '@tanstack/react-query'
-import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-router'
+import { createRootRouteWithContext, redirect } from '@tanstack/react-router'
 import { match } from 'path-to-regexp'
 
 import { AuthContext } from '@/features/auth/hooks/use-auth'
 import { CoupleStatusProvider } from '@/features/member'
 import { useTheme } from '@/shared/contexts/theme.context'
+import { NavigationTransitionProvider } from '@/shared/navigation/transition'
+import { StackedOutlet } from '@/shared/ui/stacked-outlet'
+import { TransitionViewport } from '@/shared/ui/transition-viewport'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -74,14 +77,18 @@ function RootComponent() {
 
   return (
     <div className="no-bounce-scroll main-scrollable app-safe flex h-screen w-full flex-col bg-white">
-      <main className="relative mx-auto flex w-full max-w-[600px] flex-1 flex-col">
+      <main className="relative mx-auto flex min-h-0 w-full max-w-[600px] flex-1 flex-col">
         <div
           aria-hidden
           className="pointer-events-none fixed inset-x-0 top-0 z-40 h-[var(--safe-top)]"
           style={{ backgroundColor: statusColor }}
         />
         <CoupleStatusProvider>
-          <Outlet />
+          <NavigationTransitionProvider>
+            <TransitionViewport>
+              <StackedOutlet />
+            </TransitionViewport>
+          </NavigationTransitionProvider>
         </CoupleStatusProvider>
       </main>
     </div>

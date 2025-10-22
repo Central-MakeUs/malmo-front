@@ -6,6 +6,8 @@ import { usePartnerInfo } from '@/features/member'
 import { NicknameEditSheet, useProfileEdit } from '@/features/profile'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import { Badge } from '@/shared/ui/badge'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -30,6 +32,7 @@ function MenuItem({ label, onClick, rightElement }: MenuItemProps) {
 
 function ProfileEditPage() {
   const navigate = useNavigate()
+  const goBack = useGoBack()
   const profileEdit = useProfileEdit()
 
   // 커플 연동 상태 확인
@@ -66,31 +69,33 @@ function ProfileEditPage() {
   ]
 
   return (
-    <div className="h-full bg-white">
-      {/* 헤더 */}
-      <DetailHeaderBar title="내 정보" onBackClick={() => navigate({ to: '/my-page' })} />
+    <Screen>
+      <Screen.Header>
+        <DetailHeaderBar title="내 정보" onBackClick={goBack} />
+      </Screen.Header>
 
-      {/* 메뉴 리스트 */}
-      <div className="mt-0">
-        {menuItems.map((item, index) => (
-          <div key={item.label}>
-            {index > 0 && <hr className="h-px border-0 bg-gray-iron-100" />}
-            <MenuItem label={item.label} onClick={item.onClick} rightElement={item.rightElement} />
-          </div>
-        ))}
-      </div>
+      <Screen.Content className="bg-white">
+        <div className="mt-0">
+          {menuItems.map((item, index) => (
+            <div key={item.label}>
+              {index > 0 && <hr className="h-px border-0 bg-gray-iron-100" />}
+              <MenuItem label={item.label} onClick={item.onClick} rightElement={item.rightElement} />
+            </div>
+          ))}
+        </div>
 
-      {/* 바텀시트 */}
-      <NicknameEditSheet
-        isOpen={profileEdit.isNicknameSheetOpen}
-        onOpenChange={profileEdit.setNicknameSheetOpen}
-        onSave={wrapWithTracking(BUTTON_NAMES.SAVE_NICKNAME, CATEGORIES.PROFILE)}
-      />
-      <AnniversaryEditSheet
-        isOpen={profileEdit.isAnniversarySheetOpen}
-        onOpenChange={profileEdit.setAnniversarySheetOpen}
-        onSave={wrapWithTracking(BUTTON_NAMES.SAVE_ANNIVERSARY, CATEGORIES.PROFILE)}
-      />
-    </div>
+        {/* 바텀시트 */}
+        <NicknameEditSheet
+          isOpen={profileEdit.isNicknameSheetOpen}
+          onOpenChange={profileEdit.setNicknameSheetOpen}
+          onSave={wrapWithTracking(BUTTON_NAMES.SAVE_NICKNAME, CATEGORIES.PROFILE)}
+        />
+        <AnniversaryEditSheet
+          isOpen={profileEdit.isAnniversarySheetOpen}
+          onOpenChange={profileEdit.setAnniversarySheetOpen}
+          onSave={wrapWithTracking(BUTTON_NAMES.SAVE_ANNIVERSARY, CATEGORIES.PROFILE)}
+        />
+      </Screen.Content>
+    </Screen>
   )
 }

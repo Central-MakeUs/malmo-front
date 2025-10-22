@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { wrapWithTracking } from '@/shared/analytics'
@@ -8,6 +8,7 @@ import { useHistoryModal } from './use-history-modal'
 
 export const useChatSelect = () => {
   const historyModal = useHistoryModal()
+  const navigate = useNavigate()
   const [selectedIds, setSelectedIds] = useState<number[]>([])
 
   const handleToggleSelect = wrapWithTracking(BUTTON_NAMES.SELECT_ITEM, CATEGORIES.MAIN, (id?: number) => {
@@ -20,9 +21,15 @@ export const useChatSelect = () => {
   )
 
   const backButton = () => (
-    <Link to="/history" replace onClick={wrapWithTracking(BUTTON_NAMES.BACK_DELETE, CATEGORIES.MAIN, () => {})}>
-      <p className="body2-medium text-gray-iron-900">완료</p>
-    </Link>
+    <button
+      type="button"
+      className="body2-medium text-gray-iron-900"
+      onClick={wrapWithTracking(BUTTON_NAMES.BACK_DELETE, CATEGORIES.MAIN, () =>
+        navigate({ to: '/history', replace: true, state: { skipTransition: true } })
+      )}
+    >
+      완료
+    </button>
   )
 
   return {

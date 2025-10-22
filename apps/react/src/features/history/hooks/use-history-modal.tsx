@@ -1,7 +1,7 @@
 import { useQueryClient, useMutation } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
 
 import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import historyService from '@/shared/services/history.service'
 import { queryKeys } from '@/shared/services/query-keys'
 
@@ -12,7 +12,7 @@ export interface UseHistoryModalReturn {
 
 export function useHistoryModal(): UseHistoryModalReturn {
   const alertDialog = useAlertDialog()
-  const router = useRouter()
+  const goBack = useGoBack()
   const queryClient = useQueryClient()
 
   const deleteHistoryMutation = useMutation({
@@ -38,7 +38,7 @@ export function useHistoryModal(): UseHistoryModalReturn {
       onCancel: async () => {
         alertDialog.close()
         await deleteHistoryMutation.mutateAsync([id])
-        router.history.back()
+        goBack()
       },
     })
   }

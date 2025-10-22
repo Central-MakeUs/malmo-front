@@ -9,6 +9,7 @@ import { TodayQuestionSection } from '@/features/question'
 import CalendarItem from '@/features/question/ui/calendar-item'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { Badge, BottomNavigation } from '@/shared/ui'
@@ -61,10 +62,12 @@ function RouteComponent() {
   const maxPage = Math.floor((data.level - 1) / 30)
 
   return (
-    <div className="has-bottom-nav flex h-full flex-col bg-gray-neutral-100">
-      <HomeHeaderBar title="마음도감" />
+    <Screen>
+      <Screen.Header>
+        <HomeHeaderBar title="마음도감" />
+      </Screen.Header>
 
-      <section className="overflow-y-auto overscroll-y-none bg-white">
+      <Screen.Content className="has-bottom-nav flex-1 overflow-y-auto overscroll-y-none bg-gray-neutral-100">
         <div className="bg-white pt-3 pb-7">
           <div className="mb-4 flex items-center justify-between pr-5 pl-[14px]">
             <div className="flex items-center gap-1 py-[2px]">
@@ -146,7 +149,7 @@ function RouteComponent() {
           </div>
         </div>
 
-        <div className="flex-1 bg-gray-neutral-100 px-5 pt-5 pb-12">
+        <div className="flex-1 px-5 pt-5">
           <Link
             to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
             search={{ coupleQuestionId: selectedQuestion?.coupleQuestionId || 0, isEdit: false }}
@@ -159,9 +162,9 @@ function RouteComponent() {
             <TodayQuestionSection todayQuestion={selectedQuestion} level={selectedQuestion.level} />
           </Link>
         </div>
-      </section>
+      </Screen.Content>
 
       <BottomNavigation />
-    </div>
+    </Screen>
   )
 }

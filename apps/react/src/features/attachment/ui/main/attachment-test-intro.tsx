@@ -1,24 +1,12 @@
-import { useNavigate } from '@tanstack/react-router'
-
 import TestStartImage from '@/assets/images/test-start.png'
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 interface AttachmentTestIntroProps {
   nickname: string
-  from?: string
 }
 
-export function AttachmentTestIntro({ nickname, from }: AttachmentTestIntroProps) {
-  const navigate = useNavigate()
-
-  const handleGoToHome = () => {
-    navigate({ to: from || '/' })
-  }
-
+export function AttachmentTestIntro({ nickname }: AttachmentTestIntroProps) {
   return (
     <div className="bg-malmo-rasberry-25 pt-[50px]">
-      <DetailHeaderBar onBackClick={handleGoToHome} className="fixed top-[var(--safe-top)] bg-malmo-rasberry-25" />
-
       {/* 테스트 시작 이미지 */}
       <div className="mt-[36px] flex justify-center overflow-hidden">
         <img src={TestStartImage} alt="애착유형 테스트 시작" className="w-[440px] object-cover" />
