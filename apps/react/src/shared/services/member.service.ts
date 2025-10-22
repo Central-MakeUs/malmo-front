@@ -39,11 +39,12 @@ class MemberService extends MembersApi {
           const { data } = await this.getPartnerMemberInfo()
           return data
         } catch (error: unknown) {
-          const axiosError = error as { response?: { status: number } }
+          const axiosError = error as { response?: { status: number; data: { code: number } } }
           const status = axiosError.response?.status
+          const errorCode = axiosError.response?.data?.code
 
           // 연동되지 않은 경우(40301)는 null 데이터를 반환해 쿼리를 성공으로 처리한다.
-          if (status === 403) {
+          if (status === 403 && errorCode === 40301) {
             return null
           }
 
