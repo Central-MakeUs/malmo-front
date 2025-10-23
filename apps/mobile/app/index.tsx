@@ -98,7 +98,9 @@ export default function App() {
         allowsBackForwardNavigationGestures={Platform.OS === 'ios' && !isModalOpen}
         onShouldStartLoadWithRequest={() => true}
         onNavigationStateChange={handleNavigationStateChange}
-        renderError={() => <WebViewError onRetry={handleRetry} />}
+        renderError={(domain, code, description) => (
+          <WebViewError onRetry={handleRetry} errorDomain={domain} errorCode={code} errorDescription={description} />
+        )}
         startInLoadingState={false}
         onLoadEnd={handleLoadEnd}
       />
