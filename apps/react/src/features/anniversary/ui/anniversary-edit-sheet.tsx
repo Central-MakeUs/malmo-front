@@ -2,11 +2,13 @@ import { useMutation } from '@tanstack/react-query'
 import { X } from 'lucide-react'
 import { useMemo, useEffect, useState } from 'react'
 
-import { DatePicker, useAnniversary } from '@/features/anniversary'
 import { useAuth } from '@/features/auth'
 import memberService from '@/shared/services/member.service'
 import { Button } from '@/shared/ui/button'
 import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
+
+import { DatePicker } from './date-picker'
+import { useAnniversary } from '../hooks/use-anniversary'
 
 interface AnniversaryEditSheetProps {
   isOpen: boolean
