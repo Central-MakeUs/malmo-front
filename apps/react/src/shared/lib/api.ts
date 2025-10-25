@@ -94,9 +94,12 @@ export function initApi(): AxiosInstance {
       const originalRequest = error.config
 
       const { response } = error
+      const errorCode = response?.data?.code
+      // 40301 커플 등록전인 사용자입니다. 커플 등록 후 이용해주세요.
+      const shouldSkipReporting = response?.status === 403 && errorCode === 40301
 
       // API 에러 추적
-      if (response) {
+      if (response && !shouldSkipReporting) {
         const severity =
           response.status >= 500
             ? 'critical'

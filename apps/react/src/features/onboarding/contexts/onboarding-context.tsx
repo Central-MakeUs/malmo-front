@@ -96,9 +96,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const completeOnboarding = async () => {
     try {
       // 여기서 API 호출
+      // TODO : loveStartDate 제거하기
       const requestBody = {
         nickname: data.nickname,
-        loveStartDate: data.anniversary ? formatDate(data.anniversary) : '',
+        loveStartDate: data.anniversary ? formatDate(data.anniversary) : formatDate(new Date().toISOString()),
         terms: Object.entries(data.termsAgreements).map(([termsId, isAgreed]) => ({
           termsId: Number(termsId),
           isAgreed,

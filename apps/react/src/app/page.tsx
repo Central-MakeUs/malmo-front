@@ -1,8 +1,9 @@
-import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
+import { ChatRoomStateDataChatRoomStateEnum, PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import HeartIcon from '@/assets/icons/heart.svg'
 import malmoLogo from '@/assets/images/malmo-logo-small.png'
+import { AnniversaryEditSheet } from '@/features/anniversary'
 import { getAttachmentType } from '@/features/attachment'
 import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
 import { AttachmentTypeCards } from '@/features/attachment/ui/attachment-type-cards'
@@ -11,6 +12,7 @@ import { useChatRoomStatusQuery } from '@/features/chat/hooks/use-chat-queries'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { usePartnerInfo } from '@/features/member'
 import { useAppNotifications } from '@/features/notification'
+import { useProfileEdit } from '@/features/profile'
 import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
@@ -41,7 +43,8 @@ function HomePage() {
   useAppNotifications()
 
   const { data: todayQuestion } = useTodayQuestion()
-  const { data: partnerInfo, error: partnerError } = usePartnerInfo()
+  const { data: partnerInfo } = usePartnerInfo()
+  const profileEdit = useProfileEdit()
 
   // D-day 계산
   const dDay = calculateDDay(userInfo.startLoveDate)
@@ -57,7 +60,7 @@ function HomePage() {
   const hasAttachmentType = !!userInfo.loveTypeCategory
 
   // 파트너 연동 상태 확인
-  const isPartnerConnected = !partnerError || partnerError?.status !== 403
+  const isPartnerConnected = partnerInfo?.memberState === PartnerMemberDataMemberStateEnum.Alive
 
   const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
   const partnerAttachmentData = getAttachmentType(partnerInfo?.loveTypeCategory)
@@ -84,6 +87,11 @@ function HomePage() {
     }
   })
 
+  // 기념일 시트 열기 핸들러
+  const handleAniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
+    profileEdit.openAnniversarySheet()
+  )
+
   return (
     <div className="has-bottom-nav flex h-full flex-col bg-white pt-[60px]">
       {/* 헤더 */}
@@ -91,10 +99,15 @@ function HomePage() {
         <img src={malmoLogo} alt="말모 로고" className="h-8 w-[94px]" />
 
         {/* D-day */}
-        <div className="flex h-8 items-center rounded-[30px] border border-gray-iron-200 px-4 py-[5px]">
-          <HeartIcon className="h-4 w-4" />
-          <span className="body2-semibold ml-[9px] text-gray-iron-950">D+{dDay}</span>
-        </div>
+        {isPartnerConnected && (
+          <div
+            className="flex h-8 items-center rounded-[30px] border border-gray-iron-200 px-4 py-[5px]"
+            onClick={handleAniversaryEdit}
+          >
+            <HeartIcon className="h-4 w-4" />
+            <span className="body2-semibold ml-[9px] text-gray-iron-950">D+{dDay}</span>
+          </div>
+        )}
       </header>
 
       {/* 메인 컨텐츠  */}
@@ -122,6 +135,12 @@ function HomePage() {
 
       {/* 하단 네비게이션 */}
       <BottomNavigation />
+
+      <AnniversaryEditSheet
+        isOpen={profileEdit.isAnniversarySheetOpen}
+        onOpenChange={profileEdit.setAnniversarySheetOpen}
+        onSave={wrapWithTracking(BUTTON_NAMES.SAVE_ANNIVERSARY, CATEGORIES.PROFILE)}
+      />
     </div>
   )
 }

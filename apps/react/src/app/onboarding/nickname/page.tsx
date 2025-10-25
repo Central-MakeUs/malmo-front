@@ -56,7 +56,7 @@ function NicknamePage() {
           value={nickname}
           onChange={handleNicknameChange}
           maxLength={maxLength}
-          placeholder="닉네임을 입력해주세요"
+          placeholder="닉네임을 입력해 주세요"
           className="body2-medium"
         />
       </div>

@@ -50,8 +50,7 @@ function PartnerStatusPage() {
         {/* 설명 */}
         {type === 'not-connected' ? (
           <p className="body2-medium mt-1 text-center">
-            <span className="text-malmo-rasberry-500">마이페이지 &gt; 프로필 &gt; 커플 연동 관리</span>
-            <span className="text-gray-iron-950">에서 초대가 가능해요</span>
+            <span className="text-gray-iron-500">연동하지 않아도 애착유형을 추측해 상담할게요</span>
           </p>
         ) : (
           <p className="body2-medium mt-1 text-center text-gray-iron-500">연인이 검사를 완료하면 결과를 볼 수 있어요</p>

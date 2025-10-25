@@ -36,7 +36,7 @@ function PartnerCodePage() {
 
   const handleNext = wrapWithTracking(BUTTON_NAMES.CONNECT_PARTNER, CATEGORIES.ONBOARDING, async () => {
     if (!partnerCode.trim()) {
-      alert('코드를 입력해주세요.')
+      alert('코드를 입력해 주세요.')
       return
     }
 
@@ -59,7 +59,7 @@ function PartnerCodePage() {
           <>
             연인의 커플 코드를
             <br />
-            입력해주세요
+            입력해 주세요
           </>
         }
       />
@@ -70,7 +70,7 @@ function PartnerCodePage() {
           type="text"
           value={partnerCode}
           onChange={(e) => setPartnerCode(e.target.value)}
-          placeholder="코드를 입력해주세요"
+          placeholder="코드를 입력해 주세요"
           maxLength={7}
         />
       </div>
