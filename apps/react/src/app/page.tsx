@@ -60,7 +60,7 @@ function HomePage() {
   const hasAttachmentType = !!userInfo.loveTypeCategory
 
   // 파트너 연동 상태 확인
-  const isPartnerConnected = partnerInfo?.memberState === PartnerMemberDataMemberStateEnum.Alive
+  const isPartnerConnected = !!partnerInfo && partnerInfo.memberState === PartnerMemberDataMemberStateEnum.Alive
 
   const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
   const partnerAttachmentData = getAttachmentType(partnerInfo?.loveTypeCategory)
