@@ -4,7 +4,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useNavigationTransition } from '@/shared/navigation/transition'
 import { RoutePhaseProvider } from '@/shared/navigation/transition/route-phase-context'
-import { snapshotRouterContext } from '@/shared/navigation/use-frozen-router-context'
+import { snapshotRouterContext, type RouterLike } from '@/shared/navigation/use-frozen-router-context'
 
 type Direction = 'forward' | 'back' | 'none'
 
@@ -18,6 +18,38 @@ type FrozenEntry = {
 const DEFAULT_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
 const EXIT_TRANSLATE = 100
 const toPercent = (value: number) => `${value}%`
+
+export function NavigationOutlet() {
+  const RouterContext = getRouterContext()
+  const liveRouter = useContext(RouterContext)
+  useRouterState()
+
+  const { snapshot, clear } = useNavigationTransition()
+  const lastHandledSnapshotRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (!snapshot) return
+    if (snapshot.id === lastHandledSnapshotRef.current) {
+      return
+    }
+
+    lastHandledSnapshotRef.current = snapshot.id
+
+    snapshot.proceed()
+    clear()
+  }, [snapshot, clear])
+
+  return (
+    <RoutePhaseProvider value="live">
+      <div className="relative h-full w-full">
+        <RouterContext.Provider value={liveRouter}>
+          <Outlet />
+        </RouterContext.Provider>
+      </div>
+    </RoutePhaseProvider>
+  )
+}
+
 export function StackedOutlet({
   duration = 0.28,
   ease = DEFAULT_EASE,

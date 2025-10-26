@@ -1,12 +1,12 @@
 import { QueryClient } from '@tanstack/react-query'
-import { createRootRouteWithContext, redirect } from '@tanstack/react-router'
+import { createRootRouteWithContext, redirect, useRouterState } from '@tanstack/react-router'
 import { match } from 'path-to-regexp'
 
 import { AuthContext } from '@/features/auth/hooks/use-auth'
 import { CoupleStatusProvider } from '@/features/member'
 import { useTheme } from '@/shared/contexts/theme.context'
 import { NavigationTransitionProvider } from '@/shared/navigation/transition'
-import { StackedOutlet } from '@/shared/ui/stacked-outlet'
+import { NavigationOutlet, StackedOutlet } from '@/shared/ui/stacked-outlet'
 import { TransitionViewport } from '@/shared/ui/transition-viewport'
 
 interface RouterContext {
@@ -74,6 +74,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootComponent() {
   const { statusColor } = useTheme()
+  const currentPath = useRouterState({
+    select: (state) => state.location.pathname,
+  })
+  const isOnboardingRoute = matchRoute(onboardingRoutes, currentPath)
 
   return (
     <div className="no-bounce-scroll main-scrollable app-safe flex h-screen w-full flex-col bg-white">
@@ -85,9 +89,7 @@ function RootComponent() {
         />
         <CoupleStatusProvider>
           <NavigationTransitionProvider>
-            <TransitionViewport>
-              <StackedOutlet />
-            </TransitionViewport>
+            <TransitionViewport>{isOnboardingRoute ? <NavigationOutlet /> : <StackedOutlet />}</TransitionViewport>
           </NavigationTransitionProvider>
         </CoupleStatusProvider>
       </main>
