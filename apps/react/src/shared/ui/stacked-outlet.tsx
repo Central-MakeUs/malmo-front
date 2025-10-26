@@ -69,7 +69,9 @@ export function StackedOutlet({
     setCurrentDirection(snapshot.direction)
 
     if (snapshot.direction === 'back' || snapshot.direction === 'forward') {
-      const frozenContext = snapshotRouterContext(liveRouter)
+      const frozenContext = snapshotRouterContext(liveRouter as RouterLike, {
+        location: snapshot.fromEntry?.location,
+      })
       const entry: FrozenEntry = {
         id: `${snapshot.id}-${snapshot.fromEntry?.key ?? snapshot.fromEntry?.location.pathname ?? 'unknown'}`,
         pathname: snapshot.fromEntry?.location.pathname ?? '',
