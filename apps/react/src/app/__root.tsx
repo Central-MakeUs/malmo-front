@@ -6,6 +6,7 @@ import { AuthContext } from '@/features/auth/hooks/use-auth'
 import { CoupleStatusProvider } from '@/features/member'
 import { useTheme } from '@/shared/contexts/theme.context'
 import { NavigationTransitionProvider } from '@/shared/navigation/transition'
+import { FixedLayerRoot } from '@/shared/ui/fixed-layer'
 import { NavigationOutlet, StackedOutlet } from '@/shared/ui/stacked-outlet'
 import { TransitionViewport } from '@/shared/ui/transition-viewport'
 
@@ -90,6 +91,7 @@ function RootComponent() {
         <CoupleStatusProvider>
           <NavigationTransitionProvider>
             <TransitionViewport>{isOnboardingRoute ? <NavigationOutlet /> : <StackedOutlet />}</TransitionViewport>
+            <FixedLayerRoot />
           </NavigationTransitionProvider>
         </CoupleStatusProvider>
       </main>
