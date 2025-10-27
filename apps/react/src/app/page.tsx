@@ -82,7 +82,7 @@ function HomePage() {
   })
 
   // 기념일 시트 열기 핸들러
-  const handleAniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
+  const handleAnniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
     profileEdit.openAnniversarySheet()
   )
 
