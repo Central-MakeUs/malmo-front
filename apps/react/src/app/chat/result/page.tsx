@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
 import { z } from 'zod'
@@ -9,7 +9,9 @@ import { useHistoryModal } from '@/features/history/hooks/use-history-modal'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useTheme } from '@/shared/contexts/theme.context'
+import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import historyService from '@/shared/services/history.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -41,6 +43,7 @@ function RouteComponent() {
   const { data: chatResult } = useQuery(historyService.historySummaryQuery(chatId ?? loaderChatId))
 
   const navigate = useNavigate()
+  const goBack = useGoBack()
 
   useEffect(() => {
     setStatusColor('#FDEDF0')
@@ -67,20 +70,27 @@ function RouteComponent() {
         <p className="body2-medium text-gray-iron-700">{chatId ? '삭제' : '로딩중'}</p>
       </div>
     ) : (
-      <Link to="/" onClick={wrapWithTracking(BUTTON_NAMES.CLOSE_RESULT, CATEGORIES.CHAT, () => {})}>
+      <button
+        type="button"
+        className="rounded border-none bg-transparent p-1 text-gray-iron-950"
+        onClick={wrapWithTracking(BUTTON_NAMES.CLOSE_RESULT, CATEGORIES.CHAT, () => goBack())}
+      >
         <X className="h-[24px] w-[24px]" />
-      </Link>
+      </button>
     )
 
   return (
-    <div className="flex h-full flex-col bg-white pt-[50px]">
-      <DetailHeaderBar
-        right={exitButton()}
-        showBackButton={fromHistory}
-        className="fixed top-[var(--safe-top)] bg-malmo-rasberry-25"
-      />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar
+          right={exitButton()}
+          showBackButton={fromHistory}
+          onBackClick={goBack}
+          className="bg-malmo-rasberry-25"
+        />
+      </Screen.Header>
 
-      <div className="flex flex-col bg-malmo-rasberry-25 pt-3">
+      <Screen.Content className="flex flex-col bg-malmo-rasberry-25 pt-3">
         <ChatResultHeader
           title="대화 요약이 완료되었어요!"
           description={'모모가 고민을 해결하는 데<br /> 도움을 주었길 바라요'}
@@ -117,14 +127,12 @@ function RouteComponent() {
             <div className="mt-20">
               <Button
                 text="홈으로 이동하기"
-                onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.CHAT, () =>
-                  navigate({ to: '/' })
-                )}
+                onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.CHAT, () => goBack())}
               />
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </Screen.Content>
+    </Screen>
   )
 }

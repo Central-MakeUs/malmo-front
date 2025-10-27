@@ -7,6 +7,7 @@ import { useNicknameInput, NicknameInput } from '@/features/profile'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
+import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -37,34 +38,36 @@ function NicknamePage() {
   })
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
-      {/* 헤더 및 타이틀 */}
-      <DetailHeaderBar onBackClick={handlePrevious} />
-      <TitleSection
-        title={
-          <>
-            만나서 반가워요!
-            <br />
-            어떻게 불러드릴까요?
-          </>
-        }
-      />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar onBackClick={handlePrevious} />
+      </Screen.Header>
 
-      {/* 닉네임 입력 */}
-      <div className="mt-[68px] px-5">
-        <NicknameInput
-          value={nickname}
-          onChange={handleNicknameChange}
-          maxLength={maxLength}
-          placeholder="닉네임을 입력해 주세요"
-          className="body2-medium"
+      <Screen.Content className="flex flex-1 flex-col bg-white">
+        <TitleSection
+          title={
+            <>
+              만나서 반가워요!
+              <br />
+              어떻게 불러드릴까요?
+            </>
+          }
         />
-      </div>
 
-      {/* 다음 버튼 */}
-      <div className="mt-auto mb-5 px-5" style={keyboardBottom}>
-        <Button text="다음" onClick={handleNext} disabled={!isValid} />
-      </div>
-    </div>
+        <div className="mt-[68px] px-5">
+          <NicknameInput
+            value={nickname}
+            onChange={handleNicknameChange}
+            maxLength={maxLength}
+            placeholder="닉네임을 입력해 주세요"
+            className="body2-medium"
+          />
+        </div>
+
+        <div className="mt-auto mb-5 px-5" style={keyboardBottom}>
+          <Button text="다음" onClick={handleNext} disabled={!isValid} />
+        </div>
+      </Screen.Content>
+    </Screen>
   )
 }

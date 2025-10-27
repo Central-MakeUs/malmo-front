@@ -104,6 +104,37 @@ export const TestApiAxiosParamCreator = function (configuration?: Configuration)
       }
     },
     /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    sentryTest: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+      const localVarPath = `/sentry-test`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
      * 서버 연결 상태를 확인하는 테스트 API입니다. 인증이 필요하지 않습니다.
      * @summary API 연결 테스트
      * @param {*} [options] Override http request option.
@@ -188,6 +219,26 @@ export const TestApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async sentryTest(
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.sentryTest(options)
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['TestApi.sentryTest']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
      * 서버 연결 상태를 확인하는 테스트 API입니다. 인증이 필요하지 않습니다.
      * @summary API 연결 테스트
      * @param {*} [options] Override http request option.
@@ -236,6 +287,14 @@ export const TestApiFactory = function (configuration?: Configuration, basePath?
       return localVarFp.getMyInfo(options).then((request) => request(axios, basePath))
     },
     /**
+     *
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    sentryTest(options?: RawAxiosRequestConfig): AxiosPromise<string> {
+      return localVarFp.sentryTest(options).then((request) => request(axios, basePath))
+    },
+    /**
      * 서버 연결 상태를 확인하는 테스트 API입니다. 인증이 필요하지 않습니다.
      * @summary API 연결 테스트
      * @param {*} [options] Override http request option.
@@ -277,6 +336,18 @@ export class TestApi extends BaseAPI {
   public getMyInfo(options?: RawAxiosRequestConfig) {
     return TestApiFp(this.configuration)
       .getMyInfo(options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   *
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TestApi
+   */
+  public sentryTest(options?: RawAxiosRequestConfig) {
+    return TestApiFp(this.configuration)
+      .sentryTest(options)
       .then((request) => request(this.axios, this.basePath))
   }
 

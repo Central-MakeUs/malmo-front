@@ -3,7 +3,7 @@ import {
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
-import { createFileRoute, Link, useNavigate, useRouter } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import React, { useCallback, useMemo } from 'react'
 import { z } from 'zod'
@@ -24,7 +24,9 @@ import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
+import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import chatService from '@/shared/services/chat.service'
 import historyService from '@/shared/services/history.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -57,8 +59,8 @@ LoadingIndicator.displayName = 'LoadingIndicator'
 
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
-  const router = useRouter()
   const navigate = useNavigate()
+  const goBack = useGoBack()
   const { chatStatus, chattingModal, streamingMessage, awaitingResponse, isChatStatusSuccess, sendingMessage } =
     useChatting()
   const auth = useAuth()
@@ -111,76 +113,85 @@ function RouteComponent() {
   )
 
   return (
-    <>
-      <div className="app-safe fixed top-0 flex h-screen flex-col" style={keyboardBottom}>
+    <Screen>
+      <Screen.Header behavior="overlay">
         <DetailHeaderBar
           right={chatId ? undefined : exitButton()}
           title={chatId ? formatDate(messages[0]?.createdAt, 'YYYY년 MM월 DD일') : ''}
-          onBackClick={() => (chatId ? router.history.back() : chattingModal.exitChattingModal())}
+          onBackClick={() => {
+            if (chatId) {
+              goBack()
+            } else {
+              chattingModal.exitChattingModal()
+            }
+          }}
         />
+      </Screen.Header>
 
-        <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
-          <div className="bg-gray-iron-700 px-[20px] py-[9px]">
-            <p className="body3-medium text-center text-white">
-              연동 후에도 대화 내용은 상대에게 공유되지 않으니 안심하세요!
-            </p>
-          </div>
-
-          {isLoading && (
-            <div className="flex flex-1 items-center justify-center">
-              <LoadingIndicator isFetching={true} />
+      <Screen.Content className="flex h-full flex-col bg-white">
+        <div className="flex flex-1 flex-col" style={keyboardBottom}>
+          <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
+            <div className="bg-gray-iron-700 px-[20px] py-[9px]">
+              <p className="body3-medium text-center text-white">
+                연동 후에도 대화 내용은 상대에게 공유되지 않으니 안심하세요!
+              </p>
             </div>
-          )}
 
-          {!chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
-
-          <div className="flex flex-col gap-6 px-5 py-[22px]">
-            {messages.map((chat, index) => {
-              const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
-              return (
-                <React.Fragment key={`${chat.messageId}-${index}`}>
-                  <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
-                  {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
-                    <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
-                  ) : (
-                    <MyChatBubble
-                      message={chat.content}
-                      timestamp={formatTimestamp(chat.createdAt)}
-                      status={(chat as ChatRoomMessageData & ChatMessageTempStatus).status ?? 'sent'}
-                      onRetry={() => handleRetry(chat.content!)}
-                    />
-                  )}
-                </React.Fragment>
-              )
-            })}
-
-            {awaitingResponse && !streamingMessage && <AiChatBubble isTyping />}
-
-            {streamingMessage && (
-              <AiChatBubble
-                message={streamingMessage.content}
-                timestamp={formatTimestamp(streamingMessage.createdAt)}
-              />
+            {isLoading && (
+              <div className="flex flex-1 items-center justify-center">
+                <LoadingIndicator isFetching={true} />
+              </div>
             )}
 
-            {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
-              <Link
-                to="/my-page"
-                className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
-                onClick={wrapWithTracking(BUTTON_NAMES.GO_MYPAGE_FROM_CHAT, CATEGORIES.CHAT)}
-              >
-                <p className="body3-semibold">마이페이지로 이동하기</p>
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            )}
-          </div>
+            {!chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
 
-          {chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
-        </section>
+            <div className="flex flex-col gap-6 px-5 py-[22px]">
+              {messages.map((chat, index) => {
+                const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
+                return (
+                  <React.Fragment key={`${chat.messageId}-${index}`}>
+                    <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
+                    {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
+                      <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
+                    ) : (
+                      <MyChatBubble
+                        message={chat.content}
+                        timestamp={formatTimestamp(chat.createdAt)}
+                        status={(chat as ChatRoomMessageData & ChatMessageTempStatus).status ?? 'sent'}
+                        onRetry={() => handleRetry(chat.content!)}
+                      />
+                    )}
+                  </React.Fragment>
+                )
+              })}
 
-        <ChatInput disabled={!!chatId} />
-      </div>
+              {awaitingResponse && !streamingMessage && <AiChatBubble isTyping />}
+
+              {streamingMessage && (
+                <AiChatBubble
+                  message={streamingMessage.content}
+                  timestamp={formatTimestamp(streamingMessage.createdAt)}
+                />
+              )}
+
+              {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
+                <Link
+                  to="/my-page"
+                  className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
+                  onClick={wrapWithTracking(BUTTON_NAMES.GO_MYPAGE_FROM_CHAT, CATEGORIES.CHAT)}
+                >
+                  <p className="body3-semibold">마이페이지로 이동하기</p>
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              )}
+            </div>
+
+            {chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
+          </section>
+          <ChatInput disabled={!!chatId} />
+        </div>
+      </Screen.Content>
       {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
-    </>
+    </Screen>
   )
 }

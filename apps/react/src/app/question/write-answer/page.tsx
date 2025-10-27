@@ -8,6 +8,7 @@ import { QuestionHeader } from '@/features/question/ui/question-header'
 import CustomTextarea from '@/features/question/ui/text-area'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
 import questionService from '@/shared/services/question.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -48,16 +49,20 @@ function RouteComponent() {
   )
 
   return (
-    <div className="flex h-full flex-col pb-[var(--safe-bottom)]">
-      <DetailHeaderBar title="답변 작성" className="border-b-[1px] border-gray-iron-100" onBackClick={handleBack} />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar title="답변 작성" className="border-b border-gray-iron-100" onBackClick={handleBack} />
+      </Screen.Header>
 
-      <QuestionHeader data={data} />
+      <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">
+        <QuestionHeader data={data} />
 
-      <CustomTextarea value={answer} onChange={(e) => setAnswer(e.target.value)} maxLength={MAX_LENGTH} />
+        <CustomTextarea value={answer} onChange={(e) => setAnswer(e.target.value)} maxLength={MAX_LENGTH} />
 
-      <div className="p-5">
-        <Button text="저장하기" onClick={handleSave} disabled={!answer.trim()} />
-      </div>
-    </div>
+        <div className="mt-auto p-5">
+          <Button text="저장하기" onClick={handleSave} disabled={!answer.trim()} />
+        </div>
+      </Screen.Content>
+    </Screen>
   )
 }
