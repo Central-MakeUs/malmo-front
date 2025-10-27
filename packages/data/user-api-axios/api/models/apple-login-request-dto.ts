@@ -30,4 +30,10 @@ export interface AppleLoginRequestDto {
    * @memberof AppleLoginRequestDto
    */
   authorizationCode?: string
+  /**
+   *
+   * @type {string}
+   * @memberof AppleLoginRequestDto
+   */
+  deviceId?: string
 }

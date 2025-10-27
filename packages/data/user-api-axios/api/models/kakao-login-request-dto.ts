@@ -30,4 +30,10 @@ export interface KakaoLoginRequestDto {
    * @memberof KakaoLoginRequestDto
    */
   accessToken: string
+  /**
+   *
+   * @type {string}
+   * @memberof KakaoLoginRequestDto
+   */
+  deviceId?: string
 }

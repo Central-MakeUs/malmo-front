@@ -36,12 +36,6 @@ export interface SignUpRequestDto {
   nickname: string
   /**
    *
-   * @type {string}
-   * @memberof SignUpRequestDto
-   */
-  loveStartDate: string
-  /**
-   *
    * @type {number}
    * @memberof SignUpRequestDto
    */

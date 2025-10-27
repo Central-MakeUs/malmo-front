@@ -323,7 +323,7 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       }
     },
     /**
-     * 연애 시작일을 변경합니다. JWT 토큰이 필요합니다.
+     * 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
      * @summary 연애 시작일 변경
      * @param {UpdateStartLoveDateRequestDto} updateStartLoveDateRequestDto
      * @param {*} [options] Override http request option.
@@ -531,7 +531,7 @@ export const MembersApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 연애 시작일을 변경합니다. JWT 토큰이 필요합니다.
+     * 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
      * @summary 연애 시작일 변경
      * @param {UpdateStartLoveDateRequestDto} updateStartLoveDateRequestDto
      * @param {*} [options] Override http request option.
@@ -648,7 +648,7 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
         .then((request) => request(axios, basePath))
     },
     /**
-     * 연애 시작일을 변경합니다. JWT 토큰이 필요합니다.
+     * 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
      * @summary 연애 시작일 변경
      * @param {MembersApiUpdateStartLoveDateRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -823,7 +823,7 @@ export class MembersApi extends BaseAPI {
   }
 
   /**
-   * 연애 시작일을 변경합니다. JWT 토큰이 필요합니다.
+   * 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
    * @summary 연애 시작일 변경
    * @param {MembersApiUpdateStartLoveDateRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
