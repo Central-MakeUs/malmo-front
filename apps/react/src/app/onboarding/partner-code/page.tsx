@@ -37,16 +37,14 @@ function PartnerCodePage() {
 
   const handleNext = wrapWithTracking(BUTTON_NAMES.CONNECT_PARTNER, CATEGORIES.ONBOARDING, async () => {
     if (!partnerCode.trim()) {
-      alert('코드를 입력해주세요.')
+      alert('코드를 입력해 주세요.')
       return
     }
 
     updatePartnerCode(partnerCode)
 
-    // 커플 연결 API 호출
     await connectCoupleMutation.mutateAsync(partnerCode)
 
-    // 회원가입 완료 처리
     const success = await completeOnboarding()
     if (success) goToNextStep()
   })
@@ -63,7 +61,7 @@ function PartnerCodePage() {
             <>
               연인의 커플 코드를
               <br />
-              입력해주세요
+              입력해 주세요
             </>
           }
         />
@@ -73,7 +71,7 @@ function PartnerCodePage() {
             type="text"
             value={partnerCode}
             onChange={(e) => setPartnerCode(e.target.value)}
-            placeholder="코드를 입력해주세요"
+            placeholder="코드를 입력해 주세요"
             maxLength={7}
           />
         </div>

@@ -61,7 +61,8 @@ function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const navigate = useNavigate()
   const goBack = useGoBack()
-  const { chatStatus, chattingModal, streamingMessage, isChatStatusSuccess, sendingMessage } = useChatting()
+  const { chatStatus, chattingModal, streamingMessage, awaitingResponse, isChatStatusSuccess, sendingMessage } =
+    useChatting()
   const auth = useAuth()
   const { keyboardBottom } = useKeyboardSheetMotion()
 
@@ -86,6 +87,7 @@ function RouteComponent() {
     sendingMessage,
     messages,
     streamingMessage,
+    awaitingResponse,
   })
 
   const exitButton = useCallback(() => {
@@ -126,12 +128,12 @@ function RouteComponent() {
         />
       </Screen.Header>
 
-      <Screen.Content className="flex h-full flex-col">
+      <Screen.Content className="flex h-full flex-col bg-white">
         <div className="flex flex-1 flex-col" style={keyboardBottom}>
           <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
             <div className="bg-gray-iron-700 px-[20px] py-[9px]">
               <p className="body3-medium text-center text-white">
-                대화 내용은 연인에게 공유 또는 유출되지 않으니 안심하세요!
+                연동 후에도 대화 내용은 상대에게 공유되지 않으니 안심하세요!
               </p>
             </div>
 
@@ -162,6 +164,8 @@ function RouteComponent() {
                   </React.Fragment>
                 )
               })}
+
+              {awaitingResponse && !streamingMessage && <AiChatBubble isTyping />}
 
               {streamingMessage && (
                 <AiChatBubble

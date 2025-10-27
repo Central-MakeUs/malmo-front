@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, ReactNode } from 'react'
 
 import { useAuth } from '@/features/auth'
 import signUpService from '@/shared/services/sign-up.service'
-import { formatDate } from '@/shared/utils'
 
 // 온보딩 데이터 타입 정의
 interface OnboardingData {
@@ -96,9 +95,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const completeOnboarding = async () => {
     try {
       // 여기서 API 호출
+      // TODO : loveStartDate 제거하기
       const requestBody = {
         nickname: data.nickname,
-        loveStartDate: data.anniversary ? formatDate(data.anniversary) : '',
+        //loveStartDate: data.anniversary ? formatDate(data.anniversary) : formatDate(new Date().toISOString()),
         terms: Object.entries(data.termsAgreements).map(([termsId, isAgreed]) => ({
           termsId: Number(termsId),
           isAgreed,

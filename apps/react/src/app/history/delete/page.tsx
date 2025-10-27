@@ -28,13 +28,13 @@ function RouteComponent() {
       <Screen.Header behavior="overlay">
         <DetailHeaderBar
           title="삭제"
-          left={backButton()}
-          onBackClick={() => backButton()?.props?.onClick?.({ state: { skipTransition: true } })}
+          right={backButton()}
+          showBackButton={false}
           className="border-b border-b-gray-iron-100 bg-white"
         />
       </Screen.Header>
 
-      <Screen.Content className="relative overflow-y-auto bg-gray-neutral-100 pt-[calc(var(--safe-top)+50px)] pb-[calc(var(--safe-bottom)+96px)]">
+      <Screen.Content className="relative bg-gray-neutral-100 pb-[calc(var(--safe-bottom)+96px)]">
         {showEmpty ? (
           <EmptyState
             image={noResultImage}

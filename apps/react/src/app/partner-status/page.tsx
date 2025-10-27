@@ -9,7 +9,6 @@ import { useGoBack } from '@/shared/navigation/use-go-back'
 import { Button } from '@/shared/ui/button'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
-// 쿼리 파라미터 검증 스키마
 const partnerStatusSearchSchema = z.object({
   type: z.enum(['not-tested', 'not-connected']).catch('not-tested'),
 })
@@ -24,16 +23,12 @@ function PartnerStatusPage() {
   const goBack = useGoBack()
   const { type } = useSearch({ from: '/partner-status/' })
 
-  const handleGoToHome = () => {
-    goBack()
-  }
-
   const handleGoToMyPage = wrapWithTracking(BUTTON_NAMES.GO_MYPAGE, CATEGORIES.MAIN, () => navigate({ to: '/my-page' }))
 
   return (
     <Screen>
       <Screen.Header>
-        <DetailHeaderBar onBackClick={handleGoToHome} />
+        <DetailHeaderBar onBackClick={() => goBack()} />
       </Screen.Header>
 
       <Screen.Content className="no-bounce-scroll flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">
@@ -50,8 +45,7 @@ function PartnerStatusPage() {
 
           {type === 'not-connected' ? (
             <p className="body2-medium mt-1 text-center">
-              <span className="text-malmo-rasberry-500">마이페이지 &gt; 프로필 &gt; 커플 연동 관리</span>
-              <span className="text-gray-iron-950">에서 초대가 가능해요</span>
+              <span className="text-gray-iron-500">연동하지 않아도 애착유형을 추측해 상담할게요</span>
             </p>
           ) : (
             <p className="body2-medium mt-1 text-center text-gray-iron-500">
@@ -60,11 +54,11 @@ function PartnerStatusPage() {
           )}
         </div>
 
-        {type === 'not-connected' ? (
+        {type === 'not-connected' && (
           <div className="mb-5 px-6">
             <Button text="마이페이지로 이동하기" onClick={handleGoToMyPage} />
           </div>
-        ) : null}
+        )}
       </Screen.Content>
     </Screen>
   )
