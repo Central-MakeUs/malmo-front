@@ -92,7 +92,6 @@ export function initApi(): AxiosInstance {
     },
     async (error) => {
       const originalRequest = error.config
-
       const { response } = error
 
       // API 에러 추적

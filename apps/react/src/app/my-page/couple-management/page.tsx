@@ -58,7 +58,7 @@ function CoupleManagementPage() {
     }
   })
 
-  const handleAnniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
+  const handleAniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
     profileEdit.openAnniversarySheet()
   )
 

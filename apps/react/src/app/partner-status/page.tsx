@@ -43,15 +43,20 @@ function PartnerStatusPage() {
             <h1 className="heading1-bold mt-6 text-center text-gray-iron-950">아직 애착유형 검사를 하기 전이에요!</h1>
           )}
 
-          {type === 'not-connected' ? (
-            <p className="body2-medium mt-1 text-center">
-              <span className="text-gray-iron-500">연동하지 않아도 애착유형을 추측해 상담할게요</span>
-            </p>
-          ) : (
-            <p className="body2-medium mt-1 text-center text-gray-iron-500">
-              연인이 검사를 완료하면 결과를 볼 수 있어요
-            </p>
-          )}
+        {/* 설명 */}
+        {type === 'not-connected' ? (
+          <p className="body2-medium mt-1 text-center">
+            <span className="text-gray-iron-500">연동하지 않아도 애착유형을 추측해 상담할게요</span>
+          </p>
+        ) : (
+          <p className="body2-medium mt-1 text-center text-gray-iron-500">연인이 검사를 완료하면 결과를 볼 수 있어요</p>
+        )}
+      </div>
+
+      {/* 하단 버튼 */}
+      {type === 'not-connected' && (
+        <div className="mb-5 px-6">
+          <Button text="마이페이지로 이동하기" onClick={handleGoToMyPage} />
         </div>
 
         {type === 'not-connected' && (

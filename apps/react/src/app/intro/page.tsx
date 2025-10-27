@@ -24,23 +24,23 @@ interface IntroPageData {
 const introPages: IntroPageData[] = [
   {
     image: momoIntroImage,
-    title: '말모에서 모모와 함께\n나와 연인을 이해해봐요',
+    title: '말모는 성향 기반 상담으로\n관계 고민을 해결해요',
     description: '서로를 이해하고 고민을 해결할 수 있도록 도와요',
   },
   {
     image: attachmentTypeImage,
-    title: '간단한 질문을 통해\n서로의 애착유형을 알 수 있어요',
-    description: '애착유형은 내가 대인관계를 맺는 방식으로\n갈등 이해에 도움을 주어요.',
+    title: '내 애착유형을 검사하고\n상대 유형도 함께 확인해요',
+    description: '애착유형은 대표적인 관계 성향이에요',
   },
   {
     image: coupleConsultationImage,
-    title: '커플의 애착유형을 바탕으로\n연애 고민을 상담해 드려요',
-    description: '상담 내용은 연인에게 공개되지 않으니 안심하세요!',
+    title: '애착유형을 바탕으로 \n어떤 연애 고민이든 상담해요',
+    description: '상대의 애착유형을 몰라도 AI가 추측해 상담해요',
   },
   {
     image: dailyQuestionImage,
-    title: '매일 하나의 질문으로\n서로의 연애 가치관을 알아가요',
-    description: '서로의 답변을 반영해 더 정확한 상담을 제공해요.',
+    title: '마음 질문으로 성향을 파악해\n더 정확한 상담을 제공해요',
+    description: '마음 질문은 커플 연동 이후에 사용할 수 있어요',
   },
 ]
 

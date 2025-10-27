@@ -31,7 +31,6 @@ import { Route as OnboardingNicknamePageImport } from './app/onboarding/nickname
 import { Route as OnboardingMyCodePageImport } from './app/onboarding/my-code/page'
 import { Route as OnboardingCompletePageImport } from './app/onboarding/complete/page'
 import { Route as OnboardingAnniversaryPageImport } from './app/onboarding/anniversary/page'
-import { Route as MyPageProfilePageImport } from './app/my-page/profile/page'
 import { Route as MyPageCoupleManagementPageImport } from './app/my-page/couple-management/page'
 import { Route as MyPageAccountSettingsPageImport } from './app/my-page/account-settings/page'
 import { Route as HistoryDeletePageImport } from './app/history/delete/page'
@@ -161,12 +160,6 @@ const OnboardingAnniversaryPageRoute = OnboardingAnniversaryPageImport.update({
   id: '/anniversary/',
   path: '/anniversary/',
   getParentRoute: () => OnboardingLayoutRoute,
-} as any)
-
-const MyPageProfilePageRoute = MyPageProfilePageImport.update({
-  id: '/my-page/profile/',
-  path: '/my-page/profile/',
-  getParentRoute: () => rootRoute,
 } as any)
 
 const MyPageCoupleManagementPageRoute = MyPageCoupleManagementPageImport.update({
@@ -340,13 +333,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyPageCoupleManagementPageImport
       parentRoute: typeof rootRoute
     }
-    '/my-page/profile/': {
-      id: '/my-page/profile/'
-      path: '/my-page/profile'
-      fullPath: '/my-page/profile'
-      preLoaderRoute: typeof MyPageProfilePageImport
-      parentRoute: typeof rootRoute
-    }
     '/onboarding/anniversary/': {
       id: '/onboarding/anniversary/'
       path: '/anniversary'
@@ -481,7 +467,6 @@ export interface FileRoutesByFullPath {
   '/history/delete': typeof HistoryDeletePageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
   '/my-page/couple-management': typeof MyPageCoupleManagementPageRoute
-  '/my-page/profile': typeof MyPageProfilePageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
   '/onboarding/my-code': typeof OnboardingMyCodePageRoute
@@ -512,7 +497,6 @@ export interface FileRoutesByTo {
   '/history/delete': typeof HistoryDeletePageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
   '/my-page/couple-management': typeof MyPageCoupleManagementPageRoute
-  '/my-page/profile': typeof MyPageProfilePageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
   '/onboarding/my-code': typeof OnboardingMyCodePageRoute
@@ -545,7 +529,6 @@ export interface FileRoutesById {
   '/history/delete/': typeof HistoryDeletePageRoute
   '/my-page/account-settings/': typeof MyPageAccountSettingsPageRoute
   '/my-page/couple-management/': typeof MyPageCoupleManagementPageRoute
-  '/my-page/profile/': typeof MyPageProfilePageRoute
   '/onboarding/anniversary/': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete/': typeof OnboardingCompletePageRoute
   '/onboarding/my-code/': typeof OnboardingMyCodePageRoute
@@ -579,7 +562,6 @@ export interface FileRouteTypes {
     | '/history/delete'
     | '/my-page/account-settings'
     | '/my-page/couple-management'
-    | '/my-page/profile'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
     | '/onboarding/my-code'
@@ -609,7 +591,6 @@ export interface FileRouteTypes {
     | '/history/delete'
     | '/my-page/account-settings'
     | '/my-page/couple-management'
-    | '/my-page/profile'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
     | '/onboarding/my-code'
@@ -640,7 +621,6 @@ export interface FileRouteTypes {
     | '/history/delete/'
     | '/my-page/account-settings/'
     | '/my-page/couple-management/'
-    | '/my-page/profile/'
     | '/onboarding/anniversary/'
     | '/onboarding/complete/'
     | '/onboarding/my-code/'
@@ -670,7 +650,6 @@ export interface RootRouteChildren {
   HistoryDeletePageRoute: typeof HistoryDeletePageRoute
   MyPageAccountSettingsPageRoute: typeof MyPageAccountSettingsPageRoute
   MyPageCoupleManagementPageRoute: typeof MyPageCoupleManagementPageRoute
-  MyPageProfilePageRoute: typeof MyPageProfilePageRoute
   QuestionSeeAnswerPageRoute: typeof QuestionSeeAnswerPageRoute
   QuestionWriteAnswerPageRoute: typeof QuestionWriteAnswerPageRoute
   TermsPrivacyPolicyPageRoute: typeof TermsPrivacyPolicyPageRoute
@@ -693,7 +672,6 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryDeletePageRoute: HistoryDeletePageRoute,
   MyPageAccountSettingsPageRoute: MyPageAccountSettingsPageRoute,
   MyPageCoupleManagementPageRoute: MyPageCoupleManagementPageRoute,
-  MyPageProfilePageRoute: MyPageProfilePageRoute,
   QuestionSeeAnswerPageRoute: QuestionSeeAnswerPageRoute,
   QuestionWriteAnswerPageRoute: QuestionWriteAnswerPageRoute,
   TermsPrivacyPolicyPageRoute: TermsPrivacyPolicyPageRoute,
@@ -723,7 +701,6 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/history/delete/",
         "/my-page/account-settings/",
         "/my-page/couple-management/",
-        "/my-page/profile/",
         "/question/see-answer/",
         "/question/write-answer/",
         "/terms/privacy-policy/",
@@ -797,9 +774,6 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/my-page/couple-management/": {
       "filePath": "my-page/couple-management/page.tsx"
-    },
-    "/my-page/profile/": {
-      "filePath": "my-page/profile/page.tsx"
     },
     "/onboarding/anniversary/": {
       "filePath": "onboarding/anniversary/page.tsx",

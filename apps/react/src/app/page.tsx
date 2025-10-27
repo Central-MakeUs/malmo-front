@@ -55,6 +55,8 @@ function HomePage() {
     chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion
 
   const hasAttachmentType = !!userInfo.loveTypeCategory
+
+  // 파트너 연동 상태 확인
   const isPartnerConnected = !!partnerInfo && partnerInfo.memberState === PartnerMemberDataMemberStateEnum.Alive
 
   const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
@@ -79,7 +81,8 @@ function HomePage() {
     }
   })
 
-  const handleAnniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
+  // 기념일 시트 열기 핸들러
+  const handleAniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
     profileEdit.openAnniversarySheet()
   )
 
