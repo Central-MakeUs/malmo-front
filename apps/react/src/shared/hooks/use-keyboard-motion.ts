@@ -69,8 +69,15 @@ export function useKeyboardSheetMotion(opts: Options = {}) {
       return { paddingBottom: 'var(--safe-bottom)' }
     }
 
+    const defaultBottom =
+      typeof navigator === 'undefined'
+        ? 'var(--safe-bottom)'
+        : /Android/i.test(navigator.userAgent)
+          ? '20px'
+          : 'var(--safe-bottom)'
+
     return {
-      paddingBottom: keyboardHeight ? `calc(${keyboardHeight + gap}px + var(--safe-bottom))` : 'var(--safe-bottom)',
+      paddingBottom: keyboardHeight ? `calc(${keyboardHeight + gap}px + var(--safe-bottom))` : defaultBottom,
       transition: `padding-bottom ${duration}ms ${curve}`,
     }
   }, [keyboardHeight, duration, curve, opts.disabled, gap])

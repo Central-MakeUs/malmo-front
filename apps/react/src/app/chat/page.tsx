@@ -23,7 +23,6 @@ import { formatTimestamp } from '@/features/chat/util/chat-format'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
-import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import { useGoBack } from '@/shared/navigation/use-go-back'
@@ -64,7 +63,6 @@ function RouteComponent() {
   const { chatStatus, chattingModal, streamingMessage, awaitingResponse, isChatStatusSuccess, sendingMessage } =
     useChatting()
   const auth = useAuth()
-  const { keyboardBottom } = useKeyboardSheetMotion()
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
@@ -96,9 +94,7 @@ function RouteComponent() {
       <p
         className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}
         onClick={wrapWithTracking(BUTTON_NAMES.EXIT_CHAT, CATEGORIES.CHAT, () => {
-          if (actived) {
-            navigate({ to: '/chat/loading', replace: true })
-          }
+          if (actived) navigate({ to: '/chat/loading', replace: true })
         })}
       >
         종료하기
@@ -129,7 +125,7 @@ function RouteComponent() {
       </Screen.Header>
 
       <Screen.Content className="flex h-full flex-col bg-white">
-        <div className="flex flex-1 flex-col" style={keyboardBottom}>
+        <div className="flex flex-1 flex-col">
           <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
             <div className="bg-gray-iron-700 px-[20px] py-[9px]">
               <p className="body3-medium text-center text-white">
@@ -188,9 +184,9 @@ function RouteComponent() {
 
             {chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
           </section>
-          <ChatInput disabled={!!chatId} />
         </div>
       </Screen.Content>
+      <ChatInput disabled={!!chatId} />
       {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </Screen>
   )
