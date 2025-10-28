@@ -110,7 +110,7 @@ function IntroPage() {
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar onBackClick={handlePrevious} showBackButton={true} />
+        <DetailHeaderBar onBackClick={handlePrevious} showBackButton={currentPage !== 0} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white">
