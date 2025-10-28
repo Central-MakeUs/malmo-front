@@ -103,7 +103,7 @@ function AttachmentTestQuestionPage() {
           />
         </div>
 
-        <div className="mt-auto mb-10 px-5">
+        <div className="mt-auto mb-5 px-5">
           <Button
             text={currentPage === totalPages ? '완료하기' : '다음'}
             onClick={handleNextWithTracking}

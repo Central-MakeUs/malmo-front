@@ -38,7 +38,7 @@ function AttachmentTestPage() {
   }, [])
 
   const handleStartTest = wrapWithTracking(BUTTON_NAMES.START_TEST, CATEGORIES.ATTACHMENT, () =>
-    navigate({ to: '/attachment-test/question' })
+    navigate({ to: '/attachment-test/question', search: { from }, replace: true })
   )
 
   return (

@@ -78,7 +78,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
 
       // 2초 후 결과 페이지로 이동
       setTimeout(() => {
-        navigate({ to: '/attachment-test/result/my' })
+        navigate({ to: '/attachment-test/result/my', replace: true })
       }, QUESTION_CONFIG.SUBMISSION_DELAY)
     },
     onError: (_error: any) => {
