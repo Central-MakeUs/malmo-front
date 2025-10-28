@@ -1,4 +1,4 @@
-import { useMemo, type HTMLAttributes, type ReactNode } from 'react'
+import { forwardRef, useMemo, type HTMLAttributes, type ReactNode } from 'react'
 
 import { useScreenLayoutContext } from './context'
 
@@ -6,7 +6,10 @@ interface ScreenContentProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode
 }
 
-export function ScreenContent({ children, className, style, ...rest }: ScreenContentProps) {
+export const ScreenContent = forwardRef<HTMLDivElement, ScreenContentProps>(function ScreenContent(
+  { children, className, style, ...rest },
+  ref
+) {
   const layout = useScreenLayoutContext()
 
   const resolvedStyle = useMemo(() => {
@@ -32,6 +35,7 @@ export function ScreenContent({ children, className, style, ...rest }: ScreenCon
 
   return (
     <div
+      ref={ref}
       data-role="screen-content"
       className={['min-h-0 flex-1 overflow-y-auto', className].filter(Boolean).join(' ')}
       style={resolvedStyle}
@@ -40,4 +44,4 @@ export function ScreenContent({ children, className, style, ...rest }: ScreenCon
       {children}
     </div>
   )
-}
+})

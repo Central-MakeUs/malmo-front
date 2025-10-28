@@ -124,9 +124,9 @@ function RouteComponent() {
         />
       </Screen.Header>
 
-      <Screen.Content className="flex h-full flex-col bg-white">
+      <Screen.Content ref={scrollRef} className="no-bounce-scroll flex h-full flex-col bg-white">
         <div className="flex flex-1 flex-col">
-          <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto" ref={scrollRef}>
+          <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto">
             <div className="bg-gray-iron-700 px-[20px] py-[9px]">
               <p className="body3-medium text-center text-white">
                 연동 후에도 대화 내용은 상대에게 공유되지 않으니 안심하세요!
