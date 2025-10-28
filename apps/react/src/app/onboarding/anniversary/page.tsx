@@ -37,7 +37,7 @@ function AnniversaryPage() {
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar onBackClick={handlePrevious} />
+        <DetailHeaderBar onBackClick={handlePrevious} showBackButton={false} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">

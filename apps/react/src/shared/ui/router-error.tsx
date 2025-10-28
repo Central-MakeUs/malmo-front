@@ -34,7 +34,7 @@ export function RouterError({ error }: RouterErrorProps) {
 
   return (
     <Screen>
-      <Screen.Header className="pt-safe-top bg-white">
+      <Screen.Header className="bg-white">
         <DetailHeaderBar showBackButton={true} />
       </Screen.Header>
 
