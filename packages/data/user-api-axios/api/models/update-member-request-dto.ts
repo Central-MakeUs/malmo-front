@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface UpdateMemberRequestDto
- */
 export interface UpdateMemberRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateMemberRequestDto
-   */
   nickname: string
 }

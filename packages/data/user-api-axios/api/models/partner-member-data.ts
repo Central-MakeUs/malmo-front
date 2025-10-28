@@ -14,40 +14,32 @@
 
 /**
  * 파트너 멤버 정보 응답 데이터
- * @export
- * @interface PartnerMemberData
  */
 export interface PartnerMemberData {
   /**
    * 멤버 상태
-   * @type {string}
-   * @memberof PartnerMemberData
    */
   memberState?: PartnerMemberDataMemberStateEnum
   /**
    * 애착 유형
-   * @type {string}
-   * @memberof PartnerMemberData
    */
   loveTypeCategory?: PartnerMemberDataLoveTypeCategoryEnum
   /**
    * 회피 비율
-   * @type {number}
-   * @memberof PartnerMemberData
    */
   avoidanceRate?: number
   /**
    * 불안 비율
-   * @type {number}
-   * @memberof PartnerMemberData
    */
   anxietyRate?: number
   /**
    * 닉네임
-   * @type {string}
-   * @memberof PartnerMemberData
    */
   nickname?: string
+  /**
+   * 디데이 변경 이력 여부
+   */
+  isStartLoveDateUpdated?: boolean
 }
 
 export const PartnerMemberDataMemberStateEnum = {

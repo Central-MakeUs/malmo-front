@@ -18,32 +18,19 @@ import type { GetChatRoomSummaryData } from './get-chat-room-summary-data'
 
 /**
  * 채팅방 요약 조회 성공 응답
- * @export
- * @interface GetChatRoomSummaryResponse
  */
 export interface GetChatRoomSummaryResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof GetChatRoomSummaryResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof GetChatRoomSummaryResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof GetChatRoomSummaryResponse
    */
   message?: string
-  /**
-   *
-   * @type {GetChatRoomSummaryData}
-   * @memberof GetChatRoomSummaryResponse
-   */
   data?: GetChatRoomSummaryData
 }

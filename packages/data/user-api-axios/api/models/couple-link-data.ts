@@ -14,14 +14,10 @@
 
 /**
  * 커플 연결 응답 데이터
- * @export
- * @interface CoupleLinkData
  */
 export interface CoupleLinkData {
   /**
    * 생성된 커플 ID
-   * @type {number}
-   * @memberof CoupleLinkData
    */
   coupleId?: number
 }

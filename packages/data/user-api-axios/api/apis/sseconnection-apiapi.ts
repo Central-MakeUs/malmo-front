@@ -35,7 +35,6 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 import type { SwaggerErrorResponse } from '../models'
 /**
  * SSEConnectionAPIApi - axios parameter creator
- * @export
  */
 export const SSEConnectionAPIApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -76,7 +75,6 @@ export const SSEConnectionAPIApiAxiosParamCreator = function (configuration?: Co
 
 /**
  * SSEConnectionAPIApi - functional programming interface
- * @export
  */
 export const SSEConnectionAPIApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = SSEConnectionAPIApiAxiosParamCreator(configuration)
@@ -107,7 +105,6 @@ export const SSEConnectionAPIApiFp = function (configuration?: Configuration) {
 
 /**
  * SSEConnectionAPIApi - factory interface
- * @export
  */
 export const SSEConnectionAPIApiFactory = function (
   configuration?: Configuration,
@@ -130,9 +127,6 @@ export const SSEConnectionAPIApiFactory = function (
 
 /**
  * SSEConnectionAPIApi - object-oriented interface
- * @export
- * @class SSEConnectionAPIApi
- * @extends {BaseAPI}
  */
 export class SSEConnectionAPIApi extends BaseAPI {
   /**
@@ -140,7 +134,6 @@ export class SSEConnectionAPIApi extends BaseAPI {
    * @summary SSE 연결
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SSEConnectionAPIApi
    */
   public connectSse(options?: RawAxiosRequestConfig) {
     return SSEConnectionAPIApiFp(this.configuration)

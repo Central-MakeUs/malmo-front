@@ -18,32 +18,19 @@ import type { QuestionData } from './question-data'
 
 /**
  * 오늘의 질문 조회 성공 응답
- * @export
- * @interface QuestionSuccessResponse
  */
 export interface QuestionSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof QuestionSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof QuestionSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof QuestionSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {QuestionData}
-   * @memberof QuestionSuccessResponse
-   */
   data?: QuestionData
 }

@@ -14,20 +14,14 @@
 
 /**
  * 약관 내용 및 형식 데이터
- * @export
- * @interface TermsDetailsResponseData
  */
 export interface TermsDetailsResponseData {
   /**
    * 해당 내용의 형식
-   * @type {string}
-   * @memberof TermsDetailsResponseData
    */
   type?: TermsDetailsResponseDataTypeEnum
   /**
    * 약관 내용
-   * @type {string}
-   * @memberof TermsDetailsResponseData
    */
   content?: string
 }

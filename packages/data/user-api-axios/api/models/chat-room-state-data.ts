@@ -14,14 +14,10 @@
 
 /**
  * 채팅방 상태 응답 데이터
- * @export
- * @interface ChatRoomStateData
  */
 export interface ChatRoomStateData {
   /**
    * 현재 채팅방의 상태
-   * @type {string}
-   * @memberof ChatRoomStateData
    */
   chatRoomState?: ChatRoomStateDataChatRoomStateEnum
 }

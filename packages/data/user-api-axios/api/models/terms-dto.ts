@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface TermsDto
- */
 export interface TermsDto {
-  /**
-   *
-   * @type {number}
-   * @memberof TermsDto
-   */
   termsId: number
-  /**
-   *
-   * @type {boolean}
-   * @memberof TermsDto
-   */
   isAgreed: boolean
 }

@@ -30,7 +30,6 @@ models/base-list-swagger-response-love-type-question-data.ts
 models/base-list-swagger-response-pending-notification-data.ts
 models/base-list-swagger-response-terms-data.ts
 models/base-list-swagger-response-terms-response-data.ts
-models/base-swagger-response.ts
 models/chat-message-list-success-response.ts
 models/chat-request.ts
 models/chat-room-delete-success-response.ts

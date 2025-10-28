@@ -18,32 +18,19 @@ import type { PastQuestionData } from './past-question-data'
 
 /**
  * 과거 질문 조회 성공 응답
- * @export
- * @interface PastQuestionSuccessResponse
  */
 export interface PastQuestionSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof PastQuestionSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof PastQuestionSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof PastQuestionSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {PastQuestionData}
-   * @memberof PastQuestionSuccessResponse
-   */
   data?: PastQuestionData
 }

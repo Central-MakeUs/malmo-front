@@ -43,7 +43,6 @@ import type { LogoutSuccessResponse } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * LoginsApi - axios parameter creator
- * @export
  */
 export const LoginsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -166,7 +165,6 @@ export const LoginsApiAxiosParamCreator = function (configuration?: Configuratio
 
 /**
  * LoginsApi - functional programming interface
- * @export
  */
 export const LoginsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = LoginsApiAxiosParamCreator(configuration)
@@ -243,7 +241,6 @@ export const LoginsApiFp = function (configuration?: Configuration) {
 
 /**
  * LoginsApi - factory interface
- * @export
  */
 export const LoginsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = LoginsApiFp(configuration)
@@ -292,37 +289,20 @@ export const LoginsApiFactory = function (configuration?: Configuration, basePat
 
 /**
  * Request parameters for loginWithApple operation in LoginsApi.
- * @export
- * @interface LoginsApiLoginWithAppleRequest
  */
 export interface LoginsApiLoginWithAppleRequest {
-  /**
-   *
-   * @type {AppleLoginRequestDto}
-   * @memberof LoginsApiLoginWithApple
-   */
   readonly appleLoginRequestDto: AppleLoginRequestDto
 }
 
 /**
  * Request parameters for loginWithKakao operation in LoginsApi.
- * @export
- * @interface LoginsApiLoginWithKakaoRequest
  */
 export interface LoginsApiLoginWithKakaoRequest {
-  /**
-   *
-   * @type {KakaoLoginRequestDto}
-   * @memberof LoginsApiLoginWithKakao
-   */
   readonly kakaoLoginRequestDto: KakaoLoginRequestDto
 }
 
 /**
  * LoginsApi - object-oriented interface
- * @export
- * @class LoginsApi
- * @extends {BaseAPI}
  */
 export class LoginsApi extends BaseAPI {
   /**
@@ -331,7 +311,6 @@ export class LoginsApi extends BaseAPI {
    * @param {LoginsApiLoginWithAppleRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LoginsApi
    */
   public loginWithApple(requestParameters: LoginsApiLoginWithAppleRequest, options?: RawAxiosRequestConfig) {
     return LoginsApiFp(this.configuration)
@@ -345,7 +324,6 @@ export class LoginsApi extends BaseAPI {
    * @param {LoginsApiLoginWithKakaoRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LoginsApi
    */
   public loginWithKakao(requestParameters: LoginsApiLoginWithKakaoRequest, options?: RawAxiosRequestConfig) {
     return LoginsApiFp(this.configuration)
@@ -358,7 +336,6 @@ export class LoginsApi extends BaseAPI {
    * @summary 로그아웃
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LoginsApi
    */
   public logout(options?: RawAxiosRequestConfig) {
     return LoginsApiFp(this.configuration)

@@ -18,38 +18,26 @@ import type { TermsDetailsResponseData } from './terms-details-response-data'
 
 /**
  * 약관 내용 응답 데이터
- * @export
- * @interface TermsContentResponseData
  */
 export interface TermsContentResponseData {
   /**
    * 약관 ID
-   * @type {number}
-   * @memberof TermsContentResponseData
    */
   termsId?: number
   /**
    * 약관 제목
-   * @type {string}
-   * @memberof TermsContentResponseData
    */
   title?: string
   /**
    * 약관 내용 및 형식
-   * @type {Array<TermsDetailsResponseData>}
-   * @memberof TermsContentResponseData
    */
   details?: Array<TermsDetailsResponseData>
   /**
    * 필수 동의 여부
-   * @type {boolean}
-   * @memberof TermsContentResponseData
    */
   isRequired?: boolean
   /**
    * 생성일시
-   * @type {string}
-   * @memberof TermsContentResponseData
    */
   createdAt?: string
 }

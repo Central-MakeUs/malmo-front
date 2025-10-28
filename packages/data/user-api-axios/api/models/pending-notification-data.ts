@@ -14,38 +14,26 @@
 
 /**
  * 응답 데이터 리스트
- * @export
- * @interface PendingNotificationData
  */
 export interface PendingNotificationData {
   /**
    * 알림 ID
-   * @type {number}
-   * @memberof PendingNotificationData
    */
   id?: number
   /**
    * 알림 타입
-   * @type {string}
-   * @memberof PendingNotificationData
    */
   type?: PendingNotificationDataTypeEnum
   /**
    * 알림 상태
-   * @type {string}
-   * @memberof PendingNotificationData
    */
   state?: PendingNotificationDataStateEnum
   /**
    * 알림 세부사항
-   * @type {{ [key: string]: object; }}
-   * @memberof PendingNotificationData
    */
   payload?: { [key: string]: object }
   /**
    * 알림 생성시간
-   * @type {string}
-   * @memberof PendingNotificationData
    */
   createdAt?: string
 }

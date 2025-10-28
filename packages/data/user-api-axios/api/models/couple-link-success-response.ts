@@ -18,32 +18,19 @@ import type { CoupleLinkData } from './couple-link-data'
 
 /**
  * 커플 연결 성공 응답
- * @export
- * @interface CoupleLinkSuccessResponse
  */
 export interface CoupleLinkSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof CoupleLinkSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof CoupleLinkSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof CoupleLinkSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {CoupleLinkData}
-   * @memberof CoupleLinkSuccessResponse
-   */
   data?: CoupleLinkData
 }

@@ -18,32 +18,19 @@ import type { CoupleUnlinkData } from './couple-unlink-data'
 
 /**
  * 커플 연결 끊기 성공 응답
- * @export
- * @interface CoupleUnlinkSuccessResponse
  */
 export interface CoupleUnlinkSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof CoupleUnlinkSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof CoupleUnlinkSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof CoupleUnlinkSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {CoupleUnlinkData}
-   * @memberof CoupleUnlinkSuccessResponse
-   */
   data?: CoupleUnlinkData
 }

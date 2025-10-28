@@ -12,22 +12,7 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface LoveTypeTestResult
- */
 export interface LoveTypeTestResult {
-  /**
-   *
-   * @type {number}
-   * @memberof LoveTypeTestResult
-   */
   questionId: number
-  /**
-   *
-   * @type {number}
-   * @memberof LoveTypeTestResult
-   */
   score: number
 }

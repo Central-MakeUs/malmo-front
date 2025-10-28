@@ -14,38 +14,26 @@
 
 /**
  * 채팅 리스트 조회 완료 응답 데이터
- * @export
- * @interface GetChatRoomListResponse
  */
 export interface GetChatRoomListResponse {
   /**
    * 채팅방의 ID
-   * @type {number}
-   * @memberof GetChatRoomListResponse
    */
   chatRoomId?: number
   /**
    * 채팅방 전체 요약
-   * @type {string}
-   * @memberof GetChatRoomListResponse
    */
   totalSummary?: string
   /**
    * 채팅방 상황 키워드
-   * @type {string}
-   * @memberof GetChatRoomListResponse
    */
   situationKeyword?: string
   /**
    * 채팅방 해결 키워드
-   * @type {string}
-   * @memberof GetChatRoomListResponse
    */
   solutionKeyword?: string
   /**
    * 채팅방 생성 시간
-   * @type {string}
-   * @memberof GetChatRoomListResponse
    */
   createdAt?: string
 }

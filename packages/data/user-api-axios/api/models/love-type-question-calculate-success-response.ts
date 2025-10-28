@@ -18,32 +18,19 @@ import type { LoveTypeQuestionCalculationData } from './love-type-question-calcu
 
 /**
  * 애착유형 질문 결과 등록 성공 응답
- * @export
- * @interface LoveTypeQuestionCalculateSuccessResponse
  */
 export interface LoveTypeQuestionCalculateSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof LoveTypeQuestionCalculateSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof LoveTypeQuestionCalculateSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof LoveTypeQuestionCalculateSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {LoveTypeQuestionCalculationData}
-   * @memberof LoveTypeQuestionCalculateSuccessResponse
-   */
   data?: LoveTypeQuestionCalculationData
 }

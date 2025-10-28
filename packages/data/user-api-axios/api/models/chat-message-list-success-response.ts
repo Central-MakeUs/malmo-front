@@ -18,32 +18,19 @@ import type { BaseListSwaggerResponseChatRoomMessageData } from './base-list-swa
 
 /**
  * 채팅 메시지 리스트 조회 성공 응답
- * @export
- * @interface ChatMessageListSuccessResponse
  */
 export interface ChatMessageListSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof ChatMessageListSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof ChatMessageListSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof ChatMessageListSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {BaseListSwaggerResponseChatRoomMessageData}
-   * @memberof ChatMessageListSuccessResponse
-   */
   data?: BaseListSwaggerResponseChatRoomMessageData
 }

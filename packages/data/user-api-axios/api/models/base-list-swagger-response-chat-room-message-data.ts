@@ -18,32 +18,22 @@ import type { ChatRoomMessageData } from './chat-room-message-data'
 
 /**
  * 기본 리스트 응답 형식
- * @export
- * @interface BaseListSwaggerResponseChatRoomMessageData
  */
 export interface BaseListSwaggerResponseChatRoomMessageData {
   /**
    * 응답 데이터 크기
-   * @type {number}
-   * @memberof BaseListSwaggerResponseChatRoomMessageData
    */
   size?: number
   /**
    * 페이지 번호
-   * @type {number}
-   * @memberof BaseListSwaggerResponseChatRoomMessageData
    */
   page?: number
   /**
    * 응답 데이터 리스트
-   * @type {Array<ChatRoomMessageData>}
-   * @memberof BaseListSwaggerResponseChatRoomMessageData
    */
   list?: Array<ChatRoomMessageData>
   /**
    * 전체 데이터 개수
-   * @type {number}
-   * @memberof BaseListSwaggerResponseChatRoomMessageData
    */
   totalCount?: number
 }

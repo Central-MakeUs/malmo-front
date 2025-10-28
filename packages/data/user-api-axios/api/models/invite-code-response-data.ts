@@ -14,14 +14,7 @@
 
 /**
  * 초대 코드 응답 데이터
- * @export
- * @interface InviteCodeResponseData
  */
 export interface InviteCodeResponseData {
-  /**
-   *
-   * @type {string}
-   * @memberof InviteCodeResponseData
-   */
   coupleCode?: string
 }

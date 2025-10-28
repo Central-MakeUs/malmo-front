@@ -14,14 +14,10 @@
 
 /**
  * 채팅 응답 데이터
- * @export
- * @interface SendChatData
  */
 export interface SendChatData {
   /**
    * 사용자가 보낸 메시지의 ID
-   * @type {number}
-   * @memberof SendChatData
    */
   messageId?: number
 }

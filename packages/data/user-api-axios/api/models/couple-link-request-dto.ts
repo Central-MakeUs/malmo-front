@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface CoupleLinkRequestDto
- */
 export interface CoupleLinkRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof CoupleLinkRequestDto
-   */
   coupleCode: string
 }

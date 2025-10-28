@@ -14,20 +14,14 @@
 
 /**
  * 약관 동의 정보 데이터
- * @export
- * @interface TermsData
  */
 export interface TermsData {
   /**
    * 약관 ID
-   * @type {number}
-   * @memberof TermsData
    */
   termsId?: number
   /**
    * 약관 동의 여부
-   * @type {boolean}
-   * @memberof TermsData
    */
   isAgreed?: boolean
 }

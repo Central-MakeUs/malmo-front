@@ -18,32 +18,19 @@ import type { MemberData } from './member-data'
 
 /**
  * 멤버 정보 조회 성공 응답
- * @export
- * @interface MemberInfoSuccessResponse
  */
 export interface MemberInfoSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof MemberInfoSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof MemberInfoSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof MemberInfoSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {MemberData}
-   * @memberof MemberInfoSuccessResponse
-   */
   data?: MemberData
 }

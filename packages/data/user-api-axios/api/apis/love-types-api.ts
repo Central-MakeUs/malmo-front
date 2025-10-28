@@ -41,7 +41,6 @@ import type { RegisterLoveTypeRequestDto } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * LoveTypesApi - axios parameter creator
- * @export
  */
 export const LoveTypesApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -165,7 +164,6 @@ export const LoveTypesApiAxiosParamCreator = function (configuration?: Configura
 
 /**
  * LoveTypesApi - functional programming interface
- * @export
  */
 export const LoveTypesApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = LoveTypesApiAxiosParamCreator(configuration)
@@ -242,7 +240,6 @@ export const LoveTypesApiFp = function (configuration?: Configuration) {
 
 /**
  * LoveTypesApi - factory interface
- * @export
  */
 export const LoveTypesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = LoveTypesApiFp(configuration)
@@ -291,37 +288,20 @@ export const LoveTypesApiFactory = function (configuration?: Configuration, base
 
 /**
  * Request parameters for getLoveTypeResult operation in LoveTypesApi.
- * @export
- * @interface LoveTypesApiGetLoveTypeResultRequest
  */
 export interface LoveTypesApiGetLoveTypeResultRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof LoveTypesApiGetLoveTypeResult
-   */
   readonly loveTypeId: number
 }
 
 /**
  * Request parameters for registerResult operation in LoveTypesApi.
- * @export
- * @interface LoveTypesApiRegisterResultRequest
  */
 export interface LoveTypesApiRegisterResultRequest {
-  /**
-   *
-   * @type {RegisterLoveTypeRequestDto}
-   * @memberof LoveTypesApiRegisterResult
-   */
   readonly registerLoveTypeRequestDto: RegisterLoveTypeRequestDto
 }
 
 /**
  * LoveTypesApi - object-oriented interface
- * @export
- * @class LoveTypesApi
- * @extends {BaseAPI}
  */
 export class LoveTypesApi extends BaseAPI {
   /**
@@ -329,7 +309,6 @@ export class LoveTypesApi extends BaseAPI {
    * @summary 애착 유형 검사 질문 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LoveTypesApi
    */
   public getLoveTypeQuestions(options?: RawAxiosRequestConfig) {
     return LoveTypesApiFp(this.configuration)
@@ -343,7 +322,6 @@ export class LoveTypesApi extends BaseAPI {
    * @param {LoveTypesApiGetLoveTypeResultRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LoveTypesApi
    */
   public getLoveTypeResult(requestParameters: LoveTypesApiGetLoveTypeResultRequest, options?: RawAxiosRequestConfig) {
     return LoveTypesApiFp(this.configuration)
@@ -357,7 +335,6 @@ export class LoveTypesApi extends BaseAPI {
    * @param {LoveTypesApiRegisterResultRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof LoveTypesApi
    */
   public registerResult(requestParameters: LoveTypesApiRegisterResultRequest, options?: RawAxiosRequestConfig) {
     return LoveTypesApiFp(this.configuration)

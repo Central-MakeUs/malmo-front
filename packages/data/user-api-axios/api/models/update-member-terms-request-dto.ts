@@ -16,16 +16,6 @@
 // @ts-ignore
 import type { TermsDto } from './terms-dto'
 
-/**
- *
- * @export
- * @interface UpdateMemberTermsRequestDto
- */
 export interface UpdateMemberTermsRequestDto {
-  /**
-   *
-   * @type {Array<TermsDto>}
-   * @memberof UpdateMemberTermsRequestDto
-   */
   terms?: Array<TermsDto>
 }

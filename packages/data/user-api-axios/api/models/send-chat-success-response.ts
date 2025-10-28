@@ -18,32 +18,19 @@ import type { SendChatData } from './send-chat-data'
 
 /**
  * 채팅 전송 성공 응답
- * @export
- * @interface SendChatSuccessResponse
  */
 export interface SendChatSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof SendChatSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof SendChatSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof SendChatSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {SendChatData}
-   * @memberof SendChatSuccessResponse
-   */
   data?: SendChatData
 }

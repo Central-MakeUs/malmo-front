@@ -18,32 +18,19 @@ import type { BaseListSwaggerResponseGetChatRoomListResponse } from './base-list
 
 /**
  * 채팅방 리스트 조회 성공 응답
- * @export
- * @interface ChatRoomListSuccessResponse
  */
 export interface ChatRoomListSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof ChatRoomListSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof ChatRoomListSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof ChatRoomListSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {BaseListSwaggerResponseGetChatRoomListResponse}
-   * @memberof ChatRoomListSuccessResponse
-   */
   data?: BaseListSwaggerResponseGetChatRoomListResponse
 }

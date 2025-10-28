@@ -18,32 +18,19 @@ import type { LoginData } from './login-data'
 
 /**
  * 로그인 성공 응답
- * @export
- * @interface LoginSuccessResponse
  */
 export interface LoginSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof LoginSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof LoginSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof LoginSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {LoginData}
-   * @memberof LoginSuccessResponse
-   */
   data?: LoginData
 }

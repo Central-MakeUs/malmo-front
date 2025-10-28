@@ -16,28 +16,8 @@
 // @ts-ignore
 import type { TermsDto } from './terms-dto'
 
-/**
- *
- * @export
- * @interface SignUpRequestDto
- */
 export interface SignUpRequestDto {
-  /**
-   *
-   * @type {Array<TermsDto>}
-   * @memberof SignUpRequestDto
-   */
   terms?: Array<TermsDto>
-  /**
-   *
-   * @type {string}
-   * @memberof SignUpRequestDto
-   */
   nickname: string
-  /**
-   *
-   * @type {number}
-   * @memberof SignUpRequestDto
-   */
   loveTypeId?: number
 }
