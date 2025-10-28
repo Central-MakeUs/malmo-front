@@ -47,7 +47,7 @@ export function ScreenHeader({ children, behavior = 'static', className }: Scree
 
   if (behavior === 'overlay') {
     return (
-      <div ref={containerRef} className={['absolute top-0 z-40 w-full', className].filter(Boolean).join(' ')}>
+      <div ref={containerRef} className={['absolute z-40 w-full', className].filter(Boolean).join(' ')}>
         {children}
       </div>
     )
