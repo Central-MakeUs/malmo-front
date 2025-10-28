@@ -63,7 +63,7 @@ class ChatService extends ChatroomApi {
   sendMessageMutation() {
     return {
       mutationFn: async (message: string) => {
-        const { data } = await this.sendChatMessage1({ chatRequest: { message } })
+        const { data } = await this.sendChatMessage({ chatRequest: { message } })
         return data?.data
       },
       onError: () => {
@@ -75,8 +75,9 @@ class ChatService extends ChatroomApi {
   upgradeChatRoomMutation() {
     return {
       mutationFn: async () => {
-        const { data } = await this.sendChatMessage()
-        return data?.data
+        // const { data } = await this.sendChatMessage()
+        // return data?.data
+        return null
       },
       onError: () => {
         toast.error('채팅방 업그레이드 중 오류가 발생했습니다')
