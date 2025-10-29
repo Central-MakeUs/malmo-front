@@ -24,7 +24,7 @@ export async function processSocialLogin(
       ...payload,
     }
 
-    if (options?.deviceId && requestPayload.deviceId == null) {
+    if (options?.deviceId != null) {
       requestPayload.deviceId = options.deviceId
     }
 
