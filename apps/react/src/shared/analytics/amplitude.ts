@@ -10,12 +10,24 @@ let currentCategory: Category = CATEGORIES.MAIN
 class AmplitudeService {
   private isInitialized = false
   private isProduction = import.meta.env.PROD
+  private cachedDeviceId: string | undefined
 
   constructor() {
     // 프로덕션이고 Amplitude가 로드된 경우에만 초기화
     if (typeof window !== 'undefined' && window.amplitude) {
       this.isInitialized = true
+      this.cachedDeviceId = window.amplitude.getDeviceId?.() ?? this.cachedDeviceId
     }
+  }
+
+  // 디바이스 Id 조회 (웹뷰 -> 네이티브 전달)
+  getDeviceId(): string | undefined {
+    if (typeof window === 'undefined') return this.cachedDeviceId
+    const deviceId = window.amplitude?.getDeviceId?.() ?? this.cachedDeviceId
+    if (deviceId) {
+      this.cachedDeviceId = deviceId
+    }
+    return deviceId
   }
 
   // 페이지뷰 추적

@@ -1,4 +1,4 @@
-import { SocialLoginResult } from '@bridge/types'
+import { SocialLoginResult, SocialLoginOptions } from '@bridge/types'
 import { authClient } from './auth-client'
 import { formatAxiosError, formatUnknownError, logAxiosError } from './error-utils'
 import { persistAuthSession } from './persist-auth-session'
@@ -13,12 +13,23 @@ export interface SocialLoginProvider {
   authorize(): Promise<SocialLoginRequest>
 }
 
-export async function processSocialLogin(provider: SocialLoginProvider): Promise<SocialLoginResult> {
+export async function processSocialLogin(
+  provider: SocialLoginProvider,
+  options?: SocialLoginOptions
+): Promise<SocialLoginResult> {
   try {
     const { path, payload, fetchProfile } = await provider.authorize()
 
+    const requestPayload: Record<string, unknown> = {
+      ...payload,
+    }
+
+    if (options?.deviceId != null) {
+      requestPayload.deviceId = options.deviceId
+    }
+
     try {
-      const response = await authClient.post(path, payload)
+      const response = await authClient.post(path, requestPayload)
       const tokens = response.data?.data
 
       if (!tokens?.accessToken || !tokens?.refreshToken) {

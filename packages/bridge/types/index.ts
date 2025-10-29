@@ -15,8 +15,12 @@ export interface BridgeStore {
 }
 
 // 브릿지 액션 타입 (함수)
+export interface SocialLoginOptions {
+  deviceId?: string
+}
+
 export interface BridgeActions {
-  socialLogin(type: SocialLoginType): Promise<SocialLoginResult>
+  socialLogin(type: SocialLoginType, options?: SocialLoginOptions): Promise<SocialLoginResult>
   getAuthStatus(): Promise<{ isLoggedIn: boolean }>
   getAuthToken(): Promise<{ accessToken: string | null }>
   logout({ clearAll }: { clearAll?: boolean }): Promise<{ success: boolean; message?: string }>

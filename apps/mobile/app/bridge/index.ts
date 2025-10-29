@@ -1,6 +1,6 @@
 import { Bridge, bridge, postMessageSchema } from '@webview-bridge/react-native'
 import { z } from 'zod'
-import { BridgeStore, BridgeActions, SocialLoginType, SocialLoginResult } from '@bridge/types'
+import { BridgeStore, BridgeActions, SocialLoginType, SocialLoginResult, SocialLoginOptions } from '@bridge/types'
 import { processSocialLogin, SocialLoginProvider } from '../features/auth/lib/social-login'
 import { kakaoProvider } from '../features/auth/social/kakao-provider'
 import { appleProvider } from '../features/auth/social/apple-provider'
@@ -17,7 +17,7 @@ const socialProviders: Record<SocialLoginType, SocialLoginProvider> = {
 
 export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
   const actions: BridgeActions = {
-    async socialLogin(type: SocialLoginType): Promise<SocialLoginResult> {
+    async socialLogin(type: SocialLoginType, options?: SocialLoginOptions): Promise<SocialLoginResult> {
       const provider = socialProviders[type]
 
       if (!provider) {
@@ -27,7 +27,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
         }
       }
 
-      const result = await processSocialLogin(provider)
+      const result = await processSocialLogin(provider, options)
 
       if (result.success) {
         set({ isLoggedIn: true })
