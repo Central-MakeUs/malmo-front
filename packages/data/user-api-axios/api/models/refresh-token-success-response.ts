@@ -18,32 +18,19 @@ import type { TokenData } from './token-data'
 
 /**
  * 토큰 갱신 성공 응답
- * @export
- * @interface RefreshTokenSuccessResponse
  */
 export interface RefreshTokenSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof RefreshTokenSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof RefreshTokenSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof RefreshTokenSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {TokenData}
-   * @memberof RefreshTokenSuccessResponse
-   */
   data?: TokenData
 }

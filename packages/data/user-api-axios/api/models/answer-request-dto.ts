@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface AnswerRequestDto
- */
 export interface AnswerRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof AnswerRequestDto
-   */
   answer?: string
 }

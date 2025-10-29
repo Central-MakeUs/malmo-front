@@ -18,32 +18,22 @@ import type { PendingNotificationData } from './pending-notification-data'
 
 /**
  * 기본 리스트 응답 형식
- * @export
- * @interface BaseListSwaggerResponsePendingNotificationData
  */
 export interface BaseListSwaggerResponsePendingNotificationData {
   /**
    * 응답 데이터 크기
-   * @type {number}
-   * @memberof BaseListSwaggerResponsePendingNotificationData
    */
   size?: number
   /**
    * 페이지 번호
-   * @type {number}
-   * @memberof BaseListSwaggerResponsePendingNotificationData
    */
   page?: number
   /**
    * 응답 데이터 리스트
-   * @type {Array<PendingNotificationData>}
-   * @memberof BaseListSwaggerResponsePendingNotificationData
    */
   list?: Array<PendingNotificationData>
   /**
    * 전체 데이터 개수
-   * @type {number}
-   * @memberof BaseListSwaggerResponsePendingNotificationData
    */
   totalCount?: number
 }

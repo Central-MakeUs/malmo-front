@@ -14,14 +14,10 @@
 
 /**
  * 연애 시작일 갱신 응답 데이터
- * @export
- * @interface UpdateStartLoveDateData
  */
 export interface UpdateStartLoveDateData {
   /**
    * 변경된 연애 시작일
-   * @type {string}
-   * @memberof UpdateStartLoveDateData
    */
   startLoveDate?: string
 }

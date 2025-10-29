@@ -39,7 +39,6 @@ import type { SignUpSuccessResponse } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * SignUpsApi - axios parameter creator
- * @export
  */
 export const SignUpsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -86,7 +85,6 @@ export const SignUpsApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * SignUpsApi - functional programming interface
- * @export
  */
 export const SignUpsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = SignUpsApiAxiosParamCreator(configuration)
@@ -119,7 +117,6 @@ export const SignUpsApiFp = function (configuration?: Configuration) {
 
 /**
  * SignUpsApi - factory interface
- * @export
  */
 export const SignUpsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = SignUpsApiFp(configuration)
@@ -142,23 +139,13 @@ export const SignUpsApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * Request parameters for signUp operation in SignUpsApi.
- * @export
- * @interface SignUpsApiSignUpRequest
  */
 export interface SignUpsApiSignUpRequest {
-  /**
-   *
-   * @type {SignUpRequestDto}
-   * @memberof SignUpsApiSignUp
-   */
   readonly signUpRequestDto: SignUpRequestDto
 }
 
 /**
  * SignUpsApi - object-oriented interface
- * @export
- * @class SignUpsApi
- * @extends {BaseAPI}
  */
 export class SignUpsApi extends BaseAPI {
   /**
@@ -167,7 +154,6 @@ export class SignUpsApi extends BaseAPI {
    * @param {SignUpsApiSignUpRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SignUpsApi
    */
   public signUp(requestParameters: SignUpsApiSignUpRequest, options?: RawAxiosRequestConfig) {
     return SignUpsApiFp(this.configuration)

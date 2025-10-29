@@ -12,28 +12,8 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface KakaoLoginRequestDto
- */
 export interface KakaoLoginRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof KakaoLoginRequestDto
-   */
   idToken: string
-  /**
-   *
-   * @type {string}
-   * @memberof KakaoLoginRequestDto
-   */
   accessToken: string
-  /**
-   *
-   * @type {string}
-   * @memberof KakaoLoginRequestDto
-   */
   deviceId?: string
 }

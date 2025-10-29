@@ -62,7 +62,7 @@ function TermsPage() {
       )}
 
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar onBackClick={handleBack} showBackButton={false} />
+        <DetailHeaderBar onBackClick={handleBack} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">

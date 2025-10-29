@@ -18,32 +18,19 @@ import type { BaseListSwaggerResponseTermsData } from './base-list-swagger-respo
 
 /**
  * 멤버 약관 동의 수정 성공 응답
- * @export
- * @interface UpdateMemberTermsSuccessResponse
  */
 export interface UpdateMemberTermsSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof UpdateMemberTermsSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof UpdateMemberTermsSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof UpdateMemberTermsSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {BaseListSwaggerResponseTermsData}
-   * @memberof UpdateMemberTermsSuccessResponse
-   */
   data?: BaseListSwaggerResponseTermsData
 }

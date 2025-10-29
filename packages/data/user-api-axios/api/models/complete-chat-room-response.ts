@@ -18,32 +18,19 @@ import type { CompleteChatRoomData } from './complete-chat-room-data'
 
 /**
  * 채팅방 완료 성공 응답
- * @export
- * @interface CompleteChatRoomResponse
  */
 export interface CompleteChatRoomResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof CompleteChatRoomResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof CompleteChatRoomResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof CompleteChatRoomResponse
    */
   message?: string
-  /**
-   *
-   * @type {CompleteChatRoomData}
-   * @memberof CompleteChatRoomResponse
-   */
   data?: CompleteChatRoomData
 }

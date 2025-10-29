@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
+import loveLetter from '@/assets/images/love-letter.png'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
@@ -62,7 +63,7 @@ function MyCodePage() {
         />
       </Screen.Header>
 
-      <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">
+      <Screen.Content className="flex flex-1 flex-col bg-white">
         <TitleSection
           title={
             <>
@@ -72,6 +73,10 @@ function MyCodePage() {
           }
           description="연인에게 커플 코드를 보내 커플 연동을 해주세요!"
         />
+
+        <div className="mt-[68px] flex flex-col items-center">
+          <img src={loveLetter} alt="Love Letter" className="h-[100px] w-[100px]" />
+        </div>
 
         <div className="mt-[24px] px-5">
           <div className="rounded-[10px] bg-gray-neutral-100">

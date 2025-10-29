@@ -14,14 +14,10 @@
 
 /**
  * 커플 연결 끊기 응답 데이터
- * @export
- * @interface CoupleUnlinkData
  */
 export interface CoupleUnlinkData {
   /**
    * 해제된 커플 ID
-   * @type {number}
-   * @memberof CoupleUnlinkData
    */
   coupleId?: number
 }

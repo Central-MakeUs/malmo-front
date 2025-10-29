@@ -18,44 +18,24 @@ import type { AnswerDto } from './answer-dto'
 
 /**
  * 과거 답변 조회 응답 데이터
- * @export
- * @interface PastAnswerData
  */
 export interface PastAnswerData {
   /**
    * 질문 제목
-   * @type {string}
-   * @memberof PastAnswerData
    */
   title?: string
   /**
    * 질문 내용
-   * @type {string}
-   * @memberof PastAnswerData
    */
   content?: string
   /**
    * 질문 단계
-   * @type {number}
-   * @memberof PastAnswerData
    */
   level?: number
   /**
    * 답변 생성일시
-   * @type {string}
-   * @memberof PastAnswerData
    */
   createdAt?: string
-  /**
-   *
-   * @type {AnswerDto}
-   * @memberof PastAnswerData
-   */
   me?: AnswerDto
-  /**
-   *
-   * @type {AnswerDto}
-   * @memberof PastAnswerData
-   */
   partner?: AnswerDto
 }

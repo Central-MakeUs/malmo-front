@@ -14,39 +14,24 @@
 
 /**
  * 채팅방 메시지 응답 데이터
- * @export
- * @interface ChatRoomMessageData
  */
 export interface ChatRoomMessageData {
   /**
    * 채팅 메시지 ID
-   * @type {number}
-   * @memberof ChatRoomMessageData
    */
   messageId?: number
   /**
    * 채팅 전송자(유저, 모모)
-   * @type {string}
-   * @memberof ChatRoomMessageData
    */
   senderType?: ChatRoomMessageDataSenderTypeEnum
   /**
    * 채팅 내용
-   * @type {string}
-   * @memberof ChatRoomMessageData
    */
   content?: string
   /**
    * 채팅 생성 시간
-   * @type {string}
-   * @memberof ChatRoomMessageData
    */
   createdAt?: string
-  /**
-   *
-   * @type {boolean}
-   * @memberof ChatRoomMessageData
-   */
   saved?: boolean
 }
 

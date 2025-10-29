@@ -18,32 +18,19 @@ import type { BaseListSwaggerResponsePendingNotificationData } from './base-list
 
 /**
  * 멤버 미조회 알림 조회 성공 응답
- * @export
- * @interface GetPendingMemberNotificationSuccessResponse
  */
 export interface GetPendingMemberNotificationSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof GetPendingMemberNotificationSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof GetPendingMemberNotificationSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof GetPendingMemberNotificationSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {BaseListSwaggerResponsePendingNotificationData}
-   * @memberof GetPendingMemberNotificationSuccessResponse
-   */
   data?: BaseListSwaggerResponsePendingNotificationData
 }

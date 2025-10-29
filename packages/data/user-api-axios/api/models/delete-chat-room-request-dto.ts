@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface DeleteChatRoomRequestDto
- */
 export interface DeleteChatRoomRequestDto {
-  /**
-   *
-   * @type {Array<number>}
-   * @memberof DeleteChatRoomRequestDto
-   */
   chatRoomIdList?: Array<number>
 }

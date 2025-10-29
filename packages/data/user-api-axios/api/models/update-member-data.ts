@@ -14,20 +14,14 @@
 
 /**
  * 멤버 정보 수정 응답 데이터
- * @export
- * @interface UpdateMemberData
  */
 export interface UpdateMemberData {
   /**
    * 닉네임
-   * @type {string}
-   * @memberof UpdateMemberData
    */
   nickname?: string
   /**
    * 이메일
-   * @type {string}
-   * @memberof UpdateMemberData
    */
   email?: string
 }

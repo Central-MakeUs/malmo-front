@@ -14,44 +14,30 @@
 
 /**
  * 채팅 요약 조회 완료 응답 데이터
- * @export
- * @interface GetChatRoomSummaryData
  */
 export interface GetChatRoomSummaryData {
   /**
    * 채팅방의 ID
-   * @type {number}
-   * @memberof GetChatRoomSummaryData
    */
   chatRoomId?: number
   /**
    * 채팅방 생성 시간
-   * @type {string}
-   * @memberof GetChatRoomSummaryData
    */
   createdAt?: string
   /**
    * 채팅방 전체 요약
-   * @type {string}
-   * @memberof GetChatRoomSummaryData
    */
   totalSummary?: string
   /**
    * 채팅방 상황 요약
-   * @type {string}
-   * @memberof GetChatRoomSummaryData
    */
   firstSummary?: string
   /**
    * 채팅방 관계 이해
-   * @type {string}
-   * @memberof GetChatRoomSummaryData
    */
   secondSummary?: string
   /**
    * 채팅방 해결 제안
-   * @type {string}
-   * @memberof GetChatRoomSummaryData
    */
   thirdSummary?: string
 }

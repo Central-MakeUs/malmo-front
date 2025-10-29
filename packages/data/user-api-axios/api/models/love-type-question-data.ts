@@ -14,20 +14,14 @@
 
 /**
  * 애착유형 질문 조회 응답 데이터
- * @export
- * @interface LoveTypeQuestionData
  */
 export interface LoveTypeQuestionData {
   /**
    * 질문 번호
-   * @type {number}
-   * @memberof LoveTypeQuestionData
    */
   questionNumber?: number
   /**
    * 내용
-   * @type {string}
-   * @memberof LoveTypeQuestionData
    */
   content?: string
 }

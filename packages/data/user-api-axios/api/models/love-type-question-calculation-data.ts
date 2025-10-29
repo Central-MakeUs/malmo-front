@@ -14,32 +14,22 @@
 
 /**
  * 애착유형 질문 응답 등록 결과 데이터
- * @export
- * @interface LoveTypeQuestionCalculationData
  */
 export interface LoveTypeQuestionCalculationData {
   /**
    * 임시 애착유형 결과 ID
-   * @type {number}
-   * @memberof LoveTypeQuestionCalculationData
    */
   loveTypeId?: number
   /**
    * 애착 유형
-   * @type {string}
-   * @memberof LoveTypeQuestionCalculationData
    */
   loveTypeCategory?: LoveTypeQuestionCalculationDataLoveTypeCategoryEnum
   /**
    * 회피 비율
-   * @type {number}
-   * @memberof LoveTypeQuestionCalculationData
    */
   avoidanceRate?: number
   /**
    * 불안 비율
-   * @type {number}
-   * @memberof LoveTypeQuestionCalculationData
    */
   anxietyRate?: number
 }

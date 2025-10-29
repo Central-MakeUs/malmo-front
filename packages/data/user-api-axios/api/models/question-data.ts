@@ -14,50 +14,34 @@
 
 /**
  * 질문 응답 데이터
- * @export
- * @interface QuestionData
  */
 export interface QuestionData {
   /**
    * 커플 질문 ID
-   * @type {number}
-   * @memberof QuestionData
    */
   coupleQuestionId?: number
   /**
    * 질문 단계
-   * @type {number}
-   * @memberof QuestionData
    */
   level?: number
   /**
    * 질문 제목
-   * @type {string}
-   * @memberof QuestionData
    */
   title?: string
   /**
    * 질문 내용
-   * @type {string}
-   * @memberof QuestionData
    */
   content?: string
   /**
    * 나의 답변 여부
-   * @type {boolean}
-   * @memberof QuestionData
    */
   meAnswered?: boolean
   /**
    * 상대방 답변 여부
-   * @type {boolean}
-   * @memberof QuestionData
    */
   partnerAnswered?: boolean
   /**
    * 생성일시
-   * @type {string}
-   * @memberof QuestionData
    */
   createdAt?: string
 }

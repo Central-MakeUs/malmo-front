@@ -59,7 +59,6 @@ import type { UpdateStartLoveDateRequestDto } from '../models'
 import type { UpdateStartLoveDateSuccessResponse } from '../models'
 /**
  * MembersApi - axios parameter creator
- * @export
  */
 export const MembersApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -372,7 +371,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * MembersApi - functional programming interface
- * @export
  */
 export const MembersApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = MembersApiAxiosParamCreator(configuration)
@@ -561,7 +559,6 @@ export const MembersApiFp = function (configuration?: Configuration) {
 
 /**
  * MembersApi - factory interface
- * @export
  */
 export const MembersApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = MembersApiFp(configuration)
@@ -667,65 +664,34 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * Request parameters for registerLoveType operation in MembersApi.
- * @export
- * @interface MembersApiRegisterLoveTypeRequest
  */
 export interface MembersApiRegisterLoveTypeRequest {
-  /**
-   *
-   * @type {RegisterLoveTypeRequestDto}
-   * @memberof MembersApiRegisterLoveType
-   */
   readonly registerLoveTypeRequestDto: RegisterLoveTypeRequestDto
 }
 
 /**
  * Request parameters for updateMember operation in MembersApi.
- * @export
- * @interface MembersApiUpdateMemberRequest
  */
 export interface MembersApiUpdateMemberRequest {
-  /**
-   *
-   * @type {UpdateMemberRequestDto}
-   * @memberof MembersApiUpdateMember
-   */
   readonly updateMemberRequestDto: UpdateMemberRequestDto
 }
 
 /**
  * Request parameters for updateMemberTerms operation in MembersApi.
- * @export
- * @interface MembersApiUpdateMemberTermsRequest
  */
 export interface MembersApiUpdateMemberTermsRequest {
-  /**
-   *
-   * @type {UpdateMemberTermsRequestDto}
-   * @memberof MembersApiUpdateMemberTerms
-   */
   readonly updateMemberTermsRequestDto: UpdateMemberTermsRequestDto
 }
 
 /**
  * Request parameters for updateStartLoveDate operation in MembersApi.
- * @export
- * @interface MembersApiUpdateStartLoveDateRequest
  */
 export interface MembersApiUpdateStartLoveDateRequest {
-  /**
-   *
-   * @type {UpdateStartLoveDateRequestDto}
-   * @memberof MembersApiUpdateStartLoveDate
-   */
   readonly updateStartLoveDateRequestDto: UpdateStartLoveDateRequestDto
 }
 
 /**
  * MembersApi - object-oriented interface
- * @export
- * @class MembersApi
- * @extends {BaseAPI}
  */
 export class MembersApi extends BaseAPI {
   /**
@@ -733,7 +699,6 @@ export class MembersApi extends BaseAPI {
    * @summary 사용자 탈퇴
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersApi
    */
   public deleteMember(options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
@@ -746,7 +711,6 @@ export class MembersApi extends BaseAPI {
    * @summary 멤버 정보 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersApi
    */
   public getMemberInfo(options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
@@ -759,7 +723,6 @@ export class MembersApi extends BaseAPI {
    * @summary 사용자 초대 코드 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersApi
    */
   public getMemberInviteCode(options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
@@ -772,7 +735,6 @@ export class MembersApi extends BaseAPI {
    * @summary 커플 상대 정보 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersApi
    */
   public getPartnerMemberInfo(options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
@@ -786,7 +748,6 @@ export class MembersApi extends BaseAPI {
    * @param {MembersApiRegisterLoveTypeRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersApi
    */
   public registerLoveType(requestParameters: MembersApiRegisterLoveTypeRequest, options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
@@ -800,7 +761,6 @@ export class MembersApi extends BaseAPI {
    * @param {MembersApiUpdateMemberRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersApi
    */
   public updateMember(requestParameters: MembersApiUpdateMemberRequest, options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
@@ -814,7 +774,6 @@ export class MembersApi extends BaseAPI {
    * @param {MembersApiUpdateMemberTermsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersApi
    */
   public updateMemberTerms(requestParameters: MembersApiUpdateMemberTermsRequest, options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)
@@ -828,7 +787,6 @@ export class MembersApi extends BaseAPI {
    * @param {MembersApiUpdateStartLoveDateRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersApi
    */
   public updateStartLoveDate(requestParameters: MembersApiUpdateStartLoveDateRequest, options?: RawAxiosRequestConfig) {
     return MembersApiFp(this.configuration)

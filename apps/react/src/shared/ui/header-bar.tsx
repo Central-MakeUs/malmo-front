@@ -10,7 +10,7 @@ interface DetailHeaderBarProps {
   right?: ReactNode
   left?: ReactNode
   showBackButton?: boolean
-  onBackClick?: () => void
+  onBackClick?: (e) => void
   className?: string
 }
 
@@ -24,9 +24,9 @@ export function DetailHeaderBar({
 }: DetailHeaderBarProps) {
   const goBack = useGoBack()
 
-  const handleBackClick = () => {
+  const handleBackClick = (e) => {
     if (onBackClick) {
-      onBackClick()
+      onBackClick(e)
     } else {
       goBack()
     }

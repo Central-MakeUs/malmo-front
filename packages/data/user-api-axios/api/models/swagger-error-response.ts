@@ -14,32 +14,22 @@
 
 /**
  * 기본 응답 형식
- * @export
- * @interface SwaggerErrorResponse
  */
 export interface SwaggerErrorResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof SwaggerErrorResponse
    */
   requestId?: string
   /**
    * 에러 코드
-   * @type {string}
-   * @memberof SwaggerErrorResponse
    */
   code?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof SwaggerErrorResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof SwaggerErrorResponse
    */
   message?: string
 }

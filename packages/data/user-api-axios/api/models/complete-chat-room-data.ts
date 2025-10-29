@@ -14,14 +14,10 @@
 
 /**
  * 채팅 완료 응답 데이터
- * @export
- * @interface CompleteChatRoomData
  */
 export interface CompleteChatRoomData {
   /**
    * 채팅방의 ID
-   * @type {number}
-   * @memberof CompleteChatRoomData
    */
   chatRoomId?: number
 }

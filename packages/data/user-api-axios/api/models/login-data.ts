@@ -14,32 +14,22 @@
 
 /**
  * 로그인 응답 데이터
- * @export
- * @interface LoginData
  */
 export interface LoginData {
   /**
    * 토큰 타입
-   * @type {string}
-   * @memberof LoginData
    */
   grantType?: string
   /**
    * 액세스 토큰
-   * @type {string}
-   * @memberof LoginData
    */
   accessToken?: string
   /**
    * 리프레시 토큰
-   * @type {string}
-   * @memberof LoginData
    */
   refreshToken?: string
   /**
    * 멤버 상태
-   * @type {string}
-   * @memberof LoginData
    */
   memberState?: string
 }

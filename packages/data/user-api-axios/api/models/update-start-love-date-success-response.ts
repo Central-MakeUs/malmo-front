@@ -18,32 +18,19 @@ import type { UpdateStartLoveDateData } from './update-start-love-date-data'
 
 /**
  * 연애 시작일 갱신 성공 응답
- * @export
- * @interface UpdateStartLoveDateSuccessResponse
  */
 export interface UpdateStartLoveDateSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof UpdateStartLoveDateSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof UpdateStartLoveDateSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof UpdateStartLoveDateSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {UpdateStartLoveDateData}
-   * @memberof UpdateStartLoveDateSuccessResponse
-   */
   data?: UpdateStartLoveDateData
 }

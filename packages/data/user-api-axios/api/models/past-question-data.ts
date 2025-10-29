@@ -14,50 +14,34 @@
 
 /**
  * 과거 질문 조회 응답 데이터
- * @export
- * @interface PastQuestionData
  */
 export interface PastQuestionData {
   /**
    * 커플 질문 ID
-   * @type {number}
-   * @memberof PastQuestionData
    */
   coupleQuestionId?: number
   /**
    * 질문 단계
-   * @type {number}
-   * @memberof PastQuestionData
    */
   level?: number
   /**
    * 질문 제목
-   * @type {string}
-   * @memberof PastQuestionData
    */
   title?: string
   /**
    * 질문 내용
-   * @type {string}
-   * @memberof PastQuestionData
    */
   content?: string
   /**
    * 나의 답변 여부
-   * @type {boolean}
-   * @memberof PastQuestionData
    */
   meAnswered?: boolean
   /**
    * 상대방 답변 여부
-   * @type {boolean}
-   * @memberof PastQuestionData
    */
   partnerAnswered?: boolean
   /**
    * 생성일시
-   * @type {string}
-   * @memberof PastQuestionData
    */
   createdAt?: string
 }

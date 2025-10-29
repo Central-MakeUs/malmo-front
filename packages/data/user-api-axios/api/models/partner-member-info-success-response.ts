@@ -18,32 +18,19 @@ import type { PartnerMemberData } from './partner-member-data'
 
 /**
  * 파트너 멤버 정보 조회 성공 응답
- * @export
- * @interface PartnerMemberInfoSuccessResponse
  */
 export interface PartnerMemberInfoSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof PartnerMemberInfoSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof PartnerMemberInfoSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof PartnerMemberInfoSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {PartnerMemberData}
-   * @memberof PartnerMemberInfoSuccessResponse
-   */
   data?: PartnerMemberData
 }

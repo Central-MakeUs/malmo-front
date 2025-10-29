@@ -12,28 +12,8 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface AppleLoginRequestDto
- */
 export interface AppleLoginRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof AppleLoginRequestDto
-   */
   idToken: string
-  /**
-   *
-   * @type {string}
-   * @memberof AppleLoginRequestDto
-   */
   authorizationCode?: string
-  /**
-   *
-   * @type {string}
-   * @memberof AppleLoginRequestDto
-   */
   deviceId?: string
 }

@@ -15,17 +15,17 @@ export const Route = createFileRoute('/onboarding/anniversary/')({
 })
 
 function AnniversaryPage() {
-  const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
+  const { goToNextStep } = useOnboardingNavigation()
   const { data, updateAnniversary } = useOnboarding()
 
   const { state, actions } = useAnniversary(data.anniversary)
 
-  const handlePrevious = wrapWithTracking(BUTTON_NAMES.BACK_ANNIVERSARY, CATEGORIES.ONBOARDING, () => {
-    // 현재 보이는 날짜로 업데이트 후 이전 페이지로 이동
-    const currentVisibleDate = new Date(state.visibleYear, state.visibleMonth - 1, state.visibleDay)
-    updateAnniversary(currentVisibleDate)
-    goToPreviousStep()
-  })
+  // const handlePrevious = wrapWithTracking(BUTTON_NAMES.BACK_ANNIVERSARY, CATEGORIES.ONBOARDING, () => {
+  //   // 현재 보이는 날짜로 업데이트 후 이전 페이지로 이동
+  //   const currentVisibleDate = new Date(state.visibleYear, state.visibleMonth - 1, state.visibleDay)
+  //   updateAnniversary(currentVisibleDate)
+  //   goToPreviousStep()
+  // })
 
   const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_ANNIVERSARY, CATEGORIES.ONBOARDING, () => {
     // 현재 보이는 날짜로 최종 선택하고 다음 페이지로 이동
@@ -37,7 +37,7 @@ function AnniversaryPage() {
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar onBackClick={handlePrevious} />
+        <DetailHeaderBar showBackButton={false} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">

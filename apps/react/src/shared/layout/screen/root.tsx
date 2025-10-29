@@ -35,7 +35,9 @@ export function ScreenRoot({ children, className }: ScreenRootProps) {
 
   return (
     <ScreenLayoutContext.Provider value={contextValue}>
-      <div className={['relative flex h-full w-full flex-col overflow-hidden', className].filter(Boolean).join(' ')}>
+      <div
+        className={['relative flex h-full w-full flex-col pt-[env(--safe-top)]', className].filter(Boolean).join(' ')}
+      >
         {children}
       </div>
     </ScreenLayoutContext.Provider>

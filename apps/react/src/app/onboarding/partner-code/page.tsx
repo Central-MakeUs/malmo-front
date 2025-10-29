@@ -12,6 +12,7 @@ import { Screen } from '@/shared/layout/screen'
 import coupleService from '@/shared/services/couple.service'
 import { Button, Input } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/onboarding/partner-code/')({
   component: PartnerCodePage,
@@ -46,7 +47,10 @@ function PartnerCodePage() {
     await connectCoupleMutation.mutateAsync(partnerCode)
 
     const success = await completeOnboarding()
-    if (success) goToNextStep()
+    if (success) {
+      toast.success('커플 연결이 완료되었어요!')
+      goToNextStep()
+    }
   })
 
   return (

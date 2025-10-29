@@ -14,32 +14,22 @@
 
 /**
  * 멤버 탈퇴 성공 응답
- * @export
- * @interface DeleteMemberSuccessResponse
  */
 export interface DeleteMemberSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof DeleteMemberSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof DeleteMemberSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof DeleteMemberSuccessResponse
    */
   message?: string
   /**
    * 멤버 탈퇴 응답 데이터
-   * @type {object}
-   * @memberof DeleteMemberSuccessResponse
    */
   data?: object
 }

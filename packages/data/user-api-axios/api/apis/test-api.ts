@@ -35,7 +35,6 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 import type { SwaggerErrorResponse } from '../models'
 /**
  * TestApi - axios parameter creator
- * @export
  */
 export const TestApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -171,7 +170,6 @@ export const TestApiAxiosParamCreator = function (configuration?: Configuration)
 
 /**
  * TestApi - functional programming interface
- * @export
  */
 export const TestApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = TestApiAxiosParamCreator(configuration)
@@ -263,7 +261,6 @@ export const TestApiFp = function (configuration?: Configuration) {
 
 /**
  * TestApi - factory interface
- * @export
  */
 export const TestApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = TestApiFp(configuration)
@@ -308,9 +305,6 @@ export const TestApiFactory = function (configuration?: Configuration, basePath?
 
 /**
  * TestApi - object-oriented interface
- * @export
- * @class TestApi
- * @extends {BaseAPI}
  */
 export class TestApi extends BaseAPI {
   /**
@@ -318,7 +312,6 @@ export class TestApi extends BaseAPI {
    * @summary 관리자 테스트
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof TestApi
    */
   public adminTest(options?: RawAxiosRequestConfig) {
     return TestApiFp(this.configuration)
@@ -331,7 +324,6 @@ export class TestApi extends BaseAPI {
    * @summary 내 정보 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof TestApi
    */
   public getMyInfo(options?: RawAxiosRequestConfig) {
     return TestApiFp(this.configuration)
@@ -343,7 +335,6 @@ export class TestApi extends BaseAPI {
    *
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof TestApi
    */
   public sentryTest(options?: RawAxiosRequestConfig) {
     return TestApiFp(this.configuration)
@@ -356,7 +347,6 @@ export class TestApi extends BaseAPI {
    * @summary API 연결 테스트
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof TestApi
    */
   public test(options?: RawAxiosRequestConfig) {
     return TestApiFp(this.configuration)

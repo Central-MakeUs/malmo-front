@@ -41,7 +41,6 @@ import type { ReadMemberNotificationSuccessResponse } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * MembersAlarmsApi - axios parameter creator
- * @export
  */
 export const MembersAlarmsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -127,7 +126,6 @@ export const MembersAlarmsApiAxiosParamCreator = function (configuration?: Confi
 
 /**
  * MembersAlarmsApi - functional programming interface
- * @export
  */
 export const MembersAlarmsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = MembersAlarmsApiAxiosParamCreator(configuration)
@@ -186,7 +184,6 @@ export const MembersAlarmsApiFp = function (configuration?: Configuration) {
 
 /**
  * MembersAlarmsApi - factory interface
- * @export
  */
 export const MembersAlarmsApiFactory = function (
   configuration?: Configuration,
@@ -226,23 +223,13 @@ export const MembersAlarmsApiFactory = function (
 
 /**
  * Request parameters for processNotifications operation in MembersAlarmsApi.
- * @export
- * @interface MembersAlarmsApiProcessNotificationsRequest
  */
 export interface MembersAlarmsApiProcessNotificationsRequest {
-  /**
-   *
-   * @type {ProcessNotificationsRequestDto}
-   * @memberof MembersAlarmsApiProcessNotifications
-   */
   readonly processNotificationsRequestDto: ProcessNotificationsRequestDto
 }
 
 /**
  * MembersAlarmsApi - object-oriented interface
- * @export
- * @class MembersAlarmsApi
- * @extends {BaseAPI}
  */
 export class MembersAlarmsApi extends BaseAPI {
   /**
@@ -250,7 +237,6 @@ export class MembersAlarmsApi extends BaseAPI {
    * @summary 멤버 미조회 알림 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersAlarmsApi
    */
   public getMemberPendingNotification(options?: RawAxiosRequestConfig) {
     return MembersAlarmsApiFp(this.configuration)
@@ -264,7 +250,6 @@ export class MembersAlarmsApi extends BaseAPI {
    * @param {MembersAlarmsApiProcessNotificationsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof MembersAlarmsApi
    */
   public processNotifications(
     requestParameters: MembersAlarmsApiProcessNotificationsRequest,

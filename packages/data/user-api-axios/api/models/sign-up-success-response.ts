@@ -14,32 +14,22 @@
 
 /**
  * 회원가입 성공 응답
- * @export
- * @interface SignUpSuccessResponse
  */
 export interface SignUpSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof SignUpSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof SignUpSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof SignUpSuccessResponse
    */
   message?: string
   /**
    * 응답 데이터
-   * @type {object}
-   * @memberof SignUpSuccessResponse
    */
   data?: object
 }
