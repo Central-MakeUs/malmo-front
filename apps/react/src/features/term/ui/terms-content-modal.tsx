@@ -8,7 +8,7 @@ import { TermDetail } from '../models/types'
 interface TermsContentModalProps {
   title: string
   details: TermDetail[] | null
-  onClose: (evnet) => void
+  onClose: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export function TermsContentModal({ title, details, onClose }: TermsContentModalProps) {
