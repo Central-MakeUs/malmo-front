@@ -25,6 +25,7 @@ export default function App() {
   const insets = useSafeAreaInsets()
   const [showSplash, setShowSplash] = useState(true)
   const [canGoBack, setCanGoBack] = useState(false)
+  const [isAuthReady, setIsAuthReady] = useState(false)
 
   // const webviewUrl = process.env.EXPO_PUBLIC_WEB_VIEW_URL
   const webviewUrl = process.env.EXPO_PUBLIC_LOCAL_URL
@@ -47,6 +48,27 @@ export default function App() {
       hideSub.remove()
     }
   }, [insets.bottom, setKeyboardHeight])
+
+  // Bridge 하이드레이션 완료 후에만 WebView를 노출
+  useEffect(() => {
+    let isMounted = true
+
+    const initializeAuthState = async () => {
+      const authStatus = appBridge.getState().getAuthStatus
+
+      await authStatus()
+      if (isMounted) setIsAuthReady(true)
+    }
+
+    void initializeAuthState().catch((error) => {
+      console.error('Failed to initialize auth state', error)
+      if (isMounted) setIsAuthReady(true)
+    })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   useEffect(() => {
     setCanGoBack(false)
@@ -85,30 +107,32 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <WebView
-        key={String(isLoggedIn)}
-        ref={webviewRef}
-        source={{ uri: webviewUrl }}
-        overScrollMode="never"
-        style={styles.webview}
-        bounces={false}
-        scrollEnabled={false}
-        domStorageEnabled
-        javaScriptEnabled
-        allowsFullscreenVideo
-        allowsInlineMediaPlayback
-        mediaPlaybackRequiresUserAction={false}
-        originWhitelist={['*']}
-        mixedContentMode="compatibility"
-        allowsBackForwardNavigationGestures={Platform.OS === 'ios' && !isModalOpen}
-        onShouldStartLoadWithRequest={() => true}
-        onNavigationStateChange={handleNavigationStateChange}
-        renderError={(domain, code, description) => (
-          <WebViewError onRetry={handleRetry} errorDomain={domain} errorCode={code} errorDescription={description} />
-        )}
-        startInLoadingState={false}
-        onLoadEnd={handleLoadEnd}
-      />
+      {isAuthReady && (
+        <WebView
+          key={String(isLoggedIn)}
+          ref={webviewRef}
+          source={{ uri: webviewUrl }}
+          overScrollMode="never"
+          style={styles.webview}
+          bounces={false}
+          scrollEnabled={false}
+          domStorageEnabled
+          javaScriptEnabled
+          allowsFullscreenVideo
+          allowsInlineMediaPlayback
+          mediaPlaybackRequiresUserAction={false}
+          originWhitelist={['*']}
+          mixedContentMode="compatibility"
+          allowsBackForwardNavigationGestures={Platform.OS === 'ios' && !isModalOpen}
+          onShouldStartLoadWithRequest={() => true}
+          onNavigationStateChange={handleNavigationStateChange}
+          renderError={(domain, code, description) => (
+            <WebViewError onRetry={handleRetry} errorDomain={domain} errorCode={code} errorDescription={description} />
+          )}
+          startInLoadingState={false}
+          onLoadEnd={handleLoadEnd}
+        />
+      )}
       {showSplash && <CustomSplashScreen onAnimationFinish={handleSplashFinish} />}
     </View>
   )
