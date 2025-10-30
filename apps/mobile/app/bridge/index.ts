@@ -45,6 +45,7 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
 
     async getAuthStatus(): Promise<{ isLoggedIn: boolean }> {
       const isLoggedIn = await AuthStorage.isAuthenticated()
+      set({ isLoggedIn })
       return { isLoggedIn }
     },
 

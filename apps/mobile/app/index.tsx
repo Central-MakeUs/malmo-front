@@ -21,7 +21,7 @@ SplashScreen.preventAutoHideAsync()
 
 export default function App() {
   const webviewRef = useRef<BridgeWebView>(null)
-  const { setKeyboardHeight, isModalOpen, setModalOpen } = useBridge(appBridge)
+  const { setKeyboardHeight, isModalOpen, setModalOpen, isLoggedIn } = useBridge(appBridge)
   const insets = useSafeAreaInsets()
   const [showSplash, setShowSplash] = useState(true)
   const [canGoBack, setCanGoBack] = useState(false)
@@ -47,6 +47,10 @@ export default function App() {
       hideSub.remove()
     }
   }, [insets.bottom, setKeyboardHeight])
+
+  useEffect(() => {
+    setCanGoBack(false)
+  }, [isLoggedIn])
 
   const handleRetry = useCallback(() => {
     webviewRef.current?.reload()
@@ -82,6 +86,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <WebView
+        key={String(isLoggedIn)}
         ref={webviewRef}
         source={{ uri: webviewUrl }}
         overScrollMode="never"
