@@ -63,7 +63,7 @@ function CoupleManagementPage() {
 
   const handleConnectPartner = wrapWithTracking(BUTTON_NAMES.OPEN_PARTNER_SHEET, CATEGORIES.PROFILE, () => {
     if (isPartnerConnected) return
-    navigate({ to: '/onboarding/partner-code', search: { coupleFlow: true }, replace: true })
+    navigate({ to: '/my-page/couple-management/partner-code', replace: true })
   })
 
   const handleDisconnectCouple = wrapWithTracking(BUTTON_NAMES.DISCONNECT_COUPLE, CATEGORIES.PROFILE, () =>
