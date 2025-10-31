@@ -5,6 +5,7 @@ import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { formatDate } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/onboarding/anniversary/')({
   component: OnboardingAnniversary,
@@ -27,7 +28,7 @@ function OnboardingAnniversary() {
     updateAnniversary(finalDate)
 
     if (updateStartDateMutation.isPending) return
-    const startLoveDate = finalDate.toISOString().split('T')[0]
+    const startLoveDate = formatDate(finalDate)
 
     try {
       await updateStartDateMutation.mutateAsync({ startLoveDate: startLoveDate ?? '' })

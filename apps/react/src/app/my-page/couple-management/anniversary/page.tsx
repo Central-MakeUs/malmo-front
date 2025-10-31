@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { AnniversaryLayout, useAnniversary, useUpdateStartDate } from '@/features/anniversary'
 import { useAuth } from '@/features/auth'
 import { wrapWithTracking, BUTTON_NAMES, CATEGORIES } from '@/shared/analytics'
+import { formatDate } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/my-page/couple-management/anniversary/')({
   component: CoupleManagementAnniversary,
@@ -26,7 +27,8 @@ function CoupleManagementAnniversary() {
       anniversary.state.visibleMonth - 1,
       anniversary.state.visibleDay
     )
-    const startLoveDate = finalDate.toISOString().split('T')[0]
+    console.log('finalDate', finalDate)
+    const startLoveDate = formatDate(finalDate)
 
     try {
       await updateStartDateMutation.mutateAsync({ startLoveDate: startLoveDate ?? '' })
