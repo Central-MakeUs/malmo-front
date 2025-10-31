@@ -37,6 +37,8 @@ import { Route as HistoryDeletePageImport } from './app/history/delete/page'
 import { Route as ChatResultPageImport } from './app/chat/result/page'
 import { Route as ChatLoadingPageImport } from './app/chat/loading/page'
 import { Route as AttachmentTestQuestionPageImport } from './app/attachment-test/question/page'
+import { Route as MyPageCoupleManagementPartnerCodePageImport } from './app/my-page/couple-management/partner-code/page'
+import { Route as MyPageCoupleManagementAnniversaryPageImport } from './app/my-page/couple-management/anniversary/page'
 import { Route as AttachmentTestResultPartnerPageImport } from './app/attachment-test/result/partner/page'
 import { Route as AttachmentTestResultMyPageImport } from './app/attachment-test/result/my/page'
 
@@ -195,6 +197,18 @@ const ChatLoadingPageRoute = ChatLoadingPageImport.update({
 const AttachmentTestQuestionPageRoute = AttachmentTestQuestionPageImport.update({
   id: '/attachment-test/question/',
   path: '/attachment-test/question/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MyPageCoupleManagementPartnerCodePageRoute = MyPageCoupleManagementPartnerCodePageImport.update({
+  id: '/my-page/couple-management/partner-code/',
+  path: '/my-page/couple-management/partner-code/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MyPageCoupleManagementAnniversaryPageRoute = MyPageCoupleManagementAnniversaryPageImport.update({
+  id: '/my-page/couple-management/anniversary/',
+  path: '/my-page/couple-management/anniversary/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -410,6 +424,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AttachmentTestResultPartnerPageImport
       parentRoute: typeof rootRoute
     }
+    '/my-page/couple-management/anniversary/': {
+      id: '/my-page/couple-management/anniversary/'
+      path: '/my-page/couple-management/anniversary'
+      fullPath: '/my-page/couple-management/anniversary'
+      preLoaderRoute: typeof MyPageCoupleManagementAnniversaryPageImport
+      parentRoute: typeof rootRoute
+    }
+    '/my-page/couple-management/partner-code/': {
+      id: '/my-page/couple-management/partner-code/'
+      path: '/my-page/couple-management/partner-code'
+      fullPath: '/my-page/couple-management/partner-code'
+      preLoaderRoute: typeof MyPageCoupleManagementPartnerCodePageImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -478,6 +506,8 @@ export interface FileRoutesByFullPath {
   '/terms/privacy-policy': typeof TermsPrivacyPolicyPageRoute
   '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
+  '/my-page/couple-management/anniversary': typeof MyPageCoupleManagementAnniversaryPageRoute
+  '/my-page/couple-management/partner-code': typeof MyPageCoupleManagementPartnerCodePageRoute
 }
 
 export interface FileRoutesByTo {
@@ -508,6 +538,8 @@ export interface FileRoutesByTo {
   '/terms/privacy-policy': typeof TermsPrivacyPolicyPageRoute
   '/attachment-test/result/my': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner': typeof AttachmentTestResultPartnerPageRoute
+  '/my-page/couple-management/anniversary': typeof MyPageCoupleManagementAnniversaryPageRoute
+  '/my-page/couple-management/partner-code': typeof MyPageCoupleManagementPartnerCodePageRoute
 }
 
 export interface FileRoutesById {
@@ -540,6 +572,8 @@ export interface FileRoutesById {
   '/terms/privacy-policy/': typeof TermsPrivacyPolicyPageRoute
   '/attachment-test/result/my/': typeof AttachmentTestResultMyPageRoute
   '/attachment-test/result/partner/': typeof AttachmentTestResultPartnerPageRoute
+  '/my-page/couple-management/anniversary/': typeof MyPageCoupleManagementAnniversaryPageRoute
+  '/my-page/couple-management/partner-code/': typeof MyPageCoupleManagementPartnerCodePageRoute
 }
 
 export interface FileRouteTypes {
@@ -573,6 +607,8 @@ export interface FileRouteTypes {
     | '/terms/privacy-policy'
     | '/attachment-test/result/my'
     | '/attachment-test/result/partner'
+    | '/my-page/couple-management/anniversary'
+    | '/my-page/couple-management/partner-code'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -602,6 +638,8 @@ export interface FileRouteTypes {
     | '/terms/privacy-policy'
     | '/attachment-test/result/my'
     | '/attachment-test/result/partner'
+    | '/my-page/couple-management/anniversary'
+    | '/my-page/couple-management/partner-code'
   id:
     | '__root__'
     | '/'
@@ -632,6 +670,8 @@ export interface FileRouteTypes {
     | '/terms/privacy-policy/'
     | '/attachment-test/result/my/'
     | '/attachment-test/result/partner/'
+    | '/my-page/couple-management/anniversary/'
+    | '/my-page/couple-management/partner-code/'
   fileRoutesById: FileRoutesById
 }
 
@@ -655,6 +695,8 @@ export interface RootRouteChildren {
   TermsPrivacyPolicyPageRoute: typeof TermsPrivacyPolicyPageRoute
   AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageRoute
   AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageRoute
+  MyPageCoupleManagementAnniversaryPageRoute: typeof MyPageCoupleManagementAnniversaryPageRoute
+  MyPageCoupleManagementPartnerCodePageRoute: typeof MyPageCoupleManagementPartnerCodePageRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -677,6 +719,8 @@ const rootRouteChildren: RootRouteChildren = {
   TermsPrivacyPolicyPageRoute: TermsPrivacyPolicyPageRoute,
   AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
+  MyPageCoupleManagementAnniversaryPageRoute: MyPageCoupleManagementAnniversaryPageRoute,
+  MyPageCoupleManagementPartnerCodePageRoute: MyPageCoupleManagementPartnerCodePageRoute,
 }
 
 export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
@@ -705,7 +749,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/question/write-answer/",
         "/terms/privacy-policy/",
         "/attachment-test/result/my/",
-        "/attachment-test/result/partner/"
+        "/attachment-test/result/partner/",
+        "/my-page/couple-management/anniversary/",
+        "/my-page/couple-management/partner-code/"
       ]
     },
     "/": {
@@ -813,6 +859,12 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/attachment-test/result/partner/": {
       "filePath": "attachment-test/result/partner/page.tsx"
+    },
+    "/my-page/couple-management/anniversary/": {
+      "filePath": "my-page/couple-management/anniversary/page.tsx"
+    },
+    "/my-page/couple-management/partner-code/": {
+      "filePath": "my-page/couple-management/partner-code/page.tsx"
     }
   }
 }

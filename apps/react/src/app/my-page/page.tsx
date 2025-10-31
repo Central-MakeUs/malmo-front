@@ -51,7 +51,7 @@ function MyPage() {
       </Screen.Header>
 
       {/* 프로필 섹션 */}
-      <Screen.Content className="bg-white">
+      <Screen.Content className="no-bounce-scroll has-bottom-nav flex-1 bg-white">
         <ProfileSection nickname={userInfo.nickname || ''} dDay={dDay} />
 
         {/* 통계 박스 */}
@@ -61,9 +61,7 @@ function MyPage() {
         />
 
         {/* 메뉴 리스트 */}
-        <div className="pb-[60px]">
-          <MenuList menuItems={menuItems} />
-        </div>
+        <MenuList menuItems={menuItems} />
       </Screen.Content>
 
       {/* 하단 네비게이션 */}

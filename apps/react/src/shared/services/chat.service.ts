@@ -91,8 +91,9 @@ class ChatService extends ChatroomApi {
         const { data } = await this.completeChatRoom()
         return data?.data
       },
-      onError: () => {
+      onError: (error) => {
         toast.error('채팅 완료 처리 중 오류가 발생했습니다')
+        console.error('completeChatRoomMutation error:', error)
       },
     }
   }

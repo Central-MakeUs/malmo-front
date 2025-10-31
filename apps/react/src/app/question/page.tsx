@@ -67,7 +67,7 @@ function RouteComponent() {
         <HomeHeaderBar title="마음도감" />
       </Screen.Header>
 
-      <Screen.Content className="has-bottom-nav flex-1 overflow-y-auto overscroll-y-none bg-gray-neutral-100">
+      <Screen.Content className="has-bottom-nav no-bounce-scroll flex-1 bg-gray-neutral-100">
         <div className="bg-white pt-3 pb-7">
           <div className="mb-4 flex items-center justify-between pr-5 pl-[14px]">
             <div className="flex items-center gap-1 py-[2px]">
@@ -149,7 +149,7 @@ function RouteComponent() {
           </div>
         </div>
 
-        <div className="flex-1 px-5 pt-5">
+        <div className="px-5 py-5">
           <Link
             to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
             search={{ coupleQuestionId: selectedQuestion?.coupleQuestionId || 0, isEdit: false }}

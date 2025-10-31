@@ -1,13 +1,12 @@
 import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { useState } from 'react'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { AnniversaryEditSheet } from '@/features/anniversary'
 import { useAuth } from '@/features/auth'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
-import { PartnerCodeSheet, useProfileEdit, useProfileModal } from '@/features/profile'
+import { useProfileEdit, useProfileModal } from '@/features/profile'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
@@ -25,15 +24,15 @@ export const Route = createFileRoute('/my-page/couple-management/')({
 
 function CoupleManagementPage() {
   const router = useRouter()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { data: inviteCodeData } = useQuery(memberService.inviteCodeQuery())
   const inviteCode = inviteCodeData?.data?.coupleCode || ''
-  const [isPartnerCodeSheetOpen, setIsPartnerCodeSheetOpen] = useState(false)
   const { refreshUserInfo } = useAuth()
   const profileEdit = useProfileEdit()
 
   // 프로필 모달 훅
-  const { coupleDisconnectModal, coupleConnectedModal } = useProfileModal()
+  const { coupleDisconnectModal } = useProfileModal()
 
   // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
@@ -64,7 +63,7 @@ function CoupleManagementPage() {
 
   const handleConnectPartner = wrapWithTracking(BUTTON_NAMES.OPEN_PARTNER_SHEET, CATEGORIES.PROFILE, () => {
     if (isPartnerConnected) return
-    setIsPartnerCodeSheetOpen(true)
+    navigate({ to: '/my-page/couple-management/partner-code', replace: true })
   })
 
   const handleDisconnectCouple = wrapWithTracking(BUTTON_NAMES.DISCONNECT_COUPLE, CATEGORIES.PROFILE, () =>
@@ -126,13 +125,6 @@ function CoupleManagementPage() {
           </button>
         </div>
       </Screen.Content>
-
-      <PartnerCodeSheet
-        isOpen={isPartnerCodeSheetOpen}
-        onOpenChange={setIsPartnerCodeSheetOpen}
-        onSuccess={handleRefreshPage}
-        onCoupleConnected={coupleConnectedModal}
-      />
 
       <AnniversaryEditSheet
         isOpen={profileEdit.isAnniversarySheetOpen}
