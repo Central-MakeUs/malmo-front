@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { AnniversaryLayout, useAnniversary, useUpdateStartDate } from '@/features/anniversary'
+import { useAuth } from '@/features/auth'
 import { wrapWithTracking, BUTTON_NAMES, CATEGORIES } from '@/shared/analytics'
 
 export const Route = createFileRoute('/my-page/couple-management/anniversary/')({
@@ -10,7 +11,10 @@ export const Route = createFileRoute('/my-page/couple-management/anniversary/')(
 function CoupleManagementAnniversary() {
   const navigate = useNavigate()
   const anniversary = useAnniversary(null)
+  const { refreshUserInfo } = useAuth()
+
   const updateStartDateMutation = useUpdateStartDate(async () => {
+    await refreshUserInfo()
     navigate({ to: '/my-page/couple-management', replace: true })
   })
 
