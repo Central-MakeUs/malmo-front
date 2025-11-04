@@ -3,6 +3,7 @@ import {
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
 } from '@data/user-api-axios/api'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 import React, { useCallback, useMemo } from 'react'
@@ -59,6 +60,7 @@ LoadingIndicator.displayName = 'LoadingIndicator'
 function RouteComponent() {
   const { chatId } = Route.useLoaderData()
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const goBack = useGoBack()
   const { chatStatus, chattingModal, streamingMessage, awaitingResponse, isChatStatusSuccess, sendingMessage } =
     useChatting()
@@ -79,6 +81,11 @@ function RouteComponent() {
     return chatId ? allMessages : [...allMessages].reverse()
   }, [data, chatId, chattingModal.showChattingTutorial, auth.userInfo.loveTypeCategory])
 
+  const hasUserMessage = useMemo(
+    () => messages.some((chat) => chat.senderType === ChatRoomMessageDataSenderTypeEnum.User),
+    [messages]
+  )
+
   const scrollRef = useChatScroll({
     chatId,
     isFetchingNextPage,
@@ -88,19 +95,46 @@ function RouteComponent() {
     awaitingResponse,
   })
 
+  const chatCompletionOptions = useMemo(() => chatService.completeChatRoomMutation(), [])
+  const { mutate: completeChat, isPending: isCompletingChat } = useMutation({
+    mutationFn: chatCompletionOptions.mutationFn,
+    onError: chatCompletionOptions.onError,
+    onSuccess: async (result) => {
+      if (!result?.chatRoomId) {
+        navigate({ to: '/', replace: true })
+        return
+      }
+
+      queryClient.removeQueries({ queryKey: chatService.chatMessagesQuery().queryKey })
+      await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
+
+      navigate({
+        to: '/chat/loading',
+        search: { chatId: result.chatRoomId },
+        replace: true,
+      })
+    },
+  })
+
   const exitButton = useCallback(() => {
-    const actived = messages.some((chat) => chat.senderType === ChatRoomMessageDataSenderTypeEnum.User)
+    const disabled = !hasUserMessage || isCompletingChat
+
     return (
       <p
-        className={cn('body2-medium text-malmo-rasberry-500', { 'text-gray-300': !actived })}
+        className={cn('body2-medium text-malmo-rasberry-500', {
+          'text-gray-300': disabled,
+          'pointer-events-none': disabled,
+          'cursor-not-allowed': disabled,
+        })}
         onClick={wrapWithTracking(BUTTON_NAMES.EXIT_CHAT, CATEGORIES.CHAT, () => {
-          if (actived) navigate({ to: '/chat/loading', replace: true })
+          if (disabled) return
+          completeChat()
         })}
       >
         종료하기
       </p>
     )
-  }, [messages, navigate])
+  }, [completeChat, hasUserMessage, isCompletingChat])
 
   const { mutate: sendMessage } = useSendMessageMutation()
 

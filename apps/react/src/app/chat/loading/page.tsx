@@ -1,21 +1,22 @@
-import { QueryClient, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import Lottie from 'lottie-react'
 import { useEffect } from 'react'
+import { z } from 'zod'
 
 import summaryAnimation from '@/assets/lottie/summary.json'
 import { Screen } from '@/shared/layout/screen'
 import { useIsFrozenRoute } from '@/shared/navigation/transition/route-phase-context'
 import chatService from '@/shared/services/chat.service'
 
-const LOADING_DELAY_MS = 1500
+const LOADING_DELAY_MS = 5000
 
-type CompletionResult = Awaited<ReturnType<ReturnType<typeof chatService.completeChatRoomMutation>['mutationFn']>>
-let completionPromise: Promise<CompletionResult> | null = null
-let lastCompletionResult: CompletionResult | null = null
+const searchSchema = z.object({
+  chatId: z.number().optional(),
+})
 
 export const Route = createFileRoute('/chat/loading/')({
   component: RouteComponent,
+  validateSearch: searchSchema,
   loader: async ({ context }) => {
     await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
   },
@@ -23,35 +24,27 @@ export const Route = createFileRoute('/chat/loading/')({
 
 function RouteComponent() {
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
+  const { chatId } = Route.useSearch()
   const isFrozen = useIsFrozenRoute()
 
   useEffect(() => {
     if (isFrozen) return
-    let isActive = true
-
-    const completeChat = async () => {
-      try {
-        const result = await getCompletionPromise(queryClient)
-        if (!isActive) return
-
+    const timerId = window.setTimeout(() => {
+      if (chatId) {
         navigate({
           to: '/chat/result',
-          search: { chatId: result?.chatRoomId, fromHistory: false },
+          search: { chatId, fromHistory: false },
           replace: true,
         })
-      } catch {
-        if (!isActive) return
-        navigate({ to: '/', replace: true })
+        return
       }
-    }
-
-    void completeChat()
+      navigate({ to: '/', replace: true })
+    }, LOADING_DELAY_MS)
 
     return () => {
-      isActive = false
+      window.clearTimeout(timerId)
     }
-  }, [isFrozen, navigate, queryClient])
+  }, [chatId, isFrozen, navigate])
 
   return <LoadingScreen />
 }
@@ -68,46 +61,4 @@ function LoadingScreen() {
       </Screen.Content>
     </Screen>
   )
-}
-
-function getCompletionPromise(queryClient: QueryClient) {
-  if (completionPromise) {
-    return completionPromise
-  }
-
-  const statusQuery = chatService.chatRoomStatusQuery()
-  const currentStatus = queryClient.getQueryData(statusQuery.queryKey)
-
-  if (lastCompletionResult && currentStatus !== 'ALIVE') {
-    return Promise.resolve(lastCompletionResult)
-  }
-
-  if (currentStatus === 'ALIVE') {
-    lastCompletionResult = null
-  }
-
-  const chatServiceOptions = chatService.completeChatRoomMutation()
-  completionPromise = (async () => {
-    try {
-      const result = await chatServiceOptions.mutationFn()
-      lastCompletionResult = result ?? null
-
-      queryClient.removeQueries({ queryKey: chatService.chatMessagesQuery().queryKey })
-      await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
-
-      await delay(LOADING_DELAY_MS)
-      return result
-    } catch (error) {
-      chatServiceOptions.onError?.(error)
-      throw error
-    } finally {
-      completionPromise = null
-    }
-  })()
-
-  return completionPromise
-}
-
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
 }

@@ -90,7 +90,7 @@ function RouteComponent() {
         />
       </Screen.Header>
 
-      <Screen.Content className="flex flex-col bg-malmo-rasberry-25 pt-3">
+      <Screen.Content className="no-bounce-scroll flex flex-col bg-malmo-rasberry-25 pt-3">
         <ChatResultHeader
           title="대화 요약이 완료되었어요!"
           description={'모모가 고민을 해결하는 데<br /> 도움을 주었길 바라요'}
