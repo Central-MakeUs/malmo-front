@@ -145,7 +145,7 @@ function RouteComponent() {
 
   return (
     <Screen>
-      <Screen.Header behavior="overlay">
+      <Screen.Header>
         <DetailHeaderBar
           right={chatId ? undefined : exitButton()}
           title={chatId ? formatDate(messages[0]?.createdAt, 'YYYY년 MM월 DD일') : ''}

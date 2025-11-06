@@ -81,6 +81,16 @@ export function StackedOutlet({
     }
     lastHandledSnapshotRef.current = snapshot.id
 
+    const goingToLoading = snapshot.toEntry?.location.pathname?.startsWith('/chat/loading')
+
+    if (snapshot.direction === 'forward' && goingToLoading) {
+      setFrozenStack([])
+      setCurrentDirection('forward')
+      snapshot.proceed()
+      clear()
+      return
+    }
+
     if (snapshot.skip) {
       snapshot.proceed()
       clear()
