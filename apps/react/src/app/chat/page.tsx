@@ -75,7 +75,8 @@ function RouteComponent() {
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
   const messages = useMemo(() => {
-    if (chattingModal.showChattingTutorial && chatStatus === ChatRoomStateDataChatRoomStateEnum.BeforeInit) return []
+    if (!chatId && chattingModal.showChattingTutorial && chatStatus === ChatRoomStateDataChatRoomStateEnum.BeforeInit)
+      return []
     if (!data || !auth.userInfo.loveTypeCategory) return []
     const allMessages = data.pages.flatMap((page) => page?.list ?? [])
     return chatId ? allMessages : [...allMessages].reverse()
@@ -221,7 +222,7 @@ function RouteComponent() {
         </div>
       </Screen.Content>
       <ChatInput disabled={!!chatId} />
-      {chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
+      {!chatId && chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </Screen>
   )
 }
