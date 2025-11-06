@@ -1,14 +1,22 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import Lottie from 'lottie-react'
 import { useEffect } from 'react'
+import { z } from 'zod'
 
 import summaryAnimation from '@/assets/lottie/summary.json'
 import { Screen } from '@/shared/layout/screen'
+import { useIsFrozenRoute } from '@/shared/navigation/transition/route-phase-context'
 import chatService from '@/shared/services/chat.service'
+
+const LOADING_DELAY_MS = 5000
+
+const searchSchema = z.object({
+  chatId: z.number().optional(),
+})
 
 export const Route = createFileRoute('/chat/loading/')({
   component: RouteComponent,
+  validateSearch: searchSchema,
   loader: async ({ context }) => {
     await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
   },
@@ -16,27 +24,32 @@ export const Route = createFileRoute('/chat/loading/')({
 
 function RouteComponent() {
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
-
-  const chatServiceOptions = chatService.completeChatRoomMutation()
-  const completeChatMutation = useMutation({
-    ...chatServiceOptions,
-    onSuccess: async (data) => {
-      await new Promise((r) => setTimeout(r, 1500))
-      queryClient.removeQueries({ queryKey: chatService.chatMessagesQuery().queryKey })
-      await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
-      navigate({ to: '/chat/result', search: { chatId: data?.chatRoomId, fromHistory: false }, replace: true })
-    },
-    onError: () => {
-      chatServiceOptions.onError?.()
-      navigate({ to: '/', replace: true })
-    },
-  })
+  const { chatId } = Route.useSearch()
+  const isFrozen = useIsFrozenRoute()
 
   useEffect(() => {
-    completeChatMutation.mutate()
-  }, [])
+    if (isFrozen) return
+    const timerId = window.setTimeout(() => {
+      if (chatId) {
+        navigate({
+          to: '/chat/result',
+          search: { chatId, fromHistory: false },
+          replace: true,
+        })
+        return
+      }
+      navigate({ to: '/', replace: true })
+    }, LOADING_DELAY_MS)
 
+    return () => {
+      window.clearTimeout(timerId)
+    }
+  }, [chatId, isFrozen, navigate])
+
+  return <LoadingScreen />
+}
+
+function LoadingScreen() {
   return (
     <Screen>
       <Screen.Content className="flex h-full w-full -translate-y-[60px] flex-col items-center justify-center gap-6">
