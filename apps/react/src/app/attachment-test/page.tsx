@@ -47,11 +47,7 @@ function AttachmentTestPage() {
         <div className="bg-malmo-rasberry-25">
           <DetailHeaderBar
             onBackClick={() => {
-              if (from) {
-                navigate({ to: from })
-              } else {
-                goBack()
-              }
+              goBack()
             }}
             className="bg-malmo-rasberry-25"
           />
