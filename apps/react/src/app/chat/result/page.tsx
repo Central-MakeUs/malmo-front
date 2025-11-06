@@ -17,31 +17,20 @@ import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
-  chatId: z.number().optional(),
+  chatId: z.number(),
   fromHistory: z.boolean().optional(),
 })
 
 export const Route = createFileRoute('/chat/result/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const chatId = deps.search.chatId ?? 0
-
-    await context.queryClient.ensureQueryData(historyService.historySummaryQuery(chatId))
-
-    return { chatId }
-  },
 })
 
 function RouteComponent() {
-  const { chatId: loaderChatId } = Route.useLoaderData()
   const { chatId, fromHistory } = Route.useSearch()
   const historyModal = useHistoryModal()
   const { setStatusColor } = useTheme()
-
-  const { data: chatResult } = useQuery(historyService.historySummaryQuery(chatId ?? loaderChatId))
-
+  const { data: chatResult } = useQuery(historyService.historySummaryQuery(chatId))
   const navigate = useNavigate()
   const goBack = useGoBack()
 

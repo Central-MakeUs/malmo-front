@@ -8,15 +8,11 @@ import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
-import termsService from '@/shared/services/terms.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/onboarding/terms/')({
   component: TermsPage,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(termsService.termsListQuery())
-  },
 })
 
 function TermsPage() {

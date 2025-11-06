@@ -20,10 +20,6 @@ export const Route = createFileRoute('/question/')({
   validateSearch: z.object({
     selectedLevel: z.number().optional(),
   }),
-  loaderDeps: (search) => search,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(questionService.todayQuestionQuery())
-  },
 })
 
 function RouteComponent() {

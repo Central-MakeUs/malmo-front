@@ -16,9 +16,6 @@ import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/onboarding/my-code/')({
   component: MyCodePage,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(memberService.inviteCodeQuery())
-  },
 })
 
 function MyCodePage() {

@@ -13,15 +13,11 @@ import { useAuth } from '@/features/auth'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
-import loveTypeService from '@/shared/services/love-type.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 export const Route = createFileRoute('/attachment-test/question/')({
   component: AttachmentTestQuestionPage,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(loveTypeService.questionsQuery())
-  },
 })
 
 function AttachmentTestQuestionPage() {

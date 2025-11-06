@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Pen, X } from 'lucide-react'
 import { useState } from 'react'
@@ -22,22 +22,20 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/question/see-answer/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const { coupleQuestionId } = deps.search
-    await context.queryClient.ensureQueryData(questionService.questionDetailQuery(coupleQuestionId))
-    const showHelpInit = await bridge.getQuestionHelp()
-    return { coupleQuestionId, showHelpInit }
-  },
 })
 
 function RouteComponent() {
-  const { coupleQuestionId, showHelpInit } = Route.useLoaderData()
+  const { coupleQuestionId } = Route.useSearch()
   const [showHelp, setShowHelp] = useState(false)
+
+  const { data: showHelpInit } = useSuspenseQuery({
+    queryKey: ['question-help'],
+    queryFn: () => bridge.getQuestionHelp(),
+  })
 
   const shouldShowHelp = showHelpInit && !showHelp
 
-  const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
+  const { data } = useSuspenseQuery(questionService.questionDetailQuery(coupleQuestionId))
 
   return (
     <Screen>

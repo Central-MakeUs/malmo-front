@@ -17,23 +17,11 @@ import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
-import chatService from '@/shared/services/chat.service'
-import memberService from '@/shared/services/member.service'
-import questionService from '@/shared/services/question.service'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { calculateDDay } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
-  loader: async ({ context }) => {
-    const loadPromises = [
-      context.queryClient.ensureQueryData(questionService.todayQuestionQuery()),
-      context.queryClient.ensureQueryData(memberService.partnerInfoQuery()),
-      context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery()),
-    ]
-
-    await Promise.allSettled(loadPromises)
-  },
 })
 
 function HomePage() {

@@ -28,7 +28,6 @@ import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import { useGoBack } from '@/shared/navigation/use-go-back'
 import chatService from '@/shared/services/chat.service'
-import historyService from '@/shared/services/history.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { formatDate } from '@/shared/utils'
 
@@ -39,15 +38,6 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/chat/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const { chatId } = deps.search
-    await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
-    if (chatId) {
-      await context.queryClient.ensureInfiniteQueryData(historyService.historyMessagesQuery(chatId))
-    }
-    return { chatId }
-  },
 })
 
 const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean }>(({ isFetching }, ref) => (
@@ -58,7 +48,7 @@ const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean 
 LoadingIndicator.displayName = 'LoadingIndicator'
 
 function RouteComponent() {
-  const { chatId } = Route.useLoaderData()
+  const { chatId } = Route.useSearch()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const goBack = useGoBack()

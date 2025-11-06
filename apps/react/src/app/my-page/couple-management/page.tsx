@@ -1,6 +1,6 @@
 import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { AnniversaryEditSheet } from '@/features/anniversary'
@@ -17,13 +17,9 @@ import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
   component: CoupleManagementPage,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(memberService.inviteCodeQuery())
-  },
 })
 
 function CoupleManagementPage() {
-  const router = useRouter()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { data: inviteCodeData } = useQuery(memberService.inviteCodeQuery())
@@ -43,9 +39,7 @@ function CoupleManagementPage() {
     await queryClient.setQueryData(queryKeys.member.partnerInfo(), null)
     queryClient.removeQueries({ queryKey: queryKeys.member.partnerInfo() })
     await refreshUserInfo()
-
-    // 페이지 로더 새로고침
-    router.invalidate()
+    await queryClient.invalidateQueries({ queryKey: memberService.inviteCodeQuery().queryKey })
   }
 
   const handleCopyInviteCode = wrapWithTracking(BUTTON_NAMES.COPY_INVITE_CODE, CATEGORIES.PROFILE, async () => {

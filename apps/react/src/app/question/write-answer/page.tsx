@@ -21,18 +21,10 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/question/write-answer/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const { coupleQuestionId } = deps.search
-
-    await context.queryClient.ensureQueryData(questionService.questionDetailQuery(coupleQuestionId))
-
-    return { coupleQuestionId, isEdit: deps.search.isEdit || false }
-  },
 })
 
 function RouteComponent() {
-  const { coupleQuestionId, isEdit } = Route.useLoaderData()
+  const { coupleQuestionId, isEdit = false } = Route.useSearch()
 
   const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
 
