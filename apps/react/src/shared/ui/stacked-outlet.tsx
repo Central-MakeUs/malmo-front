@@ -15,7 +15,7 @@ type FrozenEntry = {
   direction: Direction
 }
 
-const DEFAULT_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+const DEFAULT_EASE: [number, number, number, number] = [0, 0, 0.58, 1]
 const EXIT_TRANSLATE = 100
 const toPercent = (value: number) => `${value}%`
 
