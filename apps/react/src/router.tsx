@@ -11,6 +11,12 @@ export function createRouter() {
     defaultOptions: {
       queries: {
         throwOnError: true, // GET 요청은 Error Boundary로
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+        retry: false,
       },
     },
   })
