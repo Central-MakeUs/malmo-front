@@ -30,7 +30,7 @@ function HomePage() {
 
   useAppNotifications()
 
-  const { data: todayQuestion } = useTodayQuestion()
+  const { data: todayQuestion } = useTodayQuestion({ refetchOnMount: true })
   const { data: partnerInfo } = usePartnerInfo()
   const profileEdit = useProfileEdit()
 

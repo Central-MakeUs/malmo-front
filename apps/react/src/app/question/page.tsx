@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 // internal imports
 import { TodayQuestionSection } from '@/features/question'
+import { useTodayQuestion } from '@/features/question/hooks/use-today-question'
 import CalendarItem from '@/features/question/ui/calendar-item'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
@@ -26,7 +27,7 @@ export const Route = createFileRoute('/question/')({
 function RouteComponent() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { data, isLoading, error } = useQuery(questionService.todayQuestionQuery())
+  const { data, isLoading, error } = useTodayQuestion({ refetchOnMount: true })
   const search = Route.useSearch()
 
   if (isLoading) {
