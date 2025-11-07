@@ -26,13 +26,17 @@ const ChatHistoryItemBase = ({ history }: { history: GetChatRoomListResponse }) 
 
 // '대화 기록' 페이지용 링크 아이템
 export const LinkedChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => {
+  const chatRoomId = history.chatRoomId
+
+  if (!chatRoomId) return null
+
   const handleClick = wrapWithTracking(BUTTON_NAMES.SELECT_HISTORY, CATEGORIES.MAIN)
 
   return (
     <Link
       className="flex items-center justify-between gap-16 bg-white px-5 pt-6 pb-7"
       to={'/chat/result'}
-      search={{ chatId: history.chatRoomId, fromHistory: true }}
+      search={{ chatId: chatRoomId, fromHistory: true }}
       onClick={handleClick}
     >
       <ChatHistoryItemBase history={history} />
