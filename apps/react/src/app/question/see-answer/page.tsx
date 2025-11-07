@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Pen, X } from 'lucide-react'
 import { useState } from 'react'
@@ -14,6 +14,7 @@ import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -28,14 +29,20 @@ function RouteComponent() {
   const { coupleQuestionId } = Route.useSearch()
   const [showHelp, setShowHelp] = useState(false)
 
-  const { data: showHelpInit } = useSuspenseQuery({
+  const { data: showHelpInit, isLoading: isHelpLoading } = useQuery({
     queryKey: ['question-help'],
     queryFn: () => bridge.getQuestionHelp(),
   })
 
   const shouldShowHelp = showHelpInit && !showHelp
 
-  const { data } = useSuspenseQuery(questionService.questionDetailQuery(coupleQuestionId))
+  const { data, isLoading, error } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
+
+  if (isHelpLoading || isLoading) {
+    return <PageLoadingFallback />
+  }
+
+  if (error || !data) return null
 
   return (
     <Screen>

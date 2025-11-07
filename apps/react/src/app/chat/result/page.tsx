@@ -15,6 +15,7 @@ import { useGoBack } from '@/shared/navigation/use-go-back'
 import historyService from '@/shared/services/history.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 const searchSchema = z.object({
   chatId: z.number(),
@@ -30,7 +31,6 @@ function RouteComponent() {
   const { chatId, fromHistory } = Route.useSearch()
   const historyModal = useHistoryModal()
   const { setStatusColor } = useTheme()
-  const { data: chatResult } = useQuery(historyService.historySummaryQuery(chatId))
   const navigate = useNavigate()
   const goBack = useGoBack()
 
@@ -41,6 +41,16 @@ function RouteComponent() {
       setStatusColor('#fff')
     }
   }, [])
+
+  const { data: chatResult, isLoading, error } = useQuery(historyService.historySummaryQuery(chatId))
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
+  if (error) {
+    return null
+  }
 
   const summaryData = [
     { title: '상황 요약', content: chatResult?.firstSummary },
@@ -86,11 +96,7 @@ function RouteComponent() {
         />
 
         <div className={cn('rounded-t-[24px] bg-white px-5 pt-10', chatId ? 'pb-5' : 'pb-20')}>
-          {!chatResult ? (
-            <div className="flex flex-1 items-center justify-center bg-white">
-              <p className="body1-regular text-gray-500">요약 결과를 불러오는 중입니다...</p>
-            </div>
-          ) : (
+          {chatResult ? (
             <ChatResultMainInfo
               date={chatResult.createdAt}
               subject={chatResult.totalSummary}
@@ -98,6 +104,10 @@ function RouteComponent() {
                 navigate({ to: '/chat', search: { chatId: chatResult.chatRoomId } })
               )}
             />
+          ) : (
+            <div className="flex flex-1 items-center justify-center bg-white">
+              <p className="body1-regular text-gray-500">요약 결과를 찾을 수 없습니다.</p>
+            </div>
           )}
 
           <hr className="mt-7 border-gray-100" />

@@ -14,6 +14,7 @@ import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { Badge, BottomNavigation } from '@/shared/ui'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 export const Route = createFileRoute('/question/')({
   component: RouteComponent,
@@ -28,7 +29,10 @@ function RouteComponent() {
   const { data, isLoading, error } = useQuery(questionService.todayQuestionQuery())
   const search = Route.useSearch()
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
   if (error || !data || data.level === undefined) return null
 
   const initialLevel = search.selectedLevel ?? data.level

@@ -7,6 +7,7 @@ import { useTerms, TermsContentModal } from '@/features/term'
 import { Screen } from '@/shared/layout/screen'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 import { calculateDDay } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/my-page/')({
@@ -25,10 +26,14 @@ function MyPage() {
   const dDay = calculateDDay(userInfo.startLoveDate)
 
   // 약관 데이터
-  const { terms, selectedTermId, selectedTermContent, handleCloseTerms, handleShowTerms } = useTerms()
+  const { terms, selectedTermId, selectedTermContent, handleCloseTerms, handleShowTerms, isLoading } = useTerms()
 
   // 메뉴 데이터
   const { menuItems } = useMyPageMenu(terms, handleShowTerms)
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
 
   return (
     <Screen>

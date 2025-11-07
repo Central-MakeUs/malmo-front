@@ -12,6 +12,7 @@ import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
 import memberService from '@/shared/services/member.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/onboarding/my-code/')({
@@ -51,6 +52,10 @@ function MyCodePage() {
       setIsSubmitting(false)
     }
   })
+
+  if (isLoadingInviteCode) {
+    return <PageLoadingFallback />
+  }
 
   return (
     <Screen>

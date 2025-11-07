@@ -12,6 +12,7 @@ import { Screen } from '@/shared/layout/screen'
 import questionService from '@/shared/services/question.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -26,10 +27,15 @@ export const Route = createFileRoute('/question/write-answer/')({
 function RouteComponent() {
   const { coupleQuestionId, isEdit = false } = Route.useSearch()
 
-  const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
-
+  const { data, isLoading, error } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
   const historyModal = useQuestionModal()
   const [answer, setAnswer] = useState(data?.me?.answer || '')
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
+  if (error || !data) return null
   const MAX_LENGTH = 100
 
   const handleSave = wrapWithTracking(BUTTON_NAMES.SAVE_ANSWER, CATEGORIES.QUESTION, () =>

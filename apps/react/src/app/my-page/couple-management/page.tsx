@@ -13,6 +13,7 @@ import { Screen } from '@/shared/layout/screen'
 import memberService from '@/shared/services/member.service'
 import { queryKeys } from '@/shared/services/query-keys'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/my-page/couple-management/')({
@@ -22,7 +23,7 @@ export const Route = createFileRoute('/my-page/couple-management/')({
 function CoupleManagementPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { data: inviteCodeData } = useQuery(memberService.inviteCodeQuery())
+  const { data: inviteCodeData, isLoading } = useQuery(memberService.inviteCodeQuery())
   const inviteCode = inviteCodeData?.data?.coupleCode || ''
   const { refreshUserInfo } = useAuth()
   const profileEdit = useProfileEdit()
@@ -63,6 +64,10 @@ function CoupleManagementPage() {
   const handleDisconnectCouple = wrapWithTracking(BUTTON_NAMES.DISCONNECT_COUPLE, CATEGORIES.PROFILE, () =>
     coupleDisconnectModal(handleRefreshPage)
   )
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
 
   return (
     <Screen>
