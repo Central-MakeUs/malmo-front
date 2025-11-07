@@ -28,6 +28,7 @@ import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import { useGoBack } from '@/shared/navigation/use-go-back'
 import chatService from '@/shared/services/chat.service'
+import { queryKeys } from '@/shared/services/query-keys'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { formatDate } from '@/shared/utils'
 
@@ -96,8 +97,11 @@ function RouteComponent() {
         return
       }
 
-      queryClient.removeQueries({ queryKey: chatService.chatMessagesQuery().queryKey })
-      await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
+      queryClient.removeQueries({ queryKey: queryKeys.chat.messages() })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.chat.status() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.history.all }),
+      ])
 
       navigate({
         to: '/chat/loading',
