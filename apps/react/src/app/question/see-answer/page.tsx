@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Pen, X } from 'lucide-react'
 import { useState } from 'react'
@@ -28,6 +28,7 @@ export const Route = createFileRoute('/question/see-answer/')({
 function RouteComponent() {
   const { coupleQuestionId } = Route.useSearch()
   const [showHelp, setShowHelp] = useState(false)
+  const queryClient = useQueryClient()
 
   const { data: showHelpInit, isLoading: isHelpLoading } = useQuery({
     queryKey: ['question-help'],
@@ -70,6 +71,7 @@ function RouteComponent() {
                 onClick={wrapWithTracking(BUTTON_NAMES.CLOSE_TOOLTIP, CATEGORIES.QUESTION, async () => {
                   await bridge.setQuestionHelpFalse()
                   setShowHelp(true)
+                  queryClient.invalidateQueries({ queryKey: ['question-help'] })
                 })}
               >
                 <div className="flex gap-[2px] text-gray-iron-200">
