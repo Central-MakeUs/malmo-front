@@ -27,7 +27,7 @@ export const Route = createFileRoute('/question/')({
 function RouteComponent() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { data, isLoading, error } = useTodayQuestion({ refetchOnMount: true })
+  const { data, isLoading, error } = useTodayQuestion()
   const search = Route.useSearch()
 
   if (isLoading) {
