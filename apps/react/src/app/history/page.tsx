@@ -39,7 +39,7 @@ function RouteComponent() {
     chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
-  const isLoading = isFetching && !isFetchingNextPage
+  const isLoading = isFetching && !isFetchingNextPage && histories.length === 0
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
