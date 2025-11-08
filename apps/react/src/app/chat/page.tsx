@@ -98,10 +98,7 @@ function RouteComponent() {
       }
 
       queryClient.removeQueries({ queryKey: queryKeys.chat.messages() })
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: queryKeys.chat.status() }),
-        queryClient.invalidateQueries({ queryKey: queryKeys.history.all }),
-      ])
+      await Promise.all([queryClient.invalidateQueries({ queryKey: queryKeys.chat.status() })])
 
       navigate({
         to: '/chat/loading',

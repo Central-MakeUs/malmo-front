@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
@@ -13,6 +13,7 @@ import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import { useGoBack } from '@/shared/navigation/use-go-back'
 import historyService from '@/shared/services/history.service'
+import { queryKeys } from '@/shared/services/query-keys'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
@@ -33,6 +34,7 @@ function RouteComponent() {
   const { setStatusColor } = useTheme()
   const navigate = useNavigate()
   const goBack = useGoBack()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     setStatusColor('#FDEDF0')
@@ -43,6 +45,11 @@ function RouteComponent() {
   }, [])
 
   const { data: chatResult, isLoading, error } = useQuery(historyService.historySummaryQuery(chatId))
+
+  useEffect(() => {
+    if (!chatResult) return
+    queryClient.invalidateQueries({ queryKey: queryKeys.history.all })
+  }, [chatResult, queryClient])
 
   if (isLoading) {
     return <PageLoadingFallback />
