@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
 import termsService from '@/shared/services/terms.service'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 export const Route = createFileRoute('/terms/privacy-policy/')({
   component: RouteComponent,
@@ -12,7 +13,7 @@ function RouteComponent() {
   const { data: termsListData, isLoading } = useQuery(termsService.termsListQuery())
 
   if (isLoading) {
-    return <div>약관을 불러오는 중입니다...</div>
+    return <PageLoadingFallback />
   }
 
   const filteredTerms = termsListData?.find(

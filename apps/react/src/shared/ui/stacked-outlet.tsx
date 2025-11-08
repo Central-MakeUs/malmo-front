@@ -15,7 +15,7 @@ type FrozenEntry = {
   direction: Direction
 }
 
-const DEFAULT_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1]
+const DEFAULT_EASE: [number, number, number, number] = [0, 0, 0.58, 1]
 const EXIT_TRANSLATE = 100
 const toPercent = (value: number) => `${value}%`
 
@@ -66,10 +66,12 @@ export function StackedOutlet({
 
   const routerState = useRouterState()
   const location = routerState?.location ?? (liveRouter as any)?.state?.location
+  const routerStatus = routerState?.status ?? (liveRouter as any)?.state?.status ?? 'idle'
   const href = location?.href ?? location?.pathname ?? ''
 
   const [frozenStack, setFrozenStack] = useState<FrozenEntry[]>([])
   const [currentDirection, setCurrentDirection] = useState<Direction>('none')
+  const [showLivePlaceholder, setShowLivePlaceholder] = useState(false)
   const lastHandledSnapshotRef = useRef<number | null>(null)
 
   const animationDuration = prefersReducedMotion ? 0 : duration
@@ -136,6 +138,10 @@ export function StackedOutlet({
     clear()
   }, [snapshot, liveRouter, keep, clear])
 
+  useEffect(() => {
+    setShowLivePlaceholder(routerStatus === 'pending')
+  }, [routerStatus])
+
   const handleFrozenExit = (id: string) => {
     setFrozenStack((prev) => prev.filter((entry) => entry.id !== id))
   }
@@ -186,6 +192,7 @@ export function StackedOutlet({
           onAnimationComplete={handleLiveComplete}
         >
           <RouterContext.Provider value={liveRouter}>
+            {showLivePlaceholder && <div className="absolute inset-0 z-9999 bg-white" />}
             <Outlet />
           </RouterContext.Provider>
         </motion.div>

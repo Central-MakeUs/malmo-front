@@ -15,16 +15,12 @@ import { useDebounce } from '@/shared/hooks/use-debounce'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
-import chatService from '@/shared/services/chat.service'
 import { BottomNavigation } from '@/shared/ui'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
 import { Spinner } from '@/shared/ui/spinner'
 
 export const Route = createFileRoute('/history/')({
   component: RouteComponent,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
-  },
 })
 
 function RouteComponent() {
@@ -43,7 +39,7 @@ function RouteComponent() {
     chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
-  const isLoading = isFetching && !isFetchingNextPage
+  const isLoading = isFetching && !isFetchingNextPage && histories.length === 0
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)

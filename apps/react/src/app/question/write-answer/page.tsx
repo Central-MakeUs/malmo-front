@@ -12,6 +12,7 @@ import { Screen } from '@/shared/layout/screen'
 import questionService from '@/shared/services/question.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -21,23 +22,20 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/question/write-answer/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const { coupleQuestionId } = deps.search
-
-    await context.queryClient.ensureQueryData(questionService.questionDetailQuery(coupleQuestionId))
-
-    return { coupleQuestionId, isEdit: deps.search.isEdit || false }
-  },
 })
 
 function RouteComponent() {
-  const { coupleQuestionId, isEdit } = Route.useLoaderData()
+  const { coupleQuestionId, isEdit = false } = Route.useSearch()
 
-  const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
-
+  const { data, isLoading, error } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
   const historyModal = useQuestionModal()
   const [answer, setAnswer] = useState(data?.me?.answer || '')
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
+  if (error || !data) return null
   const MAX_LENGTH = 100
 
   const handleSave = wrapWithTracking(BUTTON_NAMES.SAVE_ANSWER, CATEGORIES.QUESTION, () =>

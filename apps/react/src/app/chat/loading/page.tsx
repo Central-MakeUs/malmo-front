@@ -6,7 +6,6 @@ import { z } from 'zod'
 import summaryAnimation from '@/assets/lottie/summary.json'
 import { Screen } from '@/shared/layout/screen'
 import { useIsFrozenRoute } from '@/shared/navigation/transition/route-phase-context'
-import chatService from '@/shared/services/chat.service'
 
 const LOADING_DELAY_MS = 5000
 
@@ -17,9 +16,6 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/chat/loading/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(chatService.chatRoomStatusQuery())
-  },
 })
 
 function RouteComponent() {

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Pen, X } from 'lucide-react'
 import { useState } from 'react'
@@ -14,6 +14,7 @@ import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -22,22 +23,27 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/question/see-answer/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const { coupleQuestionId } = deps.search
-    await context.queryClient.ensureQueryData(questionService.questionDetailQuery(coupleQuestionId))
-    const showHelpInit = await bridge.getQuestionHelp()
-    return { coupleQuestionId, showHelpInit }
-  },
 })
 
 function RouteComponent() {
-  const { coupleQuestionId, showHelpInit } = Route.useLoaderData()
+  const { coupleQuestionId } = Route.useSearch()
   const [showHelp, setShowHelp] = useState(false)
+  const queryClient = useQueryClient()
+
+  const { data: showHelpInit, isLoading: isHelpLoading } = useQuery({
+    queryKey: ['question-help'],
+    queryFn: () => bridge.getQuestionHelp(),
+  })
 
   const shouldShowHelp = showHelpInit && !showHelp
 
-  const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
+  const { data, isLoading, error } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
+
+  if (isHelpLoading || isLoading) {
+    return <PageLoadingFallback />
+  }
+
+  if (error || !data) return null
 
   return (
     <Screen>
@@ -65,6 +71,7 @@ function RouteComponent() {
                 onClick={wrapWithTracking(BUTTON_NAMES.CLOSE_TOOLTIP, CATEGORIES.QUESTION, async () => {
                   await bridge.setQuestionHelpFalse()
                   setShowHelp(true)
+                  queryClient.invalidateQueries({ queryKey: ['question-help'] })
                 })}
               >
                 <div className="flex gap-[2px] text-gray-iron-200">

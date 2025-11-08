@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { X } from 'lucide-react'
 import { useEffect } from 'react'
@@ -13,37 +13,28 @@ import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import { useGoBack } from '@/shared/navigation/use-go-back'
 import historyService from '@/shared/services/history.service'
+import { queryKeys } from '@/shared/services/query-keys'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 const searchSchema = z.object({
-  chatId: z.number().optional(),
+  chatId: z.number(),
   fromHistory: z.boolean().optional(),
 })
 
 export const Route = createFileRoute('/chat/result/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const chatId = deps.search.chatId ?? 0
-
-    await context.queryClient.ensureQueryData(historyService.historySummaryQuery(chatId))
-
-    return { chatId }
-  },
 })
 
 function RouteComponent() {
-  const { chatId: loaderChatId } = Route.useLoaderData()
   const { chatId, fromHistory } = Route.useSearch()
   const historyModal = useHistoryModal()
   const { setStatusColor } = useTheme()
-
-  const { data: chatResult } = useQuery(historyService.historySummaryQuery(chatId ?? loaderChatId))
-
   const navigate = useNavigate()
   const goBack = useGoBack()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     setStatusColor('#FDEDF0')
@@ -52,6 +43,21 @@ function RouteComponent() {
       setStatusColor('#fff')
     }
   }, [])
+
+  const { data: chatResult, isLoading, error } = useQuery(historyService.historySummaryQuery(chatId))
+
+  useEffect(() => {
+    if (!chatResult) return
+    queryClient.invalidateQueries({ queryKey: queryKeys.history.all })
+  }, [chatResult, queryClient])
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
+  if (error) {
+    return null
+  }
 
   const summaryData = [
     { title: '상황 요약', content: chatResult?.firstSummary },
@@ -97,11 +103,7 @@ function RouteComponent() {
         />
 
         <div className={cn('rounded-t-[24px] bg-white px-5 pt-10', chatId ? 'pb-5' : 'pb-20')}>
-          {!chatResult ? (
-            <div className="flex flex-1 items-center justify-center bg-white">
-              <p className="body1-regular text-gray-500">요약 결과를 불러오는 중입니다...</p>
-            </div>
-          ) : (
+          {chatResult ? (
             <ChatResultMainInfo
               date={chatResult.createdAt}
               subject={chatResult.totalSummary}
@@ -109,6 +111,10 @@ function RouteComponent() {
                 navigate({ to: '/chat', search: { chatId: chatResult.chatRoomId } })
               )}
             />
+          ) : (
+            <div className="flex flex-1 items-center justify-center bg-white">
+              <p className="body1-regular text-gray-500">요약 결과를 찾을 수 없습니다.</p>
+            </div>
           )}
 
           <hr className="mt-7 border-gray-100" />

@@ -5,16 +5,13 @@ import { useAuth } from '@/features/auth'
 import { useMyPageMenu, ProfileSection, StatsSection, MenuList } from '@/features/profile'
 import { useTerms, TermsContentModal } from '@/features/term'
 import { Screen } from '@/shared/layout/screen'
-import termsService from '@/shared/services/terms.service'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 import { calculateDDay } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/my-page/')({
   component: MyPage,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(termsService.termsListQuery())
-  },
 })
 
 function MyPage() {
@@ -29,10 +26,14 @@ function MyPage() {
   const dDay = calculateDDay(userInfo.startLoveDate)
 
   // 약관 데이터
-  const { terms, selectedTermId, selectedTermContent, handleCloseTerms, handleShowTerms } = useTerms()
+  const { terms, selectedTermId, selectedTermContent, handleCloseTerms, handleShowTerms, isLoading } = useTerms()
 
   // 메뉴 데이터
   const { menuItems } = useMyPageMenu(terms, handleShowTerms)
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
 
   return (
     <Screen>

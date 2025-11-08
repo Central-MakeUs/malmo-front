@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 
 import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import { useGoBack } from '@/shared/navigation/use-go-back'
+import { queryKeys } from '@/shared/services/query-keys'
 import questionService from '@/shared/services/question.service'
 
 export interface UseQuestionModalReturn {
@@ -42,7 +43,10 @@ export function useQuestionModal(): UseQuestionModalReturn {
                 })
                 return
               }
-              await queryClient.invalidateQueries({ queryKey: questionService.todayQuestionQuery().queryKey })
+              await Promise.all([
+                queryClient.invalidateQueries({ queryKey: queryKeys.question.today() }),
+                queryClient.invalidateQueries({ queryKey: queryKeys.question.detail(data.coupleQuestionId) }),
+              ])
 
               navigate({
                 to: '/question/see-answer',

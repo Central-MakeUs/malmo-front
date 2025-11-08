@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -6,6 +6,7 @@ import { z } from 'zod'
 
 // internal imports
 import { TodayQuestionSection } from '@/features/question'
+import { useTodayQuestion } from '@/features/question/hooks/use-today-question'
 import CalendarItem from '@/features/question/ui/calendar-item'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
@@ -14,25 +15,25 @@ import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { Badge, BottomNavigation } from '@/shared/ui'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 export const Route = createFileRoute('/question/')({
   component: RouteComponent,
   validateSearch: z.object({
     selectedLevel: z.number().optional(),
   }),
-  loaderDeps: (search) => search,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(questionService.todayQuestionQuery())
-  },
 })
 
 function RouteComponent() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { data, isLoading, error } = useQuery(questionService.todayQuestionQuery())
+  const { data, isLoading, error } = useTodayQuestion()
   const search = Route.useSearch()
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
   if (error || !data || data.level === undefined) return null
 
   const initialLevel = search.selectedLevel ?? data.level
