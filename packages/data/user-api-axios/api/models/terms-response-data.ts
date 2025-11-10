@@ -18,21 +18,12 @@ import type { TermsContentResponseData } from './terms-content-response-data'
 
 /**
  * 약관 응답 데이터
- * @export
- * @interface TermsResponseData
  */
 export interface TermsResponseData {
   /**
    * 약관 타입
-   * @type {string}
-   * @memberof TermsResponseData
    */
   termsType?: TermsResponseDataTermsTypeEnum
-  /**
-   *
-   * @type {TermsContentResponseData}
-   * @memberof TermsResponseData
-   */
   content?: TermsContentResponseData
 }
 

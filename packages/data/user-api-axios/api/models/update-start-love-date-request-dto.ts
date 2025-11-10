@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface UpdateStartLoveDateRequestDto
- */
 export interface UpdateStartLoveDateRequestDto {
-  /**
-   *
-   * @type {string}
-   * @memberof UpdateStartLoveDateRequestDto
-   */
   startLoveDate: string
 }

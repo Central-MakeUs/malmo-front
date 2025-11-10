@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ChatRequest
- */
 export interface ChatRequest {
-  /**
-   *
-   * @type {string}
-   * @memberof ChatRequest
-   */
   message: string
 }

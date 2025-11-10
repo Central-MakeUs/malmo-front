@@ -39,7 +39,6 @@ import type { RefreshTokenSuccessResponse } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * RefreshApi - axios parameter creator
- * @export
  */
 export const RefreshApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -89,7 +88,6 @@ export const RefreshApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * RefreshApi - functional programming interface
- * @export
  */
 export const RefreshApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = RefreshApiAxiosParamCreator(configuration)
@@ -122,7 +120,6 @@ export const RefreshApiFp = function (configuration?: Configuration) {
 
 /**
  * RefreshApi - factory interface
- * @export
  */
 export const RefreshApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = RefreshApiFp(configuration)
@@ -147,23 +144,13 @@ export const RefreshApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * Request parameters for refreshToken operation in RefreshApi.
- * @export
- * @interface RefreshApiRefreshTokenRequest
  */
 export interface RefreshApiRefreshTokenRequest {
-  /**
-   *
-   * @type {RefreshRequestDto}
-   * @memberof RefreshApiRefreshToken
-   */
   readonly refreshRequestDto: RefreshRequestDto
 }
 
 /**
  * RefreshApi - object-oriented interface
- * @export
- * @class RefreshApi
- * @extends {BaseAPI}
  */
 export class RefreshApi extends BaseAPI {
   /**
@@ -172,7 +159,6 @@ export class RefreshApi extends BaseAPI {
    * @param {RefreshApiRefreshTokenRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof RefreshApi
    */
   public refreshToken(requestParameters: RefreshApiRefreshTokenRequest, options?: RawAxiosRequestConfig) {
     return RefreshApiFp(this.configuration)

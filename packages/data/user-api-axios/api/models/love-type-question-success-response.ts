@@ -18,32 +18,19 @@ import type { BaseListSwaggerResponseLoveTypeQuestionData } from './base-list-sw
 
 /**
  * 애착유형 질문 조회 성공 응답
- * @export
- * @interface LoveTypeQuestionSuccessResponse
  */
 export interface LoveTypeQuestionSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof LoveTypeQuestionSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof LoveTypeQuestionSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof LoveTypeQuestionSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {BaseListSwaggerResponseLoveTypeQuestionData}
-   * @memberof LoveTypeQuestionSuccessResponse
-   */
   data?: BaseListSwaggerResponseLoveTypeQuestionData
 }

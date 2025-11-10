@@ -18,32 +18,19 @@ import type { InviteCodeResponseData } from './invite-code-response-data'
 
 /**
  * 멤버 초대 코드 성공 응답
- * @export
- * @interface GetInviteCodeSuccessResponse
  */
 export interface GetInviteCodeSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof GetInviteCodeSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof GetInviteCodeSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof GetInviteCodeSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {InviteCodeResponseData}
-   * @memberof GetInviteCodeSuccessResponse
-   */
   data?: InviteCodeResponseData
 }

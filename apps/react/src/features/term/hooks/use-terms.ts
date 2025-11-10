@@ -43,9 +43,10 @@ export function useTerms(initialAgreements: TermAgreements = {}) {
   )
 
   // 약관 상세보기 모달 닫기
-  const handleCloseTerms = wrapWithTracking(BUTTON_NAMES.CLOSE_TERMS_MODAL, CATEGORIES.ONBOARDING, () =>
+  const handleCloseTerms = wrapWithTracking(BUTTON_NAMES.CLOSE_TERMS_MODAL, CATEGORIES.ONBOARDING, (event) => {
+    event?.preventDefault()
     setSelectedTermId(null)
-  )
+  })
 
   // 선택된 약관의 제목과 상세 내용
   const selectedTermContent = useMemo(() => {

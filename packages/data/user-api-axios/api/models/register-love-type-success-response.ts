@@ -14,32 +14,22 @@
 
 /**
  * 애착유형 등록 성공 응답
- * @export
- * @interface RegisterLoveTypeSuccessResponse
  */
 export interface RegisterLoveTypeSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof RegisterLoveTypeSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof RegisterLoveTypeSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof RegisterLoveTypeSuccessResponse
    */
   message?: string
   /**
    * 응답 데이터
-   * @type {object}
-   * @memberof RegisterLoveTypeSuccessResponse
    */
   data?: object
 }

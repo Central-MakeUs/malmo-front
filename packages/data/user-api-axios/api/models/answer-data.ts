@@ -14,14 +14,10 @@
 
 /**
  * 답변 등록 응답 데이터
- * @export
- * @interface AnswerData
  */
 export interface AnswerData {
   /**
    * 답변이 달린 질문의 ID
-   * @type {number}
-   * @memberof AnswerData
    */
   coupleQuestionId?: number
 }

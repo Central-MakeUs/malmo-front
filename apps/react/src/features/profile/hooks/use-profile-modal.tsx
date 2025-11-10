@@ -163,7 +163,7 @@ export function useProfileModal(): UseProfileModalReturn {
       },
       onCancel: async () => {
         await refreshUserInfo()
-        navigate({ to: '/my-page' })
+        navigate({ to: '/my-page', replace: true, state: { skipTransition: true } })
         router.invalidate()
         onCancel?.()
       },

@@ -14,68 +14,46 @@
 
 /**
  * 멤버 정보 응답 데이터
- * @export
- * @interface MemberData
  */
 export interface MemberData {
   /**
    * 멤버 상태
-   * @type {string}
-   * @memberof MemberData
    */
   memberState?: MemberDataMemberStateEnum
   /**
    * 로그인한 Provider
-   * @type {string}
-   * @memberof MemberData
    */
   provider?: MemberDataProviderEnum
   /**
    * 연애 시작일
-   * @type {string}
-   * @memberof MemberData
    */
   startLoveDate?: string
   /**
    * 애착 유형
-   * @type {string}
-   * @memberof MemberData
    */
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
   /**
    * 완료된 채팅방 개수
-   * @type {number}
-   * @memberof MemberData
    */
   totalChatRoomCount?: number
   /**
    * 총 할당된 오늘의 질문 개수
-   * @type {number}
-   * @memberof MemberData
    */
   totalCoupleQuestionCount?: number
   /**
    * 회피 비율
-   * @type {number}
-   * @memberof MemberData
    */
   avoidanceRate?: number
   /**
    * 불안 비율
-   * @type {number}
-   * @memberof MemberData
    */
   anxietyRate?: number
   /**
    * 닉네임
-   * @type {string}
-   * @memberof MemberData
    */
   nickname?: string
   /**
    * 이메일
-   * @type {string}
-   * @memberof MemberData
    */
   email?: string
 }

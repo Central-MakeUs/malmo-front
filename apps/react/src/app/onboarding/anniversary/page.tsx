@@ -1,70 +1,48 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { useAnniversary, DatePicker } from '@/features/anniversary'
+import { AnniversaryLayout, useAnniversary, useUpdateStartDate } from '@/features/anniversary'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
-import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
-import { Button } from '@/shared/ui'
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { formatDate } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/onboarding/anniversary/')({
-  component: AnniversaryPage,
+  component: OnboardingAnniversary,
 })
 
-function AnniversaryPage() {
-  const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
+function OnboardingAnniversary() {
+  const { goToNextStep } = useOnboardingNavigation()
   const { data, updateAnniversary } = useOnboarding()
-
-  const { state, actions } = useAnniversary(data.anniversary)
-
-  const handlePrevious = wrapWithTracking(BUTTON_NAMES.BACK_ANNIVERSARY, CATEGORIES.ONBOARDING, () => {
-    // 현재 보이는 날짜로 업데이트 후 이전 페이지로 이동
-    const currentVisibleDate = new Date(state.visibleYear, state.visibleMonth - 1, state.visibleDay)
-    updateAnniversary(currentVisibleDate)
-    goToPreviousStep()
-  })
-
-  const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_ANNIVERSARY, CATEGORIES.ONBOARDING, () => {
-    // 현재 보이는 날짜로 최종 선택하고 다음 페이지로 이동
-    const finalDate = new Date(state.visibleYear, state.visibleMonth - 1, state.visibleDay)
-    updateAnniversary(finalDate)
+  const anniversary = useAnniversary(data.anniversary)
+  const updateStartDateMutation = useUpdateStartDate(async () => {
     goToNextStep()
   })
 
+  const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_ANNIVERSARY, CATEGORIES.ONBOARDING, async () => {
+    const finalDate = new Date(
+      anniversary.state.visibleYear,
+      anniversary.state.visibleMonth - 1,
+      anniversary.state.visibleDay
+    )
+    updateAnniversary(finalDate)
+
+    if (updateStartDateMutation.isPending) return
+    const startLoveDate = formatDate(finalDate)
+
+    try {
+      await updateStartDateMutation.mutateAsync({ startLoveDate: startLoveDate ?? '' })
+    } catch {
+      return
+    }
+  })
+
   return (
-    <div className="flex h-full w-full flex-col bg-white">
-      {/* 헤더 및 타이틀 */}
-      <DetailHeaderBar onBackClick={handlePrevious} />
-      <TitleSection
-        title={
-          <>
-            둘의 만남을 시작한 날짜는
-            <br />
-            언제인가요?
-          </>
-        }
-        description={'말모가 기념일을 기억하고 보여드릴게요!'}
-      />
-
-      {/* 날짜 선택 */}
-      <div className="mt-[68px] px-5">
-        <DatePicker
-          state={state}
-          actions={{
-            handleYearScroll: actions.handleYearScroll,
-            handleMonthScroll: actions.handleMonthScroll,
-            handleDayScroll: actions.handleDayScroll,
-            handleDateChange: actions.handleDateChange,
-          }}
-        />
-      </div>
-
-      {/* 다음 버튼 */}
-      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-        <Button text="다음" onClick={handleNext} />
-      </div>
-    </div>
+    <AnniversaryLayout
+      anniversary={anniversary}
+      onSubmit={handleNext}
+      isSubmitting={updateStartDateMutation.isPending}
+      showBackButton={false}
+    />
   )
 }

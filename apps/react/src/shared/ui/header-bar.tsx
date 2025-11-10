@@ -1,7 +1,7 @@
-import { useRouter } from '@tanstack/react-router'
 import { LucideChevronLeft } from 'lucide-react'
 
 import { cn } from '@/shared/lib/cn'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 
 import type { ReactNode } from 'react'
 
@@ -10,7 +10,7 @@ interface DetailHeaderBarProps {
   right?: ReactNode
   left?: ReactNode
   showBackButton?: boolean
-  onBackClick?: () => void
+  onBackClick?: (e) => void
   className?: string
 }
 
@@ -22,13 +22,13 @@ export function DetailHeaderBar({
   className,
   showBackButton = true,
 }: DetailHeaderBarProps) {
-  const router = useRouter()
+  const goBack = useGoBack()
 
-  const handleBackClick = () => {
+  const handleBackClick = (e) => {
     if (onBackClick) {
-      onBackClick()
+      onBackClick(e)
     } else {
-      router.history.back()
+      goBack()
     }
   }
 

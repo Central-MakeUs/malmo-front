@@ -4,16 +4,14 @@ import { useEffect } from 'react'
 import { useAuth } from '@/features/auth'
 import { useMyPageMenu, ProfileSection, StatsSection, MenuList } from '@/features/profile'
 import { useTerms, TermsContentModal } from '@/features/term'
-import termsService from '@/shared/services/terms.service'
+import { Screen } from '@/shared/layout/screen'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 import { calculateDDay } from '@/shared/utils/date'
 
 export const Route = createFileRoute('/my-page/')({
   component: MyPage,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(termsService.termsListQuery())
-  },
 })
 
 function MyPage() {
@@ -28,13 +26,17 @@ function MyPage() {
   const dDay = calculateDDay(userInfo.startLoveDate)
 
   // 약관 데이터
-  const { terms, selectedTermId, selectedTermContent, handleCloseTerms, handleShowTerms } = useTerms()
+  const { terms, selectedTermId, selectedTermContent, handleCloseTerms, handleShowTerms, isLoading } = useTerms()
 
   // 메뉴 데이터
   const { menuItems } = useMyPageMenu(terms, handleShowTerms)
 
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
   return (
-    <div className="has-bottom-nav flex h-full flex-col bg-white">
+    <Screen>
       {/* 약관 모달 */}
       {selectedTermId !== null && selectedTermContent && selectedTermContent.title && selectedTermContent.details && (
         <TermsContentModal
@@ -45,24 +47,26 @@ function MyPage() {
       )}
 
       {/* 헤더 */}
-      <HomeHeaderBar title="마이페이지" />
+      <Screen.Header>
+        <HomeHeaderBar title="마이페이지" />
+      </Screen.Header>
 
       {/* 프로필 섹션 */}
-      <ProfileSection nickname={userInfo.nickname || ''} dDay={dDay} />
+      <Screen.Content className="no-bounce-scroll has-bottom-nav flex-1 bg-white">
+        <ProfileSection nickname={userInfo.nickname || ''} dDay={dDay} />
 
-      {/* 통계 박스 */}
-      <StatsSection
-        totalChatRoomCount={userInfo.totalChatRoomCount || 0}
-        totalCoupleQuestionCount={userInfo.totalCoupleQuestionCount || 0}
-      />
+        {/* 통계 박스 */}
+        <StatsSection
+          totalChatRoomCount={userInfo.totalChatRoomCount || 0}
+          totalCoupleQuestionCount={userInfo.totalCoupleQuestionCount || 0}
+        />
 
-      {/* 메뉴 리스트 */}
-      <div className="pb-[60px]">
+        {/* 메뉴 리스트 */}
         <MenuList menuItems={menuItems} />
-      </div>
+      </Screen.Content>
 
       {/* 하단 네비게이션 */}
       <BottomNavigation />
-    </div>
+    </Screen>
   )
 }

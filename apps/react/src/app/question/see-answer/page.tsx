@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Pen, X } from 'lucide-react'
 import { useState } from 'react'
@@ -10,9 +10,11 @@ import { QuestionHeader } from '@/features/question/ui/question-header'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import bridge from '@/shared/bridge'
+import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -21,28 +23,35 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/question/see-answer/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const { coupleQuestionId } = deps.search
-    await context.queryClient.ensureQueryData(questionService.questionDetailQuery(coupleQuestionId))
-    const showHelpInit = await bridge.getQuestionHelp()
-    return { coupleQuestionId, showHelpInit }
-  },
 })
 
 function RouteComponent() {
-  const { coupleQuestionId, showHelpInit } = Route.useLoaderData()
+  const { coupleQuestionId } = Route.useSearch()
   const [showHelp, setShowHelp] = useState(false)
+  const queryClient = useQueryClient()
+
+  const { data: showHelpInit, isLoading: isHelpLoading } = useQuery({
+    queryKey: ['question-help'],
+    queryFn: () => bridge.getQuestionHelp(),
+  })
 
   const shouldShowHelp = showHelpInit && !showHelp
 
-  const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
+  const { data, isLoading, error } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
+
+  if (isHelpLoading || isLoading) {
+    return <PageLoadingFallback />
+  }
+
+  if (error || !data) return null
 
   return (
-    <div className="flex h-full flex-col">
-      <DetailHeaderBar title="답변 보기" className="border-b-[1px] border-gray-iron-100" />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar title="답변 보기" className="border-b border-gray-iron-100" />
+      </Screen.Header>
 
-      <div className="flex-1">
+      <Screen.Content className="flex flex-1 flex-col bg-white">
         <QuestionHeader data={data} />
 
         <div className="mb-15 px-5">
@@ -62,6 +71,7 @@ function RouteComponent() {
                 onClick={wrapWithTracking(BUTTON_NAMES.CLOSE_TOOLTIP, CATEGORIES.QUESTION, async () => {
                   await bridge.setQuestionHelpFalse()
                   setShowHelp(true)
+                  queryClient.invalidateQueries({ queryKey: ['question-help'] })
                 })}
               >
                 <div className="flex gap-[2px] text-gray-iron-200">
@@ -113,7 +123,7 @@ function RouteComponent() {
             </p>
           </div>
         </div>
-      </div>
-    </div>
+      </Screen.Content>
+    </Screen>
   )
 }

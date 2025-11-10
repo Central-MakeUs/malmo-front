@@ -14,26 +14,18 @@
 
 /**
  * 토큰 응답 데이터
- * @export
- * @interface TokenData
  */
 export interface TokenData {
   /**
    * 토큰 타입
-   * @type {string}
-   * @memberof TokenData
    */
   grantType?: string
   /**
    * 액세스 토큰
-   * @type {string}
-   * @memberof TokenData
    */
   accessToken?: string
   /**
    * 리프레시 토큰
-   * @type {string}
-   * @memberof TokenData
    */
   refreshToken?: string
 }

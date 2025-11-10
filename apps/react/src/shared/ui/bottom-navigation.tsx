@@ -66,7 +66,13 @@ export function BottomNavigation() {
           const Icon = active ? item.activeIcon : item.icon
 
           return (
-            <Link key={item.id} to={item.path} className="flex flex-1 flex-col items-center justify-center gap-1">
+            <Link
+              key={item.id}
+              to={item.path}
+              replace
+              state={{ skipTransition: true }}
+              className="flex flex-1 flex-col items-center justify-center gap-1"
+            >
               <Icon className="h-6 w-6" />
               <span className={cn('text-[11px] font-medium', active ? 'text-gray-iron-950' : 'text-gray-iron-400')}>
                 {item.label}

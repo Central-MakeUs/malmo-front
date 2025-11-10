@@ -39,12 +39,11 @@ import type { SignUpSuccessResponse } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * SignUpsApi - axios parameter creator
- * @export
  */
 export const SignUpsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
     /**
-     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. JWT 토큰이 필요합니다.
+     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. 연애 시작일은 커플 연동 시 자동으로 설정됩니다. JWT 토큰이 필요합니다.
      * @summary 회원가입
      * @param {SignUpRequestDto} signUpRequestDto
      * @param {*} [options] Override http request option.
@@ -86,13 +85,12 @@ export const SignUpsApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * SignUpsApi - functional programming interface
- * @export
  */
 export const SignUpsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = SignUpsApiAxiosParamCreator(configuration)
   return {
     /**
-     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. JWT 토큰이 필요합니다.
+     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. 연애 시작일은 커플 연동 시 자동으로 설정됩니다. JWT 토큰이 필요합니다.
      * @summary 회원가입
      * @param {SignUpRequestDto} signUpRequestDto
      * @param {*} [options] Override http request option.
@@ -119,13 +117,12 @@ export const SignUpsApiFp = function (configuration?: Configuration) {
 
 /**
  * SignUpsApi - factory interface
- * @export
  */
 export const SignUpsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = SignUpsApiFp(configuration)
   return {
     /**
-     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. JWT 토큰이 필요합니다.
+     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. 연애 시작일은 커플 연동 시 자동으로 설정됩니다. JWT 토큰이 필요합니다.
      * @summary 회원가입
      * @param {SignUpsApiSignUpRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -142,32 +139,21 @@ export const SignUpsApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * Request parameters for signUp operation in SignUpsApi.
- * @export
- * @interface SignUpsApiSignUpRequest
  */
 export interface SignUpsApiSignUpRequest {
-  /**
-   *
-   * @type {SignUpRequestDto}
-   * @memberof SignUpsApiSignUp
-   */
   readonly signUpRequestDto: SignUpRequestDto
 }
 
 /**
  * SignUpsApi - object-oriented interface
- * @export
- * @class SignUpsApi
- * @extends {BaseAPI}
  */
 export class SignUpsApi extends BaseAPI {
   /**
-   * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. JWT 토큰이 필요합니다.
+   * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. 연애 시작일은 커플 연동 시 자동으로 설정됩니다. JWT 토큰이 필요합니다.
    * @summary 회원가입
    * @param {SignUpsApiSignUpRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof SignUpsApi
    */
   public signUp(requestParameters: SignUpsApiSignUpRequest, options?: RawAxiosRequestConfig) {
     return SignUpsApiFp(this.configuration)

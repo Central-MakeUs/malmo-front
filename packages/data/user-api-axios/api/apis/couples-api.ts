@@ -41,7 +41,6 @@ import type { CoupleUnlinkSuccessResponse } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * CouplesApi - axios parameter creator
- * @export
  */
 export const CouplesApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -123,7 +122,6 @@ export const CouplesApiAxiosParamCreator = function (configuration?: Configurati
 
 /**
  * CouplesApi - functional programming interface
- * @export
  */
 export const CouplesApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = CouplesApiAxiosParamCreator(configuration)
@@ -177,7 +175,6 @@ export const CouplesApiFp = function (configuration?: Configuration) {
 
 /**
  * CouplesApi - factory interface
- * @export
  */
 export const CouplesApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = CouplesApiFp(configuration)
@@ -211,23 +208,13 @@ export const CouplesApiFactory = function (configuration?: Configuration, basePa
 
 /**
  * Request parameters for linkCouple operation in CouplesApi.
- * @export
- * @interface CouplesApiLinkCoupleRequest
  */
 export interface CouplesApiLinkCoupleRequest {
-  /**
-   *
-   * @type {CoupleLinkRequestDto}
-   * @memberof CouplesApiLinkCouple
-   */
   readonly coupleLinkRequestDto: CoupleLinkRequestDto
 }
 
 /**
  * CouplesApi - object-oriented interface
- * @export
- * @class CouplesApi
- * @extends {BaseAPI}
  */
 export class CouplesApi extends BaseAPI {
   /**
@@ -236,7 +223,6 @@ export class CouplesApi extends BaseAPI {
    * @param {CouplesApiLinkCoupleRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof CouplesApi
    */
   public linkCouple(requestParameters: CouplesApiLinkCoupleRequest, options?: RawAxiosRequestConfig) {
     return CouplesApiFp(this.configuration)
@@ -249,7 +235,6 @@ export class CouplesApi extends BaseAPI {
    * @summary 커플 연결 끊기
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof CouplesApi
    */
   public unlinkCouple(options?: RawAxiosRequestConfig) {
     return CouplesApiFp(this.configuration)

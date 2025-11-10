@@ -7,15 +7,13 @@ import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useTerms, TermsAgreementList, TermsContentModal } from '@/features/term'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
-import termsService from '@/shared/services/terms.service'
+import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 export const Route = createFileRoute('/onboarding/terms/')({
   component: TermsPage,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(termsService.termsListQuery())
-  },
 })
 
 function TermsPage() {
@@ -34,7 +32,12 @@ function TermsPage() {
     handleCloseTerms,
     handleAllAgreements,
     handleAgreement,
+    isLoading,
   } = useTerms(data.termsAgreements)
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
 
   // 다음 단계로 이동
   const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_TERMS, CATEGORIES.ONBOARDING, () => {
@@ -51,8 +54,7 @@ function TermsPage() {
   })
 
   return (
-    <div className="flex h-full w-full flex-col bg-white">
-      {/* 약관 전체화면 */}
+    <Screen>
       {selectedTermId !== null && selectedTermContent && (
         <TermsContentModal
           title={selectedTermContent.title || ''}
@@ -61,29 +63,31 @@ function TermsPage() {
         />
       )}
 
-      {/* 헤더 및 타이틀 */}
-      <DetailHeaderBar onBackClick={handleBack} />
-      <TitleSection
-        title={
-          <p>
-            서비스 이용 약관에 <br /> 동의해주세요
-          </p>
-        }
-      />
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar onBackClick={handleBack} />
+      </Screen.Header>
 
-      {/* 약관 동의 섹션 */}
-      <TermsAgreementList
-        terms={terms}
-        agreements={agreements}
-        onAllAgreementChange={handleAllAgreements}
-        onAgreementChange={handleAgreement}
-        onShowTerms={handleShowTerms}
-      />
+      <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">
+        <TitleSection
+          title={
+            <p>
+              서비스 이용 약관에 <br /> 동의해주세요
+            </p>
+          }
+        />
 
-      {/* 다음 버튼 */}
-      <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-        <Button text="다음" disabled={!isAllRequiredChecked} onClick={handleNext} />
-      </div>
-    </div>
+        <TermsAgreementList
+          terms={terms}
+          agreements={agreements}
+          onAllAgreementChange={handleAllAgreements}
+          onAgreementChange={handleAgreement}
+          onShowTerms={handleShowTerms}
+        />
+
+        <div className="mt-auto mb-5 px-5">
+          <Button text="다음" disabled={!isAllRequiredChecked} onClick={handleNext} />
+        </div>
+      </Screen.Content>
+    </Screen>
   )
 }

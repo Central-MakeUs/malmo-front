@@ -12,28 +12,8 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface Pageable
- */
 export interface Pageable {
-  /**
-   *
-   * @type {number}
-   * @memberof Pageable
-   */
   page?: number
-  /**
-   *
-   * @type {number}
-   * @memberof Pageable
-   */
   size?: number
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof Pageable
-   */
   sort?: Array<string>
 }

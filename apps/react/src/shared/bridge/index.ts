@@ -1,4 +1,4 @@
-import { SocialLoginType, SocialLoginResult } from '@bridge/types'
+import { SocialLoginType, SocialLoginResult, SocialLoginOptions } from '@bridge/types'
 import { BridgeStore, linkBridge } from '@webview-bridge/web'
 
 // 웹에서 사용할 브릿지 타입 정의
@@ -9,7 +9,7 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   isModalOpen: boolean
 
   // 액션
-  socialLogin(type: SocialLoginType): Promise<SocialLoginResult>
+  socialLogin(type: SocialLoginType, options?: SocialLoginOptions): Promise<SocialLoginResult>
   getAuthStatus(): Promise<{ isLoggedIn: boolean }>
   getAuthToken(): Promise<{ accessToken: string | null }>
   logout({ clearAll }: { clearAll?: boolean }): Promise<{ success: boolean; message?: string }>
@@ -33,7 +33,7 @@ export const bridge = linkBridge<WebBridge>({
     isLoggedIn: false,
     keyboardHeight: 0,
     isModalOpen: false,
-    socialLogin: async () => ({ success: false }),
+    socialLogin: async (_type: SocialLoginType, _options?: SocialLoginOptions) => ({ success: false }),
     getAuthStatus: async () => ({ isLoggedIn: false }),
     getAuthToken: async () => ({ accessToken: null }),
     logout: async () => ({ success: false, message: '로그아웃 실패' }),

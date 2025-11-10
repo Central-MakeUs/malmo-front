@@ -18,32 +18,22 @@ import type { LoveTypeQuestionData } from './love-type-question-data'
 
 /**
  * 기본 리스트 응답 형식
- * @export
- * @interface BaseListSwaggerResponseLoveTypeQuestionData
  */
 export interface BaseListSwaggerResponseLoveTypeQuestionData {
   /**
    * 응답 데이터 크기
-   * @type {number}
-   * @memberof BaseListSwaggerResponseLoveTypeQuestionData
    */
   size?: number
   /**
    * 페이지 번호
-   * @type {number}
-   * @memberof BaseListSwaggerResponseLoveTypeQuestionData
    */
   page?: number
   /**
    * 응답 데이터 리스트
-   * @type {Array<LoveTypeQuestionData>}
-   * @memberof BaseListSwaggerResponseLoveTypeQuestionData
    */
   list?: Array<LoveTypeQuestionData>
   /**
    * 전체 데이터 개수
-   * @type {number}
-   * @memberof BaseListSwaggerResponseLoveTypeQuestionData
    */
   totalCount?: number
 }

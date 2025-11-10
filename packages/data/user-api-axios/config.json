@@ -1,6 +1,6 @@
 {
   "generatorName": "typescript-axios",
-  "inputSpec": "https://api.malmo.io.kr/v3/api-docs",
+  "inputSpec": "https://test.malmo.io.kr/v3/api-docs",
   "verbose": false,
   "allowUnicodeIdentifiers": true,
   "enablePostProcessFile": true,

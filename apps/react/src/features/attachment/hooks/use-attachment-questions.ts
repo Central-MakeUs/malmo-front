@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useState, useEffect, useRef } from 'react'
 
 import { useAuth } from '@/features/auth'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import loveTypeService from '@/shared/services/love-type.service'
 import memberService from '@/shared/services/member.service'
 import { toast } from '@/shared/ui/toast'
@@ -60,7 +61,7 @@ export interface UseAttachmentQuestionsResult {
 
 export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
   const navigate = useNavigate()
-  const router = useRouter()
+  const goBack = useGoBack()
   const auth = useAuth()
 
   // 질문 목록 상태
@@ -77,7 +78,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
 
       // 2초 후 결과 페이지로 이동
       setTimeout(() => {
-        navigate({ to: '/attachment-test/result/my' })
+        navigate({ to: '/attachment-test/result/my', replace: true })
       }, QUESTION_CONFIG.SUBMISSION_DELAY)
     },
     onError: (_error: any) => {
@@ -131,7 +132,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
       setCurrentPage(currentPage - 1)
       scrollToFirstQuestion(questionRefs)
     } else {
-      router.history.back()
+      goBack()
     }
   }
 

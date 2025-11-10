@@ -45,7 +45,6 @@ import type { QuestionSuccessResponse } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * QuestionsApi - axios parameter creator
- * @export
  */
 export const QuestionsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -241,7 +240,6 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
 
 /**
  * QuestionsApi - functional programming interface
- * @export
  */
 export const QuestionsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = QuestionsApiAxiosParamCreator(configuration)
@@ -364,7 +362,6 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
 
 /**
  * QuestionsApi - factory interface
- * @export
  */
 export const QuestionsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = QuestionsApiFp(configuration)
@@ -441,65 +438,34 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
 
 /**
  * Request parameters for getAnswers operation in QuestionsApi.
- * @export
- * @interface QuestionsApiGetAnswersRequest
  */
 export interface QuestionsApiGetAnswersRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof QuestionsApiGetAnswers
-   */
   readonly coupleQuestionId: number
 }
 
 /**
  * Request parameters for getQuestion operation in QuestionsApi.
- * @export
- * @interface QuestionsApiGetQuestionRequest
  */
 export interface QuestionsApiGetQuestionRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof QuestionsApiGetQuestion
-   */
   readonly level: number
 }
 
 /**
  * Request parameters for postAnswer operation in QuestionsApi.
- * @export
- * @interface QuestionsApiPostAnswerRequest
  */
 export interface QuestionsApiPostAnswerRequest {
-  /**
-   *
-   * @type {AnswerRequestDto}
-   * @memberof QuestionsApiPostAnswer
-   */
   readonly answerRequestDto: AnswerRequestDto
 }
 
 /**
  * Request parameters for updateAnswer operation in QuestionsApi.
- * @export
- * @interface QuestionsApiUpdateAnswerRequest
  */
 export interface QuestionsApiUpdateAnswerRequest {
-  /**
-   *
-   * @type {AnswerRequestDto}
-   * @memberof QuestionsApiUpdateAnswer
-   */
   readonly answerRequestDto: AnswerRequestDto
 }
 
 /**
  * QuestionsApi - object-oriented interface
- * @export
- * @class QuestionsApi
- * @extends {BaseAPI}
  */
 export class QuestionsApi extends BaseAPI {
   /**
@@ -508,7 +474,6 @@ export class QuestionsApi extends BaseAPI {
    * @param {QuestionsApiGetAnswersRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof QuestionsApi
    */
   public getAnswers(requestParameters: QuestionsApiGetAnswersRequest, options?: RawAxiosRequestConfig) {
     return QuestionsApiFp(this.configuration)
@@ -522,7 +487,6 @@ export class QuestionsApi extends BaseAPI {
    * @param {QuestionsApiGetQuestionRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof QuestionsApi
    */
   public getQuestion(requestParameters: QuestionsApiGetQuestionRequest, options?: RawAxiosRequestConfig) {
     return QuestionsApiFp(this.configuration)
@@ -535,7 +499,6 @@ export class QuestionsApi extends BaseAPI {
    * @summary 오늘의 질문 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof QuestionsApi
    */
   public getTodayQuestion(options?: RawAxiosRequestConfig) {
     return QuestionsApiFp(this.configuration)
@@ -549,7 +512,6 @@ export class QuestionsApi extends BaseAPI {
    * @param {QuestionsApiPostAnswerRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof QuestionsApi
    */
   public postAnswer(requestParameters: QuestionsApiPostAnswerRequest, options?: RawAxiosRequestConfig) {
     return QuestionsApiFp(this.configuration)
@@ -563,7 +525,6 @@ export class QuestionsApi extends BaseAPI {
    * @param {QuestionsApiUpdateAnswerRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof QuestionsApi
    */
   public updateAnswer(requestParameters: QuestionsApiUpdateAnswerRequest, options?: RawAxiosRequestConfig) {
     return QuestionsApiFp(this.configuration)

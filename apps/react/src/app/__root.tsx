@@ -1,10 +1,14 @@
 import { QueryClient } from '@tanstack/react-query'
-import { createRootRouteWithContext, Outlet, redirect } from '@tanstack/react-router'
+import { createRootRouteWithContext, redirect, useRouterState } from '@tanstack/react-router'
 import { match } from 'path-to-regexp'
 
 import { AuthContext } from '@/features/auth/hooks/use-auth'
 import { CoupleStatusProvider } from '@/features/member'
 import { useTheme } from '@/shared/contexts/theme.context'
+import { NavigationTransitionProvider } from '@/shared/navigation/transition'
+import { FixedLayerRoot } from '@/shared/ui/fixed-layer'
+import { NavigationOutlet, StackedOutlet } from '@/shared/ui/stacked-outlet'
+import { TransitionViewport } from '@/shared/ui/transition-viewport'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -24,6 +28,8 @@ const onboardingRoutes = [
   '/onboarding/complete',
 ]
 
+const coupleFlowRoutes = ['/onboarding/partner-code', '/onboarding/anniversary']
+
 function matchRoute(routes: string[], path: string) {
   return routes.some((route) => match(route)(path))
 }
@@ -37,6 +43,9 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     // --- 인증 기반 라우팅 규칙 ---
     const isOnLoginRoute = pathname === '/login'
     const isOnOnboardingRoute = matchRoute(onboardingRoutes, pathname)
+    const isCoupleFlowRoute = matchRoute(coupleFlowRoutes, pathname)
+    const search = (location.search ?? {}) as Record<string, unknown>
+    const isCoupleFlowAccess = isCoupleFlowRoute && (search?.coupleFlow === true || search?.coupleFlow === 'true')
 
     // 1. 인증된 사용자
     if (authenticated) {
@@ -49,7 +58,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         throw redirect({ to: '/onboarding/terms' })
       }
       // 규칙 3: 온보딩을 마쳤는데 온보딩 경로로 접근 시, 홈으로 리다이렉트
-      if (!needsOnboarding && isOnOnboardingRoute) {
+      if (!needsOnboarding && isOnOnboardingRoute && !isCoupleFlowAccess) {
         throw redirect({ to: '/' })
       }
       return // 모든 규칙 통과 시 접근 허용
@@ -71,17 +80,24 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
 function RootComponent() {
   const { statusColor } = useTheme()
+  const currentPath = useRouterState({
+    select: (state) => state.location.pathname,
+  })
+  const isOnboardingRoute = matchRoute(onboardingRoutes, currentPath)
 
   return (
     <div className="no-bounce-scroll main-scrollable app-safe flex h-screen w-full flex-col bg-white">
-      <main className="relative mx-auto flex w-full max-w-[600px] flex-1 flex-col">
+      <main className="relative mx-auto flex min-h-0 w-full max-w-[600px] flex-1 flex-col">
         <div
           aria-hidden
           className="pointer-events-none fixed inset-x-0 top-0 z-40 h-[var(--safe-top)]"
           style={{ backgroundColor: statusColor }}
         />
         <CoupleStatusProvider>
-          <Outlet />
+          <NavigationTransitionProvider>
+            <TransitionViewport>{isOnboardingRoute ? <NavigationOutlet /> : <StackedOutlet />}</TransitionViewport>
+            <FixedLayerRoot />
+          </NavigationTransitionProvider>
         </CoupleStatusProvider>
       </main>
     </div>

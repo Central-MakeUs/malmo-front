@@ -8,9 +8,11 @@ import { QuestionHeader } from '@/features/question/ui/question-header'
 import CustomTextarea from '@/features/question/ui/text-area'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
 import questionService from '@/shared/services/question.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 const searchSchema = z.object({
   coupleQuestionId: z.number(),
@@ -20,23 +22,20 @@ const searchSchema = z.object({
 export const Route = createFileRoute('/question/write-answer/')({
   component: RouteComponent,
   validateSearch: searchSchema,
-  loaderDeps: (search) => search,
-  loader: async ({ context, deps }) => {
-    const { coupleQuestionId } = deps.search
-
-    await context.queryClient.ensureQueryData(questionService.questionDetailQuery(coupleQuestionId))
-
-    return { coupleQuestionId, isEdit: deps.search.isEdit || false }
-  },
 })
 
 function RouteComponent() {
-  const { coupleQuestionId, isEdit } = Route.useLoaderData()
+  const { coupleQuestionId, isEdit = false } = Route.useSearch()
 
-  const { data } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
-
+  const { data, isLoading, error } = useQuery(questionService.questionDetailQuery(coupleQuestionId))
   const historyModal = useQuestionModal()
   const [answer, setAnswer] = useState(data?.me?.answer || '')
+
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
+  if (error || !data) return null
   const MAX_LENGTH = 100
 
   const handleSave = wrapWithTracking(BUTTON_NAMES.SAVE_ANSWER, CATEGORIES.QUESTION, () =>
@@ -48,16 +47,20 @@ function RouteComponent() {
   )
 
   return (
-    <div className="flex h-full flex-col pb-[var(--safe-bottom)]">
-      <DetailHeaderBar title="답변 작성" className="border-b-[1px] border-gray-iron-100" onBackClick={handleBack} />
+    <Screen>
+      <Screen.Header behavior="overlay">
+        <DetailHeaderBar title="답변 작성" className="border-b border-gray-iron-100" onBackClick={handleBack} />
+      </Screen.Header>
 
-      <QuestionHeader data={data} />
+      <Screen.Content className="flex flex-1 flex-col bg-white pb-[var(--safe-bottom)]">
+        <QuestionHeader data={data} />
 
-      <CustomTextarea value={answer} onChange={(e) => setAnswer(e.target.value)} maxLength={MAX_LENGTH} />
+        <CustomTextarea value={answer} onChange={(e) => setAnswer(e.target.value)} maxLength={MAX_LENGTH} />
 
-      <div className="p-5">
-        <Button text="저장하기" onClick={handleSave} disabled={!answer.trim()} />
-      </div>
-    </div>
+        <div className="mt-auto p-5">
+          <Button text="저장하기" onClick={handleSave} disabled={!answer.trim()} />
+        </div>
+      </Screen.Content>
+    </Screen>
   )
 }

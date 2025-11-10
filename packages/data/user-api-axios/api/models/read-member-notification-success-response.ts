@@ -14,32 +14,22 @@
 
 /**
  * 멤버 미조회 알림 조회 처리 성공 응답
- * @export
- * @interface ReadMemberNotificationSuccessResponse
  */
 export interface ReadMemberNotificationSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof ReadMemberNotificationSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof ReadMemberNotificationSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof ReadMemberNotificationSuccessResponse
    */
   message?: string
   /**
    * 응답 데이터
-   * @type {object}
-   * @memberof ReadMemberNotificationSuccessResponse
    */
   data?: object
 }

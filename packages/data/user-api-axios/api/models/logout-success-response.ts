@@ -14,32 +14,22 @@
 
 /**
  * 로그아웃 성공 응답
- * @export
- * @interface LogoutSuccessResponse
  */
 export interface LogoutSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof LogoutSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof LogoutSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof LogoutSuccessResponse
    */
   message?: string
   /**
    * 응답 데이터
-   * @type {object}
-   * @memberof LogoutSuccessResponse
    */
   data?: object
 }

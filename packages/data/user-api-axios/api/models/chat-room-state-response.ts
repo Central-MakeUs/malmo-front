@@ -18,32 +18,19 @@ import type { ChatRoomStateData } from './chat-room-state-data'
 
 /**
  * 채팅방 상태 조회 성공 응답
- * @export
- * @interface ChatRoomStateResponse
  */
 export interface ChatRoomStateResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof ChatRoomStateResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof ChatRoomStateResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof ChatRoomStateResponse
    */
   message?: string
-  /**
-   *
-   * @type {ChatRoomStateData}
-   * @memberof ChatRoomStateResponse
-   */
   data?: ChatRoomStateData
 }

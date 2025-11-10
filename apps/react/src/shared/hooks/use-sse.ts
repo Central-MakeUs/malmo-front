@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef } from 'react'
 import bridge from '@/shared/bridge'
 import { isWebView } from '@/shared/utils/webview'
 
-const API_HOST = import.meta.env.PROD ? import.meta.env.VITE_API_URL : '/api'
+const rawApiHost = import.meta.env.PROD ? import.meta.env.VITE_API_URL : '/api'
+const API_HOST = rawApiHost.replace(/\/+$/, '')
 const EventSourceImpl = EventSourcePolyfill || (NativeEventSource as typeof EventSourcePolyfill)
 
 export interface SSEEventHandlers {
@@ -75,6 +76,7 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
           const sse = new EventSourceImpl(`${API_HOST}/sse/connect`, {
             headers: { Authorization: `Bearer ${accessToken}` },
             heartbeatTimeout: HEARTBEAT_TIMEOUT,
+            withCredentials: true,
           })
           esRef.current = sse
 

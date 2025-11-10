@@ -1,12 +1,14 @@
 import { useNavigate } from '@tanstack/react-router'
 
+import { useAuth } from '@/features/auth'
+
 // 온보딩 단계 정의
 const ONBOARDING_STEPS = [
   '/onboarding/terms',
   '/onboarding/nickname',
-  // '/onboarding/anniversary',
   '/onboarding/my-code',
   '/onboarding/partner-code',
+  '/onboarding/anniversary',
   '/onboarding/complete',
 ] as const
 
@@ -14,6 +16,7 @@ type OnboardingStep = (typeof ONBOARDING_STEPS)[number]
 
 export function useOnboardingNavigation() {
   const navigate = useNavigate()
+  const { refreshUserInfo } = useAuth()
 
   // 현재 경로에 따른 단계 인덱스 찾기
   const getCurrentStepIndex = (): number => {
@@ -27,7 +30,7 @@ export function useOnboardingNavigation() {
 
     if (currentIndex >= 0 && currentIndex < ONBOARDING_STEPS.length - 1) {
       const nextStep = ONBOARDING_STEPS[currentIndex + 1] as OnboardingStep
-      navigate({ to: nextStep })
+      navigate({ to: nextStep, replace: true })
       return true
     }
     return false
@@ -39,15 +42,16 @@ export function useOnboardingNavigation() {
 
     if (currentIndex > 0) {
       const prevStep = ONBOARDING_STEPS[currentIndex - 1] as OnboardingStep
-      navigate({ to: prevStep })
+      navigate({ to: prevStep, replace: true })
       return true
     }
     return false
   }
 
   // 홈으로 이동
-  const goToHome = () => {
-    navigate({ to: '/' })
+  const goToHome = async () => {
+    await refreshUserInfo()
+    navigate({ to: '/', replace: true })
   }
 
   return {

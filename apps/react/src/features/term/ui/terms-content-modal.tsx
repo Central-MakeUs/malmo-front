@@ -1,5 +1,6 @@
 import { TermsDetailsResponseDataTypeEnum } from '@data/user-api-axios/api'
 
+import { Screen } from '@/shared/layout/screen'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 import { TermDetail } from '../models/types'
@@ -7,7 +8,7 @@ import { TermDetail } from '../models/types'
 interface TermsContentModalProps {
   title: string
   details: TermDetail[] | null
-  onClose: () => void
+  onClose: (event: React.MouseEvent<HTMLButtonElement>) => void
 }
 
 export function TermsContentModal({ title, details, onClose }: TermsContentModalProps) {
@@ -30,15 +31,18 @@ export function TermsContentModal({ title, details, onClose }: TermsContentModal
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-white pt-[var(--safe-top)]">
-      <DetailHeaderBar onBackClick={onClose} />
-      <div className="flex-1 overflow-y-auto px-5">
+    <Screen>
+      <Screen.Header behavior="overlay" className="z-50">
+        <DetailHeaderBar onBackClick={onClose} />
+      </Screen.Header>
+
+      <Screen.Content className="flex flex-1 flex-col overflow-y-auto px-5 pb-[var(--safe-bottom)]">
         <h2 className="title1-bold mt-10 pb-[26px] text-gray-iron-950">{title}</h2>
 
-        <div className="pb-[var(--safe-bottom)] text-gray-iron-950">
+        <div className="text-gray-iron-950">
           {details?.map((detail, index) => <div key={index}>{renderDetailContent(detail)}</div>)}
         </div>
-      </div>
-    </div>
+      </Screen.Content>
+    </Screen>
   )
 }

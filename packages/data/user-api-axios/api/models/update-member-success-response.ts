@@ -18,32 +18,19 @@ import type { UpdateMemberData } from './update-member-data'
 
 /**
  * 멤버 정보 수정 성공 응답
- * @export
- * @interface UpdateMemberSuccessResponse
  */
 export interface UpdateMemberSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof UpdateMemberSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof UpdateMemberSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof UpdateMemberSuccessResponse
    */
   message?: string
-  /**
-   *
-   * @type {UpdateMemberData}
-   * @memberof UpdateMemberSuccessResponse
-   */
   data?: UpdateMemberData
 }

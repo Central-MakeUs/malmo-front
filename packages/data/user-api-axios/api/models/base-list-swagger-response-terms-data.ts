@@ -18,32 +18,22 @@ import type { TermsData } from './terms-data'
 
 /**
  * 기본 리스트 응답 형식
- * @export
- * @interface BaseListSwaggerResponseTermsData
  */
 export interface BaseListSwaggerResponseTermsData {
   /**
    * 응답 데이터 크기
-   * @type {number}
-   * @memberof BaseListSwaggerResponseTermsData
    */
   size?: number
   /**
    * 페이지 번호
-   * @type {number}
-   * @memberof BaseListSwaggerResponseTermsData
    */
   page?: number
   /**
    * 응답 데이터 리스트
-   * @type {Array<TermsData>}
-   * @memberof BaseListSwaggerResponseTermsData
    */
   list?: Array<TermsData>
   /**
    * 전체 데이터 개수
-   * @type {number}
-   * @memberof BaseListSwaggerResponseTermsData
    */
   totalCount?: number
 }

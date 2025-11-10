@@ -14,32 +14,22 @@
 
 /**
  * 채팅방 삭제 성공 응답
- * @export
- * @interface ChatRoomDeleteSuccessResponse
  */
 export interface ChatRoomDeleteSuccessResponse {
   /**
    * 요청 ID
-   * @type {string}
-   * @memberof ChatRoomDeleteSuccessResponse
    */
   requestId?: string
   /**
    * 성공 여부
-   * @type {boolean}
-   * @memberof ChatRoomDeleteSuccessResponse
    */
   success?: boolean
   /**
    * 응답 메시지
-   * @type {string}
-   * @memberof ChatRoomDeleteSuccessResponse
    */
   message?: string
   /**
    * 응답 데이터
-   * @type {object}
-   * @memberof ChatRoomDeleteSuccessResponse
    */
   data?: object
 }

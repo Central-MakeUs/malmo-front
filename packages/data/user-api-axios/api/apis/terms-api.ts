@@ -35,7 +35,6 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 import type { TermsListSuccessResponse } from '../models'
 /**
  * TermsApi - axios parameter creator
- * @export
  */
 export const TermsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -76,7 +75,6 @@ export const TermsApiAxiosParamCreator = function (configuration?: Configuration
 
 /**
  * TermsApi - functional programming interface
- * @export
  */
 export const TermsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = TermsApiAxiosParamCreator(configuration)
@@ -107,7 +105,6 @@ export const TermsApiFp = function (configuration?: Configuration) {
 
 /**
  * TermsApi - factory interface
- * @export
  */
 export const TermsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = TermsApiFp(configuration)
@@ -126,9 +123,6 @@ export const TermsApiFactory = function (configuration?: Configuration, basePath
 
 /**
  * TermsApi - object-oriented interface
- * @export
- * @class TermsApi
- * @extends {BaseAPI}
  */
 export class TermsApi extends BaseAPI {
   /**
@@ -136,7 +130,6 @@ export class TermsApi extends BaseAPI {
    * @summary 약관 목록 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof TermsApi
    */
   public getTerms(options?: RawAxiosRequestConfig) {
     return TermsApiFp(this.configuration)

@@ -16,16 +16,6 @@
 // @ts-ignore
 import type { LoveTypeTestResult } from './love-type-test-result'
 
-/**
- *
- * @export
- * @interface RegisterLoveTypeRequestDto
- */
 export interface RegisterLoveTypeRequestDto {
-  /**
-   *
-   * @type {Array<LoveTypeTestResult>}
-   * @memberof RegisterLoveTypeRequestDto
-   */
   results?: Array<LoveTypeTestResult>
 }

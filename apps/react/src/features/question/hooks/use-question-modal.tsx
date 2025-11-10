@@ -1,7 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 
 import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
+import { useGoBack } from '@/shared/navigation/use-go-back'
+import { queryKeys } from '@/shared/services/query-keys'
 import questionService from '@/shared/services/question.service'
 
 export interface UseQuestionModalReturn {
@@ -12,7 +14,8 @@ export interface UseQuestionModalReturn {
 export function useQuestionModal(): UseQuestionModalReturn {
   const alertDialog = useAlertDialog()
   const queryClient = useQueryClient()
-  const router = useRouter()
+  const navigate = useNavigate()
+  const goBack = useGoBack()
 
   const submitAnswerMutation = useMutation(questionService.submitAnswerMutation())
   const updateAnswerMutation = useMutation(questionService.updateAnswerMutation())
@@ -40,9 +43,12 @@ export function useQuestionModal(): UseQuestionModalReturn {
                 })
                 return
               }
-              await queryClient.invalidateQueries({ queryKey: questionService.todayQuestionQuery().queryKey })
+              await Promise.all([
+                queryClient.invalidateQueries({ queryKey: queryKeys.question.today() }),
+                queryClient.invalidateQueries({ queryKey: queryKeys.question.detail(data.coupleQuestionId) }),
+              ])
 
-              router.navigate({
+              navigate({
                 to: '/question/see-answer',
                 search: { coupleQuestionId: data?.coupleQuestionId },
                 replace: true,
@@ -68,7 +74,7 @@ export function useQuestionModal(): UseQuestionModalReturn {
       confirmText: '이어서 작성하기',
       onCancel: () => {
         alertDialog.close()
-        router.history.back()
+        goBack()
       },
     })
   }

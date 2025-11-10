@@ -1,5 +1,6 @@
 import { SocialLoginType } from '@bridge/types'
 
+import { amplitude } from '@/shared/analytics'
 import bridge from '@/shared/bridge'
 import { isWebView } from '@/shared/utils/webview'
 
@@ -55,7 +56,8 @@ class AuthClient {
     if (isWebView()) {
       try {
         // 네이티브 소셜 로그인 사용
-        const result = await bridge.socialLogin(type)
+        const deviceId = amplitude.getDeviceId()
+        const result = await bridge.socialLogin(type, deviceId ? { deviceId } : undefined)
 
         if (!result.success) {
           throw new Error(result.message || '소셜 로그인에 실패했습니다.')

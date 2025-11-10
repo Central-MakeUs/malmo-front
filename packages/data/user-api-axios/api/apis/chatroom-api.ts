@@ -32,8 +32,6 @@ import {
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base'
 // @ts-ignore
-import type { BaseSwaggerResponse } from '../models'
-// @ts-ignore
 import type { ChatMessageListSuccessResponse } from '../models'
 // @ts-ignore
 import type { ChatRequest } from '../models'
@@ -57,7 +55,6 @@ import type { SendChatSuccessResponse } from '../models'
 import type { SwaggerErrorResponse } from '../models'
 /**
  * ChatroomApi - axios parameter creator
- * @export
  */
 export const ChatroomApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
@@ -354,47 +351,15 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
       }
     },
     /**
-     * 현재 채팅방의 단계를 업그레이드합니다. 다음 단계의 오프닝 멘트를 SSE로 전달됩니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 단계 변경
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    sendChatMessage: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      const localVarPath = `/chatrooms/current/upgrade`
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
-      let baseOptions
-      if (configuration) {
-        baseOptions = configuration.baseOptions
-      }
-
-      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options }
-      const localVarHeaderParameter = {} as any
-      const localVarQueryParameter = {} as any
-
-      // authentication Bearer Authentication required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter)
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
-      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      }
-    },
-    /**
      * 서버로 AI 상담을 위한 사용자의 메시지를 전달합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
      * @summary 채팅 메시지 전송
      * @param {ChatRequest} chatRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    sendChatMessage1: async (chatRequest: ChatRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+    sendChatMessage: async (chatRequest: ChatRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
       // verify required parameter 'chatRequest' is not null or undefined
-      assertParamExists('sendChatMessage1', 'chatRequest', chatRequest)
+      assertParamExists('sendChatMessage', 'chatRequest', chatRequest)
       const localVarPath = `/chatrooms/current/send`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
@@ -428,7 +393,6 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
 
 /**
  * ChatroomApi - functional programming interface
- * @export
  */
 export const ChatroomApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ChatroomApiAxiosParamCreator(configuration)
@@ -595,41 +559,20 @@ export const ChatroomApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 현재 채팅방의 단계를 업그레이드합니다. 다음 단계의 오프닝 멘트를 SSE로 전달됩니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 단계 변경
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async sendChatMessage(
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<BaseSwaggerResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.sendChatMessage(options)
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
-      const localVarOperationServerBasePath =
-        operationServerMap['ChatroomApi.sendChatMessage']?.[localVarOperationServerIndex]?.url
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath)
-    },
-    /**
      * 서버로 AI 상담을 위한 사용자의 메시지를 전달합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
      * @summary 채팅 메시지 전송
      * @param {ChatRequest} chatRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async sendChatMessage1(
+    async sendChatMessage(
       chatRequest: ChatRequest,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SendChatSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.sendChatMessage1(chatRequest, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.sendChatMessage(chatRequest, options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
-        operationServerMap['ChatroomApi.sendChatMessage1']?.[localVarOperationServerIndex]?.url
+        operationServerMap['ChatroomApi.sendChatMessage']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -643,7 +586,6 @@ export const ChatroomApiFp = function (configuration?: Configuration) {
 
 /**
  * ChatroomApi - factory interface
- * @export
  */
 export const ChatroomApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
   const localVarFp = ChatroomApiFp(configuration)
@@ -742,27 +684,18 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
         .then((request) => request(axios, basePath))
     },
     /**
-     * 현재 채팅방의 단계를 업그레이드합니다. 다음 단계의 오프닝 멘트를 SSE로 전달됩니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 단계 변경
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    sendChatMessage(options?: RawAxiosRequestConfig): AxiosPromise<BaseSwaggerResponse> {
-      return localVarFp.sendChatMessage(options).then((request) => request(axios, basePath))
-    },
-    /**
      * 서버로 AI 상담을 위한 사용자의 메시지를 전달합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
      * @summary 채팅 메시지 전송
-     * @param {ChatroomApiSendChatMessage1Request} requestParameters Request parameters.
+     * @param {ChatroomApiSendChatMessageRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    sendChatMessage1(
-      requestParameters: ChatroomApiSendChatMessage1Request,
+    sendChatMessage(
+      requestParameters: ChatroomApiSendChatMessageRequest,
       options?: RawAxiosRequestConfig
     ): AxiosPromise<SendChatSuccessResponse> {
       return localVarFp
-        .sendChatMessage1(requestParameters.chatRequest, options)
+        .sendChatMessage(requestParameters.chatRequest, options)
         .then((request) => request(axios, basePath))
     },
   }
@@ -770,107 +703,52 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
 
 /**
  * Request parameters for deleteChatRooms operation in ChatroomApi.
- * @export
- * @interface ChatroomApiDeleteChatRoomsRequest
  */
 export interface ChatroomApiDeleteChatRoomsRequest {
-  /**
-   *
-   * @type {DeleteChatRoomRequestDto}
-   * @memberof ChatroomApiDeleteChatRooms
-   */
   readonly deleteChatRoomRequestDto: DeleteChatRoomRequestDto
 }
 
 /**
  * Request parameters for getChatRoomList operation in ChatroomApi.
- * @export
- * @interface ChatroomApiGetChatRoomListRequest
  */
 export interface ChatroomApiGetChatRoomListRequest {
-  /**
-   *
-   * @type {Pageable}
-   * @memberof ChatroomApiGetChatRoomList
-   */
   readonly pageable: Pageable
 
-  /**
-   *
-   * @type {string}
-   * @memberof ChatroomApiGetChatRoomList
-   */
   readonly keyword?: string
 }
 
 /**
  * Request parameters for getChatRoomMessages operation in ChatroomApi.
- * @export
- * @interface ChatroomApiGetChatRoomMessagesRequest
  */
 export interface ChatroomApiGetChatRoomMessagesRequest {
-  /**
-   *
-   * @type {Pageable}
-   * @memberof ChatroomApiGetChatRoomMessages
-   */
   readonly pageable: Pageable
 
-  /**
-   *
-   * @type {number}
-   * @memberof ChatroomApiGetChatRoomMessages
-   */
   readonly chatRoomId: number
 }
 
 /**
  * Request parameters for getCurrentChatRoom operation in ChatroomApi.
- * @export
- * @interface ChatroomApiGetCurrentChatRoomRequest
  */
 export interface ChatroomApiGetCurrentChatRoomRequest {
-  /**
-   *
-   * @type {number}
-   * @memberof ChatroomApiGetCurrentChatRoom
-   */
   readonly chatRoomId: number
 }
 
 /**
  * Request parameters for getCurrentChatRoomMessages operation in ChatroomApi.
- * @export
- * @interface ChatroomApiGetCurrentChatRoomMessagesRequest
  */
 export interface ChatroomApiGetCurrentChatRoomMessagesRequest {
-  /**
-   *
-   * @type {Pageable}
-   * @memberof ChatroomApiGetCurrentChatRoomMessages
-   */
   readonly pageable: Pageable
 }
 
 /**
- * Request parameters for sendChatMessage1 operation in ChatroomApi.
- * @export
- * @interface ChatroomApiSendChatMessage1Request
+ * Request parameters for sendChatMessage operation in ChatroomApi.
  */
-export interface ChatroomApiSendChatMessage1Request {
-  /**
-   *
-   * @type {ChatRequest}
-   * @memberof ChatroomApiSendChatMessage1
-   */
+export interface ChatroomApiSendChatMessageRequest {
   readonly chatRequest: ChatRequest
 }
 
 /**
  * ChatroomApi - object-oriented interface
- * @export
- * @class ChatroomApi
- * @extends {BaseAPI}
  */
 export class ChatroomApi extends BaseAPI {
   /**
@@ -878,7 +756,6 @@ export class ChatroomApi extends BaseAPI {
    * @summary 채팅방 종료
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ChatroomApi
    */
   public completeChatRoom(options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
@@ -892,7 +769,6 @@ export class ChatroomApi extends BaseAPI {
    * @param {ChatroomApiDeleteChatRoomsRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ChatroomApi
    */
   public deleteChatRooms(requestParameters: ChatroomApiDeleteChatRoomsRequest, options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
@@ -906,7 +782,6 @@ export class ChatroomApi extends BaseAPI {
    * @param {ChatroomApiGetChatRoomListRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ChatroomApi
    */
   public getChatRoomList(requestParameters: ChatroomApiGetChatRoomListRequest, options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
@@ -920,7 +795,6 @@ export class ChatroomApi extends BaseAPI {
    * @param {ChatroomApiGetChatRoomMessagesRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ChatroomApi
    */
   public getChatRoomMessages(
     requestParameters: ChatroomApiGetChatRoomMessagesRequest,
@@ -937,7 +811,6 @@ export class ChatroomApi extends BaseAPI {
    * @param {ChatroomApiGetCurrentChatRoomRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ChatroomApi
    */
   public getCurrentChatRoom(requestParameters: ChatroomApiGetCurrentChatRoomRequest, options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
@@ -950,7 +823,6 @@ export class ChatroomApi extends BaseAPI {
    * @summary 채팅방 상태 조회
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ChatroomApi
    */
   public getCurrentChatRoom1(options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
@@ -964,7 +836,6 @@ export class ChatroomApi extends BaseAPI {
    * @param {ChatroomApiGetCurrentChatRoomMessagesRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ChatroomApi
    */
   public getCurrentChatRoomMessages(
     requestParameters: ChatroomApiGetCurrentChatRoomMessagesRequest,
@@ -976,29 +847,15 @@ export class ChatroomApi extends BaseAPI {
   }
 
   /**
-   * 현재 채팅방의 단계를 업그레이드합니다. 다음 단계의 오프닝 멘트를 SSE로 전달됩니다. JWT 토큰이 필요합니다.
-   * @summary 채팅방 단계 변경
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof ChatroomApi
-   */
-  public sendChatMessage(options?: RawAxiosRequestConfig) {
-    return ChatroomApiFp(this.configuration)
-      .sendChatMessage(options)
-      .then((request) => request(this.axios, this.basePath))
-  }
-
-  /**
    * 서버로 AI 상담을 위한 사용자의 메시지를 전달합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
    * @summary 채팅 메시지 전송
-   * @param {ChatroomApiSendChatMessage1Request} requestParameters Request parameters.
+   * @param {ChatroomApiSendChatMessageRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
-   * @memberof ChatroomApi
    */
-  public sendChatMessage1(requestParameters: ChatroomApiSendChatMessage1Request, options?: RawAxiosRequestConfig) {
+  public sendChatMessage(requestParameters: ChatroomApiSendChatMessageRequest, options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
-      .sendChatMessage1(requestParameters.chatRequest, options)
+      .sendChatMessage(requestParameters.chatRequest, options)
       .then((request) => request(this.axios, this.basePath))
   }
 }

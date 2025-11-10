@@ -12,16 +12,6 @@
  * Do not edit the class manually.
  */
 
-/**
- *
- * @export
- * @interface ProcessNotificationsRequestDto
- */
 export interface ProcessNotificationsRequestDto {
-  /**
-   *
-   * @type {Array<number>}
-   * @memberof ProcessNotificationsRequestDto
-   */
   pendingNotifications?: Array<number>
 }

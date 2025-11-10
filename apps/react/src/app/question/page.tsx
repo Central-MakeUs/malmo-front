@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -6,32 +6,34 @@ import { z } from 'zod'
 
 // internal imports
 import { TodayQuestionSection } from '@/features/question'
+import { useTodayQuestion } from '@/features/question/hooks/use-today-question'
 import CalendarItem from '@/features/question/ui/calendar-item'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
+import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import questionService from '@/shared/services/question.service'
 import { Badge, BottomNavigation } from '@/shared/ui'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
+import { PageLoadingFallback } from '@/shared/ui/loading-fallback'
 
 export const Route = createFileRoute('/question/')({
   component: RouteComponent,
   validateSearch: z.object({
     selectedLevel: z.number().optional(),
   }),
-  loaderDeps: (search) => search,
-  loader: async ({ context }) => {
-    await context.queryClient.ensureQueryData(questionService.todayQuestionQuery())
-  },
 })
 
 function RouteComponent() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
-  const { data, isLoading, error } = useQuery(questionService.todayQuestionQuery())
+  const { data, isLoading, error } = useTodayQuestion()
   const search = Route.useSearch()
 
-  if (isLoading) return <div>Loading...</div>
+  if (isLoading) {
+    return <PageLoadingFallback />
+  }
+
   if (error || !data || data.level === undefined) return null
 
   const initialLevel = search.selectedLevel ?? data.level
@@ -61,10 +63,12 @@ function RouteComponent() {
   const maxPage = Math.floor((data.level - 1) / 30)
 
   return (
-    <div className="has-bottom-nav flex h-full flex-col bg-gray-neutral-100">
-      <HomeHeaderBar title="마음도감" />
+    <Screen>
+      <Screen.Header>
+        <HomeHeaderBar title="마음도감" />
+      </Screen.Header>
 
-      <section className="overflow-y-auto overscroll-y-none bg-white">
+      <Screen.Content className="has-bottom-nav no-bounce-scroll flex-1 bg-gray-neutral-100">
         <div className="bg-white pt-3 pb-7">
           <div className="mb-4 flex items-center justify-between pr-5 pl-[14px]">
             <div className="flex items-center gap-1 py-[2px]">
@@ -146,7 +150,7 @@ function RouteComponent() {
           </div>
         </div>
 
-        <div className="flex-1 bg-gray-neutral-100 px-5 pt-5 pb-12">
+        <div className="px-5 py-5">
           <Link
             to={selectedQuestion.meAnswered ? '/question/see-answer' : '/question/write-answer'}
             search={{ coupleQuestionId: selectedQuestion?.coupleQuestionId || 0, isEdit: false }}
@@ -159,9 +163,9 @@ function RouteComponent() {
             <TodayQuestionSection todayQuestion={selectedQuestion} level={selectedQuestion.level} />
           </Link>
         </div>
-      </section>
+      </Screen.Content>
 
       <BottomNavigation />
-    </div>
+    </Screen>
   )
 }

@@ -14,26 +14,18 @@
 
 /**
  * 멤버 답변 상세 데이터
- * @export
- * @interface AnswerDto
  */
 export interface AnswerDto {
   /**
    * 답변한 멤버 닉네임
-   * @type {string}
-   * @memberof AnswerDto
    */
   nickname?: string
   /**
    * 답변 내용
-   * @type {string}
-   * @memberof AnswerDto
    */
   answer?: string
   /**
    * 수정 가능
-   * @type {boolean}
-   * @memberof AnswerDto
    */
   updatable?: boolean
 }
