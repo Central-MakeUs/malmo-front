@@ -1,6 +1,6 @@
 import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { ArrowUp } from 'lucide-react'
+import { ArrowUp, Bookmark } from 'lucide-react'
 import React, { useState, useRef, useEffect } from 'react'
 
 import { wrapWithTracking } from '@/shared/analytics'
@@ -74,7 +74,14 @@ function ChatInput(props: { disabled?: boolean }) {
         </div>
       )}
 
-      <div className="flex w-full items-end gap-2">
+      <div className="relative flex w-full items-end gap-2">
+        <button
+          type="button"
+          aria-label="북마크"
+          className="absolute -top-[54px] right-0 z-10 flex h-10 w-10 items-center justify-center rounded-[26px] bg-gray-iron-700"
+        >
+          <Bookmark className="h-5 w-5 text-white" fill="currentColor" />
+        </button>
         <div
           className={cn(
             'relative flex w-full items-end gap-4 rounded-[22px] border border-gray-300 bg-white py-2.5 pr-2.5 pl-3 transition-colors'
