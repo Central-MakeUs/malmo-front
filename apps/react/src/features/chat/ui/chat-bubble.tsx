@@ -3,6 +3,7 @@ import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } fro
 
 import momoChat from '@/assets/images/momo-chat.png'
 import { cn } from '@/shared/lib/cn'
+import { toast } from '@/shared/ui/toast'
 
 import { ChatMessageTempStatus } from '../hooks/use-chat-queries'
 import { groupSentences } from '../util/chat-format'
@@ -12,6 +13,17 @@ const MOVE_THRESHOLD = 8
 
 type MenuAlign = 'left' | 'right'
 type BubbleVariant = 'assistant' | 'user'
+
+const copyToClipboard = async (text: string) => {
+  if (!text) return false
+  if (!navigator?.clipboard?.writeText) return false
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch {
+    return false
+  }
+}
 
 interface MessageActionMenuProps {
   align: MenuAlign
@@ -121,9 +133,12 @@ function ActionableBubble({ align, variant, copyText, className, children }: Act
     startPointRef.current = null
   }, [clearPressTimer])
 
-  const handleCopy = useCallback(() => {
-    if (copyText) {
-      void navigator?.clipboard?.writeText(copyText)
+  const handleCopy = useCallback(async () => {
+    const success = await copyToClipboard(copyText)
+    if (success) {
+      toast.success('클립보드에 복사했어요')
+    } else {
+      toast.error('클립보드 복사에 실패했어요')
     }
     closeMenu()
   }, [closeMenu, copyText])
