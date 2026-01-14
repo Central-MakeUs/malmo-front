@@ -35,6 +35,7 @@
   --color-gray-neutral-950: var(--gray-neutral-950);
 
   /* Malmo Raspberry */
+  --color-malmo-rasberry-10: var(--malmo-rasberry-10);
   --color-malmo-rasberry-25: var(--malmo-rasberry-25);
   --color-malmo-rasberry-50: var(--malmo-rasberry-50);
   --color-malmo-rasberry-100: var(--malmo-rasberry-100);
@@ -87,5 +88,4 @@
   --animate-down: accordion-down 0.2s ease-out;
   --animate-up: accordion-up 0.2s ease-out;
 }
-
 
