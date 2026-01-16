@@ -17,7 +17,17 @@ const CONNECTED_REQUIRED_MESSAGE =
   '알려줘서 고마워! 그런데, 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 연인에게 공유해봐!'
 
 export const useChatRoomStatusQuery = () => {
-  return useQuery(chatService.chatRoomStatusQuery())
+  return useQuery({
+    ...chatService.chatRoomStatusQuery(),
+    select: (data) => data?.chatRoomState,
+  })
+}
+
+export const useCurrentChatRoomQuery = (enabled = true) => {
+  return useQuery({
+    ...chatService.chatRoomStatusQuery(),
+    enabled,
+  })
 }
 
 export const useChatMessagesQuery = (
@@ -100,7 +110,7 @@ export const useSendMessageMutation = () => {
     },
 
     onSuccess: (data, variables, context) => {
-      // 낙관적 업데이트된 메시지의 상태를 'sent'로 변경
+      const resolvedMessageId = data?.messageId
       queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
         if (!oldData) return oldData
         return {
@@ -108,7 +118,9 @@ export const useSendMessageMutation = () => {
           pages: oldData.pages.map((page) => ({
             ...page,
             list: page.list?.map((msg) =>
-              msg.messageId === context.optimisticMessageId ? { ...msg, status: 'sent' } : msg
+              msg.messageId === context.optimisticMessageId
+                ? { ...msg, status: 'sent', messageId: resolvedMessageId ?? msg.messageId }
+                : msg
             ),
           })),
         }

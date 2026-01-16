@@ -1,8 +1,10 @@
+import { useMutation } from '@tanstack/react-query'
 import { AlertTriangle, Bookmark, Copy } from 'lucide-react'
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import momoChat from '@/assets/images/momo-chat.png'
 import { cn } from '@/shared/lib/cn'
+import bookmarkService from '@/shared/services/bookmark.service'
 import { toast } from '@/shared/ui/toast'
 
 import { ChatMessageTempStatus } from '../hooks/use-chat-queries'
@@ -56,16 +58,30 @@ interface ActionableBubbleProps {
   align: MenuAlign
   variant: BubbleVariant
   copyText: string
+  chatRoomId?: number
+  messageId?: number
   className?: string
   children: ReactNode
 }
 
-function ActionableBubble({ align, variant, copyText, className, children }: ActionableBubbleProps) {
+function ActionableBubble({
+  align,
+  variant,
+  copyText,
+  chatRoomId,
+  messageId,
+  className,
+  children,
+}: ActionableBubbleProps) {
   const [isPressed, setIsPressed] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const timerRef = useRef<number | null>(null)
   const startPointRef = useRef<{ x: number; y: number } | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const { mutateAsync: createBookmark, isPending: isCreatingBookmark } = useMutation(
+    bookmarkService.createBookmarkMutation()
+  )
 
   const clearPressTimer = useCallback(() => {
     if (timerRef.current !== null) {
@@ -143,9 +159,19 @@ function ActionableBubble({ align, variant, copyText, className, children }: Act
     closeMenu()
   }, [closeMenu, copyText])
 
-  const handleBookmark = useCallback(() => {
-    closeMenu()
-  }, [closeMenu])
+  const handleBookmark = useCallback(async () => {
+    if (isCreatingBookmark) return
+    if (chatRoomId == null || messageId == null) {
+      toast.error('북마크할 메시지를 찾을 수 없어요')
+      closeMenu()
+      return
+    }
+    try {
+      await createBookmark({ chatRoomId, messageId })
+    } finally {
+      closeMenu()
+    }
+  }, [chatRoomId, closeMenu, createBookmark, isCreatingBookmark, messageId])
 
   const baseColor = variant === 'user' ? 'bg-malmo-rasberry-10' : 'bg-gray-100'
   const pressedColor = variant === 'user' ? 'bg-malmo-rasberry-50' : 'bg-gray-300'
@@ -168,6 +194,8 @@ function ActionableBubble({ align, variant, copyText, className, children }: Act
 }
 
 interface AiChatBubbleProps {
+  messageId?: number
+  chatRoomId?: number
   message?: string
   timestamp?: string
   senderName?: string
@@ -175,7 +203,7 @@ interface AiChatBubbleProps {
 }
 
 export function AiChatBubble(props: AiChatBubbleProps) {
-  const { message = '', senderName = '모모', timestamp = '', isTyping = false } = props
+  const { messageId, chatRoomId, message = '', senderName = '모모', timestamp = '', isTyping = false } = props
 
   const messageGroups = useMemo(() => (isTyping ? [] : groupSentences(message, 3)), [isTyping, message])
 
@@ -205,6 +233,8 @@ export function AiChatBubble(props: AiChatBubbleProps) {
                 align="left"
                 variant="assistant"
                 copyText={group}
+                chatRoomId={chatRoomId}
+                messageId={messageId}
                 className={cn('w-fit max-w-full rounded-[10px] rounded-tl-none px-[14px] py-[10px]', {
                   'mb-2': index < messageGroups.length - 1,
                 })}
@@ -223,12 +253,16 @@ export function AiChatBubble(props: AiChatBubbleProps) {
 }
 
 interface MyChatBubbleProps {
+  messageId?: number
+  chatRoomId?: number
   message?: string
   timestamp: string
   onRetry?: () => void
 }
 
 export function MyChatBubble({
+  messageId,
+  chatRoomId,
   message = '',
   timestamp,
   status = 'sent',
@@ -250,6 +284,8 @@ export function MyChatBubble({
           align="right"
           variant="user"
           copyText={message}
+          chatRoomId={chatRoomId}
+          messageId={messageId}
           className={cn('w-fit max-w-full rounded-[10px] rounded-br-none px-[14px] py-[10px]', {
             'border border-red-300': status === 'failed',
           })}

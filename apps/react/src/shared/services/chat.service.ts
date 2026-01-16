@@ -15,7 +15,7 @@ class ChatService extends ChatroomApi {
       queryKey: queryKeys.chat.status(),
       queryFn: async () => {
         const { data } = await this.getCurrentChatRoom1()
-        return data?.data?.chatRoomState
+        return data?.data
       },
     }
   }

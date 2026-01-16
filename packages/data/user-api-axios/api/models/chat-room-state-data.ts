@@ -17,6 +17,10 @@
  */
 export interface ChatRoomStateData {
   /**
+   * 현재 채팅방의 ID
+   */
+  chatRoomId?: number
+  /**
    * 현재 채팅방의 상태
    */
   chatRoomState?: ChatRoomStateDataChatRoomStateEnum
