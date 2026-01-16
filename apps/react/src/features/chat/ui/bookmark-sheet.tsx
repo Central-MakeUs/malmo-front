@@ -1,11 +1,12 @@
 import { BookmarkDtoTypeEnum } from '@data/user-api-axios/api'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 
 import CheckedCircle from '@/assets/icons/checked-circle.svg'
 import { useScreenLayout } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import bookmarkService from '@/shared/services/bookmark.service'
+import { queryKeys } from '@/shared/services/query-keys'
 import { Button } from '@/shared/ui'
 import { Sheet, SheetContent, SheetTitle } from '@/shared/ui/sheet'
 import { formatDate } from '@/shared/utils/date'
@@ -34,6 +35,7 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId }: BookmarkShee
   const headerHeight = layout?.headerHeight ?? 0
   const [isDeleteMode, setIsDeleteMode] = useState(false)
   const [selectedIds, setSelectedIds] = useState<number[]>([])
+  const queryClient = useQueryClient()
 
   const { data: bookmarkData } = useQuery({
     ...bookmarkService.bookmarkListQuery(chatRoomId ?? 0, { page: 0, size: 20 }),
@@ -45,6 +47,8 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId }: BookmarkShee
 
   const bookmarks = bookmarkData?.list ?? []
   const totalCount = bookmarkData?.totalCount ?? bookmarks.length
+
+  const { mutateAsync: deleteBookmarks, isPending: isDeleting } = useMutation(bookmarkService.deleteBookmarksMutation())
 
   useEffect(() => {
     if (!isOpen) {
@@ -58,9 +62,25 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId }: BookmarkShee
   }
 
   const hasSelection = selectedIds.length > 0
-  const sheetStyle = {
-    height: '50vh',
-    ...(isDeleteMode ? { top: `calc(var(--safe-top) + ${headerHeight}px)` } : {}),
+  const canDelete = hasSelection && !!chatRoomId && !isDeleting
+  const sheetStyle = isDeleteMode
+    ? {
+        top: `calc(var(--safe-top) + ${headerHeight}px)`,
+        height: `calc(100vh - (var(--safe-top) + ${headerHeight}px))`,
+      }
+    : { height: '50vh' }
+
+  const handleDelete = async () => {
+    if (!chatRoomId || !hasSelection || isDeleting) return
+    const bookmarkIdList = selectedIds.filter((id) => Number.isFinite(id))
+    if (bookmarkIdList.length === 0) return
+    try {
+      await deleteBookmarks({ chatRoomId, bookmarkIdList })
+      setSelectedIds([])
+      await queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all })
+    } catch {
+      // handled by mutation onError
+    }
   }
 
   return (
@@ -145,12 +165,12 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId }: BookmarkShee
           {isDeleteMode && (
             <div className="mt-6 pb-5">
               <Button
-                onClick={() => {}}
+                onClick={handleDelete}
                 text={hasSelection ? `${selectedIds.length}개 삭제` : '삭제'}
-                disabled={!hasSelection}
+                disabled={!canDelete}
                 className={cn({
-                  'bg-gray-iron-700': hasSelection,
-                  'bg-gray-neutral-300': !hasSelection,
+                  'bg-gray-iron-700': canDelete,
+                  'bg-gray-neutral-300': !canDelete,
                 })}
               />
             </div>

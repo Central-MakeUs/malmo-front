@@ -39,6 +39,26 @@ class BookmarkService extends BookmarksApi {
     }
   }
 
+  deleteBookmarksMutation() {
+    return {
+      mutationFn: async (params: { chatRoomId: number; bookmarkIdList: number[] }) => {
+        const { data } = await this.deleteBookmarks({
+          chatRoomId: params.chatRoomId,
+          deleteBookmarksRequestDto: {
+            bookmarkIdList: params.bookmarkIdList,
+          },
+        })
+        return data?.data
+      },
+      onSuccess: () => {
+        toast.success('북마크를 삭제했어요')
+      },
+      onError: () => {
+        toast.error('북마크 삭제에 실패했어요')
+      },
+    }
+  }
+
   createBookmarkMutation() {
     return {
       mutationFn: async (params: { chatRoomId: number; messageId: number }) => {
