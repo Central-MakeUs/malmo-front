@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState, type RefObject } from 'react'
 
-type UseScrollToBottomOptions = {
-  scrollRef: RefObject<HTMLElement>
+type UseScrollToBottomOptions<T extends HTMLElement = HTMLElement> = {
+  scrollRef: RefObject<T | null>
   deps?: Array<unknown>
 }
 
 const BOTTOM_THRESHOLD = 24
 
-export function useScrollToBottom({ scrollRef, deps = [] }: UseScrollToBottomOptions) {
+export function useScrollToBottom<T extends HTMLElement = HTMLElement>({
+  scrollRef,
+  deps = [],
+}: UseScrollToBottomOptions<T>) {
   const [isAtBottom, setIsAtBottom] = useState(true)
 
   const updateIsAtBottom = useCallback(() => {
