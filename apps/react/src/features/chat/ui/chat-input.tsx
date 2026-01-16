@@ -1,7 +1,7 @@
-import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
+import { ChatRoomStateData, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { ArrowUp, Bookmark } from 'lucide-react'
-import React, { useState, useRef, useEffect } from 'react'
+import { ArrowUp } from 'lucide-react'
+import React, { useState, useRef, useEffect, type ReactNode } from 'react'
 
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
@@ -12,7 +12,7 @@ import chatService from '@/shared/services/chat.service'
 import { useChatting } from '../context/chatting-context'
 import { useSendMessageMutation } from '../hooks/use-chat-queries'
 
-function ChatInput(props: { disabled?: boolean }) {
+function ChatInput(props: { disabled?: boolean; floatingAction?: ReactNode }) {
   const queryClient = useQueryClient()
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
@@ -62,8 +62,8 @@ function ChatInput(props: { disabled?: boolean }) {
     }
   }
 
-  const paused =
-    queryClient.getQueryData(chatService.chatRoomStatusQuery().queryKey) === ChatRoomStateDataChatRoomStateEnum.Paused
+  const chatStatus = queryClient.getQueryData<ChatRoomStateData>(chatService.chatRoomStatusQuery().queryKey)
+  const paused = chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused
   const disabled = props.disabled || paused || isPending || sendingMessage
 
   return (
@@ -75,13 +75,7 @@ function ChatInput(props: { disabled?: boolean }) {
       )}
 
       <div className="relative flex w-full items-end gap-2">
-        <button
-          type="button"
-          aria-label="북마크"
-          className="absolute -top-[54px] right-0 z-10 flex h-10 w-10 items-center justify-center rounded-[26px] bg-gray-iron-700"
-        >
-          <Bookmark className="h-5 w-5 text-white" fill="currentColor" />
-        </button>
+        {props.floatingAction}
         <div
           className={cn(
             'relative flex w-full items-end gap-4 rounded-[22px] border border-gray-300 bg-white py-2.5 pr-2.5 pl-3 transition-colors'

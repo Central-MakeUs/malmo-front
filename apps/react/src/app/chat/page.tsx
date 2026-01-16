@@ -5,8 +5,8 @@ import {
 } from '@data/user-api-axios/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
-import React, { useCallback, useMemo } from 'react'
+import { Bookmark, ChevronRight } from 'lucide-react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { z } from 'zod'
 
 import { useAuth } from '@/features/auth'
@@ -14,9 +14,11 @@ import { useChatting } from '@/features/chat/context/chatting-context'
 import {
   ChatMessageTempStatus,
   useChatMessagesQuery,
+  useCurrentChatRoomQuery,
   useSendMessageMutation,
 } from '@/features/chat/hooks/use-chat-queries'
 import { useChatScroll } from '@/features/chat/hooks/use-chat-scroll'
+import { BookmarkSheet } from '@/features/chat/ui/bookmark-sheet'
 import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import ChatInput from '@/features/chat/ui/chat-input'
 import { DateDivider } from '@/features/chat/ui/date-divider'
@@ -56,12 +58,15 @@ function RouteComponent() {
   const { chatStatus, chattingModal, streamingMessage, awaitingResponse, isChatStatusSuccess, sendingMessage } =
     useChatting()
   const auth = useAuth()
+  const [isBookmarkSheetOpen, setIsBookmarkSheetOpen] = useState(false)
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
     chatStatus,
     chatId
   )
+  const { data: currentChatRoom } = useCurrentChatRoomQuery(!chatId)
+  const resolvedChatRoomId = chatId ?? currentChatRoom?.chatRoomId
 
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
@@ -174,9 +179,16 @@ function RouteComponent() {
                   <React.Fragment key={`${chat.messageId}-${index}`}>
                     <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
                     {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
-                      <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
+                      <AiChatBubble
+                        messageId={chat.messageId}
+                        chatRoomId={resolvedChatRoomId}
+                        message={chat.content}
+                        timestamp={formatTimestamp(chat.createdAt)}
+                      />
                     ) : (
                       <MyChatBubble
+                        messageId={chat.messageId}
+                        chatRoomId={resolvedChatRoomId}
                         message={chat.content}
                         timestamp={formatTimestamp(chat.createdAt)}
                         status={(chat as ChatRoomMessageData & ChatMessageTempStatus).status ?? 'sent'}
@@ -191,6 +203,8 @@ function RouteComponent() {
 
               {streamingMessage && (
                 <AiChatBubble
+                  messageId={streamingMessage.messageId}
+                  chatRoomId={resolvedChatRoomId}
                   message={streamingMessage.content}
                   timestamp={formatTimestamp(streamingMessage.createdAt)}
                 />
@@ -212,7 +226,24 @@ function RouteComponent() {
           </section>
         </div>
       </Screen.Content>
-      <ChatInput disabled={!!chatId} />
+      <ChatInput
+        disabled={!!chatId}
+        floatingAction={
+          <button
+            type="button"
+            aria-label="북마크"
+            className="absolute -top-[54px] right-0 z-10 flex h-10 w-10 items-center justify-center rounded-[26px] bg-gray-iron-700"
+            onClick={() => setIsBookmarkSheetOpen(true)}
+          >
+            <Bookmark className="h-5 w-5 text-white" fill="currentColor" />
+          </button>
+        }
+      />
+      <BookmarkSheet
+        isOpen={isBookmarkSheetOpen}
+        onOpenChange={setIsBookmarkSheetOpen}
+        chatRoomId={resolvedChatRoomId}
+      />
       {!chatId && chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </Screen>
   )

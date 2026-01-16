@@ -1,10 +1,11 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, Bookmark, Copy } from 'lucide-react'
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import momoChat from '@/assets/images/momo-chat.png'
 import { cn } from '@/shared/lib/cn'
 import bookmarkService from '@/shared/services/bookmark.service'
+import { queryKeys } from '@/shared/services/query-keys'
 import { toast } from '@/shared/ui/toast'
 
 import { ChatMessageTempStatus } from '../hooks/use-chat-queries'
@@ -78,6 +79,7 @@ function ActionableBubble({
   const timerRef = useRef<number | null>(null)
   const startPointRef = useRef<{ x: number; y: number } | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const queryClient = useQueryClient()
 
   const { mutateAsync: createBookmark, isPending: isCreatingBookmark } = useMutation(
     bookmarkService.createBookmarkMutation()
@@ -168,6 +170,7 @@ function ActionableBubble({
     }
     try {
       await createBookmark({ chatRoomId, messageId })
+      await queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all })
     } finally {
       closeMenu()
     }

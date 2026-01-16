@@ -30,6 +30,20 @@ export const queryKeys = {
     summary: (chatRoomId: number) => [...queryKeys.history.all, 'summary', chatRoomId] as const,
   },
 
+  // === Bookmark 관련 ===
+  bookmark: {
+    all: ['bookmark'] as const,
+    list: (chatRoomId: number, params?: { page?: number; size?: number; sort?: string[] }) =>
+      [
+        ...queryKeys.bookmark.all,
+        'list',
+        chatRoomId,
+        params?.page ?? 0,
+        params?.size ?? 0,
+        params?.sort?.join(',') ?? '',
+      ] as const,
+  },
+
   // === Terms 관련 ===
   terms: {
     all: ['terms'] as const,

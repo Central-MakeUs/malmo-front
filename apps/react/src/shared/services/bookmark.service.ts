@@ -1,5 +1,6 @@
 import { BookmarksApi } from '@data/user-api-axios/api'
 
+import { queryKeys } from './query-keys'
 import apiInstance from '../lib/api'
 import { toast } from '../ui/toast'
 
@@ -15,6 +16,27 @@ const getBookmarkErrorMessage = (error: unknown) => {
 class BookmarkService extends BookmarksApi {
   constructor() {
     super(undefined, '', apiInstance)
+  }
+
+  bookmarkListQuery(chatRoomId: number, options?: { page?: number; size?: number; sort?: string[] }) {
+    const page = options?.page ?? 0
+    const size = options?.size ?? 20
+    const sort = options?.sort
+
+    return {
+      queryKey: queryKeys.bookmark.list(chatRoomId, { page, size, sort }),
+      queryFn: async () => {
+        const { data } = await this.getBookmarkList({
+          chatRoomId,
+          pageable: {
+            page,
+            size,
+            ...(sort ? { sort } : {}),
+          },
+        })
+        return data?.data
+      },
+    }
   }
 
   createBookmarkMutation() {
