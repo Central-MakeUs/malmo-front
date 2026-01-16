@@ -81,7 +81,7 @@ export function RecentChatSection({ histories, totalHistoryCount }: RecentChatSe
       </div>
       {showMoreHistoryButton && (
         <div className="mt-2 flex">
-          <Link to="/history" className="inline-flex rounded-[8px] bg-gray-neutral-100 px-4 py-2">
+          <Link to="/history" className="flex w-full justify-center rounded-[8px] bg-gray-neutral-100 px-4 py-2">
             <span className="body4-medium text-gray-iron-800">대화기록 더보기</span>
           </Link>
         </div>
