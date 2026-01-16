@@ -116,59 +116,71 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
             </p>
           </div>
 
-          <div className="mt-7 flex min-h-0 flex-1 flex-col overflow-y-scroll" style={{ scrollbarGutter: 'stable' }}>
-            {bookmarks.map((bookmark, index) => {
-              const bookmarkId = bookmark.bookmarkId ?? index
-              const isSelected = selectedIds.includes(bookmarkId)
-              const senderLabel = getSenderLabel(bookmark.type)
-              const timestamp = formatDate(bookmark.timestamp, 'YYYY년 M월 D일 HH:mm')
-              return (
-                <div key={bookmarkId}>
-                  {isDeleteMode ? (
-                    <button
-                      type="button"
-                      className="flex w-full items-start gap-4 text-left"
-                      onClick={() => toggleSelect(bookmarkId)}
-                    >
-                      {isSelected ? (
-                        <CheckedCircle className="mt-[2px] h-[22px] w-[22px] shrink-0" />
-                      ) : (
-                        <div className="mt-[2px] h-[22px] w-[22px] shrink-0 rounded-full border border-gray-iron-400" />
-                      )}
-                      <div className="min-w-0 flex-1">
+          <div
+            className={cn('mt-7 flex min-h-0 flex-1 flex-col overflow-y-scroll', {
+              'items-center justify-center': bookmarks.length === 0,
+            })}
+            style={{ scrollbarGutter: 'stable' }}
+          >
+            {bookmarks.length === 0 ? (
+              <div className="text-center">
+                <p className="body2-medium text-gray-iron-800">메시지를 꾹 눌러 저장하고 싶은 메시지에</p>
+                <p className="body2-medium text-gray-iron-800">북마크를 남겨 보세요!</p>
+              </div>
+            ) : (
+              bookmarks.map((bookmark, index) => {
+                const bookmarkId = bookmark.bookmarkId ?? index
+                const isSelected = selectedIds.includes(bookmarkId)
+                const senderLabel = getSenderLabel(bookmark.type)
+                const timestamp = formatDate(bookmark.timestamp, 'YYYY년 M월 D일 HH:mm')
+                return (
+                  <div key={bookmarkId}>
+                    {isDeleteMode ? (
+                      <button
+                        type="button"
+                        className="flex w-full items-start gap-4 text-left"
+                        onClick={() => toggleSelect(bookmarkId)}
+                      >
+                        {isSelected ? (
+                          <CheckedCircle className="mt-[2px] h-[22px] w-[22px] shrink-0" />
+                        ) : (
+                          <div className="mt-[2px] h-[22px] w-[22px] shrink-0 rounded-full border border-gray-iron-400" />
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <p className="body2-reading-regular truncate text-gray-iron-950">{bookmark.content}</p>
+                          <p className="label1-medium mt-1 text-gray-iron-500">
+                            {senderLabel} ・ {timestamp}
+                          </p>
+                        </div>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="w-full text-left"
+                        onClick={() => {
+                          if (bookmark.bookmarkId == null || chatRoomId == null) return
+                          if (!onSelectBookmark) return
+                          onSelectBookmark?.(bookmark.bookmarkId, chatRoomId)
+                        }}
+                      >
                         <p className="body2-reading-regular truncate text-gray-iron-950">{bookmark.content}</p>
                         <p className="label1-medium mt-1 text-gray-iron-500">
                           {senderLabel} ・ {timestamp}
                         </p>
-                      </div>
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      className="w-full text-left"
-                      onClick={() => {
-                        if (bookmark.bookmarkId == null || chatRoomId == null) return
-                        if (!onSelectBookmark) return
-                        onSelectBookmark?.(bookmark.bookmarkId, chatRoomId)
-                      }}
-                    >
-                      <p className="body2-reading-regular truncate text-gray-iron-950">{bookmark.content}</p>
-                      <p className="label1-medium mt-1 text-gray-iron-500">
-                        {senderLabel} ・ {timestamp}
-                      </p>
-                    </button>
-                  )}
-                  {index < bookmarks.length - 1 && (
-                    <>
-                      <div className="mt-4">
-                        <hr className="h-px border-0 bg-gray-iron-100" />
-                      </div>
-                      <div className="mt-4" />
-                    </>
-                  )}
-                </div>
-              )
-            })}
+                      </button>
+                    )}
+                    {index < bookmarks.length - 1 && (
+                      <>
+                        <div className="mt-4">
+                          <hr className="h-px border-0 bg-gray-iron-100" />
+                        </div>
+                        <div className="mt-4" />
+                      </>
+                    )}
+                  </div>
+                )
+              })
+            )}
           </div>
 
           {isDeleteMode && (
