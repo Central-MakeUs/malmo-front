@@ -170,6 +170,22 @@ function ActionableBubble({
     }
     try {
       await createBookmark({ chatRoomId, messageId })
+      const markMessageSaved = (oldData: any) => {
+        if (!oldData?.pages) return oldData
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => {
+            if (!page?.list) return page
+            return {
+              ...page,
+              list: page.list.map((item: any) => (item?.messageId === messageId ? { ...item, saved: true } : item)),
+            }
+          }),
+        }
+      }
+
+      queryClient.setQueriesData({ queryKey: queryKeys.chat.messages() }, markMessageSaved)
+      queryClient.setQueriesData({ queryKey: queryKeys.history.detail(chatRoomId) }, markMessageSaved)
       await queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all })
     } finally {
       closeMenu()
