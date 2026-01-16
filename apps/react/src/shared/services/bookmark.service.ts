@@ -39,6 +39,24 @@ class BookmarkService extends BookmarksApi {
     }
   }
 
+  bookmarkMessagesMutation() {
+    return {
+      mutationFn: async (params: { chatRoomId: number; bookmarkId: number; size?: number; sort?: string }) => {
+        const { data } = await this.getMessagesByBookmark({
+          chatRoomId: params.chatRoomId,
+          bookmarkId: params.bookmarkId,
+          size: params.size ?? 10,
+          sort: params.sort ?? 'ASC',
+        })
+        return data?.data
+      },
+      onError: (error) => {
+        const message = getBookmarkErrorMessage(error) ?? '북마크 메시지를 불러오지 못했어요'
+        toast.error(message)
+      },
+    }
+  }
+
   deleteBookmarksMutation() {
     return {
       mutationFn: async (params: { chatRoomId: number; bookmarkIdList: number[] }) => {

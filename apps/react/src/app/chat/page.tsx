@@ -1,4 +1,5 @@
 import {
+  BaseListSwaggerResponseChatRoomMessageData,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   ChatRoomStateDataChatRoomStateEnum,
@@ -6,7 +7,7 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Bookmark, ChevronRight } from 'lucide-react'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 
 import { useAuth } from '@/features/auth'
@@ -29,7 +30,9 @@ import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
 import { useGoBack } from '@/shared/navigation/use-go-back'
+import bookmarkService from '@/shared/services/bookmark.service'
 import chatService from '@/shared/services/chat.service'
+import historyService from '@/shared/services/history.service'
 import { queryKeys } from '@/shared/services/query-keys'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { formatDate } from '@/shared/utils'
@@ -69,6 +72,7 @@ function RouteComponent() {
   const resolvedChatRoomId = chatId ?? currentChatRoom?.chatRoomId
 
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
+  const [pendingScrollMessageId, setPendingScrollMessageId] = useState<number | null>(null)
 
   const messages = useMemo(() => {
     if (!chatId && chattingModal.showChattingTutorial && chatStatus === ChatRoomStateDataChatRoomStateEnum.BeforeInit)
@@ -91,6 +95,10 @@ function RouteComponent() {
     streamingMessage,
     awaitingResponse,
   })
+
+  const { mutateAsync: fetchBookmarkMessages, isPending: isLoadingBookmarkMessages } = useMutation(
+    bookmarkService.bookmarkMessagesMutation()
+  )
 
   const chatCompletionOptions = useMemo(() => chatService.completeChatRoomMutation(), [])
   const { mutate: completeChat, isPending: isCompletingChat } = useMutation({
@@ -139,6 +147,64 @@ function RouteComponent() {
     sendMessage(content)
   )
 
+  const handleSelectBookmark = useCallback(
+    async (bookmarkId: number, targetChatRoomId: number) => {
+      if (isLoadingBookmarkMessages) return
+      let result
+      try {
+        result = await fetchBookmarkMessages({
+          chatRoomId: targetChatRoomId,
+          bookmarkId,
+          size: 20,
+          sort: chatId ? 'ASC' : 'DESC',
+        })
+      } catch {
+        return
+      }
+
+      const messageList = result?.messages ?? []
+      if (messageList.length === 0) return
+
+      const mappedMessages: ChatRoomMessageData[] = messageList.map((message) => ({
+        messageId: message.messageId,
+        content: message.content,
+        senderType: message.senderType as ChatRoomMessageDataSenderTypeEnum | undefined,
+        createdAt: message.createdAt,
+        saved: message.isSaved,
+      }))
+
+      const pageData: BaseListSwaggerResponseChatRoomMessageData = {
+        page: result?.page ?? 0,
+        size: result?.size ?? mappedMessages.length,
+        totalCount: mappedMessages.length,
+        list: mappedMessages,
+      }
+
+      const targetQueryKey = chatId
+        ? historyService.historyMessagesQuery(chatId).queryKey
+        : chatService.chatMessagesQuery().queryKey
+
+      queryClient.setQueryData(targetQueryKey, { pages: [pageData], pageParams: [0] })
+      setPendingScrollMessageId(result?.targetMessageId ?? null)
+      setIsBookmarkSheetOpen(false)
+    },
+    [chatId, fetchBookmarkMessages, isLoadingBookmarkMessages, queryClient]
+  )
+
+  useLayoutEffect(() => {
+    if (!pendingScrollMessageId) return
+    const container = scrollRef.current
+    if (!container) return
+    const target = container.querySelector<HTMLElement>(`[data-message-id="${pendingScrollMessageId}"]`)
+    if (!target) return
+
+    const containerTop = container.getBoundingClientRect().top
+    const targetTop = target.getBoundingClientRect().top
+    const offsetTop = targetTop - containerTop + container.scrollTop
+    container.scrollTo({ top: Math.max(0, offsetTop - 16) })
+    setPendingScrollMessageId(null)
+  }, [messages, pendingScrollMessageId, scrollRef])
+
   return (
     <Screen>
       <Screen.Header>
@@ -176,7 +242,7 @@ function RouteComponent() {
               {messages.map((chat, index) => {
                 const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
                 return (
-                  <React.Fragment key={`${chat.messageId}-${index}`}>
+                  <div key={`${chat.messageId}-${index}`} data-message-id={chat.messageId}>
                     <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
                     {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
                       <AiChatBubble
@@ -195,7 +261,7 @@ function RouteComponent() {
                         onRetry={() => handleRetry(chat.content!)}
                       />
                     )}
-                  </React.Fragment>
+                  </div>
                 )
               })}
 
@@ -243,6 +309,7 @@ function RouteComponent() {
         isOpen={isBookmarkSheetOpen}
         onOpenChange={setIsBookmarkSheetOpen}
         chatRoomId={resolvedChatRoomId}
+        onSelectBookmark={handleSelectBookmark}
       />
       {!chatId && chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </Screen>

@@ -15,6 +15,7 @@ interface BookmarkSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   chatRoomId?: number
+  onSelectBookmark?: (bookmarkId: number, chatRoomId: number) => void
 }
 
 const getSenderLabel = (type?: BookmarkDtoTypeEnum) => {
@@ -30,7 +31,7 @@ const getSenderLabel = (type?: BookmarkDtoTypeEnum) => {
   }
 }
 
-export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId }: BookmarkSheetProps) {
+export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookmark }: BookmarkSheetProps) {
   const layout = useScreenLayout()
   const headerHeight = layout?.headerHeight ?? 0
   const [isDeleteMode, setIsDeleteMode] = useState(false)
@@ -142,12 +143,20 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId }: BookmarkShee
                       </div>
                     </button>
                   ) : (
-                    <>
+                    <button
+                      type="button"
+                      className="w-full text-left"
+                      onClick={() => {
+                        if (bookmark.bookmarkId == null || chatRoomId == null) return
+                        if (!onSelectBookmark) return
+                        onSelectBookmark?.(bookmark.bookmarkId, chatRoomId)
+                      }}
+                    >
                       <p className="body2-reading-regular truncate text-gray-iron-950">{bookmark.content}</p>
                       <p className="label1-medium mt-1 text-gray-iron-500">
                         {senderLabel} ・ {timestamp}
                       </p>
-                    </>
+                    </button>
                   )}
                   {index < bookmarks.length - 1 && (
                     <>
