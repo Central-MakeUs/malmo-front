@@ -1,5 +1,5 @@
 import { ChatRoomStateDataChatRoomStateEnum, PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import HeartIcon from '@/assets/icons/heart.svg'
 import malmoLogo from '@/assets/images/malmo-logo-small.png'
@@ -10,10 +10,11 @@ import { AttachmentTypeCards } from '@/features/attachment/ui/attachment-type-ca
 import { useAuth } from '@/features/auth'
 import { useChatRoomStatusQuery } from '@/features/chat/hooks/use-chat-queries'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
+import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
+import { RecentChatSection } from '@/features/history/ui/recent-chat-section'
 import { usePartnerInfo } from '@/features/member'
 import { useAppNotifications } from '@/features/notification'
 import { useProfileEdit } from '@/features/profile'
-import { TodayQuestionSection, useTodayQuestion } from '@/features/question'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
@@ -26,11 +27,9 @@ export const Route = createFileRoute('/')({
 
 function HomePage() {
   const { userInfo } = useAuth()
-  const navigate = useNavigate()
 
   useAppNotifications()
 
-  const { data: todayQuestion } = useTodayQuestion()
   const { data: partnerInfo } = usePartnerInfo()
   const profileEdit = useProfileEdit()
 
@@ -42,6 +41,10 @@ function HomePage() {
     chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.Paused ||
     chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion
 
+  const { data: historyData } = useChatHistoryQuery({})
+  const histories = historyData?.pages.flatMap((page) => page?.list ?? []) ?? []
+  const totalHistoryCount = historyData?.pages[0]?.totalCount ?? histories.length
+
   const hasAttachmentType = !!userInfo.loveTypeCategory
 
   // 파트너 연동 상태 확인
@@ -52,22 +55,6 @@ function HomePage() {
 
   const myAttachmentType = myAttachmentData?.character
   const partnerAttachmentType = partnerAttachmentData?.character
-
-  const handleTodayQuestionClick = wrapWithTracking(BUTTON_NAMES.OPEN_TODAY_QUESTION, CATEGORIES.MAIN, () => {
-    if (!todayQuestion?.coupleQuestionId) return
-
-    if (todayQuestion.meAnswered) {
-      navigate({
-        to: '/question/see-answer',
-        search: { coupleQuestionId: todayQuestion.coupleQuestionId },
-      })
-    } else {
-      navigate({
-        to: '/question/write-answer',
-        search: { coupleQuestionId: todayQuestion.coupleQuestionId },
-      })
-    }
-  })
 
   // 기념일 시트 열기 핸들러
   const handleAnniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
@@ -96,9 +83,7 @@ function HomePage() {
 
         {!hasAttachmentType && <AttachmentTestBanner />}
 
-        <div onClick={handleTodayQuestionClick} className="mt-8 cursor-pointer">
-          <TodayQuestionSection todayQuestion={todayQuestion} />
-        </div>
+        <RecentChatSection histories={histories} totalHistoryCount={totalHistoryCount} />
 
         <AttachmentTypeCards
           myAttachmentData={myAttachmentData}
