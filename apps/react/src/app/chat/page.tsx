@@ -6,8 +6,8 @@ import {
 } from '@data/user-api-axios/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { Bookmark, ChevronRight } from 'lucide-react'
-import React, { useCallback, useLayoutEffect, useMemo, useState } from 'react'
+import { ArrowDown, Bookmark, ChevronRight } from 'lucide-react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 
 import { useAuth } from '@/features/auth'
@@ -62,6 +62,7 @@ function RouteComponent() {
     useChatting()
   const auth = useAuth()
   const [isBookmarkSheetOpen, setIsBookmarkSheetOpen] = useState(false)
+  const [isAtBottom, setIsAtBottom] = useState(true)
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
@@ -95,6 +96,29 @@ function RouteComponent() {
     streamingMessage,
     awaitingResponse,
   })
+
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+
+    const updateIsAtBottom = () => {
+      const threshold = 24
+      const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight <= threshold
+      setIsAtBottom(atBottom)
+    }
+
+    updateIsAtBottom()
+    container.addEventListener('scroll', updateIsAtBottom)
+    return () => container.removeEventListener('scroll', updateIsAtBottom)
+  }, [scrollRef])
+
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+    const threshold = 24
+    const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight <= threshold
+    setIsAtBottom(atBottom)
+  }, [messages.length, streamingMessage?.content, scrollRef])
 
   const { mutateAsync: fetchBookmarkMessages, isPending: isLoadingBookmarkMessages } = useMutation(
     bookmarkService.bookmarkMessagesMutation()
@@ -295,14 +319,33 @@ function RouteComponent() {
       <ChatInput
         disabled={!!chatId}
         floatingAction={
-          <button
-            type="button"
-            aria-label="북마크"
-            className="absolute -top-[54px] right-0 z-10 flex h-10 w-10 items-center justify-center rounded-[26px] bg-gray-iron-700"
-            onClick={() => setIsBookmarkSheetOpen(true)}
-          >
-            <Bookmark className="h-5 w-5 text-white" fill="currentColor" />
-          </button>
+          <>
+            {!isAtBottom && (
+              <button
+                type="button"
+                aria-label="맨 아래로 이동"
+                className="absolute -top-[54px] right-0 z-10 flex h-10 w-10 items-center justify-center rounded-[26px] bg-white"
+                onClick={() => {
+                  const container = scrollRef.current
+                  if (!container) return
+                  container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' })
+                }}
+              >
+                <ArrowDown className="h-6 w-6 text-gray-iron-700" />
+              </button>
+            )}
+            <button
+              type="button"
+              aria-label="북마크"
+              className={cn(
+                'absolute right-0 z-10 flex h-10 w-10 items-center justify-center rounded-[26px] bg-gray-iron-700',
+                isAtBottom ? '-top-[54px]' : '-top-[100px]'
+              )}
+              onClick={() => setIsBookmarkSheetOpen(true)}
+            >
+              <Bookmark className="h-5 w-5 text-white" fill="currentColor" />
+            </button>
+          </>
         }
       />
       <BookmarkSheet
