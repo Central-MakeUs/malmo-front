@@ -10,7 +10,7 @@ const EventSourceImpl = EventSourcePolyfill || (NativeEventSource as typeof Even
 
 export interface SSEEventHandlers {
   onChatResponse?: (chunk: string) => void
-  onResponseId?: (messageId: string) => void
+  onResponseId?: (messageIds: number[]) => void
   onLevelFinished?: () => void
   onChatPaused?: () => void
   onCoupleConnected?: () => void
@@ -23,6 +23,17 @@ type ConnectionStatus = 'CONNECTING' | 'OPEN' | 'CLOSED'
 
 const BACKOFF_STEPS = [1000, 2000, 5000, 10000] as const
 const HEARTBEAT_TIMEOUT = 60_000
+
+const parseMessageIdList = (data: string): number[] => {
+  if (!data) return []
+  try {
+    const parsed = JSON.parse(data)
+    if (!Array.isArray(parsed)) return []
+    return parsed.map((item) => Number(item)).filter((item) => Number.isFinite(item))
+  } catch {
+    return []
+  }
+}
 
 export interface UseSSEReturn {
   reconnect: () => Promise<void>
@@ -95,8 +106,14 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
             }
           }
 
+          const createResponseIdListener = (handler?: (messageIds: number[]) => void) => (event: unknown) => {
+            const { data } = event as MessageEvent
+            if (typeof data === 'undefined') return
+            handler?.(parseMessageIdList(data as string))
+          }
+
           sse.addEventListener('chat_response', createListener(handlersRef.current.onChatResponse))
-          sse.addEventListener('ai_response_id', createListener(handlersRef.current.onResponseId))
+          sse.addEventListener('ai_response_id', createResponseIdListener(handlersRef.current.onResponseId))
           sse.addEventListener('current_level_finished', createListener(handlersRef.current.onLevelFinished))
           sse.addEventListener('chat_room_paused', createListener(handlersRef.current.onChatPaused))
           sse.addEventListener('couple_connected', createListener(handlersRef.current.onCoupleConnected))
