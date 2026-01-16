@@ -274,6 +274,7 @@ function RouteComponent() {
                         chatRoomId={resolvedChatRoomId}
                         message={chat.content}
                         timestamp={formatTimestamp(chat.createdAt)}
+                        isSaved={chat.saved}
                       />
                     ) : (
                       <MyChatBubble
@@ -282,6 +283,7 @@ function RouteComponent() {
                         message={chat.content}
                         timestamp={formatTimestamp(chat.createdAt)}
                         status={(chat as ChatRoomMessageData & ChatMessageTempStatus).status ?? 'sent'}
+                        isSaved={chat.saved}
                         onRetry={() => handleRetry(chat.content!)}
                       />
                     )}
@@ -297,6 +299,7 @@ function RouteComponent() {
                   chatRoomId={resolvedChatRoomId}
                   message={streamingMessage.content}
                   timestamp={formatTimestamp(streamingMessage.createdAt)}
+                  isSaved={streamingMessage.saved}
                 />
               )}
 

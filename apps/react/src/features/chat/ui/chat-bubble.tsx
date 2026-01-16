@@ -203,10 +203,11 @@ interface AiChatBubbleProps {
   timestamp?: string
   senderName?: string
   isTyping?: boolean
+  isSaved?: boolean
 }
 
 export function AiChatBubble(props: AiChatBubbleProps) {
-  const { messageId, chatRoomId, message = '', senderName = '모모', timestamp = '', isTyping = false } = props
+  const { messageId, chatRoomId, message = '', senderName = '모모', timestamp = '', isTyping = false, isSaved } = props
 
   const messageGroups = useMemo(() => (isTyping ? [] : groupSentences(message, 3)), [isTyping, message])
 
@@ -245,7 +246,10 @@ export function AiChatBubble(props: AiChatBubbleProps) {
                 <p className="body2-regular break-words text-gray-800">{group}</p>
               </ActionableBubble>
               {index === messageGroups.length - 1 && timestamp && (
-                <p className="label2-regular text-gray-600">{timestamp}</p>
+                <div className="flex flex-col items-start">
+                  {isSaved && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
+                  <p className="label2-regular text-gray-600">{timestamp}</p>
+                </div>
               )}
             </div>
           ))
@@ -260,6 +264,7 @@ interface MyChatBubbleProps {
   chatRoomId?: number
   message?: string
   timestamp: string
+  isSaved?: boolean
   onRetry?: () => void
 }
 
@@ -268,6 +273,7 @@ export function MyChatBubble({
   chatRoomId,
   message = '',
   timestamp,
+  isSaved,
   status = 'sent',
   onRetry,
 }: MyChatBubbleProps & ChatMessageTempStatus) {
@@ -282,7 +288,10 @@ export function MyChatBubble({
             </button>
           </div>
         )}
-        <p className="flex-shrink-0 text-[11px] leading-[20px] text-gray-600">{timestamp}</p>
+        <div className="flex flex-shrink-0 flex-col items-end">
+          {isSaved && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
+          <p className="text-[11px] leading-[20px] text-gray-600">{timestamp}</p>
+        </div>
         <ActionableBubble
           align="right"
           variant="user"
