@@ -56,10 +56,7 @@ function MyPage() {
         <ProfileSection nickname={userInfo.nickname || ''} dDay={dDay} />
 
         {/* 통계 박스 */}
-        <StatsSection
-          totalChatRoomCount={userInfo.totalChatRoomCount || 0}
-          totalCoupleQuestionCount={userInfo.totalCoupleQuestionCount || 0}
-        />
+        <StatsSection totalChatRoomCount={userInfo.totalChatRoomCount || 0} />
 
         {/* 메뉴 리스트 */}
         <MenuList menuItems={menuItems} />

@@ -17,8 +17,6 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   saveChatTutorialSeen(): Promise<void>
   getChatTutorialSeen(): Promise<boolean>
   openWebView(url: string): Promise<void>
-  getQuestionHelp(): Promise<boolean>
-  setQuestionHelpFalse(): Promise<void>
   getIntroSeen(): Promise<boolean>
   setIntroSeen(): Promise<void>
   setModalOpen(isOpen: boolean): Promise<void>
@@ -44,8 +42,6 @@ export const bridge = linkBridge<WebBridge>({
       // 웹에서는 새 창으로 열기
       window.open(url, '_blank')
     },
-    getQuestionHelp: async () => true,
-    setQuestionHelpFalse: async () => {},
     getIntroSeen: async () => {
       // 웹에서는 localStorage 사용
       return localStorage.getItem('intro_seen') === 'true'

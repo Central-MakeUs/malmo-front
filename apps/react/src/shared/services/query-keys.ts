@@ -1,12 +1,4 @@
 export const queryKeys = {
-  // === Question 관련 ===
-  question: {
-    all: ['question'] as const,
-    today: () => [...queryKeys.question.all, 'today'] as const,
-    past: (level: number) => [...queryKeys.question.all, 'past', level] as const,
-    detail: (questionId: number) => [...queryKeys.question.all, 'detail', questionId] as const,
-  },
-
   // === Member 관련 ===
   member: {
     all: ['member'] as const,
