@@ -4,7 +4,6 @@ import { keepPreviousData } from '@tanstack/react-query'
 import { queryKeys } from './query-keys'
 import apiInstance from '../lib/api'
 import { toast } from '../ui/toast'
-
 class HistoryService extends ChatroomApi {
   constructor() {
     super(undefined, '', apiInstance)
@@ -50,7 +49,15 @@ class HistoryService extends ChatroomApi {
           },
           chatRoomId,
         })
-        return data?.data
+        const payload = data?.data
+        if (!payload?.list) return payload
+        return {
+          ...payload,
+          list: payload.list.map((message) => ({
+            ...message,
+            saved: message.saved ?? (message as { isSaved?: boolean }).isSaved,
+          })),
+        }
       },
       initialPageParam: 0,
       getNextPageParam: (lastPage: any, allPages: any[]) => {
