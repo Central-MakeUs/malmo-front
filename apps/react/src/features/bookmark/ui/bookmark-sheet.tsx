@@ -78,7 +78,11 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
     try {
       await deleteBookmarks({ chatRoomId, bookmarkIdList })
       setSelectedIds([])
-      await queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all })
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.chat.messages() }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.history.detail(chatRoomId) }),
+      ])
     } catch {
       // handled by mutation onError
     }
