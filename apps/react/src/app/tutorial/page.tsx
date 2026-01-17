@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import tutBannerMomo from '@/assets/icons/tut_banner_momo.png'
 import tutPhone01 from '@/assets/icons/tut_phone_01.png'
 import tutPhone02 from '@/assets/icons/tut_phone_02.png'
 import tutPhone03 from '@/assets/icons/tut_phone_03.png'
+import tutBannerMomo from '@/assets/images/tutorial/tut_banner_momo.png'
 import { Screen } from '@/shared/layout/screen'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
