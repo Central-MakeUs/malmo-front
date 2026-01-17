@@ -11,6 +11,7 @@ import { ChatMessageTempStatus } from '@/features/chat/hooks/use-chat-queries'
 import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import { DateDivider } from '@/features/chat/ui/date-divider'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
+import { cn } from '@/shared/lib/cn'
 
 type ChatMessageListProps = {
   messages: ChatRoomMessageData[]
@@ -69,11 +70,23 @@ export function ChatMessageList({
           <LoadingIndicator ref={infiniteScrollRef} isFetching={isFetchingNextPage} />
         )}
 
-        <div className="flex flex-col gap-6 px-5 py-[22px]">
+        <div className="flex flex-col px-5 py-[22px]">
           {messages.map((chat, index) => {
             const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
+            const previousSender = index > 0 ? messages[index - 1]?.senderType : undefined
+            const showHeader =
+              chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
+              previousSender !== ChatRoomMessageDataSenderTypeEnum.Assistant
+            const isContinuous = previousSender === chat.senderType
             return (
-              <div key={`${chat.messageId}-${index}`} data-message-id={chat.messageId}>
+              <div
+                key={`${chat.messageId}-${index}`}
+                data-message-id={chat.messageId}
+                className={cn('mt-6', {
+                  'mt-0': index === 0,
+                  'mt-2': isContinuous,
+                })}
+              >
                 <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
                 {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
                   <AiChatBubble
@@ -82,6 +95,7 @@ export function ChatMessageList({
                     message={chat.content}
                     timestamp={formatTimestamp(chat.createdAt)}
                     isSaved={chat.saved}
+                    showHeader={showHeader}
                   />
                 ) : (
                   <MyChatBubble
@@ -98,16 +112,31 @@ export function ChatMessageList({
             )
           })}
 
-          {awaitingResponse && !streamingMessage && <AiChatBubble isTyping />}
+          {awaitingResponse && !streamingMessage && (
+            <div
+              className={cn('mt-6', {
+                'mt-2': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
+              })}
+            >
+              <AiChatBubble isTyping />
+            </div>
+          )}
 
           {streamingMessage && (
-            <AiChatBubble
-              messageId={streamingMessage.messageId}
-              chatRoomId={resolvedChatRoomId}
-              message={streamingMessage.content}
-              timestamp={formatTimestamp(streamingMessage.createdAt)}
-              isSaved={streamingMessage.saved}
-            />
+            <div
+              className={cn('mt-6', {
+                'mt-2': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
+              })}
+            >
+              <AiChatBubble
+                messageId={streamingMessage.messageId}
+                chatRoomId={resolvedChatRoomId}
+                message={streamingMessage.content}
+                timestamp={formatTimestamp(streamingMessage.createdAt)}
+                isSaved={streamingMessage.saved}
+                showHeader={messages[messages.length - 1]?.senderType !== ChatRoomMessageDataSenderTypeEnum.Assistant}
+              />
+            </div>
           )}
 
           {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (

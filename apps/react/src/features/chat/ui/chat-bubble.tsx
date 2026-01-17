@@ -220,19 +220,33 @@ interface AiChatBubbleProps {
   senderName?: string
   isTyping?: boolean
   isSaved?: boolean
+  showHeader?: boolean
 }
 
 export function AiChatBubble(props: AiChatBubbleProps) {
-  const { messageId, chatRoomId, message = '', senderName = '모모', timestamp = '', isTyping = false, isSaved } = props
+  const {
+    messageId,
+    chatRoomId,
+    message = '',
+    senderName = '모모',
+    timestamp = '',
+    isTyping = false,
+    isSaved,
+    showHeader = true,
+  } = props
 
   const messageGroups = useMemo(() => (isTyping ? [] : groupSentences(message, 3)), [isTyping, message])
 
   return (
     <div className="flex w-full items-start gap-3">
-      <img src={momoChat} alt={`${senderName} 캐릭터 이미지`} className="h-auto w-[50px] flex-shrink-0" />
+      {showHeader ? (
+        <img src={momoChat} alt={`${senderName} 캐릭터 이미지`} className="h-auto w-[50px] flex-shrink-0" />
+      ) : (
+        <div className="h-auto w-[50px] flex-shrink-0" aria-hidden />
+      )}
 
       <div className="flex-1">
-        <p className="body3-semibold mb-[6px] text-malmo-rasberry-500">{senderName}</p>
+        {showHeader && <p className="body3-semibold mb-[6px] text-malmo-rasberry-500">{senderName}</p>}
         {isTyping ? (
           <div className="flex items-end gap-2">
             <div className="w-fit max-w-full rounded-[10px] rounded-tl-none bg-gray-100 px-[16px] py-[12px]">
