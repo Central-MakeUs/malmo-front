@@ -4,6 +4,7 @@ import { ChevronRight } from 'lucide-react'
 
 import ChatFilledIcon from '@/assets/icons/chat-current.svg'
 import ChatIcon from '@/assets/icons/chat-gray.svg'
+import { cn } from '@/shared/lib/cn'
 import { formatDate } from '@/shared/utils/date'
 
 interface RecentChatSectionProps {
@@ -21,11 +22,10 @@ export function RecentChatSection({ histories, totalHistoryCount }: RecentChatSe
     <section className="mt-8">
       <h2 className="heading2-semibold text-gray-iron-950">최근 대화 목록</h2>
       <div
-        className={
-          showEmptyHistory
-            ? 'mt-3 rounded-[10px] border border-gray-iron-200 px-5 py-12'
-            : 'mt-3 rounded-[10px] border border-gray-iron-200 py-5 pr-[14px] pl-4'
-        }
+        className={cn(
+          'mt-3 rounded-[10px] border border-gray-iron-200',
+          showEmptyHistory ? 'px-5 py-12' : 'py-5 pr-[14px] pl-4'
+        )}
       >
         {showEmptyHistory ? (
           <div className="flex flex-col items-center text-center">
