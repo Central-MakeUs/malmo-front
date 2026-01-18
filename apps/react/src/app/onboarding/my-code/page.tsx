@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
+import { Copy } from 'lucide-react'
 import { useState } from 'react'
 
-import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import loveLetter from '@/assets/images/love-letter.png'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
@@ -92,7 +92,7 @@ function MyCodePage() {
                     <span className="heading1-semibold text-gray-iron-950">{inviteCode}</span>
                   )}
                   <button onClick={handleCopyCode} className="ml-[10px]" disabled={isLoadingInviteCode}>
-                    <ClipBoardIcon className="h-5 w-5" />
+                    <Copy className="h-5 w-5" />
                   </button>
                 </div>
               </div>

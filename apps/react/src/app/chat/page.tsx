@@ -1,26 +1,22 @@
-import {
-  ChatRoomMessageData,
-  ChatRoomMessageDataSenderTypeEnum,
-  ChatRoomStateDataChatRoomStateEnum,
-} from '@data/user-api-axios/api'
+import { ChatRoomMessageDataSenderTypeEnum, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
-import React, { useCallback, useMemo } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
 import { z } from 'zod'
 
 import { useAuth } from '@/features/auth'
+import { BookmarkSheet, useBookmarkSelection } from '@/features/bookmark'
 import { useChatting } from '@/features/chat/context/chatting-context'
 import {
-  ChatMessageTempStatus,
   useChatMessagesQuery,
+  useCurrentChatRoomQuery,
   useSendMessageMutation,
 } from '@/features/chat/hooks/use-chat-queries'
 import { useChatScroll } from '@/features/chat/hooks/use-chat-scroll'
-import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
+import { useScrollToBottom } from '@/features/chat/hooks/use-scroll-to-bottom'
+import { ChatFloatingActions } from '@/features/chat/ui/chat-floating-actions'
 import ChatInput from '@/features/chat/ui/chat-input'
-import { DateDivider } from '@/features/chat/ui/date-divider'
-import { formatTimestamp } from '@/features/chat/util/chat-format'
+import { ChatMessageList } from '@/features/chat/ui/chat-message-list'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
@@ -41,13 +37,6 @@ export const Route = createFileRoute('/chat/')({
   validateSearch: searchSchema,
 })
 
-const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean }>(({ isFetching }, ref) => (
-  <div ref={ref} className="flex h-12 items-center justify-center">
-    {isFetching && <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-gray-500" />}
-  </div>
-))
-LoadingIndicator.displayName = 'LoadingIndicator'
-
 function RouteComponent() {
   const { chatId } = Route.useSearch()
   const navigate = useNavigate()
@@ -56,14 +45,18 @@ function RouteComponent() {
   const { chatStatus, chattingModal, streamingMessage, awaitingResponse, isChatStatusSuccess, sendingMessage } =
     useChatting()
   const auth = useAuth()
+  const [isBookmarkSheetOpen, setIsBookmarkSheetOpen] = useState(false)
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery(
     isChatStatusSuccess,
     chatStatus,
     chatId
   )
+  const { data: currentChatRoom } = useCurrentChatRoomQuery(!chatId)
+  const resolvedChatRoomId = chatId ?? currentChatRoom?.chatRoomId
 
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
+  const [pendingScrollMessageId, setPendingScrollMessageId] = useState<number | null>(null)
 
   const messages = useMemo(() => {
     if (!chatId && chattingModal.showChattingTutorial && chatStatus === ChatRoomStateDataChatRoomStateEnum.BeforeInit)
@@ -85,6 +78,19 @@ function RouteComponent() {
     messages,
     streamingMessage,
     awaitingResponse,
+  })
+
+  const { isAtBottom, scrollToBottom } = useScrollToBottom({
+    scrollRef,
+    deps: [messages.length, streamingMessage?.content],
+  })
+
+  const { handleSelectBookmark } = useBookmarkSelection({
+    chatId,
+    onSelectComplete: (targetMessageId) => {
+      setPendingScrollMessageId(targetMessageId ?? null)
+      setIsBookmarkSheetOpen(false)
+    },
   })
 
   const chatCompletionOptions = useMemo(() => chatService.completeChatRoomMutation(), [])
@@ -133,6 +139,21 @@ function RouteComponent() {
   const handleRetry = wrapWithTracking(BUTTON_NAMES.RETRY_MESSAGE, CATEGORIES.CHAT, (content: string) =>
     sendMessage(content)
   )
+  const handleGoMyPage = wrapWithTracking(BUTTON_NAMES.GO_MYPAGE_FROM_CHAT, CATEGORIES.CHAT)
+
+  useLayoutEffect(() => {
+    if (!pendingScrollMessageId) return
+    const container = scrollRef.current
+    if (!container) return
+    const target = container.querySelector<HTMLElement>(`[data-message-id="${pendingScrollMessageId}"]`)
+    if (!target) return
+
+    const containerTop = container.getBoundingClientRect().top
+    const targetTop = target.getBoundingClientRect().top
+    const offsetTop = targetTop - containerTop + container.scrollTop
+    container.scrollTo({ top: Math.max(0, offsetTop - 16) })
+    setPendingScrollMessageId(null)
+  }, [messages, pendingScrollMessageId, scrollRef])
 
   return (
     <Screen>
@@ -151,68 +172,37 @@ function RouteComponent() {
       </Screen.Header>
 
       <Screen.Content ref={scrollRef} className="no-bounce-scroll flex h-full flex-col bg-white">
-        <div className="flex flex-1 flex-col">
-          <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto">
-            <div className="bg-gray-iron-700 px-[20px] py-[9px]">
-              <p className="body3-medium text-center text-white">
-                연동 후에도 대화 내용은 상대에게 공유되지 않으니 안심하세요!
-              </p>
-            </div>
-
-            {isLoading && (
-              <div className="flex flex-1 items-center justify-center">
-                <LoadingIndicator isFetching={true} />
-              </div>
-            )}
-
-            {!chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
-
-            <div className="flex flex-col gap-6 px-5 py-[22px]">
-              {messages.map((chat, index) => {
-                const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
-                return (
-                  <React.Fragment key={`${chat.messageId}-${index}`}>
-                    <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
-                    {chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant ? (
-                      <AiChatBubble message={chat.content} timestamp={formatTimestamp(chat.createdAt)} />
-                    ) : (
-                      <MyChatBubble
-                        message={chat.content}
-                        timestamp={formatTimestamp(chat.createdAt)}
-                        status={(chat as ChatRoomMessageData & ChatMessageTempStatus).status ?? 'sent'}
-                        onRetry={() => handleRetry(chat.content!)}
-                      />
-                    )}
-                  </React.Fragment>
-                )
-              })}
-
-              {awaitingResponse && !streamingMessage && <AiChatBubble isTyping />}
-
-              {streamingMessage && (
-                <AiChatBubble
-                  message={streamingMessage.content}
-                  timestamp={formatTimestamp(streamingMessage.createdAt)}
-                />
-              )}
-
-              {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
-                <Link
-                  to="/my-page"
-                  className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
-                  onClick={wrapWithTracking(BUTTON_NAMES.GO_MYPAGE_FROM_CHAT, CATEGORIES.CHAT)}
-                >
-                  <p className="body3-semibold">마이페이지로 이동하기</p>
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              )}
-            </div>
-
-            {chatId && hasNextPage && <LoadingIndicator ref={ref} isFetching={isFetchingNextPage} />}
-          </section>
-        </div>
+        <ChatMessageList
+          messages={messages}
+          chatId={chatId}
+          chatStatus={chatStatus}
+          resolvedChatRoomId={resolvedChatRoomId}
+          isLoading={isLoading}
+          hasNextPage={hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          infiniteScrollRef={ref}
+          awaitingResponse={awaitingResponse}
+          streamingMessage={streamingMessage}
+          onRetry={handleRetry}
+          onGoMyPage={handleGoMyPage}
+        />
       </Screen.Content>
-      <ChatInput disabled={!!chatId} />
+      <ChatInput
+        disabled={!!chatId}
+        floatingAction={
+          <ChatFloatingActions
+            isAtBottom={isAtBottom}
+            onBookmarkClick={() => setIsBookmarkSheetOpen(true)}
+            onScrollToBottom={scrollToBottom}
+          />
+        }
+      />
+      <BookmarkSheet
+        isOpen={isBookmarkSheetOpen}
+        onOpenChange={setIsBookmarkSheetOpen}
+        chatRoomId={resolvedChatRoomId}
+        onSelectBookmark={handleSelectBookmark}
+      />
       {!chatId && chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </Screen>
   )

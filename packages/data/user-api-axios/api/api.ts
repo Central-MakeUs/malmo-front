@@ -12,6 +12,8 @@
  * Do not edit the class manually.
  */
 
+export * from './apis/apple-webhook-api'
+export * from './apis/bookmarks-api'
 export * from './apis/chatroom-api'
 export * from './apis/couples-api'
 export * from './apis/logins-api'

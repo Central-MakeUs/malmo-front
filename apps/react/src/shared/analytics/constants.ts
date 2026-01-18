@@ -5,7 +5,6 @@ export const CATEGORIES = {
   ONBOARDING: 'onboarding',
   CHAT: 'chat',
   ATTACHMENT: 'attachment',
-  QUESTION: 'question',
   PROFILE: 'profile',
 } as const
 
@@ -40,11 +39,6 @@ export const PAGE_NAMES = {
   ATTACHMENT_RESULT_MY: 'attachment_result_my',
   ATTACHMENT_RESULT_PARTNER: 'attachment_result_partner',
 
-  // Question
-  QUESTION_CALENDAR: 'question_calendar',
-  QUESTION_WRITE: 'question_write',
-  QUESTION_ANSWER: 'question_answer',
-
   // Profile
   MYPAGE_MAIN: 'mypage_main',
   MYPAGE_PROFILE: 'mypage_profile',
@@ -59,11 +53,9 @@ export const BUTTON_NAMES = {
   START_NEW_CHAT: 'start_new_chat',
   CONTINUE_CHAT: 'continue_chat',
   GO_ATTACHMENT_TEST: 'go_attachment_test',
-  OPEN_TODAY_QUESTION: 'open_today_question',
   VIEW_ATTACHMENT_CARD: 'view_attachment_card',
   NAV_HOME: 'nav_home',
   NAV_HISTORY: 'nav_history',
-  NAV_QUESTION: 'nav_question',
   NAV_PROFILE: 'nav_profile',
 
   // Auth
@@ -126,18 +118,6 @@ export const BUTTON_NAMES = {
   NEXT_QUESTION: 'next_question',
   COMPLETE_TEST: 'complete_test',
   CLOSE_GUIDE: 'close_guide',
-
-  // Question
-  PREV_CALENDAR: 'prev_calendar',
-  NEXT_CALENDAR: 'next_calendar',
-  SELECT_DATE: 'select_date',
-  WRITE_ANSWER: 'write_answer',
-  VIEW_ANSWER: 'view_answer',
-  BACK_WRITE: 'back_write',
-  INPUT_ANSWER: 'input_answer',
-  SAVE_ANSWER: 'save_answer',
-  EDIT_ANSWER: 'edit_answer',
-  CLOSE_TOOLTIP: 'close_tooltip',
 
   // History
   DELETE_MODE: 'delete_mode',

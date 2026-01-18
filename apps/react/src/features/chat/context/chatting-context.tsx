@@ -12,6 +12,7 @@ import chatService from '@/shared/services/chat.service'
 
 import { useChatRoomStatusQuery, useSendMessageMutation, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
 import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
+import { groupSentences } from '../util/chat-format'
 
 interface ChattingContextType {
   chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined
@@ -87,18 +88,29 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   )
 
   const handleResponseId = useCallback(
-    (messageId: string) => {
+    (messageIds: number[]) => {
       const queryKey = chatService.chatMessagesQuery().queryKey
       queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
         if (!oldData || !streamingMessage) return oldData
 
-        const finalMessage = { ...streamingMessage, messageId: parseInt(messageId, 10) }
+        const sanitizedIds = messageIds.filter((id) => Number.isFinite(id))
+        const messageGroups = groupSentences(streamingMessage.content ?? '', 3)
+        if (sanitizedIds.length === 0 || sanitizedIds.length !== messageGroups.length) return oldData
+
+        const groupedMessages = messageGroups.map((content, index) => ({
+          messageId: sanitizedIds[index]!,
+          content,
+          createdAt: streamingMessage.createdAt,
+          senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+        }))
+
+        const orderedMessages = [...groupedMessages].reverse()
 
         const newData = {
           ...oldData,
           pages: oldData.pages.map((page, index) => {
             if (index === 0) {
-              const newList = page.list ? [finalMessage, ...page.list] : [finalMessage]
+              const newList = page.list ? [...orderedMessages, ...page.list] : orderedMessages
               return { ...page, list: newList }
             }
             return { ...page, list: [...(page.list || [])] }

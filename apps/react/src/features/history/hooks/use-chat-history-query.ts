@@ -7,6 +7,6 @@ interface UseChatHistoryQueryProps {
   isSuccess?: boolean
 }
 
-export function useChatHistoryQuery({ keyword = '', isSuccess }: UseChatHistoryQueryProps) {
-  return useInfiniteQuery(historyService.historyListQuery(keyword, isSuccess))
+export function useChatHistoryQuery({ keyword = '', isSuccess }: UseChatHistoryQueryProps = {}) {
+  return useInfiniteQuery(historyService.historyListQuery(keyword, isSuccess ?? true))
 }

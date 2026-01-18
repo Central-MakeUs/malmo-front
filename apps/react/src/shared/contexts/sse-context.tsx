@@ -26,8 +26,8 @@ export function SSEProvider({ children }: { children: ReactNode }) {
       onChatResponse: (chunk: string) => {
         subscribersRef.current.forEach((s) => s.onChatResponse?.(chunk))
       },
-      onResponseId: (messageId: string) => {
-        subscribersRef.current.forEach((s) => s.onResponseId?.(messageId))
+      onResponseId: (messageIds: number[]) => {
+        subscribersRef.current.forEach((s) => s.onResponseId?.(messageIds))
       },
       onLevelFinished: () => {
         subscribersRef.current.forEach((s) => s.onLevelFinished?.())
@@ -72,7 +72,7 @@ export function useSSESubscription(id: string, handlers: SSEEventHandlers): UseS
   useEffect(() => {
     const stableHandlers: SSEEventHandlers = {
       onChatResponse: (chunk: string) => handlersRef.current.onChatResponse?.(chunk),
-      onResponseId: (messageId: string) => handlersRef.current.onResponseId?.(messageId),
+      onResponseId: (messageIds: number[]) => handlersRef.current.onResponseId?.(messageIds),
       onLevelFinished: () => handlersRef.current.onLevelFinished?.(),
       onChatPaused: () => handlersRef.current.onChatPaused?.(),
       onCoupleConnected: () => handlersRef.current.onCoupleConnected?.(),

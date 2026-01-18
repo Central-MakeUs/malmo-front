@@ -1,8 +1,8 @@
 import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { Copy } from 'lucide-react'
 
-import ClipBoardIcon from '@/assets/icons/clip-board.svg'
 import { AnniversaryEditSheet } from '@/features/anniversary'
 import { useAuth } from '@/features/auth'
 import { usePartnerInfo } from '@/features/member/hooks/use-partner-info'
@@ -82,7 +82,7 @@ function CoupleManagementPage() {
             <div className="ml-auto flex items-center">
               <span className="body2-medium text-gray-iron-950">{inviteCode}</span>
               <button onClick={handleCopyInviteCode} className="ml-2">
-                <ClipBoardIcon className="h-4 w-4" />
+                <Copy className="h-4 w-4" />
               </button>
             </div>
           </div>

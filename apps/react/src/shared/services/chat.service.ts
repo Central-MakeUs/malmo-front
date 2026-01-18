@@ -3,7 +3,6 @@ import { ChatroomApi } from '@data/user-api-axios/api'
 import { queryKeys } from './query-keys'
 import apiInstance from '../lib/api'
 import { toast } from '../ui/toast'
-
 class ChatService extends ChatroomApi {
   constructor() {
     super(undefined, '', apiInstance)
@@ -15,7 +14,7 @@ class ChatService extends ChatroomApi {
       queryKey: queryKeys.chat.status(),
       queryFn: async () => {
         const { data } = await this.getCurrentChatRoom1()
-        return data?.data?.chatRoomState
+        return data?.data
       },
     }
   }
@@ -32,7 +31,15 @@ class ChatService extends ChatroomApi {
             sort: [],
           },
         })
-        return data?.data
+        const payload = data?.data
+        if (!payload?.list) return payload
+        return {
+          ...payload,
+          list: payload.list.map((message) => ({
+            ...message,
+            saved: message.saved ?? (message as { isSaved?: boolean }).isSaved,
+          })),
+        }
       },
       initialPageParam: 0,
       getNextPageParam: (lastPage: any, allPages: any[]) => {
