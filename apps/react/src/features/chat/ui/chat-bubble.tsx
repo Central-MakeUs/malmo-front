@@ -49,7 +49,7 @@ interface MessageActionMenuProps {
   onRemoveBookmark: () => void
   isBookmarked: boolean
   placement: MenuPlacement
-  menuRef: React.RefObject<HTMLDivElement>
+  menuRef: React.RefObject<HTMLDivElement | null>
 }
 
 function MessageActionMenu({
