@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, Bookmark, Copy } from 'lucide-react'
-import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import momoChat from '@/assets/images/momo-chat.png'
 import { cn } from '@/shared/lib/cn'
@@ -16,6 +16,20 @@ const MOVE_THRESHOLD = 8
 
 type MenuAlign = 'left' | 'right'
 type BubbleVariant = 'assistant' | 'user'
+type MenuPlacement = 'top' | 'bottom'
+
+const findScrollContainer = (element: HTMLElement | null) => {
+  let current = element?.parentElement ?? null
+  while (current) {
+    const style = window.getComputedStyle(current)
+    const overflowY = style.overflowY
+    if (overflowY !== 'visible' && current.scrollHeight > current.clientHeight) {
+      return current
+    }
+    current = current.parentElement
+  }
+  return null
+}
 
 const copyToClipboard = async (text: string) => {
   if (!text) return false
@@ -34,16 +48,28 @@ interface MessageActionMenuProps {
   onBookmark: () => void
   onRemoveBookmark: () => void
   isBookmarked: boolean
+  placement: MenuPlacement
+  menuRef: React.RefObject<HTMLDivElement>
 }
 
-function MessageActionMenu({ align, onCopy, onBookmark, onRemoveBookmark, isBookmarked }: MessageActionMenuProps) {
+function MessageActionMenu({
+  align,
+  onCopy,
+  onBookmark,
+  onRemoveBookmark,
+  isBookmarked,
+  placement,
+  menuRef,
+}: MessageActionMenuProps) {
   const bookmarkLabel = isBookmarked ? '북마크 삭제' : '북마크'
   const handleBookmarkClick = isBookmarked ? onRemoveBookmark : onBookmark
   return (
     <div
+      ref={menuRef}
       className={cn(
-        'absolute bottom-full z-10 mb-2 min-w-[160px] rounded-[10px] bg-white px-4 py-2 shadow-[0_2px_12px_rgba(0,0,0,0.12)]',
-        align === 'right' ? 'right-0' : 'left-0'
+        'absolute z-10 min-w-[160px] rounded-[10px] bg-white px-4 py-2 shadow-[0_2px_12px_rgba(0,0,0,0.12)]',
+        align === 'right' ? 'right-0' : 'left-0',
+        placement === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
       )}
     >
       <button type="button" className="flex w-full items-center justify-between gap-4" onClick={onCopy}>
@@ -82,9 +108,11 @@ function ActionableBubble({
 }: ActionableBubbleProps) {
   const [isPressed, setIsPressed] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [menuPlacement, setMenuPlacement] = useState<MenuPlacement>('top')
   const timerRef = useRef<number | null>(null)
   const startPointRef = useRef<{ x: number; y: number } | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
 
   const { mutateAsync: createBookmark, isPending: isCreatingBookmark } = useMutation(
@@ -118,6 +146,27 @@ function ActionableBubble({
       document.removeEventListener('pointerdown', handleOutsidePress)
     }
   }, [closeMenu, isMenuOpen])
+
+  useLayoutEffect(() => {
+    if (!isMenuOpen) return
+    const menuEl = menuRef.current
+    const anchorEl = containerRef.current
+    if (!menuEl || !anchorEl) return
+
+    const scrollContainer = findScrollContainer(anchorEl)
+    const scrollRect = (scrollContainer ?? document.documentElement).getBoundingClientRect()
+    const anchorRect = anchorEl.getBoundingClientRect()
+    const menuHeight = menuEl.offsetHeight
+    const gap = 8
+    const spaceAbove = anchorRect.top - scrollRect.top
+    const spaceBelow = scrollRect.bottom - anchorRect.bottom
+
+    if (spaceAbove < menuHeight + gap && spaceBelow >= menuHeight + gap) {
+      setMenuPlacement('bottom')
+    } else {
+      setMenuPlacement('top')
+    }
+  }, [isMenuOpen])
 
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
@@ -261,6 +310,8 @@ function ActionableBubble({
           onBookmark={handleBookmark}
           onRemoveBookmark={handleRemoveBookmark}
           isBookmarked={bookmarkId != null}
+          placement={menuPlacement}
+          menuRef={menuRef}
         />
       )}
       <div className={cn(className, isPressed ? pressedColor : baseColor)}>{children}</div>
