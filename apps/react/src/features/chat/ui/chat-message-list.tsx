@@ -78,6 +78,7 @@ export function ChatMessageList({
               chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
               previousSender !== ChatRoomMessageDataSenderTypeEnum.Assistant
             const isContinuous = previousSender === chat.senderType
+            const bookmarkId = chat.bookmarkId ?? null
             return (
               <div
                 key={`${chat.messageId}-${index}`}
@@ -94,7 +95,7 @@ export function ChatMessageList({
                     chatRoomId={resolvedChatRoomId}
                     message={chat.content}
                     timestamp={formatTimestamp(chat.createdAt)}
-                    isSaved={chat.saved}
+                    bookmarkId={bookmarkId}
                     showHeader={showHeader}
                   />
                 ) : (
@@ -104,7 +105,7 @@ export function ChatMessageList({
                     message={chat.content}
                     timestamp={formatTimestamp(chat.createdAt)}
                     status={(chat as ChatRoomMessageData & ChatMessageTempStatus).status ?? 'sent'}
-                    isSaved={chat.saved}
+                    bookmarkId={bookmarkId}
                     onRetry={() => onRetry(chat.content!)}
                   />
                 )}
@@ -133,7 +134,7 @@ export function ChatMessageList({
                 chatRoomId={resolvedChatRoomId}
                 message={streamingMessage.content}
                 timestamp={formatTimestamp(streamingMessage.createdAt)}
-                isSaved={streamingMessage.saved}
+                bookmarkId={streamingMessage.bookmarkId ?? null}
                 showHeader={messages[messages.length - 1]?.senderType !== ChatRoomMessageDataSenderTypeEnum.Assistant}
               />
             </div>
