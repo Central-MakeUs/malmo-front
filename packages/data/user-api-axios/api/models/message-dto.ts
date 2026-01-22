@@ -17,7 +17,7 @@ export interface MessageDto {
   content?: string
   senderType?: MessageDtoSenderTypeEnum
   createdAt?: string
-  isSaved?: boolean
+  bookmarkId?: number
 }
 
 export const MessageDtoSenderTypeEnum = {

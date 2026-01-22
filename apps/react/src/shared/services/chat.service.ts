@@ -37,7 +37,7 @@ class ChatService extends ChatroomApi {
           ...payload,
           list: payload.list.map((message) => ({
             ...message,
-            saved: message.saved ?? (message as { isSaved?: boolean }).isSaved,
+            bookmarkId: message.bookmarkId,
           })),
         }
       },

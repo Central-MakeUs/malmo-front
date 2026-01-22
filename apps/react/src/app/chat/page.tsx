@@ -150,8 +150,9 @@ function RouteComponent() {
 
     const containerTop = container.getBoundingClientRect().top
     const targetTop = target.getBoundingClientRect().top
-    const offsetTop = targetTop - containerTop + container.scrollTop
-    container.scrollTo({ top: Math.max(0, offsetTop - 16) })
+    const targetCenter = targetTop - containerTop + container.scrollTop + target.offsetHeight / 2
+    const nextScrollTop = targetCenter - container.clientHeight / 2
+    container.scrollTo({ top: Math.max(0, nextScrollTop) })
     setPendingScrollMessageId(null)
   }, [messages, pendingScrollMessageId, scrollRef])
 

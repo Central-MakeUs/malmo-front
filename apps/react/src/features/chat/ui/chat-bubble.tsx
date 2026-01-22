@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, Bookmark, Copy } from 'lucide-react'
-import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import momoChat from '@/assets/images/momo-chat.png'
 import { cn } from '@/shared/lib/cn'
@@ -16,6 +16,20 @@ const MOVE_THRESHOLD = 8
 
 type MenuAlign = 'left' | 'right'
 type BubbleVariant = 'assistant' | 'user'
+type MenuPlacement = 'top' | 'bottom'
+
+const findScrollContainer = (element: HTMLElement | null) => {
+  let current = element?.parentElement ?? null
+  while (current) {
+    const style = window.getComputedStyle(current)
+    const overflowY = style.overflowY
+    if (overflowY !== 'visible' && current.scrollHeight > current.clientHeight) {
+      return current
+    }
+    current = current.parentElement
+  }
+  return null
+}
 
 const copyToClipboard = async (text: string) => {
   if (!text) return false
@@ -32,14 +46,30 @@ interface MessageActionMenuProps {
   align: MenuAlign
   onCopy: () => void
   onBookmark: () => void
+  onRemoveBookmark: () => void
+  isBookmarked: boolean
+  placement: MenuPlacement
+  menuRef: React.RefObject<HTMLDivElement | null>
 }
 
-function MessageActionMenu({ align, onCopy, onBookmark }: MessageActionMenuProps) {
+function MessageActionMenu({
+  align,
+  onCopy,
+  onBookmark,
+  onRemoveBookmark,
+  isBookmarked,
+  placement,
+  menuRef,
+}: MessageActionMenuProps) {
+  const bookmarkLabel = isBookmarked ? '북마크 삭제' : '북마크'
+  const handleBookmarkClick = isBookmarked ? onRemoveBookmark : onBookmark
   return (
     <div
+      ref={menuRef}
       className={cn(
-        'absolute bottom-full z-10 mb-2 min-w-[160px] rounded-[10px] bg-white px-4 py-2 shadow-[0_2px_12px_rgba(0,0,0,0.12)]',
-        align === 'right' ? 'right-0' : 'left-0'
+        'absolute z-10 min-w-[160px] rounded-[10px] bg-white px-4 py-2 shadow-[0_2px_12px_rgba(0,0,0,0.12)]',
+        align === 'right' ? 'right-0' : 'left-0',
+        placement === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
       )}
     >
       <button type="button" className="flex w-full items-center justify-between gap-4" onClick={onCopy}>
@@ -47,8 +77,8 @@ function MessageActionMenu({ align, onCopy, onBookmark }: MessageActionMenuProps
         <Copy className="h-4 w-4 text-gray-iron-700" />
       </button>
       <hr className="my-[10px] h-px border-0 bg-gray-iron-100" />
-      <button type="button" className="flex w-full items-center justify-between gap-4" onClick={onBookmark}>
-        <span className="body3-medium text-gray-iron-700">북마크</span>
+      <button type="button" className="flex w-full items-center justify-between gap-4" onClick={handleBookmarkClick}>
+        <span className="body3-medium text-gray-iron-700">{bookmarkLabel}</span>
         <Bookmark className="h-4 w-4 text-gray-iron-700" />
       </button>
     </div>
@@ -61,6 +91,7 @@ interface ActionableBubbleProps {
   copyText: string
   chatRoomId?: number
   messageId?: number
+  bookmarkId?: number | null
   className?: string
   children: ReactNode
 }
@@ -71,18 +102,24 @@ function ActionableBubble({
   copyText,
   chatRoomId,
   messageId,
+  bookmarkId = null,
   className,
   children,
 }: ActionableBubbleProps) {
   const [isPressed, setIsPressed] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [menuPlacement, setMenuPlacement] = useState<MenuPlacement>('top')
   const timerRef = useRef<number | null>(null)
   const startPointRef = useRef<{ x: number; y: number } | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
   const queryClient = useQueryClient()
 
   const { mutateAsync: createBookmark, isPending: isCreatingBookmark } = useMutation(
     bookmarkService.createBookmarkMutation()
+  )
+  const { mutateAsync: deleteBookmarks, isPending: isDeletingBookmark } = useMutation(
+    bookmarkService.deleteBookmarksMutation()
   )
 
   const clearPressTimer = useCallback(() => {
@@ -109,6 +146,27 @@ function ActionableBubble({
       document.removeEventListener('pointerdown', handleOutsidePress)
     }
   }, [closeMenu, isMenuOpen])
+
+  useLayoutEffect(() => {
+    if (!isMenuOpen) return
+    const menuEl = menuRef.current
+    const anchorEl = containerRef.current
+    if (!menuEl || !anchorEl) return
+
+    const scrollContainer = findScrollContainer(anchorEl)
+    const scrollRect = (scrollContainer ?? document.documentElement).getBoundingClientRect()
+    const anchorRect = anchorEl.getBoundingClientRect()
+    const menuHeight = menuEl.offsetHeight
+    const gap = 8
+    const spaceAbove = anchorRect.top - scrollRect.top
+    const spaceBelow = scrollRect.bottom - anchorRect.bottom
+
+    if (spaceAbove < menuHeight + gap && spaceBelow >= menuHeight + gap) {
+      setMenuPlacement('bottom')
+    } else {
+      setMenuPlacement('top')
+    }
+  }, [isMenuOpen])
 
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
@@ -161,6 +219,37 @@ function ActionableBubble({
     closeMenu()
   }, [closeMenu, copyText])
 
+  const updateMessageBookmarkId = useCallback(
+    (nextBookmarkId: number | null) => {
+      if (messageId == null) return
+      const updateList = (oldData: any) => {
+        if (!oldData?.pages) return oldData
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page: any) => {
+            if (!page?.list) return page
+            return {
+              ...page,
+              list: page.list.map((item: any) => {
+                if (item?.messageId !== messageId) return item
+                return {
+                  ...item,
+                  bookmarkId: nextBookmarkId,
+                }
+              }),
+            }
+          }),
+        }
+      }
+
+      queryClient.setQueriesData({ queryKey: queryKeys.chat.messages() }, updateList)
+      if (chatRoomId != null) {
+        queryClient.setQueriesData({ queryKey: queryKeys.history.detail(chatRoomId) }, updateList)
+      }
+    },
+    [chatRoomId, messageId, queryClient]
+  )
+
   const handleBookmark = useCallback(async () => {
     if (isCreatingBookmark) return
     if (chatRoomId == null || messageId == null) {
@@ -169,28 +258,36 @@ function ActionableBubble({
       return
     }
     try {
-      await createBookmark({ chatRoomId, messageId })
-      const markMessageSaved = (oldData: any) => {
-        if (!oldData?.pages) return oldData
-        return {
-          ...oldData,
-          pages: oldData.pages.map((page: any) => {
-            if (!page?.list) return page
-            return {
-              ...page,
-              list: page.list.map((item: any) => (item?.messageId === messageId ? { ...item, saved: true } : item)),
-            }
-          }),
-        }
-      }
-
-      queryClient.setQueriesData({ queryKey: queryKeys.chat.messages() }, markMessageSaved)
-      queryClient.setQueriesData({ queryKey: queryKeys.history.detail(chatRoomId) }, markMessageSaved)
+      const response = await createBookmark({ chatRoomId, messageId })
+      updateMessageBookmarkId(response?.bookmarkId ?? null)
       await queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all })
     } finally {
       closeMenu()
     }
-  }, [chatRoomId, closeMenu, createBookmark, isCreatingBookmark, messageId])
+  }, [chatRoomId, closeMenu, createBookmark, isCreatingBookmark, messageId, queryClient, updateMessageBookmarkId])
+
+  const handleRemoveBookmark = useCallback(async () => {
+    if (isDeletingBookmark) return
+    if (chatRoomId == null) {
+      toast.error('북마크를 삭제할 메시지를 찾을 수 없어요')
+      closeMenu()
+      return
+    }
+
+    if (bookmarkId == null) {
+      toast.error('북마크 정보를 찾을 수 없어요')
+      closeMenu()
+      return
+    }
+
+    try {
+      await deleteBookmarks({ chatRoomId, bookmarkIdList: [bookmarkId] })
+      updateMessageBookmarkId(null)
+      await queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all })
+    } finally {
+      closeMenu()
+    }
+  }, [bookmarkId, chatRoomId, closeMenu, deleteBookmarks, isDeletingBookmark, queryClient, updateMessageBookmarkId])
 
   const baseColor = variant === 'user' ? 'bg-malmo-rasberry-10' : 'bg-gray-100'
   const pressedColor = variant === 'user' ? 'bg-malmo-rasberry-50' : 'bg-gray-300'
@@ -206,7 +303,17 @@ function ActionableBubble({
       onPointerCancel={handlePointerCancel}
       onContextMenu={(event) => event.preventDefault()}
     >
-      {isMenuOpen && <MessageActionMenu align={align} onCopy={handleCopy} onBookmark={handleBookmark} />}
+      {isMenuOpen && (
+        <MessageActionMenu
+          align={align}
+          onCopy={handleCopy}
+          onBookmark={handleBookmark}
+          onRemoveBookmark={handleRemoveBookmark}
+          isBookmarked={bookmarkId != null}
+          placement={menuPlacement}
+          menuRef={menuRef}
+        />
+      )}
       <div className={cn(className, isPressed ? pressedColor : baseColor)}>{children}</div>
     </div>
   )
@@ -219,7 +326,7 @@ interface AiChatBubbleProps {
   timestamp?: string
   senderName?: string
   isTyping?: boolean
-  isSaved?: boolean
+  bookmarkId?: number | null
   showHeader?: boolean
 }
 
@@ -231,9 +338,10 @@ export function AiChatBubble(props: AiChatBubbleProps) {
     senderName = '모모',
     timestamp = '',
     isTyping = false,
-    isSaved,
+    bookmarkId = null,
     showHeader = true,
   } = props
+  const isBookmarked = bookmarkId != null
 
   const messageGroups = useMemo(() => (isTyping ? [] : groupSentences(message, 3)), [isTyping, message])
 
@@ -269,6 +377,7 @@ export function AiChatBubble(props: AiChatBubbleProps) {
                 copyText={group}
                 chatRoomId={chatRoomId}
                 messageId={messageId}
+                bookmarkId={bookmarkId}
                 className={cn('w-fit max-w-full rounded-[10px] rounded-tl-none px-[14px] py-[10px]', {
                   'mb-2': index < messageGroups.length - 1,
                 })}
@@ -277,7 +386,7 @@ export function AiChatBubble(props: AiChatBubbleProps) {
               </ActionableBubble>
               {index === messageGroups.length - 1 && timestamp && (
                 <div className="flex flex-col items-start">
-                  {isSaved && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
+                  {isBookmarked && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
                   <p className="label2-regular text-gray-600">{timestamp}</p>
                 </div>
               )}
@@ -294,7 +403,7 @@ interface MyChatBubbleProps {
   chatRoomId?: number
   message?: string
   timestamp: string
-  isSaved?: boolean
+  bookmarkId?: number | null
   onRetry?: () => void
 }
 
@@ -303,10 +412,11 @@ export function MyChatBubble({
   chatRoomId,
   message = '',
   timestamp,
-  isSaved,
+  bookmarkId = null,
   status = 'sent',
   onRetry,
 }: MyChatBubbleProps & ChatMessageTempStatus) {
+  const isBookmarked = bookmarkId != null
   return (
     <div className="flex w-full justify-end">
       <div className="flex flex-nowrap items-end gap-2">
@@ -319,7 +429,7 @@ export function MyChatBubble({
           </div>
         )}
         <div className="flex flex-shrink-0 flex-col items-end">
-          {isSaved && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
+          {isBookmarked && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
           <p className="text-[11px] leading-[20px] text-gray-600">{timestamp}</p>
         </div>
         <ActionableBubble
@@ -328,6 +438,7 @@ export function MyChatBubble({
           copyText={message}
           chatRoomId={chatRoomId}
           messageId={messageId}
+          bookmarkId={bookmarkId}
           className={cn('w-fit max-w-full rounded-[10px] rounded-br-none px-[14px] py-[10px]', {
             'border border-red-300': status === 'failed',
           })}

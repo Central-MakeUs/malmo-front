@@ -60,7 +60,7 @@ export function useBookmarkSelection({ chatId, onSelectComplete }: UseBookmarkSe
         content: message.content,
         senderType: message.senderType as ChatRoomMessageDataSenderTypeEnum | undefined,
         createdAt: message.createdAt,
-        saved: message.isSaved,
+        bookmarkId: message.bookmarkId,
       }))
 
       const pageData: BaseListSwaggerResponseChatRoomMessageData = {

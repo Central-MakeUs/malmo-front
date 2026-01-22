@@ -5,7 +5,7 @@ type UseScrollToBottomOptions<T extends HTMLElement = HTMLElement> = {
   deps?: Array<unknown>
 }
 
-const BOTTOM_THRESHOLD = 24
+const MIN_BOTTOM_THRESHOLD = 24
 
 export function useScrollToBottom<T extends HTMLElement = HTMLElement>({
   scrollRef,
@@ -16,7 +16,9 @@ export function useScrollToBottom<T extends HTMLElement = HTMLElement>({
   const updateIsAtBottom = useCallback(() => {
     const container = scrollRef.current
     if (!container) return
-    const atBottom = container.scrollHeight - container.scrollTop - container.clientHeight <= BOTTOM_THRESHOLD
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight
+    const threshold = Math.max(MIN_BOTTOM_THRESHOLD, container.clientHeight)
+    const atBottom = distanceFromBottom <= threshold
     setIsAtBottom(atBottom)
   }, [scrollRef])
 

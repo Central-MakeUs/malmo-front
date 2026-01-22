@@ -1,6 +1,6 @@
 import { BookmarkDtoTypeEnum } from '@data/user-api-axios/api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type PointerEvent } from 'react'
 
 import CheckedCircle from '@/assets/icons/checked-circle.svg'
 import { useScreenLayout } from '@/shared/layout/screen'
@@ -35,8 +35,11 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
   const layout = useScreenLayout()
   const headerHeight = layout?.headerHeight ?? 0
   const [isDeleteMode, setIsDeleteMode] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false)
   const [selectedIds, setSelectedIds] = useState<number[]>([])
   const queryClient = useQueryClient()
+  const dragStartYRef = useRef<number | null>(null)
+  const DRAG_THRESHOLD = 32
 
   const { data: bookmarkData } = useQuery({
     ...bookmarkService.bookmarkListQuery(chatRoomId ?? 0, { page: 0, size: 20 }),
@@ -54,6 +57,7 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
   useEffect(() => {
     if (!isOpen) {
       setIsDeleteMode(false)
+      setIsExpanded(false)
       setSelectedIds([])
     }
   }, [isOpen])
@@ -64,12 +68,27 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
 
   const hasSelection = selectedIds.length > 0
   const canDelete = hasSelection && !!chatRoomId && !isDeleting
-  const sheetStyle = isDeleteMode
-    ? {
-        top: `calc(var(--safe-top) + ${headerHeight}px)`,
-        height: `calc(100vh - (var(--safe-top) + ${headerHeight}px))`,
-      }
-    : { height: '50vh' }
+  const isSheetExpanded = isDeleteMode || isExpanded
+  const expandedHeight = `calc(100vh - (var(--safe-top) + ${headerHeight}px))`
+  const sheetStyle = {
+    height: isSheetExpanded ? expandedHeight : '50vh',
+    transition: 'height 260ms cubic-bezier(0.22, 1, 0.36, 1)',
+  }
+
+  const handleDragStart = (event: PointerEvent<HTMLButtonElement>) => {
+    dragStartYRef.current = event.clientY
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  const handleDragEnd = (event: PointerEvent<HTMLButtonElement>) => {
+    if (dragStartYRef.current == null) return
+    const delta = event.clientY - dragStartYRef.current
+    dragStartYRef.current = null
+    event.currentTarget.releasePointerCapture(event.pointerId)
+
+    if (Math.abs(delta) < DRAG_THRESHOLD) return
+    setIsExpanded(delta < 0)
+  }
 
   const handleDelete = async () => {
     if (!chatRoomId || !hasSelection || isDeleting) return
@@ -97,7 +116,20 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
       >
         <SheetTitle className="sr-only">북마크</SheetTitle>
 
-        <div className={cn('relative flex h-full flex-col px-5 pt-8 pb-6', { 'pb-0': isDeleteMode })}>
+        <div className="flex justify-center">
+          <button
+            type="button"
+            aria-label="시트 높이 조절"
+            onPointerDown={handleDragStart}
+            onPointerUp={handleDragEnd}
+            onPointerCancel={handleDragEnd}
+            className="flex h-6 w-16 items-center justify-center"
+          >
+            <span className="h-1 w-10 rounded-full bg-gray-iron-200" />
+          </button>
+        </div>
+
+        <div className={cn('relative flex h-full flex-col px-5 pt-4 pb-6', { 'pb-0': isDeleteMode })}>
           <button
             type="button"
             className="body2-medium absolute top-8 right-5 text-gray-iron-700"
@@ -107,6 +139,7 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
                 setSelectedIds([])
               } else {
                 setIsDeleteMode(true)
+                setIsExpanded(true)
               }
             }}
           >
