@@ -34,15 +34,11 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { ChatMessageListSuccessResponse } from '../models'
 // @ts-ignore
-import type { ChatRequest } from '../models'
-// @ts-ignore
 import type { ChatRoomDeleteSuccessResponse } from '../models'
 // @ts-ignore
 import type { ChatRoomListSuccessResponse } from '../models'
 // @ts-ignore
-import type { ChatRoomStateResponse } from '../models'
-// @ts-ignore
-import type { CompleteChatRoomResponse } from '../models'
+import type { CreateChatRoomResponse } from '../models'
 // @ts-ignore
 import type { DeleteChatRoomRequestDto } from '../models'
 // @ts-ignore
@@ -52,6 +48,8 @@ import type { Pageable } from '../models'
 // @ts-ignore
 import type { SendChatSuccessResponse } from '../models'
 // @ts-ignore
+import type { SendMessageRequest } from '../models'
+// @ts-ignore
 import type { SwaggerErrorResponse } from '../models'
 /**
  * ChatroomApi - axios parameter creator
@@ -59,13 +57,13 @@ import type { SwaggerErrorResponse } from '../models'
 export const ChatroomApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
     /**
-     * 현재 채팅방을 종료합니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 종료
+     * 새로운 채팅방을 생성합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 생성
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    completeChatRoom: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      const localVarPath = `/chatrooms/current/complete`
+    createChatRoom: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+      const localVarPath = `/chatrooms`
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -284,96 +282,26 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
       }
     },
     /**
-     * 현재 채팅방의 상태를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 상태 조회
+     * 특정 채팅방에 메시지를 전송합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
+     * @summary 채팅 메시지 전송
+     * @param {number} chatRoomId
+     * @param {SendMessageRequest} sendMessageRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getCurrentChatRoom1: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      const localVarPath = `/chatrooms/current`
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
-      let baseOptions
-      if (configuration) {
-        baseOptions = configuration.baseOptions
-      }
-
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
-      const localVarHeaderParameter = {} as any
-      const localVarQueryParameter = {} as any
-
-      // authentication Bearer Authentication required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      localVarHeaderParameter['Accept'] = '*/*'
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter)
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
-      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      }
-    },
-    /**
-     * 현재 채팅방의 메시지를 페이지네이션으로 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 현재 채팅방 메시지 조회
-     * @param {Pageable} pageable
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getCurrentChatRoomMessages: async (
-      pageable: Pageable,
+    sendMessage: async (
+      chatRoomId: number,
+      sendMessageRequest: SendMessageRequest,
       options: RawAxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
-      // verify required parameter 'pageable' is not null or undefined
-      assertParamExists('getCurrentChatRoomMessages', 'pageable', pageable)
-      const localVarPath = `/chatrooms/current/messages`
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
-      let baseOptions
-      if (configuration) {
-        baseOptions = configuration.baseOptions
-      }
-
-      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
-      const localVarHeaderParameter = {} as any
-      const localVarQueryParameter = {} as any
-
-      // authentication Bearer Authentication required
-      // http bearer authentication required
-      await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      if (pageable !== undefined) {
-        for (const [key, value] of Object.entries(pageable)) {
-          localVarQueryParameter[key] = value
-        }
-      }
-
-      localVarHeaderParameter['Accept'] = '*/*'
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter)
-      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
-      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      }
-    },
-    /**
-     * 서버로 AI 상담을 위한 사용자의 메시지를 전달합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
-     * @summary 채팅 메시지 전송
-     * @param {ChatRequest} chatRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    sendChatMessage: async (chatRequest: ChatRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-      // verify required parameter 'chatRequest' is not null or undefined
-      assertParamExists('sendChatMessage', 'chatRequest', chatRequest)
-      const localVarPath = `/chatrooms/current/send`
+      // verify required parameter 'chatRoomId' is not null or undefined
+      assertParamExists('sendMessage', 'chatRoomId', chatRoomId)
+      // verify required parameter 'sendMessageRequest' is not null or undefined
+      assertParamExists('sendMessage', 'sendMessageRequest', sendMessageRequest)
+      const localVarPath = `/chatrooms/{chatRoomId}/messages`.replace(
+        `{${'chatRoomId'}}`,
+        encodeURIComponent(String(chatRoomId))
+      )
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
       let baseOptions
@@ -395,7 +323,7 @@ export const ChatroomApiAxiosParamCreator = function (configuration?: Configurat
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
-      localVarRequestOptions.data = serializeDataIfNeeded(chatRequest, localVarRequestOptions, configuration)
+      localVarRequestOptions.data = serializeDataIfNeeded(sendMessageRequest, localVarRequestOptions, configuration)
 
       return {
         url: toPathString(localVarUrlObj),
@@ -412,18 +340,18 @@ export const ChatroomApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = ChatroomApiAxiosParamCreator(configuration)
   return {
     /**
-     * 현재 채팅방을 종료합니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 종료
+     * 새로운 채팅방을 생성합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 생성
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async completeChatRoom(
+    async createChatRoom(
       options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CompleteChatRoomResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.completeChatRoom(options)
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateChatRoomResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createChatRoom(options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
-        operationServerMap['ChatroomApi.completeChatRoom']?.[localVarOperationServerIndex]?.url
+        operationServerMap['ChatroomApi.createChatRoom']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -529,64 +457,22 @@ export const ChatroomApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 현재 채팅방의 상태를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 상태 조회
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getCurrentChatRoom1(
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatRoomStateResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentChatRoom1(options)
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
-      const localVarOperationServerBasePath =
-        operationServerMap['ChatroomApi.getCurrentChatRoom1']?.[localVarOperationServerIndex]?.url
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath)
-    },
-    /**
-     * 현재 채팅방의 메시지를 페이지네이션으로 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 현재 채팅방 메시지 조회
-     * @param {Pageable} pageable
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getCurrentChatRoomMessages(
-      pageable: Pageable,
-      options?: RawAxiosRequestConfig
-    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ChatMessageListSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentChatRoomMessages(pageable, options)
-      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
-      const localVarOperationServerBasePath =
-        operationServerMap['ChatroomApi.getCurrentChatRoomMessages']?.[localVarOperationServerIndex]?.url
-      return (axios, basePath) =>
-        createRequestFunction(
-          localVarAxiosArgs,
-          globalAxios,
-          BASE_PATH,
-          configuration
-        )(axios, localVarOperationServerBasePath || basePath)
-    },
-    /**
-     * 서버로 AI 상담을 위한 사용자의 메시지를 전달합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
+     * 특정 채팅방에 메시지를 전송합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
      * @summary 채팅 메시지 전송
-     * @param {ChatRequest} chatRequest
+     * @param {number} chatRoomId
+     * @param {SendMessageRequest} sendMessageRequest
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    async sendChatMessage(
-      chatRequest: ChatRequest,
+    async sendMessage(
+      chatRoomId: number,
+      sendMessageRequest: SendMessageRequest,
       options?: RawAxiosRequestConfig
     ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SendChatSuccessResponse>> {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.sendChatMessage(chatRequest, options)
+      const localVarAxiosArgs = await localVarAxiosParamCreator.sendMessage(chatRoomId, sendMessageRequest, options)
       const localVarOperationServerIndex = configuration?.serverIndex ?? 0
       const localVarOperationServerBasePath =
-        operationServerMap['ChatroomApi.sendChatMessage']?.[localVarOperationServerIndex]?.url
+        operationServerMap['ChatroomApi.sendMessage']?.[localVarOperationServerIndex]?.url
       return (axios, basePath) =>
         createRequestFunction(
           localVarAxiosArgs,
@@ -605,13 +491,13 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
   const localVarFp = ChatroomApiFp(configuration)
   return {
     /**
-     * 현재 채팅방을 종료합니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 종료
+     * 새로운 채팅방을 생성합니다. JWT 토큰이 필요합니다.
+     * @summary 채팅방 생성
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    completeChatRoom(options?: RawAxiosRequestConfig): AxiosPromise<CompleteChatRoomResponse> {
-      return localVarFp.completeChatRoom(options).then((request) => request(axios, basePath))
+    createChatRoom(options?: RawAxiosRequestConfig): AxiosPromise<CreateChatRoomResponse> {
+      return localVarFp.createChatRoom(options).then((request) => request(axios, basePath))
     },
     /**
      * 채팅방을 id 리스트를 통해 다건 동시 삭제합니다. JWT 토큰이 필요합니다.
@@ -674,42 +560,18 @@ export const ChatroomApiFactory = function (configuration?: Configuration, baseP
         .then((request) => request(axios, basePath))
     },
     /**
-     * 현재 채팅방의 상태를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 채팅방 상태 조회
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getCurrentChatRoom1(options?: RawAxiosRequestConfig): AxiosPromise<ChatRoomStateResponse> {
-      return localVarFp.getCurrentChatRoom1(options).then((request) => request(axios, basePath))
-    },
-    /**
-     * 현재 채팅방의 메시지를 페이지네이션으로 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 현재 채팅방 메시지 조회
-     * @param {ChatroomApiGetCurrentChatRoomMessagesRequest} requestParameters Request parameters.
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getCurrentChatRoomMessages(
-      requestParameters: ChatroomApiGetCurrentChatRoomMessagesRequest,
-      options?: RawAxiosRequestConfig
-    ): AxiosPromise<ChatMessageListSuccessResponse> {
-      return localVarFp
-        .getCurrentChatRoomMessages(requestParameters.pageable, options)
-        .then((request) => request(axios, basePath))
-    },
-    /**
-     * 서버로 AI 상담을 위한 사용자의 메시지를 전달합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
+     * 특정 채팅방에 메시지를 전송합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
      * @summary 채팅 메시지 전송
-     * @param {ChatroomApiSendChatMessageRequest} requestParameters Request parameters.
+     * @param {ChatroomApiSendMessageRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    sendChatMessage(
-      requestParameters: ChatroomApiSendChatMessageRequest,
+    sendMessage(
+      requestParameters: ChatroomApiSendMessageRequest,
       options?: RawAxiosRequestConfig
     ): AxiosPromise<SendChatSuccessResponse> {
       return localVarFp
-        .sendChatMessage(requestParameters.chatRequest, options)
+        .sendMessage(requestParameters.chatRoomId, requestParameters.sendMessageRequest, options)
         .then((request) => request(axios, basePath))
     },
   }
@@ -748,17 +610,12 @@ export interface ChatroomApiGetCurrentChatRoomRequest {
 }
 
 /**
- * Request parameters for getCurrentChatRoomMessages operation in ChatroomApi.
+ * Request parameters for sendMessage operation in ChatroomApi.
  */
-export interface ChatroomApiGetCurrentChatRoomMessagesRequest {
-  readonly pageable: Pageable
-}
+export interface ChatroomApiSendMessageRequest {
+  readonly chatRoomId: number
 
-/**
- * Request parameters for sendChatMessage operation in ChatroomApi.
- */
-export interface ChatroomApiSendChatMessageRequest {
-  readonly chatRequest: ChatRequest
+  readonly sendMessageRequest: SendMessageRequest
 }
 
 /**
@@ -766,14 +623,14 @@ export interface ChatroomApiSendChatMessageRequest {
  */
 export class ChatroomApi extends BaseAPI {
   /**
-   * 현재 채팅방을 종료합니다. JWT 토큰이 필요합니다.
-   * @summary 채팅방 종료
+   * 새로운 채팅방을 생성합니다. JWT 토큰이 필요합니다.
+   * @summary 채팅방 생성
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    */
-  public completeChatRoom(options?: RawAxiosRequestConfig) {
+  public createChatRoom(options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
-      .completeChatRoom(options)
+      .createChatRoom(options)
       .then((request) => request(this.axios, this.basePath))
   }
 
@@ -833,43 +690,15 @@ export class ChatroomApi extends BaseAPI {
   }
 
   /**
-   * 현재 채팅방의 상태를 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 채팅방 상태 조회
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  public getCurrentChatRoom1(options?: RawAxiosRequestConfig) {
-    return ChatroomApiFp(this.configuration)
-      .getCurrentChatRoom1(options)
-      .then((request) => request(this.axios, this.basePath))
-  }
-
-  /**
-   * 현재 채팅방의 메시지를 페이지네이션으로 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 현재 채팅방 메시지 조회
-   * @param {ChatroomApiGetCurrentChatRoomMessagesRequest} requestParameters Request parameters.
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   */
-  public getCurrentChatRoomMessages(
-    requestParameters: ChatroomApiGetCurrentChatRoomMessagesRequest,
-    options?: RawAxiosRequestConfig
-  ) {
-    return ChatroomApiFp(this.configuration)
-      .getCurrentChatRoomMessages(requestParameters.pageable, options)
-      .then((request) => request(this.axios, this.basePath))
-  }
-
-  /**
-   * 서버로 AI 상담을 위한 사용자의 메시지를 전달합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
+   * 특정 채팅방에 메시지를 전송합니다. AI 응답은 SSE로 전달됩니다. JWT 토큰이 필요합니다.
    * @summary 채팅 메시지 전송
-   * @param {ChatroomApiSendChatMessageRequest} requestParameters Request parameters.
+   * @param {ChatroomApiSendMessageRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    */
-  public sendChatMessage(requestParameters: ChatroomApiSendChatMessageRequest, options?: RawAxiosRequestConfig) {
+  public sendMessage(requestParameters: ChatroomApiSendMessageRequest, options?: RawAxiosRequestConfig) {
     return ChatroomApiFp(this.configuration)
-      .sendChatMessage(requestParameters.chatRequest, options)
+      .sendMessage(requestParameters.chatRoomId, requestParameters.sendMessageRequest, options)
       .then((request) => request(this.axios, this.basePath))
   }
 }

@@ -12,25 +12,6 @@
  * Do not edit the class manually.
  */
 
-// May contain unused imports in some cases
-// @ts-ignore
-import type { CompleteChatRoomData } from './complete-chat-room-data'
-
-/**
- * 채팅방 완료 성공 응답
- */
-export interface CompleteChatRoomResponse {
-  /**
-   * 요청 ID
-   */
-  requestId?: string
-  /**
-   * 성공 여부
-   */
-  success?: boolean
-  /**
-   * 응답 메시지
-   */
-  message?: string
-  data?: CompleteChatRoomData
+export interface SendMessageRequest {
+  message: string
 }

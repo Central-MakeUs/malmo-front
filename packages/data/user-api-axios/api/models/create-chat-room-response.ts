@@ -12,12 +12,25 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { CreateChatRoomData } from './create-chat-room-data'
+
 /**
- * 채팅 완료 응답 데이터
+ * 채팅방 생성 성공 응답
  */
-export interface CompleteChatRoomData {
+export interface CreateChatRoomResponse {
   /**
-   * 채팅방의 ID
+   * 요청 ID
    */
-  chatRoomId?: number
+  requestId?: string
+  /**
+   * 성공 여부
+   */
+  success?: boolean
+  /**
+   * 응답 메시지
+   */
+  message?: string
+  data?: CreateChatRoomData
 }

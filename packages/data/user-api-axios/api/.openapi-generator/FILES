@@ -40,14 +40,9 @@ models/base-response-get-messages-by-bookmark-response.ts
 models/base-response-void.ts
 models/bookmark-dto.ts
 models/chat-message-list-success-response.ts
-models/chat-request.ts
 models/chat-room-delete-success-response.ts
 models/chat-room-list-success-response.ts
 models/chat-room-message-data.ts
-models/chat-room-state-data.ts
-models/chat-room-state-response.ts
-models/complete-chat-room-data.ts
-models/complete-chat-room-response.ts
 models/couple-link-data.ts
 models/couple-link-request-dto.ts
 models/couple-link-success-response.ts
@@ -55,6 +50,8 @@ models/couple-unlink-data.ts
 models/couple-unlink-success-response.ts
 models/create-bookmark-request-dto.ts
 models/create-bookmark-response.ts
+models/create-chat-room-data.ts
+models/create-chat-room-response.ts
 models/delete-bookmarks-request-dto.ts
 models/delete-chat-room-request-dto.ts
 models/delete-member-success-response.ts
@@ -96,6 +93,7 @@ models/register-love-type-request-dto.ts
 models/register-love-type-success-response.ts
 models/send-chat-data.ts
 models/send-chat-success-response.ts
+models/send-message-request.ts
 models/sign-up-request-dto.ts
 models/sign-up-success-response.ts
 models/swagger-error-response.ts
