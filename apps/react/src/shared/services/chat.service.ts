@@ -2,7 +2,7 @@ import { ChatroomApi } from '@data/user-api-axios/api'
 
 import { queryKeys } from './query-keys'
 import apiInstance from '../lib/api'
-import { CHAT_ROOM_STATE, ChatRoomListItem } from '../types/chat'
+import { ChatRoomListItem } from '../types/chat'
 import { toast } from '../ui/toast'
 class ChatService extends ChatroomApi {
   constructor() {
@@ -18,11 +18,10 @@ class ChatService extends ChatroomApi {
           pageable: { page: 0, size: 50, sort: ['lastMessageSentTime,desc', 'createdAt,desc'] },
         })
         const list = (data?.data?.list ?? []) as ChatRoomListItem[]
-        const activeRooms = list.filter((room) => room.chatRoomState === CHAT_ROOM_STATE.Alive)
-        if (activeRooms.length === 0) return null
+        if (list.length === 0) return null
         const getTimestamp = (room: ChatRoomListItem) =>
           new Date(room.lastMessageSentTime ?? room.createdAt ?? 0).getTime()
-        return [...activeRooms].sort((a, b) => getTimestamp(b) - getTimestamp(a))[0] ?? null
+        return [...list].sort((a, b) => getTimestamp(b) - getTimestamp(a))[0] ?? null
       },
     }
   }

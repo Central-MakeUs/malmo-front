@@ -1,4 +1,3 @@
-import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { LucideSearch } from 'lucide-react'
 import { useState } from 'react'
@@ -34,9 +33,7 @@ function RouteComponent() {
   })
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
 
-  const activeChat =
-    chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion ||
-    chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
+  const activeChat = !!chatStatus?.chatRoomId
 
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
   const isLoading = isFetching && !isFetchingNextPage && histories.length === 0

@@ -1,4 +1,4 @@
-import { ChatRoomStateDataChatRoomStateEnum, PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
+import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute } from '@tanstack/react-router'
 
 import HeartIcon from '@/assets/icons/heart.svg'
@@ -8,7 +8,6 @@ import { getAttachmentType } from '@/features/attachment'
 import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
 import { AttachmentTypeCards } from '@/features/attachment/ui/attachment-type-cards'
 import { useAuth } from '@/features/auth'
-import { useChatRoomStatusQuery } from '@/features/chat/hooks/use-chat-queries'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
 import { RecentChatSection } from '@/features/history/ui/recent-chat-section'
@@ -34,12 +33,6 @@ function HomePage() {
   const profileEdit = useProfileEdit()
 
   const dDay = calculateDDay(userInfo.startLoveDate)
-
-  const { data: chatRoomStatus } = useChatRoomStatusQuery()
-  const isChatActive =
-    chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.Alive ||
-    chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.Paused ||
-    chatRoomStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion
 
   const { data: historyData } = useChatHistoryQuery({})
   const histories = historyData?.pages.flatMap((page) => page?.list ?? []) ?? []
@@ -79,7 +72,7 @@ function HomePage() {
       </Screen.Header>
 
       <Screen.Content className="no-bounce-scroll has-bottom-nav flex-1 bg-white px-5">
-        <ChatEntryCard isChatActive={isChatActive} />
+        <ChatEntryCard />
 
         {!hasAttachmentType && <AttachmentTestBanner />}
 

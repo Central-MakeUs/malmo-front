@@ -1,20 +1,39 @@
-import { Link } from '@tanstack/react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 
-import momoChatting from '@/assets/images/momo-home-chatting.png'
 import momoIdle from '@/assets/images/momo-home-idle.png'
+import { useAuth } from '@/features/auth'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
-import { cn } from '@/shared/lib/cn'
+import chatService from '@/shared/services/chat.service'
 
-interface ChatEntryCardProps {
-  isChatActive: boolean
-}
+export function ChatEntryCard() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { userInfo } = useAuth()
+  const { mutateAsync: createChatRoom, isPending } = useMutation(chatService.createChatRoomMutation())
 
-export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
-  const handleChatClick = wrapWithTracking(
-    isChatActive ? BUTTON_NAMES.CONTINUE_CHAT : BUTTON_NAMES.START_NEW_CHAT,
-    CATEGORIES.MAIN
-  )
+  const handleChatClick = wrapWithTracking(BUTTON_NAMES.START_NEW_CHAT, CATEGORIES.MAIN, async () => {
+    if (isPending) return
+    if (!userInfo.loveTypeCategory) {
+      navigate({ to: '/chat' })
+      return
+    }
+
+    const created = await createChatRoom()
+    const createdId = created?.chatRoomId
+    if (!createdId) {
+      navigate({ to: '/chat' })
+      return
+    }
+
+    queryClient.setQueryData(chatService.chatRoomStatusQuery().queryKey, {
+      chatRoomId: createdId,
+      createdAt: new Date().toISOString(),
+    })
+
+    navigate({ to: '/chat', search: { chatId: createdId } })
+  })
 
   return (
     <>
@@ -28,15 +47,8 @@ export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
           <div className="flex items-start justify-between">
             {/* 뱃지 */}
             <div>
-              <div
-                className={cn(
-                  'inline-flex rounded-lg px-[9px] py-[1px]',
-                  isChatActive ? 'bg-white' : 'bg-malmo-rasberry-500'
-                )}
-              >
-                <span className={cn('label1-semibold', isChatActive ? 'text-malmo-rasberry-500' : 'text-white')}>
-                  {isChatActive ? 'CONTINUE' : 'START'}
-                </span>
+              <div className="inline-flex rounded-lg bg-malmo-rasberry-500 px-[9px] py-[1px]">
+                <span className="label1-semibold text-white">START</span>
               </div>
 
               {/* 설명 */}
@@ -44,26 +56,19 @@ export function ChatEntryCard({ isChatActive }: ChatEntryCardProps) {
                 <p className="body2-semibold text-gray-iron-900">
                   모모와 연애 고민 상담을
                   <br />
-                  {isChatActive ? '이어가 보세요' : '시작해 보세요'}
+                  시작해 보세요
                 </p>
               </div>
             </div>
 
             {/* 모모 이미지 */}
-            <img src={isChatActive ? momoChatting : momoIdle} alt="모모" className="h-24 w-28" />
+            <img src={momoIdle} alt="모모" className="h-24 w-28" />
           </div>
 
           {/* 하단 버튼 */}
-          <Link to="/chat">
-            <button
-              className={cn('h-[44px] w-full rounded-[32px]', isChatActive ? 'bg-malmo-rasberry-500' : 'bg-white')}
-              onClick={handleChatClick}
-            >
-              <span className={cn('body2-semibold', isChatActive ? 'text-white' : 'text-malmo-rasberry-500')}>
-                {isChatActive ? '대화 이어서 하기' : '새 대화 시작하기'}
-              </span>
-            </button>
-          </Link>
+          <button className="h-[44px] w-full rounded-[32px] bg-white" onClick={handleChatClick} disabled={isPending}>
+            <span className="body2-semibold text-malmo-rasberry-500">새 대화 시작하기</span>
+          </button>
         </div>
       </div>
     </>
