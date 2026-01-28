@@ -1,14 +1,14 @@
-import { GetChatRoomListResponse } from '@data/user-api-axios/api'
 import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 
 import ChatFilledIcon from '@/assets/icons/chat-current.svg'
 import ChatIcon from '@/assets/icons/chat-gray.svg'
 import { cn } from '@/shared/lib/cn'
+import { ChatRoomListItem } from '@/shared/types/chat'
 import { formatDate } from '@/shared/utils/date'
 
 interface RecentChatSectionProps {
-  histories: GetChatRoomListResponse[]
+  histories: ChatRoomListItem[]
   totalHistoryCount: number
 }
 
@@ -43,7 +43,7 @@ export function RecentChatSection({ histories, totalHistoryCount }: RecentChatSe
             {visibleHistories.map((history, index) => (
               <div key={history.chatRoomId ?? index}>
                 <Link
-                  to="/chat/result"
+                  to={history.chatRoomState === 'COMPLETED' ? '/chat/result' : '/chat'}
                   search={{ chatId: history.chatRoomId!, fromHistory: true }}
                   className="flex items-center justify-between"
                 >
@@ -52,9 +52,11 @@ export function RecentChatSection({ histories, totalHistoryCount }: RecentChatSe
                       <ChatFilledIcon className="h-6 w-6 text-malmo-rasberry-500" style={{ transform: 'scaleX(-1)' }} />
                     </div>
                     <div className="min-w-0">
-                      <p className="body2-semibold truncate text-gray-iron-800">{history.totalSummary}</p>
+                      <p className="body2-semibold truncate text-gray-iron-800">
+                        {history.title === null ? '대화를 더 나누면 제목이 생성돼요' : (history.title ?? '대화 기록')}
+                      </p>
                       <p className="label1-medium text-gray-iron-500">
-                        {formatDate(history.createdAt, 'YYYY년 M월 D일')}
+                        {formatDate(history.lastMessageSentTime ?? history.createdAt, 'YYYY년 M월 D일')}
                       </p>
                     </div>
                   </div>

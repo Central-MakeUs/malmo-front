@@ -1,27 +1,25 @@
 import {
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
-  ChatRoomStateDataChatRoomStateEnum,
   BaseListSwaggerResponseChatRoomMessageData,
 } from '@data/user-api-axios/api'
 import { InfiniteData, useQueryClient } from '@tanstack/react-query'
-import { createContext, useContext, ReactNode, useCallback, useState } from 'react'
+import { createContext, useContext, ReactNode, useCallback, useRef, useState } from 'react'
 
 import { useSSESubscription } from '@/shared/contexts/sse-context'
 import chatService from '@/shared/services/chat.service'
 
-import { useChatRoomStatusQuery, useSendMessageMutation, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
+import { useCurrentChatRoomQuery, useSendMessageMutation, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
 import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
 import { groupSentences } from '../util/chat-format'
 
 interface ChattingContextType {
-  chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined
   chattingModal: UseChattingModalReturn
   sendingMessage: boolean
   streamingMessage: ChatRoomMessageData | null
   awaitingResponse: boolean
-  isChatStatusSuccess: boolean
-  sendMessageWithReconnect: (message: string) => Promise<void>
+  sendMessageWithReconnect: (message: string, chatRoomId?: number) => Promise<void>
+  setActiveChatRoomId: (chatRoomId?: number) => void
 }
 
 export const ChattingContext = createContext<ChattingContextType | undefined>(undefined)
@@ -35,16 +33,39 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const [awaitingResponse, setAwaitingResponse] = useState<boolean>(false)
   const { mutate: sendMessage } = useSendMessageMutation()
 
-  const { data: chatStatus, isSuccess: isChatStatusSuccess } = useChatRoomStatusQuery()
+  const { data: activeChatRoom } = useCurrentChatRoomQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
 
-  const chattingModal = useChattingModal(chatStatus)
+  const chattingModal = useChattingModal(!!activeChatRoom?.chatRoomId)
+  const activeChatRoomIdRef = useRef<number | undefined>(activeChatRoom?.chatRoomId)
+
+  const setActiveChatRoomId = useCallback((chatRoomId?: number) => {
+    if (!chatRoomId) return
+    activeChatRoomIdRef.current = chatRoomId
+  }, [])
+
+  const isAscending = (list?: ChatRoomMessageData[]) => {
+    if (!list || list.length < 2) return true
+    const firstItem = list[0]
+    const lastItem = list[list.length - 1]
+    const first = firstItem?.createdAt ? new Date(firstItem.createdAt).getTime() : 0
+    const last = lastItem?.createdAt ? new Date(lastItem.createdAt).getTime() : 0
+    return first <= last
+  }
+  const getTargetPageIndex = (pages: Array<{ list?: ChatRoomMessageData[] }>) => {
+    if (pages.length === 0) return 0
+    const ascending = isAscending(pages[0]?.list)
+    return ascending ? pages.length - 1 : 0
+  }
 
   const handleChatResponse = useCallback(
     (chunk: string) => {
+      const activeChatRoomId = activeChatRoomIdRef.current ?? activeChatRoom?.chatRoomId
+      if (!activeChatRoomId) return
+
       if (chunk.startsWith(TERMINATION_MESSAGE_START)) {
         setAwaitingResponse(false)
-        const queryKey = chatService.chatMessagesQuery().queryKey
+        const queryKey = chatService.chatMessagesQuery(activeChatRoomId).queryKey
 
         const terminationMessage: ChatRoomMessageData = {
           messageId: Date.now(),
@@ -59,9 +80,14 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
           const newData = { ...oldData, pages: [...oldData.pages] }
           if (newData.pages.length > 0) {
-            const firstPage = { ...newData.pages[0], list: [...(newData.pages[0]?.list ?? [])] }
-            firstPage.list.unshift(terminationMessage)
-            newData.pages[0] = firstPage
+            const targetIndex = getTargetPageIndex(newData.pages)
+            const targetPage = { ...newData.pages[targetIndex], list: [...(newData.pages[targetIndex]?.list ?? [])] }
+            if (isAscending(targetPage.list)) {
+              targetPage.list.push(terminationMessage)
+            } else {
+              targetPage.list.unshift(terminationMessage)
+            }
+            newData.pages[targetIndex] = targetPage
           } else {
             newData.pages.push({ list: [terminationMessage], page: 0, size: 1, totalCount: 1 })
           }
@@ -84,70 +110,79 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         return { ...baseMessage, content: (prev?.content || '') + chunk }
       })
     },
-    [queryClient]
+    [activeChatRoom?.chatRoomId, queryClient]
   )
 
   const handleResponseId = useCallback(
     (messageIds: number[]) => {
-      const queryKey = chatService.chatMessagesQuery().queryKey
-      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
-        if (!oldData || !streamingMessage) return oldData
+      const activeChatRoomId = activeChatRoomIdRef.current ?? activeChatRoom?.chatRoomId
+      if (!activeChatRoomId) return
+      const queryKey = chatService.chatMessagesQuery(activeChatRoomId).queryKey
 
-        const sanitizedIds = messageIds.filter((id) => Number.isFinite(id))
-        const messageGroups = groupSentences(streamingMessage.content ?? '', 3)
-        if (sanitizedIds.length === 0 || sanitizedIds.length !== messageGroups.length) return oldData
+      const sanitizedIds = messageIds.filter((id) => Number.isFinite(id))
+      const messageGroups = groupSentences(streamingMessage?.content ?? '', 3)
+      const canApply = !!streamingMessage && sanitizedIds.length > 0 && sanitizedIds.length === messageGroups.length
 
-        const groupedMessages = messageGroups.map((content, index) => ({
-          messageId: sanitizedIds[index]!,
-          content,
-          createdAt: streamingMessage.createdAt,
-          senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
-        }))
+      let didCommit = false
+      if (canApply) {
+        queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+          if (!oldData || !streamingMessage) return oldData
 
-        const orderedMessages = [...groupedMessages].reverse()
+          const groupedMessages = messageGroups.map((content, index) => ({
+            messageId: sanitizedIds[index]!,
+            content,
+            createdAt: streamingMessage.createdAt,
+            senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
+          }))
 
-        const newData = {
-          ...oldData,
-          pages: oldData.pages.map((page, index) => {
-            if (index === 0) {
-              const newList = page.list ? [...orderedMessages, ...page.list] : orderedMessages
-              return { ...page, list: newList }
-            }
-            return { ...page, list: [...(page.list || [])] }
-          }),
-        }
-        return newData
-      })
+          const orderedMessages = isAscending(oldData.pages[0]?.list) ? groupedMessages : [...groupedMessages].reverse()
 
-      setStreamingMessage(null)
+          const newData = {
+            ...oldData,
+            pages: oldData.pages.map((page, index) => {
+              const targetIndex = getTargetPageIndex(oldData.pages)
+              if (index === targetIndex) {
+                const newList = page.list
+                  ? isAscending(page.list)
+                    ? [...page.list, ...orderedMessages]
+                    : [...orderedMessages, ...page.list]
+                  : orderedMessages
+                return { ...page, list: newList }
+              }
+              return { ...page, list: [...(page.list || [])] }
+            }),
+          }
+          didCommit = true
+          return newData
+        })
+      }
+
+      if (didCommit) {
+        setStreamingMessage(null)
+      }
       setSendingMessage(false)
       setAwaitingResponse(false)
     },
-    [queryClient, streamingMessage]
+    [activeChatRoom?.chatRoomId, queryClient, streamingMessage]
   )
 
   const handleLevelFinished = useCallback(() => {
     upgradeChatRoom()
   }, [upgradeChatRoom])
 
-  const handleChatPaused = useCallback(async () => {
-    await queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
-  }, [queryClient])
-
   const { reconnect, disconnect } = useSSESubscription('chat', {
     onChatResponse: handleChatResponse,
     onResponseId: handleResponseId,
     onLevelFinished: handleLevelFinished,
-    onChatPaused: handleChatPaused,
     onError: useCallback(() => {
       setSendingMessage(false)
-      setStreamingMessage(null)
       setAwaitingResponse(false)
+      setStreamingMessage(null)
     }, []),
   })
 
   const sendMessageWithReconnect = useCallback(
-    async (message: string) => {
+    async (message: string, targetChatRoomId?: number) => {
       try {
         setSendingMessage(true)
         setAwaitingResponse(true)
@@ -160,13 +195,24 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         await reconnect()
 
         // 3. 연결 완료 후 메시지 전송
-        sendMessage(message, {
-          onError: () => {
-            setSendingMessage(false)
-            setAwaitingResponse(false)
-            setStreamingMessage(null)
-          },
-        })
+        const chatRoomId = targetChatRoomId ?? activeChatRoom?.chatRoomId
+        if (!chatRoomId) {
+          setSendingMessage(false)
+          setAwaitingResponse(false)
+          return
+        }
+        activeChatRoomIdRef.current = chatRoomId
+
+        sendMessage(
+          { chatRoomId, message },
+          {
+            onError: () => {
+              setSendingMessage(false)
+              setAwaitingResponse(false)
+              setStreamingMessage(null)
+            },
+          }
+        )
       } catch (error) {
         console.error('Failed to reconnect and send message:', error)
         setSendingMessage(false) // 에러 발생 시 전송 상태 해제
@@ -174,19 +220,18 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         setStreamingMessage(null)
       }
     },
-    [disconnect, reconnect, sendMessage]
+    [activeChatRoom?.chatRoomId, disconnect, reconnect, sendMessage]
   )
 
   return (
     <ChattingContext.Provider
       value={{
-        chatStatus,
         chattingModal,
         sendingMessage,
         streamingMessage,
         awaitingResponse,
-        isChatStatusSuccess,
         sendMessageWithReconnect,
+        setActiveChatRoomId,
       }}
     >
       {children}

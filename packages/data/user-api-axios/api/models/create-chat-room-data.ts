@@ -13,27 +13,28 @@
  */
 
 /**
- * 채팅방 상태 응답 데이터
+ * 채팅방 생성 응답 데이터
  */
-export interface ChatRoomStateData {
+export interface CreateChatRoomData {
   /**
-   * 현재 채팅방의 ID
+   * 채팅방 ID
    */
   chatRoomId?: number
   /**
-   * 현재 채팅방의 상태
+   * 채팅방 상태
    */
-  chatRoomState?: ChatRoomStateDataChatRoomStateEnum
+  chatRoomState?: CreateChatRoomDataChatRoomStateEnum
+  /**
+   * 생성 시간
+   */
+  createdAt?: string
 }
 
-export const ChatRoomStateDataChatRoomStateEnum = {
-  BeforeInit: 'BEFORE_INIT',
+export const CreateChatRoomDataChatRoomStateEnum = {
   Alive: 'ALIVE',
-  Paused: 'PAUSED',
-  NeedNextQuestion: 'NEED_NEXT_QUESTION',
   Completed: 'COMPLETED',
   Deleted: 'DELETED',
 } as const
 
-export type ChatRoomStateDataChatRoomStateEnum =
-  (typeof ChatRoomStateDataChatRoomStateEnum)[keyof typeof ChatRoomStateDataChatRoomStateEnum]
+export type CreateChatRoomDataChatRoomStateEnum =
+  (typeof CreateChatRoomDataChatRoomStateEnum)[keyof typeof CreateChatRoomDataChatRoomStateEnum]

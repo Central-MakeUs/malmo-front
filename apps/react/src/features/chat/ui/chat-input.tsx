@@ -1,5 +1,3 @@
-import { ChatRoomStateData, ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
-import { useQueryClient } from '@tanstack/react-query'
 import { ArrowUp } from 'lucide-react'
 import React, { useState, useRef, useEffect, type ReactNode } from 'react'
 
@@ -7,13 +5,11 @@ import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useKeyboardSheetMotion } from '@/shared/hooks/use-keyboard-motion'
 import { cn } from '@/shared/lib/cn'
-import chatService from '@/shared/services/chat.service'
 
 import { useChatting } from '../context/chatting-context'
 import { useSendMessageMutation } from '../hooks/use-chat-queries'
 
-function ChatInput(props: { disabled?: boolean; floatingAction?: ReactNode }) {
-  const queryClient = useQueryClient()
+function ChatInput(props: { disabled?: boolean; floatingAction?: ReactNode; chatRoomId?: number }) {
   const [text, setText] = useState('')
   const [isFocused, setIsFocused] = useState(false)
   const { sendingMessage, sendMessageWithReconnect } = useChatting()
@@ -49,7 +45,7 @@ function ChatInput(props: { disabled?: boolean; floatingAction?: ReactNode }) {
   const handleSubmit = wrapWithTracking(BUTTON_NAMES.SEND_MESSAGE, CATEGORIES.CHAT, (e: React.FormEvent) => {
     e.preventDefault()
     if (text.trim() && !isPending && !sendingMessage) {
-      void sendMessageWithReconnect(text.trim()) // 새로운 함수 호출
+      void sendMessageWithReconnect(text.trim(), props.chatRoomId) // 새로운 함수 호출
       setText('')
     }
   })
@@ -62,9 +58,7 @@ function ChatInput(props: { disabled?: boolean; floatingAction?: ReactNode }) {
     }
   }
 
-  const chatStatus = queryClient.getQueryData<ChatRoomStateData>(chatService.chatRoomStatusQuery().queryKey)
-  const paused = chatStatus?.chatRoomState === ChatRoomStateDataChatRoomStateEnum.Paused
-  const disabled = props.disabled || paused || isPending || sendingMessage
+  const disabled = props.disabled || isPending || sendingMessage
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full bg-white px-5 py-[10px]" style={keyboardBottom}>
@@ -93,11 +87,9 @@ function ChatInput(props: { disabled?: boolean; floatingAction?: ReactNode }) {
             placeholder={
               props.disabled
                 ? '대화가 불가능해요'
-                : paused
-                  ? '커플 연동이 완료된 후에 채팅이 가능해요'
-                  : sendingMessage
-                    ? '모모의 답변이 완료된 후 채팅이 가능해요'
-                    : '메시지를 입력해 주세요'
+                : sendingMessage
+                  ? '모모의 답변이 완료된 후 채팅이 가능해요'
+                  : '메시지를 입력해 주세요'
             }
             rows={1}
           />

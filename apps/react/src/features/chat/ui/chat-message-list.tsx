@@ -1,10 +1,4 @@
-import {
-  ChatRoomMessageData,
-  ChatRoomMessageDataSenderTypeEnum,
-  ChatRoomStateDataChatRoomStateEnum,
-} from '@data/user-api-axios/api'
-import { Link } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
+import { ChatRoomMessageData, ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
 import React from 'react'
 
 import { ChatMessageTempStatus } from '@/features/chat/hooks/use-chat-queries'
@@ -16,7 +10,6 @@ import { cn } from '@/shared/lib/cn'
 type ChatMessageListProps = {
   messages: ChatRoomMessageData[]
   chatId?: number
-  chatStatus?: ChatRoomStateDataChatRoomStateEnum
   resolvedChatRoomId?: number
   isLoading: boolean
   hasNextPage?: boolean
@@ -25,7 +18,6 @@ type ChatMessageListProps = {
   awaitingResponse: boolean
   streamingMessage: ChatRoomMessageData | null
   onRetry: (content: string) => void
-  onGoMyPage?: () => void
 }
 
 const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean }>(({ isFetching }, ref) => (
@@ -38,7 +30,6 @@ LoadingIndicator.displayName = 'LoadingIndicator'
 export function ChatMessageList({
   messages,
   chatId,
-  chatStatus,
   resolvedChatRoomId,
   isLoading,
   hasNextPage,
@@ -47,7 +38,6 @@ export function ChatMessageList({
   awaitingResponse,
   streamingMessage,
   onRetry,
-  onGoMyPage,
 }: ChatMessageListProps) {
   const shouldShowInfiniteLoader = !!hasNextPage
 
@@ -138,17 +128,6 @@ export function ChatMessageList({
                 showHeader={messages[messages.length - 1]?.senderType !== ChatRoomMessageDataSenderTypeEnum.Assistant}
               />
             </div>
-          )}
-
-          {chatStatus === ChatRoomStateDataChatRoomStateEnum.Paused && (
-            <Link
-              to="/my-page"
-              className="mt-[-12px] ml-[62px] flex w-fit items-center gap-1 rounded-[8px] border border-malmo-rasberry-300 py-2 pr-[12px] pl-[18px] text-malmo-rasberry-500 shadow-[1px_3px_8px_rgba(0,0,0,0.08)]"
-              onClick={onGoMyPage}
-            >
-              <p className="body3-semibold">마이페이지로 이동하기</p>
-              <ChevronRight className="h-4 w-4" />
-            </Link>
           )}
         </div>
 

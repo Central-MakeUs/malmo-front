@@ -1,5 +1,3 @@
-import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
-import { useQueryClient } from '@tanstack/react-query'
 import { useLocation, useNavigate } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
@@ -9,22 +7,19 @@ import bridge from '@/shared/bridge'
 import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import { useIsFrozenRoute } from '@/shared/navigation/transition/route-phase-context'
 import { useGoBack } from '@/shared/navigation/use-go-back'
-import chatService from '@/shared/services/chat.service'
 import { Button } from '@/shared/ui'
 import { FixedLayerPortal } from '@/shared/ui/fixed-layer'
 
 export interface UseChattingModalReturn {
   testRequiredModal: () => void
-  exitChattingModal: () => void
   chattingTutorialModal: () => React.ReactNode
   showChattingTutorial: boolean
 }
 
-export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum): UseChattingModalReturn {
+export function useChattingModal(hasActiveChat?: boolean): UseChattingModalReturn {
   const alertDialog = useAlertDialog()
   const navigate = useNavigate()
   const goBack = useGoBack()
-  const queryClient = useQueryClient()
   const { pathname } = useLocation()
   const auth = useAuth()
   const isFrozenRoute = useIsFrozenRoute()
@@ -41,7 +36,7 @@ export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum
       }
 
       const seen = await bridge.getChatTutorialSeen()
-      if (seen || chatStatus !== ChatRoomStateDataChatRoomStateEnum.BeforeInit) {
+      if (seen || hasActiveChat) {
         setShowChattingTutorial(false)
         return
       }
@@ -50,7 +45,7 @@ export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum
     }
 
     fetchChatSeen()
-  }, [])
+  }, [auth.userInfo.loveTypeCategory, hasActiveChat, pathname])
 
   const testRequiredModal = () => {
     alertDialog.open({
@@ -79,30 +74,6 @@ export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum
     })
   }
 
-  const exitChattingModal = () => {
-    alertDialog.open({
-      title: (
-        <>
-          아직 대화가 진행 중이에요!
-          <br /> 지금 나가시겠어요?
-        </>
-      ),
-      description: (
-        <>
-          나갔다가 들어와도 대화를 이어갈 수 있어요.
-          <br /> 단, 1일 이상 대화가 없으면 자동으로 종료돼요.
-        </>
-      ),
-      cancelText: '나가기',
-      confirmText: '이어서 대화하기',
-      onCancel: () => {
-        queryClient.invalidateQueries({ queryKey: chatService.chatRoomStatusQuery().queryKey })
-        alertDialog.close()
-        goBack()
-      },
-    })
-  }
-
   const chattingTutorialModal = () => {
     const highlightedText = 'body2-medium text-malmo-rasberry-400'
 
@@ -117,17 +88,17 @@ export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum
 
           <div className="relative flex h-full w-full flex-col items-center justify-center">
             <div className="absolute top-[calc(var(--safe-top)-12px)] right-2 flex h-[72px] w-[72px] items-center justify-center rounded-full border-2 border-malmo-rasberry-500 bg-white">
-              <p className="body2-semibold text-malmo-rasberry-500">종료하기</p>
+              <p className="body2-semibold text-malmo-rasberry-500">나가기</p>
               <div className="absolute right-[72px] bottom-[-86px] h-[120px] w-[97px] border-t-2 border-l-2 border-dashed border-malmo-rasberry-400">
                 <div className="absolute bottom-0 left-[-5px] h-2 w-2 rounded-full bg-malmo-rasberry-300" />
               </div>
             </div>
 
             <p className="absolute top-[calc(var(--safe-top)+160px)] text-center">
-              1. 모모와 <span className={highlightedText}>대화를 종료</span>하고 싶다면
+              1. 모모와 <span className={highlightedText}>대화를 나가고</span> 싶다면
               <span className={highlightedText}> 버튼</span>을 눌러주세요!
               <br />
-              종료하지 않고 나가면, <span className={highlightedText}>1일 후에 자동 종료</span>돼요.
+              나갔다가 들어와도, <span className={highlightedText}>대화를 이어서</span> 할 수 있어요.
             </p>
 
             <div className="flex w-full flex-col items-center gap-[26px] px-5">
@@ -175,7 +146,6 @@ export function useChattingModal(chatStatus?: ChatRoomStateDataChatRoomStateEnum
 
   return {
     testRequiredModal,
-    exitChattingModal,
     chattingTutorialModal,
     showChattingTutorial,
   }

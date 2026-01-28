@@ -46,7 +46,7 @@ export function useBookmarkSelection({ chatId, onSelectComplete }: UseBookmarkSe
           chatRoomId: targetChatRoomId,
           bookmarkId,
           size: 20,
-          sort: chatId ? 'ASC' : 'DESC',
+          sort: 'ASC',
         })
       } catch {
         return
@@ -72,7 +72,7 @@ export function useBookmarkSelection({ chatId, onSelectComplete }: UseBookmarkSe
 
       const targetQueryKey = chatId
         ? historyService.historyMessagesQuery(chatId).queryKey
-        : chatService.chatMessagesQuery().queryKey
+        : chatService.chatMessagesQuery(targetChatRoomId).queryKey
 
       queryClient.setQueryData(targetQueryKey, (oldData: any) => {
         if (!oldData || !oldData.pages) {
@@ -89,7 +89,7 @@ export function useBookmarkSelection({ chatId, onSelectComplete }: UseBookmarkSe
         }
 
         const firstPage = oldData.pages[0] ?? {}
-        const mergedList = mergeMessages(firstPage.list ?? [], mappedMessages, !!chatId)
+        const mergedList = mergeMessages(firstPage.list ?? [], mappedMessages, true)
         const nextPage = {
           ...firstPage,
           list: mergedList,

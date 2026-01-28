@@ -97,7 +97,6 @@ export function useChatScroll({
   }, [])
 
   useLayoutEffect(() => {
-    if (chatId) return
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
