@@ -177,6 +177,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
     onError: useCallback(() => {
       setSendingMessage(false)
       setAwaitingResponse(false)
+      setStreamingMessage(null)
     }, []),
   })
 
