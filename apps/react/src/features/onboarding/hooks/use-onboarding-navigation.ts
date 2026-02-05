@@ -9,6 +9,7 @@ const BASE_STEPS = [
   '/onboarding/nickname',
   '/onboarding/relationship-status',
   '/onboarding/mbti',
+  '/onboarding/partner-mbti',
 ] as const
 
 // 커플 전용 단계
@@ -56,8 +57,8 @@ export function useOnboardingNavigation() {
   const goToNextStep = () => {
     const currentPath = window.location.pathname.replace(/\/$/, '')
 
-    // MBTI 페이지 이후 조건부 라우팅
-    if (currentPath === '/onboarding/mbti') {
+    // 상대방 MBTI 페이지 이후 조건부 라우팅
+    if (currentPath === '/onboarding/partner-mbti') {
       if (data.relationshipStatus === 'IN_RELATIONSHIP') {
         navigate({ to: '/onboarding/couple-link', replace: true })
       } else {
@@ -85,14 +86,14 @@ export function useOnboardingNavigation() {
       if (data.relationshipStatus === 'IN_RELATIONSHIP') {
         navigate({ to: '/onboarding/anniversary', replace: true })
       } else {
-        navigate({ to: '/onboarding/mbti', replace: true })
+        navigate({ to: '/onboarding/partner-mbti', replace: true })
       }
       return true
     }
 
     // 커플 연동 페이지에서 뒤로가기
     if (currentPath === '/onboarding/couple-link') {
-      navigate({ to: '/onboarding/mbti', replace: true })
+      navigate({ to: '/onboarding/partner-mbti', replace: true })
       return true
     }
 

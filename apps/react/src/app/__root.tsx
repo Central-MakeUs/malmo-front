@@ -24,6 +24,7 @@ const onboardingRoutes = [
   '/onboarding/nickname',
   '/onboarding/relationship-status',
   '/onboarding/mbti',
+  '/onboarding/partner-mbti',
   '/onboarding/couple-link',
   '/onboarding/my-code',
   '/onboarding/anniversary',
