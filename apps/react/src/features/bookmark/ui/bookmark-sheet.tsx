@@ -116,14 +116,14 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
       >
         <SheetTitle className="sr-only">북마크</SheetTitle>
 
-        <div className="flex justify-center">
+        <div className="flex px-5 py-3">
           <button
             type="button"
             aria-label="시트 높이 조절"
             onPointerDown={handleDragStart}
             onPointerUp={handleDragEnd}
             onPointerCancel={handleDragEnd}
-            className="flex h-6 w-16 items-center justify-center"
+            className="flex h-10 w-full items-center justify-center"
           >
             <span className="h-1 w-10 rounded-full bg-gray-iron-200" />
           </button>
@@ -154,8 +154,10 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
           </div>
 
           <div
-            className={cn('mt-7 flex min-h-0 flex-1 flex-col overflow-y-scroll', {
+            className={cn('mt-7 flex min-h-0 flex-1 flex-col', {
               'items-center justify-center': bookmarks.length === 0,
+              'overflow-y-auto': isSheetExpanded,
+              'overflow-y-hidden': !isSheetExpanded,
             })}
             style={{ scrollbarGutter: 'stable' }}
           >
