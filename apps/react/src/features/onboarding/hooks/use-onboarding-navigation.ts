@@ -1,31 +1,70 @@
 import { useNavigate } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
+import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 
-// 온보딩 단계 정의
-const ONBOARDING_STEPS = [
+// 기본 온보딩 단계 (모든 사용자 공통)
+const BASE_STEPS = [
   '/onboarding/terms',
   '/onboarding/nickname',
-  '/onboarding/my-code',
+  '/onboarding/relationship-status',
+  '/onboarding/mbti',
+] as const
+
+// 커플 전용 단계
+const COUPLE_STEPS = [
+  '/onboarding/couple-link',
   '/onboarding/partner-code',
   '/onboarding/anniversary',
   '/onboarding/complete',
 ] as const
 
-type OnboardingStep = (typeof ONBOARDING_STEPS)[number]
+// 비커플(썸/이별) 전용 단계
+const NON_COUPLE_STEPS = ['/onboarding/complete'] as const
+
+type OnboardingStep = (typeof BASE_STEPS)[number] | (typeof COUPLE_STEPS)[number] | (typeof NON_COUPLE_STEPS)[number]
 
 export function useOnboardingNavigation() {
   const navigate = useNavigate()
   const { refreshUserInfo } = useAuth()
+  const { data } = useOnboarding()
+
+  // 연애 상태에 따른 전체 스텝 계산
+  const getOnboardingSteps = (): OnboardingStep[] => {
+    if (data.relationshipStatus === '커플') {
+      return [...BASE_STEPS, ...COUPLE_STEPS]
+    }
+    return [...BASE_STEPS, ...NON_COUPLE_STEPS]
+  }
+
+  const ONBOARDING_STEPS = getOnboardingSteps()
 
   // 현재 경로에 따른 단계 인덱스 찾기
   const getCurrentStepIndex = (): number => {
-    const currentPath = window.location.pathname
-    return ONBOARDING_STEPS.findIndex((step) => currentPath.endsWith(step))
+    // trailing slash 제거 후 비교
+    const currentPath = window.location.pathname.replace(/\/$/, '')
+    return ONBOARDING_STEPS.findIndex((step) => currentPath === step)
+  }
+
+  // 특정 단계로 이동
+  const goToStep = (step: OnboardingStep) => {
+    navigate({ to: step, replace: true })
   }
 
   // 다음 단계로 이동
   const goToNextStep = () => {
+    const currentPath = window.location.pathname.replace(/\/$/, '')
+
+    // MBTI 페이지 이후 조건부 라우팅
+    if (currentPath === '/onboarding/mbti') {
+      if (data.relationshipStatus === '커플') {
+        navigate({ to: '/onboarding/couple-link', replace: true })
+      } else {
+        navigate({ to: '/onboarding/complete', replace: true })
+      }
+      return true
+    }
+
     const currentIndex = getCurrentStepIndex()
 
     if (currentIndex >= 0 && currentIndex < ONBOARDING_STEPS.length - 1) {
@@ -38,6 +77,24 @@ export function useOnboardingNavigation() {
 
   // 이전 단계로 이동
   const goToPreviousStep = () => {
+    const currentPath = window.location.pathname.replace(/\/$/, '')
+
+    // 완료 페이지에서 뒤로가기 시 조건부 라우팅
+    if (currentPath === '/onboarding/complete') {
+      if (data.relationshipStatus === '커플') {
+        navigate({ to: '/onboarding/anniversary', replace: true })
+      } else {
+        navigate({ to: '/onboarding/mbti', replace: true })
+      }
+      return true
+    }
+
+    // 커플 연동 페이지에서 뒤로가기
+    if (currentPath === '/onboarding/couple-link') {
+      navigate({ to: '/onboarding/mbti', replace: true })
+      return true
+    }
+
     const currentIndex = getCurrentStepIndex()
 
     if (currentIndex > 0) {
@@ -57,9 +114,11 @@ export function useOnboardingNavigation() {
   return {
     goToNextStep,
     goToPreviousStep,
+    goToStep,
     goToHome,
     currentStepIndex: getCurrentStepIndex(),
     totalSteps: ONBOARDING_STEPS.length,
     ONBOARDING_STEPS,
+    isCouple: data.relationshipStatus === '커플',
   }
 }

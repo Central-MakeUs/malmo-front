@@ -4,6 +4,9 @@ import React, { createContext, useContext, useState, ReactNode } from 'react'
 // import { useAuth } from '@/features/auth'
 import signUpService from '@/shared/services/sign-up.service'
 
+// 연애 상태 타입 정의
+export type RelationshipStatus = '썸' | '커플' | '이별'
+
 // 온보딩 데이터 타입 정의
 interface OnboardingData {
   // 약관 동의 데이터
@@ -11,6 +14,12 @@ interface OnboardingData {
 
   // 사용자 정보
   nickname: string
+
+  // 연애 상태
+  relationshipStatus: RelationshipStatus | null
+
+  // MBTI
+  mbti: string | null
 
   // 기념일 정보
   anniversary: Date | null
@@ -29,6 +38,12 @@ interface OnboardingContextType {
   // 닉네임 업데이트
   updateNickname: (nickname: string) => void
 
+  // 연애 상태 업데이트
+  updateRelationshipStatus: (status: RelationshipStatus) => void
+
+  // MBTI 업데이트
+  updateMbti: (mbti: string) => void
+
   // 기념일 업데이트
   updateAnniversary: (date: Date) => void
 
@@ -43,6 +58,8 @@ interface OnboardingContextType {
 const defaultOnboardingData: OnboardingData = {
   termsAgreements: {},
   nickname: '',
+  relationshipStatus: null,
+  mbti: null,
   anniversary: null,
   partnerCode: null,
 }
@@ -71,6 +88,22 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     setData((prev) => ({
       ...prev,
       nickname,
+    }))
+  }
+
+  // 연애 상태 업데이트
+  const updateRelationshipStatus = (status: RelationshipStatus) => {
+    setData((prev) => ({
+      ...prev,
+      relationshipStatus: status,
+    }))
+  }
+
+  // MBTI 업데이트
+  const updateMbti = (mbti: string) => {
+    setData((prev) => ({
+      ...prev,
+      mbti,
     }))
   }
 
@@ -117,6 +150,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         data,
         updateTermsAgreements,
         updateNickname,
+        updateRelationshipStatus,
+        updateMbti,
         updateAnniversary,
         updatePartnerCode,
         completeOnboarding,
