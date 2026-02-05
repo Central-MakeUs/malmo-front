@@ -27,6 +27,9 @@ const PAGE_MAPPING: Record<string, { name: PageName; category: Category }> = {
   '/my-page/profile': { name: PAGE_NAMES.MYPAGE_PROFILE, category: CATEGORIES.PROFILE },
   '/my-page/couple-management': { name: PAGE_NAMES.MYPAGE_COUPLE, category: CATEGORIES.PROFILE },
   '/my-page/account-settings': { name: PAGE_NAMES.MYPAGE_SETTINGS, category: CATEGORIES.PROFILE },
+  '/relationship-status': { name: PAGE_NAMES.PROFILE_RELATIONSHIP_STATUS, category: CATEGORIES.PROFILE },
+  '/mbti': { name: PAGE_NAMES.PROFILE_MBTI, category: CATEGORIES.PROFILE },
+  '/partner-mbti': { name: PAGE_NAMES.PROFILE_PARTNER_MBTI, category: CATEGORIES.PROFILE },
   '/terms/privacy-policy': { name: PAGE_NAMES.TERMS_PRIVACY, category: CATEGORIES.PROFILE },
 }
 

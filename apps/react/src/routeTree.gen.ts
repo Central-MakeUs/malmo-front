@@ -15,8 +15,11 @@ import { Route as OnboardingLayoutImport } from './app/onboarding/layout'
 import { Route as ChatLayoutImport } from './app/chat/layout'
 import { Route as PageImport } from './app/page'
 import { Route as TutorialPageImport } from './app/tutorial/page'
+import { Route as RelationshipStatusPageImport } from './app/relationship-status/page'
 import { Route as PartnerStatusPageImport } from './app/partner-status/page'
+import { Route as PartnerMbtiPageImport } from './app/partner-mbti/page'
 import { Route as MyPagePageImport } from './app/my-page/page'
+import { Route as MbtiPageImport } from './app/mbti/page'
 import { Route as LoginPageImport } from './app/login/page'
 import { Route as IntroPageImport } from './app/intro/page'
 import { Route as HistoryPageImport } from './app/history/page'
@@ -32,6 +35,7 @@ import { Route as OnboardingMyCodePageImport } from './app/onboarding/my-code/pa
 import { Route as OnboardingMbtiPageImport } from './app/onboarding/mbti/page'
 import { Route as OnboardingCompletePageImport } from './app/onboarding/complete/page'
 import { Route as OnboardingAnniversaryPageImport } from './app/onboarding/anniversary/page'
+import { Route as MyPageProfilePageImport } from './app/my-page/profile/page'
 import { Route as MyPageCoupleManagementPageImport } from './app/my-page/couple-management/page'
 import { Route as MyPageAccountSettingsPageImport } from './app/my-page/account-settings/page'
 import { Route as HistoryDeletePageImport } from './app/history/delete/page'
@@ -69,15 +73,33 @@ const TutorialPageRoute = TutorialPageImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const RelationshipStatusPageRoute = RelationshipStatusPageImport.update({
+  id: '/relationship-status/',
+  path: '/relationship-status/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const PartnerStatusPageRoute = PartnerStatusPageImport.update({
   id: '/partner-status/',
   path: '/partner-status/',
   getParentRoute: () => rootRoute,
 } as any)
 
+const PartnerMbtiPageRoute = PartnerMbtiPageImport.update({
+  id: '/partner-mbti/',
+  path: '/partner-mbti/',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const MyPagePageRoute = MyPagePageImport.update({
   id: '/my-page/',
   path: '/my-page/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const MbtiPageRoute = MbtiPageImport.update({
+  id: '/mbti/',
+  path: '/mbti/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -123,11 +145,12 @@ const OnboardingTermsPageRoute = OnboardingTermsPageImport.update({
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
-const OnboardingRelationshipStatusPageRoute = OnboardingRelationshipStatusPageImport.update({
-  id: '/relationship-status/',
-  path: '/relationship-status/',
-  getParentRoute: () => OnboardingLayoutRoute,
-} as any)
+const OnboardingRelationshipStatusPageRoute =
+  OnboardingRelationshipStatusPageImport.update({
+    id: '/relationship-status/',
+    path: '/relationship-status/',
+    getParentRoute: () => OnboardingLayoutRoute,
+  } as any)
 
 const OnboardingPartnerMbtiPageRoute = OnboardingPartnerMbtiPageImport.update({
   id: '/partner-mbti/',
@@ -171,11 +194,19 @@ const OnboardingAnniversaryPageRoute = OnboardingAnniversaryPageImport.update({
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
-const MyPageCoupleManagementPageRoute = MyPageCoupleManagementPageImport.update({
-  id: '/my-page/couple-management/',
-  path: '/my-page/couple-management/',
+const MyPageProfilePageRoute = MyPageProfilePageImport.update({
+  id: '/my-page/profile/',
+  path: '/my-page/profile/',
   getParentRoute: () => rootRoute,
 } as any)
+
+const MyPageCoupleManagementPageRoute = MyPageCoupleManagementPageImport.update(
+  {
+    id: '/my-page/couple-management/',
+    path: '/my-page/couple-management/',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
 
 const MyPageAccountSettingsPageRoute = MyPageAccountSettingsPageImport.update({
   id: '/my-page/account-settings/',
@@ -201,35 +232,42 @@ const ChatLoadingPageRoute = ChatLoadingPageImport.update({
   getParentRoute: () => ChatLayoutRoute,
 } as any)
 
-const AttachmentTestQuestionPageRoute = AttachmentTestQuestionPageImport.update({
-  id: '/attachment-test/question/',
-  path: '/attachment-test/question/',
-  getParentRoute: () => rootRoute,
-} as any)
+const AttachmentTestQuestionPageRoute = AttachmentTestQuestionPageImport.update(
+  {
+    id: '/attachment-test/question/',
+    path: '/attachment-test/question/',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
 
-const MyPageCoupleManagementPartnerCodePageRoute = MyPageCoupleManagementPartnerCodePageImport.update({
-  id: '/my-page/couple-management/partner-code/',
-  path: '/my-page/couple-management/partner-code/',
-  getParentRoute: () => rootRoute,
-} as any)
+const MyPageCoupleManagementPartnerCodePageRoute =
+  MyPageCoupleManagementPartnerCodePageImport.update({
+    id: '/my-page/couple-management/partner-code/',
+    path: '/my-page/couple-management/partner-code/',
+    getParentRoute: () => rootRoute,
+  } as any)
 
-const MyPageCoupleManagementAnniversaryPageRoute = MyPageCoupleManagementAnniversaryPageImport.update({
-  id: '/my-page/couple-management/anniversary/',
-  path: '/my-page/couple-management/anniversary/',
-  getParentRoute: () => rootRoute,
-} as any)
+const MyPageCoupleManagementAnniversaryPageRoute =
+  MyPageCoupleManagementAnniversaryPageImport.update({
+    id: '/my-page/couple-management/anniversary/',
+    path: '/my-page/couple-management/anniversary/',
+    getParentRoute: () => rootRoute,
+  } as any)
 
-const AttachmentTestResultPartnerPageRoute = AttachmentTestResultPartnerPageImport.update({
-  id: '/attachment-test/result/partner/',
-  path: '/attachment-test/result/partner/',
-  getParentRoute: () => rootRoute,
-} as any)
+const AttachmentTestResultPartnerPageRoute =
+  AttachmentTestResultPartnerPageImport.update({
+    id: '/attachment-test/result/partner/',
+    path: '/attachment-test/result/partner/',
+    getParentRoute: () => rootRoute,
+  } as any)
 
-const AttachmentTestResultMyPageRoute = AttachmentTestResultMyPageImport.update({
-  id: '/attachment-test/result/my/',
-  path: '/attachment-test/result/my/',
-  getParentRoute: () => rootRoute,
-} as any)
+const AttachmentTestResultMyPageRoute = AttachmentTestResultMyPageImport.update(
+  {
+    id: '/attachment-test/result/my/',
+    path: '/attachment-test/result/my/',
+    getParentRoute: () => rootRoute,
+  } as any,
+)
 
 // Populate the FileRoutesByPath interface
 
@@ -291,6 +329,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginPageImport
       parentRoute: typeof rootRoute
     }
+    '/mbti/': {
+      id: '/mbti/'
+      path: '/mbti'
+      fullPath: '/mbti'
+      preLoaderRoute: typeof MbtiPageImport
+      parentRoute: typeof rootRoute
+    }
     '/my-page/': {
       id: '/my-page/'
       path: '/my-page'
@@ -298,11 +343,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyPagePageImport
       parentRoute: typeof rootRoute
     }
+    '/partner-mbti/': {
+      id: '/partner-mbti/'
+      path: '/partner-mbti'
+      fullPath: '/partner-mbti'
+      preLoaderRoute: typeof PartnerMbtiPageImport
+      parentRoute: typeof rootRoute
+    }
     '/partner-status/': {
       id: '/partner-status/'
       path: '/partner-status'
       fullPath: '/partner-status'
       preLoaderRoute: typeof PartnerStatusPageImport
+      parentRoute: typeof rootRoute
+    }
+    '/relationship-status/': {
+      id: '/relationship-status/'
+      path: '/relationship-status'
+      fullPath: '/relationship-status'
+      preLoaderRoute: typeof RelationshipStatusPageImport
       parentRoute: typeof rootRoute
     }
     '/tutorial/': {
@@ -352,6 +411,13 @@ declare module '@tanstack/react-router' {
       path: '/my-page/couple-management'
       fullPath: '/my-page/couple-management'
       preLoaderRoute: typeof MyPageCoupleManagementPageImport
+      parentRoute: typeof rootRoute
+    }
+    '/my-page/profile/': {
+      id: '/my-page/profile/'
+      path: '/my-page/profile'
+      fullPath: '/my-page/profile'
+      preLoaderRoute: typeof MyPageProfilePageImport
       parentRoute: typeof rootRoute
     }
     '/onboarding/anniversary/': {
@@ -469,7 +535,9 @@ const ChatLayoutRouteChildren: ChatLayoutRouteChildren = {
   ChatResultPageRoute: ChatResultPageRoute,
 }
 
-const ChatLayoutRouteWithChildren = ChatLayoutRoute._addFileChildren(ChatLayoutRouteChildren)
+const ChatLayoutRouteWithChildren = ChatLayoutRoute._addFileChildren(
+  ChatLayoutRouteChildren,
+)
 
 interface OnboardingLayoutRouteChildren {
   OnboardingAnniversaryPageRoute: typeof OnboardingAnniversaryPageRoute
@@ -495,7 +563,8 @@ const OnboardingLayoutRouteChildren: OnboardingLayoutRouteChildren = {
   OnboardingTermsPageRoute: OnboardingTermsPageRoute,
 }
 
-const OnboardingLayoutRouteWithChildren = OnboardingLayoutRoute._addFileChildren(OnboardingLayoutRouteChildren)
+const OnboardingLayoutRouteWithChildren =
+  OnboardingLayoutRoute._addFileChildren(OnboardingLayoutRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof PageRoute
@@ -506,8 +575,11 @@ export interface FileRoutesByFullPath {
   '/history': typeof HistoryPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
+  '/mbti': typeof MbtiPageRoute
   '/my-page': typeof MyPagePageRoute
+  '/partner-mbti': typeof PartnerMbtiPageRoute
   '/partner-status': typeof PartnerStatusPageRoute
+  '/relationship-status': typeof RelationshipStatusPageRoute
   '/tutorial': typeof TutorialPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
@@ -515,6 +587,7 @@ export interface FileRoutesByFullPath {
   '/history/delete': typeof HistoryDeletePageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
   '/my-page/couple-management': typeof MyPageCoupleManagementPageRoute
+  '/my-page/profile': typeof MyPageProfilePageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
   '/onboarding/mbti': typeof OnboardingMbtiPageRoute
@@ -539,8 +612,11 @@ export interface FileRoutesByTo {
   '/history': typeof HistoryPageRoute
   '/intro': typeof IntroPageRoute
   '/login': typeof LoginPageRoute
+  '/mbti': typeof MbtiPageRoute
   '/my-page': typeof MyPagePageRoute
+  '/partner-mbti': typeof PartnerMbtiPageRoute
   '/partner-status': typeof PartnerStatusPageRoute
+  '/relationship-status': typeof RelationshipStatusPageRoute
   '/tutorial': typeof TutorialPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
   '/chat/loading': typeof ChatLoadingPageRoute
@@ -548,6 +624,7 @@ export interface FileRoutesByTo {
   '/history/delete': typeof HistoryDeletePageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
   '/my-page/couple-management': typeof MyPageCoupleManagementPageRoute
+  '/my-page/profile': typeof MyPageProfilePageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
   '/onboarding/mbti': typeof OnboardingMbtiPageRoute
@@ -574,8 +651,11 @@ export interface FileRoutesById {
   '/history/': typeof HistoryPageRoute
   '/intro/': typeof IntroPageRoute
   '/login/': typeof LoginPageRoute
+  '/mbti/': typeof MbtiPageRoute
   '/my-page/': typeof MyPagePageRoute
+  '/partner-mbti/': typeof PartnerMbtiPageRoute
   '/partner-status/': typeof PartnerStatusPageRoute
+  '/relationship-status/': typeof RelationshipStatusPageRoute
   '/tutorial/': typeof TutorialPageRoute
   '/attachment-test/question/': typeof AttachmentTestQuestionPageRoute
   '/chat/loading/': typeof ChatLoadingPageRoute
@@ -583,6 +663,7 @@ export interface FileRoutesById {
   '/history/delete/': typeof HistoryDeletePageRoute
   '/my-page/account-settings/': typeof MyPageAccountSettingsPageRoute
   '/my-page/couple-management/': typeof MyPageCoupleManagementPageRoute
+  '/my-page/profile/': typeof MyPageProfilePageRoute
   '/onboarding/anniversary/': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete/': typeof OnboardingCompletePageRoute
   '/onboarding/mbti/': typeof OnboardingMbtiPageRoute
@@ -610,8 +691,11 @@ export interface FileRouteTypes {
     | '/history'
     | '/intro'
     | '/login'
+    | '/mbti'
     | '/my-page'
+    | '/partner-mbti'
     | '/partner-status'
+    | '/relationship-status'
     | '/tutorial'
     | '/attachment-test/question'
     | '/chat/loading'
@@ -619,6 +703,7 @@ export interface FileRouteTypes {
     | '/history/delete'
     | '/my-page/account-settings'
     | '/my-page/couple-management'
+    | '/my-page/profile'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
     | '/onboarding/mbti'
@@ -642,8 +727,11 @@ export interface FileRouteTypes {
     | '/history'
     | '/intro'
     | '/login'
+    | '/mbti'
     | '/my-page'
+    | '/partner-mbti'
     | '/partner-status'
+    | '/relationship-status'
     | '/tutorial'
     | '/attachment-test/question'
     | '/chat/loading'
@@ -651,6 +739,7 @@ export interface FileRouteTypes {
     | '/history/delete'
     | '/my-page/account-settings'
     | '/my-page/couple-management'
+    | '/my-page/profile'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
     | '/onboarding/mbti'
@@ -675,8 +764,11 @@ export interface FileRouteTypes {
     | '/history/'
     | '/intro/'
     | '/login/'
+    | '/mbti/'
     | '/my-page/'
+    | '/partner-mbti/'
     | '/partner-status/'
+    | '/relationship-status/'
     | '/tutorial/'
     | '/attachment-test/question/'
     | '/chat/loading/'
@@ -684,6 +776,7 @@ export interface FileRouteTypes {
     | '/history/delete/'
     | '/my-page/account-settings/'
     | '/my-page/couple-management/'
+    | '/my-page/profile/'
     | '/onboarding/anniversary/'
     | '/onboarding/complete/'
     | '/onboarding/mbti/'
@@ -709,13 +802,17 @@ export interface RootRouteChildren {
   HistoryPageRoute: typeof HistoryPageRoute
   IntroPageRoute: typeof IntroPageRoute
   LoginPageRoute: typeof LoginPageRoute
+  MbtiPageRoute: typeof MbtiPageRoute
   MyPagePageRoute: typeof MyPagePageRoute
+  PartnerMbtiPageRoute: typeof PartnerMbtiPageRoute
   PartnerStatusPageRoute: typeof PartnerStatusPageRoute
+  RelationshipStatusPageRoute: typeof RelationshipStatusPageRoute
   TutorialPageRoute: typeof TutorialPageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
   HistoryDeletePageRoute: typeof HistoryDeletePageRoute
   MyPageAccountSettingsPageRoute: typeof MyPageAccountSettingsPageRoute
   MyPageCoupleManagementPageRoute: typeof MyPageCoupleManagementPageRoute
+  MyPageProfilePageRoute: typeof MyPageProfilePageRoute
   TermsPrivacyPolicyPageRoute: typeof TermsPrivacyPolicyPageRoute
   AttachmentTestResultMyPageRoute: typeof AttachmentTestResultMyPageRoute
   AttachmentTestResultPartnerPageRoute: typeof AttachmentTestResultPartnerPageRoute
@@ -731,21 +828,29 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryPageRoute: HistoryPageRoute,
   IntroPageRoute: IntroPageRoute,
   LoginPageRoute: LoginPageRoute,
+  MbtiPageRoute: MbtiPageRoute,
   MyPagePageRoute: MyPagePageRoute,
+  PartnerMbtiPageRoute: PartnerMbtiPageRoute,
   PartnerStatusPageRoute: PartnerStatusPageRoute,
+  RelationshipStatusPageRoute: RelationshipStatusPageRoute,
   TutorialPageRoute: TutorialPageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
   HistoryDeletePageRoute: HistoryDeletePageRoute,
   MyPageAccountSettingsPageRoute: MyPageAccountSettingsPageRoute,
   MyPageCoupleManagementPageRoute: MyPageCoupleManagementPageRoute,
+  MyPageProfilePageRoute: MyPageProfilePageRoute,
   TermsPrivacyPolicyPageRoute: TermsPrivacyPolicyPageRoute,
   AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
-  MyPageCoupleManagementAnniversaryPageRoute: MyPageCoupleManagementAnniversaryPageRoute,
-  MyPageCoupleManagementPartnerCodePageRoute: MyPageCoupleManagementPartnerCodePageRoute,
+  MyPageCoupleManagementAnniversaryPageRoute:
+    MyPageCoupleManagementAnniversaryPageRoute,
+  MyPageCoupleManagementPartnerCodePageRoute:
+    MyPageCoupleManagementPartnerCodePageRoute,
 }
 
-export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -760,13 +865,17 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/history/",
         "/intro/",
         "/login/",
+        "/mbti/",
         "/my-page/",
+        "/partner-mbti/",
         "/partner-status/",
+        "/relationship-status/",
         "/tutorial/",
         "/attachment-test/question/",
         "/history/delete/",
         "/my-page/account-settings/",
         "/my-page/couple-management/",
+        "/my-page/profile/",
         "/terms/privacy-policy/",
         "/attachment-test/result/my/",
         "/attachment-test/result/partner/",
@@ -815,11 +924,20 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/login/": {
       "filePath": "login/page.tsx"
     },
+    "/mbti/": {
+      "filePath": "mbti/page.tsx"
+    },
     "/my-page/": {
       "filePath": "my-page/page.tsx"
     },
+    "/partner-mbti/": {
+      "filePath": "partner-mbti/page.tsx"
+    },
     "/partner-status/": {
       "filePath": "partner-status/page.tsx"
+    },
+    "/relationship-status/": {
+      "filePath": "relationship-status/page.tsx"
     },
     "/tutorial/": {
       "filePath": "tutorial/page.tsx"
@@ -843,6 +961,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/my-page/couple-management/": {
       "filePath": "my-page/couple-management/page.tsx"
+    },
+    "/my-page/profile/": {
+      "filePath": "my-page/profile/page.tsx"
     },
     "/onboarding/anniversary/": {
       "filePath": "onboarding/anniversary/page.tsx",

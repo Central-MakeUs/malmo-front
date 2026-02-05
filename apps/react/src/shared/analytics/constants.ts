@@ -44,6 +44,9 @@ export const PAGE_NAMES = {
   MYPAGE_PROFILE: 'mypage_profile',
   MYPAGE_COUPLE: 'mypage_couple',
   MYPAGE_SETTINGS: 'mypage_settings',
+  PROFILE_RELATIONSHIP_STATUS: 'profile_relationship_status',
+  PROFILE_MBTI: 'profile_mbti',
+  PROFILE_PARTNER_MBTI: 'profile_partner_mbti',
   TERMS_PRIVACY: 'terms_privacy',
 } as const
 
@@ -130,6 +133,10 @@ export const BUTTON_NAMES = {
 
   // Profile
   OPEN_PROFILE_EDIT: 'open_profile_edit',
+  OPEN_PROFILE_MANAGE: 'open_profile_manage',
+  OPEN_PROFILE_RELATIONSHIP_STATUS: 'open_profile_relationship_status',
+  OPEN_PROFILE_MBTI: 'open_profile_mbti',
+  OPEN_PROFILE_PARTNER_MBTI: 'open_profile_partner_mbti',
   OPEN_COUPLE_MANAGE: 'open_couple_manage',
   OPEN_ACCOUNT_SETTINGS: 'open_account_settings',
   OPEN_TERMS_SERVICE: 'open_terms_service',
@@ -144,6 +151,9 @@ export const BUTTON_NAMES = {
   OPEN_PARTNER_SHEET: 'open_partner_sheet',
   DISCONNECT_COUPLE: 'disconnect_couple',
   CONFIRM_DISCONNECT: 'confirm_disconnect',
+  SAVE_PROFILE_RELATIONSHIP_STATUS: 'save_profile_relationship_status',
+  SAVE_PROFILE_MBTI: 'save_profile_mbti',
+  SAVE_PROFILE_PARTNER_MBTI: 'save_profile_partner_mbti',
   LOGOUT: 'logout',
   CONFIRM_LOGOUT: 'confirm_logout',
   WITHDRAW: 'withdraw',
