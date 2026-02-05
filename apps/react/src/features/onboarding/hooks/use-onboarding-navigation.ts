@@ -14,6 +14,7 @@ const BASE_STEPS = [
 // 커플 전용 단계
 const COUPLE_STEPS = [
   '/onboarding/couple-link',
+  '/onboarding/my-code',
   '/onboarding/partner-code',
   '/onboarding/anniversary',
   '/onboarding/complete',
@@ -31,7 +32,7 @@ export function useOnboardingNavigation() {
 
   // 연애 상태에 따른 전체 스텝 계산
   const getOnboardingSteps = (): OnboardingStep[] => {
-    if (data.relationshipStatus === '커플') {
+    if (data.relationshipStatus === 'IN_RELATIONSHIP') {
       return [...BASE_STEPS, ...COUPLE_STEPS]
     }
     return [...BASE_STEPS, ...NON_COUPLE_STEPS]
@@ -57,7 +58,7 @@ export function useOnboardingNavigation() {
 
     // MBTI 페이지 이후 조건부 라우팅
     if (currentPath === '/onboarding/mbti') {
-      if (data.relationshipStatus === '커플') {
+      if (data.relationshipStatus === 'IN_RELATIONSHIP') {
         navigate({ to: '/onboarding/couple-link', replace: true })
       } else {
         navigate({ to: '/onboarding/complete', replace: true })
@@ -81,7 +82,7 @@ export function useOnboardingNavigation() {
 
     // 완료 페이지에서 뒤로가기 시 조건부 라우팅
     if (currentPath === '/onboarding/complete') {
-      if (data.relationshipStatus === '커플') {
+      if (data.relationshipStatus === 'IN_RELATIONSHIP') {
         navigate({ to: '/onboarding/anniversary', replace: true })
       } else {
         navigate({ to: '/onboarding/mbti', replace: true })
@@ -119,6 +120,6 @@ export function useOnboardingNavigation() {
     currentStepIndex: getCurrentStepIndex(),
     totalSteps: ONBOARDING_STEPS.length,
     ONBOARDING_STEPS,
-    isCouple: data.relationshipStatus === '커플',
+    isCouple: data.relationshipStatus === 'IN_RELATIONSHIP',
   }
 }

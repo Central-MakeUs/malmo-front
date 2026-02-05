@@ -13,5 +13,17 @@
  */
 
 export interface UpdateMemberRequestDto {
-  nickname: string
+  nickname?: string
+  relationshipStatus?: UpdateMemberRequestDtoRelationshipStatusEnum
+  personalityType?: string
+  otherPersonalityType?: string
 }
+
+export const UpdateMemberRequestDtoRelationshipStatusEnum = {
+  InRelationship: 'IN_RELATIONSHIP',
+  SeeingSomeone: 'SEEING_SOMEONE',
+  Breakup: 'BREAKUP',
+} as const
+
+export type UpdateMemberRequestDtoRelationshipStatusEnum =
+  (typeof UpdateMemberRequestDtoRelationshipStatusEnum)[keyof typeof UpdateMemberRequestDtoRelationshipStatusEnum]

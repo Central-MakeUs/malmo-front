@@ -1,11 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 
-// import { useAuth } from '@/features/auth'
 import signUpService from '@/shared/services/sign-up.service'
 
+import type { SignUpRequestDto } from '@data/user-api-axios/api'
+
+// import { useAuth } from '@/features/auth'
+
 // 연애 상태 타입 정의
-export type RelationshipStatus = '썸' | '커플' | '이별'
+export type RelationshipStatus = 'IN_RELATIONSHIP' | 'SEEING_SOMEONE' | 'BREAKUP'
 
 // 온보딩 데이터 타입 정의
 interface OnboardingData {
@@ -19,7 +22,10 @@ interface OnboardingData {
   relationshipStatus: RelationshipStatus | null
 
   // MBTI
-  mbti: string | null
+  personalityType: string | null
+
+  // 상대방 MBTI
+  otherPersonalityType: string | null
 
   // 기념일 정보
   anniversary: Date | null
@@ -42,7 +48,10 @@ interface OnboardingContextType {
   updateRelationshipStatus: (status: RelationshipStatus) => void
 
   // MBTI 업데이트
-  updateMbti: (mbti: string) => void
+  updatePersonalityType: (mbti: string) => void
+
+  // 상대방 MBTI 업데이트
+  updateOtherPersonalityType: (mbti: string) => void
 
   // 기념일 업데이트
   updateAnniversary: (date: Date) => void
@@ -59,7 +68,8 @@ const defaultOnboardingData: OnboardingData = {
   termsAgreements: {},
   nickname: '',
   relationshipStatus: null,
-  mbti: null,
+  personalityType: null,
+  otherPersonalityType: null,
   anniversary: null,
   partnerCode: null,
 }
@@ -100,10 +110,18 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   }
 
   // MBTI 업데이트
-  const updateMbti = (mbti: string) => {
+  const updatePersonalityType = (mbti: string) => {
     setData((prev) => ({
       ...prev,
-      mbti,
+      personalityType: mbti,
+    }))
+  }
+
+  // 상대방 MBTI 업데이트
+  const updateOtherPersonalityType = (mbti: string) => {
+    setData((prev) => ({
+      ...prev,
+      otherPersonalityType: mbti,
     }))
   }
 
@@ -127,12 +145,24 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const completeOnboarding = async () => {
     try {
       // 여기서 API 호출
-      const requestBody = {
+      const requestBody: SignUpRequestDto = {
         nickname: data.nickname,
         terms: Object.entries(data.termsAgreements).map(([termsId, isAgreed]) => ({
           termsId: Number(termsId),
           isAgreed,
         })),
+      }
+
+      if (data.relationshipStatus) {
+        requestBody.relationshipStatus = data.relationshipStatus
+      }
+
+      if (data.personalityType) {
+        requestBody.personalityType = data.personalityType
+      }
+
+      if (data.otherPersonalityType) {
+        requestBody.otherPersonalityType = data.otherPersonalityType
       }
 
       // 회원가입 API 호출
@@ -151,7 +181,8 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         updateTermsAgreements,
         updateNickname,
         updateRelationshipStatus,
-        updateMbti,
+        updatePersonalityType,
+        updateOtherPersonalityType,
         updateAnniversary,
         updatePartnerCode,
         completeOnboarding,

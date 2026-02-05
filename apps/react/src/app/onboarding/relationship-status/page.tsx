@@ -16,11 +16,10 @@ export const Route = createFileRoute('/onboarding/relationship-status/')({
 const RELATIONSHIP_OPTIONS: {
   value: RelationshipStatus
   label: string
-  description: string
 }[] = [
-  { value: '썸', label: '썸', description: '설레는 중이에요' },
-  { value: '커플', label: '커플', description: '연인이 있어요' },
-  { value: '이별', label: '이별', description: '헤어졌어요' },
+  { value: 'SEEING_SOMEONE', label: '썸을 타고 있거나, 관계가 진전되기 전이에요' },
+  { value: 'IN_RELATIONSHIP', label: '연애 중이에요' },
+  { value: 'BREAKUP', label: '이별했어요' },
 ]
 
 function RelationshipStatusPage() {
@@ -56,30 +55,32 @@ function RelationshipStatusPage() {
         <TitleSection
           title={
             <>
-              현재 연애 상태가
+              현재 연애 상태를
               <br />
-              어떻게 되시나요?
+              선택해 주세요
             </>
           }
-          description="더 정확한 상담을 위해 알려주세요"
+          description="이후에 관계 정보가 바뀌면 변경할 수 있어요"
         />
 
-        <div className="mt-[48px] space-y-3 px-5">
+        <div className="mt-[68px] space-y-2 px-5">
           {RELATIONSHIP_OPTIONS.map((option) => (
             <button
               key={option.value}
               onClick={() => handleSelect(option.value)}
               className={cn(
-                'flex w-full items-center rounded-[12px] border-2 p-4 transition-all',
-                selected === option.value
-                  ? 'border-malmo-rasberry-500 bg-malmo-rasberry-50'
-                  : 'border-gray-neutral-200 bg-white'
+                'flex w-full items-center rounded-[10px] border-1 px-5 py-4 text-left transition-all',
+                selected === option.value ? 'border-malmo-rasberry-500' : 'border-gray-neutral-300'
               )}
             >
-              <div className="text-left">
-                <p className="body1-semibold text-gray-iron-950">{option.label}</p>
-                <p className="body3-medium text-gray-iron-500">{option.description}</p>
-              </div>
+              <p
+                className={cn(
+                  'body2-medium',
+                  selected === option.value ? 'text-malmo-rasberry-500' : 'text-gray-iron-500'
+                )}
+              >
+                {option.label}
+              </p>
             </button>
           ))}
         </div>
