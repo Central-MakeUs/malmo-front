@@ -25,7 +25,6 @@ const onboardingRoutes = [
   '/onboarding/relationship-status',
   '/onboarding/mbti',
   '/onboarding/partner-mbti',
-  '/onboarding/couple-link',
   '/onboarding/my-code',
   '/onboarding/anniversary',
   '/onboarding/partner-code',

@@ -30,7 +30,6 @@ import { Route as OnboardingPartnerCodePageImport } from './app/onboarding/partn
 import { Route as OnboardingNicknamePageImport } from './app/onboarding/nickname/page'
 import { Route as OnboardingMyCodePageImport } from './app/onboarding/my-code/page'
 import { Route as OnboardingMbtiPageImport } from './app/onboarding/mbti/page'
-import { Route as OnboardingCoupleLinkPageImport } from './app/onboarding/couple-link/page'
 import { Route as OnboardingCompletePageImport } from './app/onboarding/complete/page'
 import { Route as OnboardingAnniversaryPageImport } from './app/onboarding/anniversary/page'
 import { Route as MyPageCoupleManagementPageImport } from './app/my-page/couple-management/page'
@@ -124,12 +123,11 @@ const OnboardingTermsPageRoute = OnboardingTermsPageImport.update({
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
-const OnboardingRelationshipStatusPageRoute =
-  OnboardingRelationshipStatusPageImport.update({
-    id: '/relationship-status/',
-    path: '/relationship-status/',
-    getParentRoute: () => OnboardingLayoutRoute,
-  } as any)
+const OnboardingRelationshipStatusPageRoute = OnboardingRelationshipStatusPageImport.update({
+  id: '/relationship-status/',
+  path: '/relationship-status/',
+  getParentRoute: () => OnboardingLayoutRoute,
+} as any)
 
 const OnboardingPartnerMbtiPageRoute = OnboardingPartnerMbtiPageImport.update({
   id: '/partner-mbti/',
@@ -161,12 +159,6 @@ const OnboardingMbtiPageRoute = OnboardingMbtiPageImport.update({
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
-const OnboardingCoupleLinkPageRoute = OnboardingCoupleLinkPageImport.update({
-  id: '/couple-link/',
-  path: '/couple-link/',
-  getParentRoute: () => OnboardingLayoutRoute,
-} as any)
-
 const OnboardingCompletePageRoute = OnboardingCompletePageImport.update({
   id: '/complete/',
   path: '/complete/',
@@ -179,13 +171,11 @@ const OnboardingAnniversaryPageRoute = OnboardingAnniversaryPageImport.update({
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
-const MyPageCoupleManagementPageRoute = MyPageCoupleManagementPageImport.update(
-  {
-    id: '/my-page/couple-management/',
-    path: '/my-page/couple-management/',
-    getParentRoute: () => rootRoute,
-  } as any,
-)
+const MyPageCoupleManagementPageRoute = MyPageCoupleManagementPageImport.update({
+  id: '/my-page/couple-management/',
+  path: '/my-page/couple-management/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const MyPageAccountSettingsPageRoute = MyPageAccountSettingsPageImport.update({
   id: '/my-page/account-settings/',
@@ -211,42 +201,35 @@ const ChatLoadingPageRoute = ChatLoadingPageImport.update({
   getParentRoute: () => ChatLayoutRoute,
 } as any)
 
-const AttachmentTestQuestionPageRoute = AttachmentTestQuestionPageImport.update(
-  {
-    id: '/attachment-test/question/',
-    path: '/attachment-test/question/',
-    getParentRoute: () => rootRoute,
-  } as any,
-)
+const AttachmentTestQuestionPageRoute = AttachmentTestQuestionPageImport.update({
+  id: '/attachment-test/question/',
+  path: '/attachment-test/question/',
+  getParentRoute: () => rootRoute,
+} as any)
 
-const MyPageCoupleManagementPartnerCodePageRoute =
-  MyPageCoupleManagementPartnerCodePageImport.update({
-    id: '/my-page/couple-management/partner-code/',
-    path: '/my-page/couple-management/partner-code/',
-    getParentRoute: () => rootRoute,
-  } as any)
+const MyPageCoupleManagementPartnerCodePageRoute = MyPageCoupleManagementPartnerCodePageImport.update({
+  id: '/my-page/couple-management/partner-code/',
+  path: '/my-page/couple-management/partner-code/',
+  getParentRoute: () => rootRoute,
+} as any)
 
-const MyPageCoupleManagementAnniversaryPageRoute =
-  MyPageCoupleManagementAnniversaryPageImport.update({
-    id: '/my-page/couple-management/anniversary/',
-    path: '/my-page/couple-management/anniversary/',
-    getParentRoute: () => rootRoute,
-  } as any)
+const MyPageCoupleManagementAnniversaryPageRoute = MyPageCoupleManagementAnniversaryPageImport.update({
+  id: '/my-page/couple-management/anniversary/',
+  path: '/my-page/couple-management/anniversary/',
+  getParentRoute: () => rootRoute,
+} as any)
 
-const AttachmentTestResultPartnerPageRoute =
-  AttachmentTestResultPartnerPageImport.update({
-    id: '/attachment-test/result/partner/',
-    path: '/attachment-test/result/partner/',
-    getParentRoute: () => rootRoute,
-  } as any)
+const AttachmentTestResultPartnerPageRoute = AttachmentTestResultPartnerPageImport.update({
+  id: '/attachment-test/result/partner/',
+  path: '/attachment-test/result/partner/',
+  getParentRoute: () => rootRoute,
+} as any)
 
-const AttachmentTestResultMyPageRoute = AttachmentTestResultMyPageImport.update(
-  {
-    id: '/attachment-test/result/my/',
-    path: '/attachment-test/result/my/',
-    getParentRoute: () => rootRoute,
-  } as any,
-)
+const AttachmentTestResultMyPageRoute = AttachmentTestResultMyPageImport.update({
+  id: '/attachment-test/result/my/',
+  path: '/attachment-test/result/my/',
+  getParentRoute: () => rootRoute,
+} as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -385,13 +368,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingCompletePageImport
       parentRoute: typeof OnboardingLayoutImport
     }
-    '/onboarding/couple-link/': {
-      id: '/onboarding/couple-link/'
-      path: '/couple-link'
-      fullPath: '/onboarding/couple-link'
-      preLoaderRoute: typeof OnboardingCoupleLinkPageImport
-      parentRoute: typeof OnboardingLayoutImport
-    }
     '/onboarding/mbti/': {
       id: '/onboarding/mbti/'
       path: '/mbti'
@@ -493,14 +469,11 @@ const ChatLayoutRouteChildren: ChatLayoutRouteChildren = {
   ChatResultPageRoute: ChatResultPageRoute,
 }
 
-const ChatLayoutRouteWithChildren = ChatLayoutRoute._addFileChildren(
-  ChatLayoutRouteChildren,
-)
+const ChatLayoutRouteWithChildren = ChatLayoutRoute._addFileChildren(ChatLayoutRouteChildren)
 
 interface OnboardingLayoutRouteChildren {
   OnboardingAnniversaryPageRoute: typeof OnboardingAnniversaryPageRoute
   OnboardingCompletePageRoute: typeof OnboardingCompletePageRoute
-  OnboardingCoupleLinkPageRoute: typeof OnboardingCoupleLinkPageRoute
   OnboardingMbtiPageRoute: typeof OnboardingMbtiPageRoute
   OnboardingMyCodePageRoute: typeof OnboardingMyCodePageRoute
   OnboardingNicknamePageRoute: typeof OnboardingNicknamePageRoute
@@ -513,7 +486,6 @@ interface OnboardingLayoutRouteChildren {
 const OnboardingLayoutRouteChildren: OnboardingLayoutRouteChildren = {
   OnboardingAnniversaryPageRoute: OnboardingAnniversaryPageRoute,
   OnboardingCompletePageRoute: OnboardingCompletePageRoute,
-  OnboardingCoupleLinkPageRoute: OnboardingCoupleLinkPageRoute,
   OnboardingMbtiPageRoute: OnboardingMbtiPageRoute,
   OnboardingMyCodePageRoute: OnboardingMyCodePageRoute,
   OnboardingNicknamePageRoute: OnboardingNicknamePageRoute,
@@ -523,8 +495,7 @@ const OnboardingLayoutRouteChildren: OnboardingLayoutRouteChildren = {
   OnboardingTermsPageRoute: OnboardingTermsPageRoute,
 }
 
-const OnboardingLayoutRouteWithChildren =
-  OnboardingLayoutRoute._addFileChildren(OnboardingLayoutRouteChildren)
+const OnboardingLayoutRouteWithChildren = OnboardingLayoutRoute._addFileChildren(OnboardingLayoutRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof PageRoute
@@ -546,7 +517,6 @@ export interface FileRoutesByFullPath {
   '/my-page/couple-management': typeof MyPageCoupleManagementPageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
-  '/onboarding/couple-link': typeof OnboardingCoupleLinkPageRoute
   '/onboarding/mbti': typeof OnboardingMbtiPageRoute
   '/onboarding/my-code': typeof OnboardingMyCodePageRoute
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
@@ -580,7 +550,6 @@ export interface FileRoutesByTo {
   '/my-page/couple-management': typeof MyPageCoupleManagementPageRoute
   '/onboarding/anniversary': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete': typeof OnboardingCompletePageRoute
-  '/onboarding/couple-link': typeof OnboardingCoupleLinkPageRoute
   '/onboarding/mbti': typeof OnboardingMbtiPageRoute
   '/onboarding/my-code': typeof OnboardingMyCodePageRoute
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
@@ -616,7 +585,6 @@ export interface FileRoutesById {
   '/my-page/couple-management/': typeof MyPageCoupleManagementPageRoute
   '/onboarding/anniversary/': typeof OnboardingAnniversaryPageRoute
   '/onboarding/complete/': typeof OnboardingCompletePageRoute
-  '/onboarding/couple-link/': typeof OnboardingCoupleLinkPageRoute
   '/onboarding/mbti/': typeof OnboardingMbtiPageRoute
   '/onboarding/my-code/': typeof OnboardingMyCodePageRoute
   '/onboarding/nickname/': typeof OnboardingNicknamePageRoute
@@ -653,7 +621,6 @@ export interface FileRouteTypes {
     | '/my-page/couple-management'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
-    | '/onboarding/couple-link'
     | '/onboarding/mbti'
     | '/onboarding/my-code'
     | '/onboarding/nickname'
@@ -686,7 +653,6 @@ export interface FileRouteTypes {
     | '/my-page/couple-management'
     | '/onboarding/anniversary'
     | '/onboarding/complete'
-    | '/onboarding/couple-link'
     | '/onboarding/mbti'
     | '/onboarding/my-code'
     | '/onboarding/nickname'
@@ -720,7 +686,6 @@ export interface FileRouteTypes {
     | '/my-page/couple-management/'
     | '/onboarding/anniversary/'
     | '/onboarding/complete/'
-    | '/onboarding/couple-link/'
     | '/onboarding/mbti/'
     | '/onboarding/my-code/'
     | '/onboarding/nickname/'
@@ -776,15 +741,11 @@ const rootRouteChildren: RootRouteChildren = {
   TermsPrivacyPolicyPageRoute: TermsPrivacyPolicyPageRoute,
   AttachmentTestResultMyPageRoute: AttachmentTestResultMyPageRoute,
   AttachmentTestResultPartnerPageRoute: AttachmentTestResultPartnerPageRoute,
-  MyPageCoupleManagementAnniversaryPageRoute:
-    MyPageCoupleManagementAnniversaryPageRoute,
-  MyPageCoupleManagementPartnerCodePageRoute:
-    MyPageCoupleManagementPartnerCodePageRoute,
+  MyPageCoupleManagementAnniversaryPageRoute: MyPageCoupleManagementAnniversaryPageRoute,
+  MyPageCoupleManagementPartnerCodePageRoute: MyPageCoupleManagementPartnerCodePageRoute,
 }
 
-export const routeTree = rootRoute
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>()
 
 /* ROUTE_MANIFEST_START
 {
@@ -829,7 +790,6 @@ export const routeTree = rootRoute
       "children": [
         "/onboarding/anniversary/",
         "/onboarding/complete/",
-        "/onboarding/couple-link/",
         "/onboarding/mbti/",
         "/onboarding/my-code/",
         "/onboarding/nickname/",
@@ -890,10 +850,6 @@ export const routeTree = rootRoute
     },
     "/onboarding/complete/": {
       "filePath": "onboarding/complete/page.tsx",
-      "parent": "/onboarding"
-    },
-    "/onboarding/couple-link/": {
-      "filePath": "onboarding/couple-link/page.tsx",
       "parent": "/onboarding"
     },
     "/onboarding/mbti/": {
