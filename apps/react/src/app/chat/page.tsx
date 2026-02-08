@@ -21,6 +21,7 @@ import { DetailHeaderBar } from '@/shared/ui/header-bar'
 const searchSchema = z.object({
   chatId: z.number().optional(),
   fromHistory: z.boolean().optional(),
+  title: z.string().optional(),
 })
 
 export const Route = createFileRoute('/chat/')({
@@ -29,7 +30,7 @@ export const Route = createFileRoute('/chat/')({
 })
 
 function RouteComponent() {
-  const { chatId } = Route.useSearch()
+  const { chatId, title: chatTitle } = Route.useSearch()
   const goBack = useGoBack()
   const {
     chattingModal,
@@ -44,6 +45,7 @@ function RouteComponent() {
 
   const { data: currentChatRoom } = useCurrentChatRoomQuery(!chatId)
   const resolvedChatRoomId = chatId ?? currentChatRoom?.chatRoomId
+  const headerTitle = chatId ? (chatTitle ?? '') : (currentChatRoom?.title ?? '')
 
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useChatMessagesQuery({
     enabled: true,
@@ -126,7 +128,7 @@ function RouteComponent() {
   return (
     <Screen>
       <Screen.Header>
-        <DetailHeaderBar title={currentChatRoom?.title ?? ''} onBackClick={goBack} />
+        <DetailHeaderBar title={headerTitle} onBackClick={goBack} />
       </Screen.Header>
 
       <Screen.Content ref={scrollRef} className="no-bounce-scroll flex h-full flex-col bg-white">

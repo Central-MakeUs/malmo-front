@@ -44,7 +44,7 @@ export function RecentChatSection({ histories, totalHistoryCount }: RecentChatSe
               <div key={history.chatRoomId ?? index}>
                 <Link
                   to={history.chatRoomState === 'COMPLETED' ? '/chat/result' : '/chat'}
-                  search={{ chatId: history.chatRoomId!, fromHistory: true }}
+                  search={{ chatId: history.chatRoomId!, fromHistory: true, title: history.title ?? undefined }}
                   className="flex items-center justify-between"
                 >
                   <div className="flex min-w-0 flex-1 items-center gap-3">

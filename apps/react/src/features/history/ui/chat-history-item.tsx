@@ -41,7 +41,7 @@ export const LinkedChatHistoryItem = ({ history }: { history: ChatRoomListItem }
     <Link
       className="flex items-center justify-between gap-16 bg-white px-5 pt-6 pb-7"
       to={targetPath}
-      search={{ chatId: chatRoomId, fromHistory: true }}
+      search={{ chatId: chatRoomId, fromHistory: true, title: history.title ?? undefined }}
       onClick={handleClick}
     >
       <ChatHistoryItemBase history={history} />
