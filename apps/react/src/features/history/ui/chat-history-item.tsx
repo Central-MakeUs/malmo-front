@@ -1,42 +1,47 @@
-import { GetChatRoomListResponse } from '@data/user-api-axios/api'
 import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
 
 import CheckedCircle from '@/assets/icons/checked-circle.svg'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
-import { Badge } from '@/shared/ui'
+import { CHAT_ROOM_STATE, ChatRoomListItem } from '@/shared/types/chat'
 import { formatDate } from '@/shared/utils'
 
 // 공통 UI를 Base 컴포넌트로 추출
-const ChatHistoryItemBase = ({ history }: { history: GetChatRoomListResponse }) => (
-  <>
-    <div className="flex-1">
-      <div className="mb-[10px] flex gap-1">
-        <Badge variant="rasberry">{history.situationKeyword}</Badge>
-        <Badge variant="completed">{history.solutionKeyword}</Badge>
+const ChatHistoryItemBase = ({ history }: { history: ChatRoomListItem }) => {
+  const title = history.title === null ? '대화를 더 나누면 제목이 생성돼요' : (history.title ?? '대화 기록')
+  const timestamp = history.lastMessageSentTime ?? history.createdAt
+
+  return (
+    <>
+      <div className="flex-1">
+        <div className="mb-[10px]" />
+        <div className="pl-1">
+          <p className="label1-medium text-gray-iron-500">
+            {timestamp ? formatDate(timestamp, 'YYYY년 MM월 DD일') : ''}
+          </p>
+          <p className="body1-semibold break-keep">{title}</p>
+        </div>
       </div>
-      <div className="pl-1">
-        <p className="label1-medium text-gray-iron-500">{formatDate(history.createdAt, 'YYYY년 MM월 DD일')}</p>
-        <p className="body1-semibold break-keep">{history.totalSummary}</p>
-      </div>
-    </div>
-  </>
-)
+    </>
+  )
+}
 
 // '대화 기록' 페이지용 링크 아이템
-export const LinkedChatHistoryItem = ({ history }: { history: GetChatRoomListResponse }) => {
+export const LinkedChatHistoryItem = ({ history }: { history: ChatRoomListItem }) => {
   const chatRoomId = history.chatRoomId
 
   if (!chatRoomId) return null
 
   const handleClick = wrapWithTracking(BUTTON_NAMES.SELECT_HISTORY, CATEGORIES.MAIN)
+  const isCompleted = history.chatRoomState === CHAT_ROOM_STATE.Completed
+  const targetPath = isCompleted ? '/chat/result' : '/chat'
 
   return (
     <Link
       className="flex items-center justify-between gap-16 bg-white px-5 pt-6 pb-7"
-      to={'/chat/result'}
-      search={{ chatId: chatRoomId, fromHistory: true }}
+      to={targetPath}
+      search={{ chatId: chatRoomId, fromHistory: true, title: history.title ?? undefined }}
       onClick={handleClick}
     >
       <ChatHistoryItemBase history={history} />
@@ -58,7 +63,7 @@ export const SelectableChatHistoryItem = ({
   isSelected,
   onToggleSelect,
 }: {
-  history: GetChatRoomListResponse
+  history: ChatRoomListItem
   isSelected: boolean
   onToggleSelect: (id?: number) => void
 }) => (

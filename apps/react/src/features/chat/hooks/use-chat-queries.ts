@@ -1,5 +1,4 @@
 import {
-  ChatRoomStateDataChatRoomStateEnum,
   ChatRoomMessageData,
   ChatRoomMessageDataSenderTypeEnum,
   BaseListSwaggerResponseChatRoomMessageData,
@@ -7,52 +6,45 @@ import {
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery, InfiniteData } from '@tanstack/react-query'
 
 import chatService from '@/shared/services/chat.service'
-import historyService from '@/shared/services/history.service'
+import { queryKeys } from '@/shared/services/query-keys'
 
 export interface ChatMessageTempStatus {
   status?: 'failed' | 'sent' | 'pending' | 'queued'
 }
 
-const CONNECTED_REQUIRED_MESSAGE =
-  '알려줘서 고마워! 그런데, 본격적인 상담은 커플 연결이 완료된 후에 시작할 수 있어. 마이페이지에서 커플 코드를 연인에게 공유해봐!'
-
-export const useChatRoomStatusQuery = () => {
-  return useQuery(chatService.chatRoomStatusQuery())
+const isAscending = (list?: ChatRoomMessageData[]) => {
+  if (!list || list.length < 2) return true
+  const firstItem = list[0]
+  const lastItem = list[list.length - 1]
+  const first = firstItem?.createdAt ? new Date(firstItem.createdAt).getTime() : 0
+  const last = lastItem?.createdAt ? new Date(lastItem.createdAt).getTime() : 0
+  return first <= last
+}
+const getTargetPageIndex = (pages: Array<{ list?: ChatRoomMessageData[] }>) => {
+  if (pages.length === 0) return 0
+  const ascending = isAscending(pages[0]?.list)
+  return ascending ? pages.length - 1 : 0
 }
 
-export const useChatMessagesQuery = (
-  enabled: boolean,
-  chatStatus: ChatRoomStateDataChatRoomStateEnum | undefined,
-  chatId?: number
-) => {
-  if (chatId) {
-    return useInfiniteQuery({
-      ...historyService.historyMessagesQuery(chatId),
-    })
-  }
+export const useChatRoomStatusQuery = () => {
+  return useQuery({
+    ...chatService.chatRoomStatusQuery(),
+  })
+}
+
+export const useCurrentChatRoomQuery = (enabled = true) => {
+  return useQuery({
+    ...chatService.chatRoomStatusQuery(),
+    enabled,
+  })
+}
+
+export const useChatMessagesQuery = (options: { enabled: boolean; chatRoomId?: number }) => {
+  const { enabled, chatRoomId } = options
 
   return useInfiniteQuery({
-    ...chatService.chatMessagesQuery(),
-    select: (data) => {
-      if (chatStatus !== ChatRoomStateDataChatRoomStateEnum.Paused) return data
-
-      const newData = JSON.parse(JSON.stringify(data)) as InfiniteData<BaseListSwaggerResponseChatRoomMessageData>
-
-      const assistantMessage: ChatRoomMessageData = {
-        messageId: Date.now(),
-        content: CONNECTED_REQUIRED_MESSAGE,
-        createdAt: new Date().toISOString(),
-        senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
-      }
-
-      const firstPageList = newData.pages[0]?.list
-      if (firstPageList?.some((msg) => msg.content === CONNECTED_REQUIRED_MESSAGE)) return newData
-
-      newData.pages[0]?.list?.unshift(assistantMessage)
-
-      return newData
-    },
-    enabled,
+    ...chatService.chatMessagesQuery(chatRoomId ?? 0),
+    enabled: enabled && !!chatRoomId,
   })
 }
 
@@ -62,16 +54,16 @@ export const useChatMessagesQuery = (
 
 export const useSendMessageMutation = () => {
   const queryClient = useQueryClient()
-  const queryKey = chatService.chatMessagesQuery().queryKey
 
   return useMutation({
     ...chatService.sendMessageMutation(),
-    onMutate: async (newMessageText) => {
+    onMutate: async (params) => {
+      const queryKey = chatService.chatMessagesQuery(params.chatRoomId).queryKey
       await queryClient.cancelQueries({ queryKey })
       const previousMessages = queryClient.getQueryData(queryKey)
       const optimisticMessage: ChatRoomMessageData & ChatMessageTempStatus = {
         messageId: Date.now(),
-        content: newMessageText,
+        content: params.message,
         createdAt: new Date().toISOString(),
         senderType: ChatRoomMessageDataSenderTypeEnum.User,
         status: 'pending',
@@ -81,9 +73,14 @@ export const useSendMessageMutation = () => {
         const newData = oldData ? { ...oldData, pages: [...oldData.pages] } : { pages: [], pageParams: [] }
 
         if (newData.pages.length > 0) {
-          const firstPage = { ...newData.pages[0], list: [...(newData.pages[0]?.list ?? [])] }
-          firstPage.list.unshift(optimisticMessage)
-          newData.pages[0] = firstPage
+          const targetIndex = getTargetPageIndex(newData.pages)
+          const targetPage = { ...newData.pages[targetIndex], list: [...(newData.pages[targetIndex]?.list ?? [])] }
+          if (isAscending(targetPage.list)) {
+            targetPage.list.push(optimisticMessage)
+          } else {
+            targetPage.list.unshift(optimisticMessage)
+          }
+          newData.pages[targetIndex] = targetPage
         } else {
           newData.pages.push({
             list: [optimisticMessage],
@@ -96,11 +93,17 @@ export const useSendMessageMutation = () => {
         return newData
       })
 
-      return { previousMessages, optimisticMessageId: optimisticMessage.messageId }
+      return {
+        previousMessages,
+        optimisticMessageId: optimisticMessage.messageId,
+        chatRoomId: params.chatRoomId,
+      }
     },
 
     onSuccess: (data, variables, context) => {
-      // 낙관적 업데이트된 메시지의 상태를 'sent'로 변경
+      if (!context?.chatRoomId) return
+      const queryKey = chatService.chatMessagesQuery(context.chatRoomId).queryKey
+      const resolvedMessageId = data?.messageId
       queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
         if (!oldData) return oldData
         return {
@@ -108,17 +111,21 @@ export const useSendMessageMutation = () => {
           pages: oldData.pages.map((page) => ({
             ...page,
             list: page.list?.map((msg) =>
-              msg.messageId === context.optimisticMessageId ? { ...msg, status: 'sent' } : msg
+              msg.messageId === context.optimisticMessageId
+                ? { ...msg, status: 'sent', messageId: resolvedMessageId ?? msg.messageId }
+                : msg
             ),
           })),
         }
       })
+      queryClient.invalidateQueries({ queryKey: queryKeys.history.all })
     },
 
     onError: (err, newMessage, context) => {
       // 이전 메시지 상태로 복원하는 대신, 실패한 메시지 상태를 'failed'로 변경
 
-      if (context?.optimisticMessageId) {
+      if (context?.optimisticMessageId && context.chatRoomId) {
+        const queryKey = chatService.chatMessagesQuery(context.chatRoomId).queryKey
         queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
           if (!oldData) return oldData
           return {

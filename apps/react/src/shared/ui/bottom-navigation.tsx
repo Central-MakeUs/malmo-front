@@ -5,8 +5,6 @@ import ChatHistoryActiveIcon from '@/assets/icons/nav/chat-history-active.svg'
 import ChatHistoryIcon from '@/assets/icons/nav/chat-history.svg'
 import HomeActiveIcon from '@/assets/icons/nav/home-active.svg'
 import HomeIcon from '@/assets/icons/nav/home.svg'
-import MoodJournalActiveIcon from '@/assets/icons/nav/mood-journal-active.svg'
-import MoodJournalIcon from '@/assets/icons/nav/mood-journal.svg'
 import UserActiveIcon from '@/assets/icons/nav/user-active.svg'
 import UserIcon from '@/assets/icons/nav/user.svg'
 // 액티브 아이콘들
@@ -34,13 +32,6 @@ const navigationItems: NavigationItem[] = [
     icon: ChatHistoryIcon,
     activeIcon: ChatHistoryActiveIcon,
     path: '/history',
-  },
-  {
-    id: 'question',
-    label: '마음도감',
-    icon: MoodJournalIcon,
-    activeIcon: MoodJournalActiveIcon,
-    path: '/question',
   },
   {
     id: 'my-page',

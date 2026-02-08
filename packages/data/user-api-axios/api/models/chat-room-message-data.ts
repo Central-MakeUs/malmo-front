@@ -32,7 +32,10 @@ export interface ChatRoomMessageData {
    * 채팅 생성 시간
    */
   createdAt?: string
-  saved?: boolean
+  /**
+   * 해당 메시지에 대한 북마크 ID (없으면 null)
+   */
+  bookmarkId?: number
 }
 
 export const ChatRoomMessageDataSenderTypeEnum = {

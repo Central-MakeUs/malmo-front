@@ -1,12 +1,4 @@
 export const queryKeys = {
-  // === Question 관련 ===
-  question: {
-    all: ['question'] as const,
-    today: () => [...queryKeys.question.all, 'today'] as const,
-    past: (level: number) => [...queryKeys.question.all, 'past', level] as const,
-    detail: (questionId: number) => [...queryKeys.question.all, 'detail', questionId] as const,
-  },
-
   // === Member 관련 ===
   member: {
     all: ['member'] as const,
@@ -28,6 +20,20 @@ export const queryKeys = {
     list: (keyword?: string) => [...queryKeys.history.all, 'list', keyword] as const,
     detail: (chatRoomId: number) => [...queryKeys.history.all, 'detail', chatRoomId] as const,
     summary: (chatRoomId: number) => [...queryKeys.history.all, 'summary', chatRoomId] as const,
+  },
+
+  // === Bookmark 관련 ===
+  bookmark: {
+    all: ['bookmark'] as const,
+    list: (chatRoomId: number, params?: { page?: number; size?: number; sort?: string[] }) =>
+      [
+        ...queryKeys.bookmark.all,
+        'list',
+        chatRoomId,
+        params?.page ?? 0,
+        params?.size ?? 0,
+        params?.sort?.join(',') ?? '',
+      ] as const,
   },
 
   // === Terms 관련 ===

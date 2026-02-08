@@ -1,12 +1,9 @@
-import { ChatRoomStateDataChatRoomStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { LucideSearch } from 'lucide-react'
 import { useState } from 'react'
 
-import ChatBubble from '@/assets/icons/chat.svg'
 import emptyImage from '@/assets/images/characters/empty.png'
 import noResultImage from '@/assets/images/characters/no-result.png'
-import { useChatRoomStatusQuery } from '@/features/chat/hooks/use-chat-queries'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
 import { EmptyState, LinkedChatHistoryItem } from '@/features/history/ui/chat-history-item'
 import { wrapWithTracking } from '@/shared/analytics'
@@ -14,7 +11,6 @@ import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useDebounce } from '@/shared/hooks/use-debounce'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 import { Screen } from '@/shared/layout/screen'
-import { cn } from '@/shared/lib/cn'
 import { BottomNavigation } from '@/shared/ui'
 import { HomeHeaderBar } from '@/shared/ui/header-bar'
 import { Spinner } from '@/shared/ui/spinner'
@@ -24,19 +20,14 @@ export const Route = createFileRoute('/history/')({
 })
 
 function RouteComponent() {
-  const { data: chatStatus, isSuccess } = useChatRoomStatusQuery()
   const [keyword, setKeyword] = useState('')
   const debouncedKeyword = useDebounce(keyword, 750)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching } = useChatHistoryQuery({
     keyword: debouncedKeyword,
-    isSuccess,
+    isSuccess: true,
   })
   const { ref } = useInfiniteScroll({ hasNextPage, isFetchingNextPage, fetchNextPage })
-
-  const activeChat =
-    chatStatus === ChatRoomStateDataChatRoomStateEnum.NeedNextQuestion ||
-    chatStatus === ChatRoomStateDataChatRoomStateEnum.Alive
 
   const histories = data?.pages.flatMap((page) => page?.list || []) ?? []
   const isLoading = isFetching && !isFetchingNextPage && histories.length === 0
@@ -49,8 +40,6 @@ function RouteComponent() {
   }
 
   const handleDeleteMode = wrapWithTracking(BUTTON_NAMES.DELETE_MODE, CATEGORIES.MAIN, () => {})
-
-  const handleChatFAB = wrapWithTracking(BUTTON_NAMES.OPEN_CHAT_FAB, CATEGORIES.MAIN, () => {})
 
   return (
     <Screen>
@@ -112,22 +101,6 @@ function RouteComponent() {
           </>
         )}
       </Screen.Content>
-
-      <Link to={'/chat'} onClick={handleChatFAB}>
-        <div className="fixed right-5 bottom-[calc(var(--safe-bottom)+var(--bottom-nav-h)+16px)] z-50 flex h-[52px] w-[52px] items-center justify-center rounded-full bg-gray-iron-700">
-          <div
-            className={cn(
-              'absolute top-[-42px] right-0 rounded-[17.5px] bg-gray-iron-900 px-4 py-[6px] whitespace-nowrap',
-              "before:absolute before:right-[18px] before:bottom-[-4.5px] before:h-3 before:w-3 before:-translate-x-1/2 before:rotate-45 before:rounded-sm before:bg-inherit before:content-['']"
-            )}
-          >
-            <p className="label1-medium text-gray-iron-200">
-              {activeChat ? '진행 중인 대화가 있어요!' : '모모와 고민 상담하러 가기'}
-            </p>
-          </div>
-          <ChatBubble className="h-6 w-6 drop-shadow-[1px_2px_12px_rgba(0,0,0,0.15)]" />
-        </div>
-      </Link>
 
       <BottomNavigation />
     </Screen>

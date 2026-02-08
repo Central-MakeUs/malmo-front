@@ -4,6 +4,11 @@ import { useCallback, useLayoutEffect, useRef, useEffect } from 'react'
 
 import bridge from '@/shared/bridge'
 
+const BOTTOM_STICK_THRESHOLD = 24
+
+const isNearBottom = (element: HTMLElement) =>
+  element.scrollHeight - element.scrollTop - element.clientHeight <= BOTTOM_STICK_THRESHOLD
+
 function usePrevious<T>(value: T): T | undefined {
   const ref = useRef<T | undefined>(undefined)
   useEffect(() => {
@@ -30,6 +35,8 @@ export function useChatScroll({
   awaitingResponse,
 }: UseChatScrollProps) {
   const keyboardHeight = useBridge(bridge.store, (state) => state.keyboardHeight)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const isAtBottomRef = useRef(true)
 
   useEffect(() => {
     if (!('visualViewport' in window)) return
@@ -43,7 +50,8 @@ export function useChatScroll({
       if (!scrollRef.current) return
 
       if (heightReduced && keyboardHeight === 0) {
-        // Android 키보드가 올라오면 바로 최하단으로 스크롤
+        if (!isAtBottomRef.current) return
+        // Android 키보드가 올라오면 최하단 유지
         requestAnimationFrame(() => {
           scrollRef.current!.scrollTop = scrollRef.current!.scrollHeight
         })
@@ -54,7 +62,19 @@ export function useChatScroll({
     return () => viewport.removeEventListener('resize', handleResize)
   }, [keyboardHeight])
 
-  const scrollRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const scrollContainer = scrollRef.current
+    if (!scrollContainer) return
+
+    const handleScroll = () => {
+      isAtBottomRef.current = isNearBottom(scrollContainer)
+    }
+
+    handleScroll()
+    scrollContainer.addEventListener('scroll', handleScroll)
+    return () => scrollContainer.removeEventListener('scroll', handleScroll)
+  }, [])
+
   const scrollHeightRef = useRef(0)
   const prevIsFetchingNextPage = usePrevious(isFetchingNextPage)
   const prevKeyboardHeight = usePrevious(keyboardHeight)
@@ -77,7 +97,6 @@ export function useChatScroll({
   }, [])
 
   useLayoutEffect(() => {
-    if (chatId) return
     const scrollContainer = scrollRef.current
     if (!scrollContainer) return
 
@@ -90,6 +109,7 @@ export function useChatScroll({
 
     const keyboardHeightChanged = typeof prevKeyboardHeight !== 'undefined' && prevKeyboardHeight !== keyboardHeight
     if (keyboardHeightChanged) {
+      if (!isAtBottomRef.current) return
       setTimeout(() => {
         smoothScrollTo(scrollContainer, scrollContainer.scrollHeight, 250)
       }, 0)

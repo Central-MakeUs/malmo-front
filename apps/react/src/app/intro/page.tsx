@@ -4,7 +4,6 @@ import z from 'zod'
 
 import attachmentTypeImage from '@/assets/images/introduce/attachment-type.png'
 import coupleConsultationImage from '@/assets/images/introduce/couple-consultation.png'
-import dailyQuestionImage from '@/assets/images/introduce/daily-question.png'
 import momoIntroImage from '@/assets/images/introduce/momo-intro.png'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
@@ -36,11 +35,6 @@ const introPages: IntroPageData[] = [
     image: coupleConsultationImage,
     title: '애착유형을 바탕으로 \n어떤 연애 고민이든 상담해요',
     description: '상대의 애착유형을 몰라도 AI가 추측해 상담해요',
-  },
-  {
-    image: dailyQuestionImage,
-    title: '마음 질문으로 성향을 파악해\n더 정확한 상담을 제공해요',
-    description: '마음 질문은 커플 연동 이후에 사용할 수 있어요',
   },
 ]
 
