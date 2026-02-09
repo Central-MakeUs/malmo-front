@@ -10,11 +10,9 @@ import { useSSESubscription } from '@/shared/contexts/sse-context'
 import chatService from '@/shared/services/chat.service'
 
 import { useCurrentChatRoomQuery, useSendMessageMutation, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
-import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
 import { groupSentences } from '../util/chat-format'
 
 interface ChattingContextType {
-  chattingModal: UseChattingModalReturn
   sendingMessage: boolean
   streamingMessage: ChatRoomMessageData | null
   awaitingResponse: boolean
@@ -35,8 +33,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
   const { data: activeChatRoom } = useCurrentChatRoomQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
-
-  const chattingModal = useChattingModal(!!activeChatRoom?.chatRoomId)
   const activeChatRoomIdRef = useRef<number | undefined>(activeChatRoom?.chatRoomId)
 
   const setActiveChatRoomId = useCallback((chatRoomId?: number) => {
@@ -226,7 +222,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   return (
     <ChattingContext.Provider
       value={{
-        chattingModal,
         sendingMessage,
         streamingMessage,
         awaitingResponse,
