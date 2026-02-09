@@ -44,9 +44,13 @@ function RelationshipStatusEditPage() {
     },
   })
 
-  const handleSave = wrapWithTracking(BUTTON_NAMES.SAVE_PROFILE_RELATIONSHIP_STATUS, CATEGORIES.PROFILE, () => {
+  const trackSave = wrapWithTracking(BUTTON_NAMES.SAVE_PROFILE_RELATIONSHIP_STATUS, CATEGORIES.PROFILE)
+
+  const handleSubmit = (value: string) => {
     if (updateMutation.isPending) return
-  })
+    trackSave()
+    updateMutation.mutate({ relationshipStatus: value as RelationshipStatus })
+  }
 
   return (
     <RelationshipStatusForm
@@ -63,11 +67,7 @@ function RelationshipStatusEditPage() {
       initialValue={(userInfo.relationshipStatus as RelationshipStatus | undefined) ?? null}
       submitText="저장"
       isSubmitting={updateMutation.isPending}
-      onSubmit={(value) => {
-        if (updateMutation.isPending) return
-        handleSave()
-        updateMutation.mutate({ relationshipStatus: value as RelationshipStatus })
-      }}
+      onSubmit={handleSubmit}
     />
   )
 }

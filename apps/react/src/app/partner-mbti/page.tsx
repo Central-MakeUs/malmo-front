@@ -34,9 +34,13 @@ function PartnerMbtiEditPage() {
     },
   })
 
-  const handleSave = wrapWithTracking(BUTTON_NAMES.SAVE_PROFILE_PARTNER_MBTI, CATEGORIES.PROFILE, () => {
+  const trackSave = wrapWithTracking(BUTTON_NAMES.SAVE_PROFILE_PARTNER_MBTI, CATEGORIES.PROFILE)
+
+  const handleSubmit = (mbti: string) => {
     if (updateMutation.isPending) return
-  })
+    trackSave()
+    updateMutation.mutate({ otherPersonalityType: mbti })
+  }
 
   return (
     <MbtiForm
@@ -51,11 +55,7 @@ function PartnerMbtiEditPage() {
       initialValue={userInfo.otherPersonalityType}
       submitText="저장"
       isSubmitting={updateMutation.isPending}
-      onSubmit={(mbti) => {
-        if (updateMutation.isPending) return
-        handleSave()
-        updateMutation.mutate({ otherPersonalityType: mbti })
-      }}
+      onSubmit={handleSubmit}
     />
   )
 }

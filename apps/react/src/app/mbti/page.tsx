@@ -34,9 +34,13 @@ function MbtiEditPage() {
     },
   })
 
-  const handleSave = wrapWithTracking(BUTTON_NAMES.SAVE_PROFILE_MBTI, CATEGORIES.PROFILE, () => {
+  const trackSave = wrapWithTracking(BUTTON_NAMES.SAVE_PROFILE_MBTI, CATEGORIES.PROFILE)
+
+  const handleSubmit = (mbti: string) => {
     if (updateMutation.isPending) return
-  })
+    trackSave()
+    updateMutation.mutate({ personalityType: mbti })
+  }
 
   return (
     <MbtiForm
@@ -51,11 +55,7 @@ function MbtiEditPage() {
       initialValue={userInfo.personalityType}
       submitText="저장"
       isSubmitting={updateMutation.isPending}
-      onSubmit={(mbti) => {
-        if (updateMutation.isPending) return
-        handleSave()
-        updateMutation.mutate({ personalityType: mbti })
-      }}
+      onSubmit={handleSubmit}
     />
   )
 }
