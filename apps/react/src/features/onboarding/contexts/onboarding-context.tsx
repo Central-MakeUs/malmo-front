@@ -8,7 +8,7 @@ import type { SignUpRequestDto } from '@data/user-api-axios/api'
 // import { useAuth } from '@/features/auth'
 
 // 연애 상태 타입 정의
-export type RelationshipStatus = 'IN_RELATIONSHIP' | 'SEEING_SOMEONE' | 'BREAKUP'
+export type RelationshipStatus = NonNullable<SignUpRequestDto['relationshipStatus']>
 
 // 온보딩 데이터 타입 정의
 interface OnboardingData {

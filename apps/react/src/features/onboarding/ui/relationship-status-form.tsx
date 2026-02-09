@@ -60,7 +60,7 @@ export function RelationshipStatusForm({
               key={option.value}
               onClick={() => setSelected(option.value)}
               className={cn(
-                'flex w-full items-center rounded-[10px] border-1 px-5 py-4 text-left transition-all',
+                'flex w-full items-center rounded-[10px] border px-5 py-4 text-left transition-all',
                 selected === option.value ? 'border-malmo-rasberry-500' : 'border-gray-neutral-300'
               )}
             >

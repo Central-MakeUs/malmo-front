@@ -81,16 +81,27 @@ export function MbtiForm({
   onSubmit,
   onBack,
 }: MbtiFormProps) {
+  const emptySelections: MbtiSelections = {
+    energy: null,
+    perception: null,
+    judgment: null,
+    lifestyle: null,
+  }
+
   const parseExistingMbti = (): MbtiSelections => {
-    if (initialValue && initialValue.length === 4) {
-      return {
-        energy: initialValue[0] as EnergyType,
-        perception: initialValue[1] as PerceptionType,
-        judgment: initialValue[2] as JudgmentType,
-        lifestyle: initialValue[3] as LifestyleType,
-      }
+    if (!initialValue) return emptySelections
+
+    const normalized = initialValue.trim().toUpperCase()
+    if (!/^[EI][SN][TF][JP]$/.test(normalized)) {
+      return emptySelections
     }
-    return { energy: null, perception: null, judgment: null, lifestyle: null }
+
+    return {
+      energy: normalized[0] as EnergyType,
+      perception: normalized[1] as PerceptionType,
+      judgment: normalized[2] as JudgmentType,
+      lifestyle: normalized[3] as LifestyleType,
+    }
   }
 
   const [selections, setSelections] = useState<MbtiSelections>(parseExistingMbti())
@@ -133,7 +144,7 @@ export function MbtiForm({
                     key={option.value}
                     onClick={() => handleSelect(dimension.key, option.value)}
                     className={cn(
-                      'flex-1 rounded-[10px] border-1 py-4 text-center transition-all',
+                      'flex-1 rounded-[10px] border py-4 text-center transition-all',
                       selections[dimension.key] === option.value
                         ? 'border-malmo-rasberry-500'
                         : 'border-gray-neutral-300'

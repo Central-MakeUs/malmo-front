@@ -3,6 +3,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useOnboarding, type RelationshipStatus } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { RelationshipStatusForm } from '@/features/onboarding/ui/relationship-status-form'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 
 export const Route = createFileRoute('/onboarding/relationship-status/')({
   component: RelationshipStatusPage,
@@ -21,6 +23,22 @@ function RelationshipStatusPage() {
   const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
   const { data, updateRelationshipStatus } = useOnboarding()
 
+  const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_RELATIONSHIP_STATUS, CATEGORIES.ONBOARDING, (value: string) => {
+    updateRelationshipStatus(value as RelationshipStatus)
+    goToNextStep()
+  })
+
+  const handleBack = wrapWithTracking(
+    BUTTON_NAMES.BACK_RELATIONSHIP_STATUS,
+    CATEGORIES.ONBOARDING,
+    (value: string | null) => {
+      if (value) {
+        updateRelationshipStatus(value as RelationshipStatus)
+      }
+      goToPreviousStep()
+    }
+  )
+
   return (
     <RelationshipStatusForm
       title={
@@ -34,16 +52,8 @@ function RelationshipStatusPage() {
       options={RELATIONSHIP_OPTIONS}
       initialValue={data.relationshipStatus}
       submitText="다음"
-      onSubmit={(value) => {
-        updateRelationshipStatus(value as RelationshipStatus)
-        goToNextStep()
-      }}
-      onBack={(value) => {
-        if (value) {
-          updateRelationshipStatus(value as RelationshipStatus)
-        }
-        goToPreviousStep()
-      }}
+      onSubmit={handleNext}
+      onBack={handleBack}
     />
   )
 }

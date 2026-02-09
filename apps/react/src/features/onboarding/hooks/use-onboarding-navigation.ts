@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouterState } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
@@ -27,12 +27,13 @@ type OnboardingStep = (typeof BASE_STEPS)[number] | (typeof COUPLE_STEPS)[number
 
 export function useOnboardingNavigation() {
   const navigate = useNavigate()
+  const { location } = useRouterState()
   const { refreshUserInfo } = useAuth()
   const { data } = useOnboarding()
 
   // 연애 상태에 따른 전체 스텝 계산
   const getOnboardingSteps = (): OnboardingStep[] => {
-    const currentPath = window.location.pathname.replace(/\/$/, '')
+    const currentPath = location.pathname.replace(/\/$/, '')
     const isCoupleFlowPath = COUPLE_STEPS.includes(currentPath as (typeof COUPLE_STEPS)[number])
 
     if (data.relationshipStatus === 'IN_RELATIONSHIP' || isCoupleFlowPath) {
@@ -46,7 +47,7 @@ export function useOnboardingNavigation() {
   // 현재 경로에 따른 단계 인덱스 찾기
   const getCurrentStepIndex = (): number => {
     // trailing slash 제거 후 비교
-    const currentPath = window.location.pathname.replace(/\/$/, '')
+    const currentPath = location.pathname.replace(/\/$/, '')
     return ONBOARDING_STEPS.findIndex((step) => currentPath === step)
   }
 
@@ -57,7 +58,7 @@ export function useOnboardingNavigation() {
 
   // 다음 단계로 이동
   const goToNextStep = () => {
-    const currentPath = window.location.pathname.replace(/\/$/, '')
+    const currentPath = location.pathname.replace(/\/$/, '')
 
     // 상대방 MBTI 페이지 이후 조건부 라우팅
     if (currentPath === '/onboarding/partner-mbti') {
@@ -81,7 +82,7 @@ export function useOnboardingNavigation() {
 
   // 이전 단계로 이동
   const goToPreviousStep = () => {
-    const currentPath = window.location.pathname.replace(/\/$/, '')
+    const currentPath = location.pathname.replace(/\/$/, '')
 
     // 완료 페이지에서 뒤로가기 시 조건부 라우팅
     if (currentPath === '/onboarding/complete') {
