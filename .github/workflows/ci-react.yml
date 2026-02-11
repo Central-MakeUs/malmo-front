@@ -1,0 +1,44 @@
+name: React CI
+
+on:
+  push:
+    branches: ['**']
+    paths:
+      - 'apps/react/**'
+      - 'packages/**'
+      - '.github/workflows/ci-react.yml'
+  pull_request:
+    branches: ['**']
+    paths:
+      - 'apps/react/**'
+      - 'packages/**'
+      - '.github/workflows/ci-react.yml'
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm --filter react check-types
+
+      - name: Lint check
+        run: pnpm --filter react lint
+
+      - name: Checks completed
+        run: |
+          echo "Type and Lint checks passed for branch ${{ github.ref_name }}"

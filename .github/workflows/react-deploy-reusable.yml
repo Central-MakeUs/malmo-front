@@ -1,0 +1,123 @@
+name: React Deploy (Reusable)
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment label (dev or prod)'
+        type: string
+        required: true
+      discord_embed_title:
+        description: 'Discord embed title'
+        type: string
+        required: true
+      discord_embed_color:
+        description: 'Discord embed color'
+        type: string
+        required: true
+    secrets:
+      vite_api_url:
+        required: true
+      s3_bucket_name:
+        required: true
+      cloudfront_distribution_id:
+        required: true
+      aws_access_key_id:
+        required: true
+      aws_secret_access_key:
+        required: true
+      aws_region:
+        required: true
+      vite_amplitude_api_key:
+        required: true
+      vite_sentry_dsn:
+        required: true
+      discord_webhook_url:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm --filter react check-types
+
+      - name: Lint check
+        run: pnpm --filter react lint
+
+      - name: Build React app
+        run: pnpm --filter react build
+        env:
+          VITE_API_URL: ${{ secrets.vite_api_url }}
+          VITE_AMPLITUDE_API_KEY: ${{ secrets.vite_amplitude_api_key }}
+          VITE_SENTRY_DSN: ${{ secrets.vite_sentry_dsn }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
+          aws-region: ${{ secrets.aws_region }}
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync apps/react/dist/ s3://${{ secrets.s3_bucket_name }} --delete
+        env:
+          AWS_DEFAULT_REGION: ${{ secrets.aws_region }}
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.cloudfront_distribution_id }} \
+            --paths "/*"
+        env:
+          AWS_DEFAULT_REGION: ${{ secrets.aws_region }}
+
+      - name: Build success
+        run: |
+          echo "React app build completed successfully (${{ inputs.environment }})"
+          du -sh apps/react/dist/
+
+      - name: Deployment success
+        run: |
+          echo "React app successfully deployed to AWS (${{ inputs.environment }})"
+
+      - name: Extract PR Title
+        id: extract_pr_title
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+          HEAD_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          TITLE="$HEAD_MSG"
+          if [ -n "$TITLE" ]; then
+            TITLE=$(echo "$TITLE" | tail -n 1)
+          else
+            TITLE="manual dispatch (${REF_NAME})"
+          fi
+          echo "pr_title=$TITLE" >> "$GITHUB_OUTPUT"
+
+      - name: Send Discord Notification for Deployment Success
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.discord_webhook_url }}
+          embed-title: ${{ inputs.discord_embed_title }}
+          embed-description: |
+            **PR:** `${{ steps.extract_pr_title.outputs.pr_title }}`
+            **실행자:** `${{ github.actor }}`
+          embed-color: ${{ inputs.discord_embed_color }}
