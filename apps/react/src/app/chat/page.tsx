@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useLayoutEffect, useMemo, useState } from 'react'
+import { useLayoutEffect, useMemo, useState, useEffect } from 'react'
 import { z } from 'zod'
+import { useQueryClient } from '@tanstack/react-query'
 
-import { useAuth } from '@/features/auth'
 import { BookmarkSheet, useBookmarkSelection } from '@/features/bookmark'
 import { useChatting } from '@/features/chat/context/chatting-context'
 import { useChatMessagesQuery, useCurrentChatRoomQuery } from '@/features/chat/hooks/use-chat-queries'
@@ -17,6 +17,7 @@ import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 import { Screen } from '@/shared/layout/screen'
 import { useGoBack } from '@/shared/navigation/use-go-back'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { queryKeys } from '@/shared/services/query-keys'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
@@ -31,15 +32,15 @@ export const Route = createFileRoute('/chat/')({
 function RouteComponent() {
   const { chatId } = Route.useSearch()
   const goBack = useGoBack()
+  const queryClient = useQueryClient()
   const {
-    chattingModal,
     streamingMessage,
+    streamingChatRoomId,
     awaitingResponse,
     sendingMessage,
     sendMessageWithReconnect,
     setActiveChatRoomId,
   } = useChatting()
-  const auth = useAuth()
   const [isBookmarkSheetOpen, setIsBookmarkSheetOpen] = useState(false)
 
   const { data: currentChatRoom } = useCurrentChatRoomQuery(!chatId)
@@ -54,8 +55,7 @@ function RouteComponent() {
   const [pendingScrollMessageId, setPendingScrollMessageId] = useState<number | null>(null)
 
   const messages = useMemo(() => {
-    if (!chatId && chattingModal.showChattingTutorial) return []
-    if (!data || !auth.userInfo.loveTypeCategory) return []
+    if (!data) return []
     const allMessages = data.pages.flatMap((page) => page?.list ?? [])
     return [...allMessages].sort((a, b) => {
       const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0
@@ -65,21 +65,32 @@ function RouteComponent() {
       const bId = b.messageId ?? 0
       return aId - bId
     })
-  }, [data, chatId, chattingModal.showChattingTutorial, auth.userInfo.loveTypeCategory])
+  }, [data, chatId])
+
+  const isStreamingForThisChat = !!resolvedChatRoomId && streamingChatRoomId === resolvedChatRoomId
 
   const scrollRef = useChatScroll({
     chatId,
     isFetchingNextPage,
-    sendingMessage,
+    sendingMessage: isStreamingForThisChat ? sendingMessage : false,
     messages,
-    streamingMessage,
-    awaitingResponse,
+    streamingMessage: isStreamingForThisChat ? streamingMessage : null,
+    awaitingResponse: isStreamingForThisChat ? awaitingResponse : false,
   })
 
   const { isAtBottom, scrollToBottom } = useScrollToBottom({
     scrollRef,
     deps: [messages.length, streamingMessage?.content],
   })
+
+  useEffect(() => {
+    return () => {
+      if (!resolvedChatRoomId) return
+      queryClient.invalidateQueries({
+        queryKey: [...queryKeys.chat.messages(), resolvedChatRoomId],
+      })
+    }
+  }, [queryClient, resolvedChatRoomId])
 
   useLayoutEffect(() => {
     if (resolvedChatRoomId) {
@@ -138,8 +149,8 @@ function RouteComponent() {
           hasNextPage={hasNextPage}
           isFetchingNextPage={isFetchingNextPage}
           infiniteScrollRef={ref}
-          awaitingResponse={awaitingResponse}
-          streamingMessage={streamingMessage}
+          awaitingResponse={isStreamingForThisChat ? awaitingResponse : false}
+          streamingMessage={isStreamingForThisChat ? streamingMessage : null}
           onRetry={handleRetry}
         />
       </Screen.Content>
@@ -159,7 +170,6 @@ function RouteComponent() {
         chatRoomId={resolvedChatRoomId}
         onSelectBookmark={handleSelectBookmark}
       />
-      {!chatId && chattingModal.showChattingTutorial && chattingModal.chattingTutorialModal()}
     </Screen>
   )
 }
