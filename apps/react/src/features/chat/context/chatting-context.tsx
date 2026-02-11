@@ -10,12 +10,13 @@ import { useSSESubscription } from '@/shared/contexts/sse-context'
 import chatService from '@/shared/services/chat.service'
 
 import { useCurrentChatRoomQuery, useSendMessageMutation, useUpgradeChatRoomMutation } from '../hooks/use-chat-queries'
+import { useChattingModal, UseChattingModalReturn } from '../hooks/use-chatting-modal'
 import { groupSentences } from '../util/chat-format'
 
 interface ChattingContextType {
+  chattingModal: UseChattingModalReturn
   sendingMessage: boolean
   streamingMessage: ChatRoomMessageData | null
-  streamingChatRoomId: number | null
   awaitingResponse: boolean
   sendMessageWithReconnect: (message: string, chatRoomId?: number) => Promise<void>
   setActiveChatRoomId: (chatRoomId?: number) => void
@@ -29,23 +30,18 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient()
   const [sendingMessage, setSendingMessage] = useState<boolean>(false)
   const [streamingMessage, setStreamingMessage] = useState<ChatRoomMessageData | null>(null)
-  const [streamingChatRoomId, setStreamingChatRoomId] = useState<number | null>(null)
   const [awaitingResponse, setAwaitingResponse] = useState<boolean>(false)
   const { mutate: sendMessage } = useSendMessageMutation()
 
   const { data: activeChatRoom } = useCurrentChatRoomQuery()
   const { mutate: upgradeChatRoom } = useUpgradeChatRoomMutation()
+
+  const chattingModal = useChattingModal(!!activeChatRoom?.chatRoomId)
   const activeChatRoomIdRef = useRef<number | undefined>(activeChatRoom?.chatRoomId)
-  const streamingChatRoomIdRef = useRef<number | null>(null)
 
   const setActiveChatRoomId = useCallback((chatRoomId?: number) => {
     if (!chatRoomId) return
     activeChatRoomIdRef.current = chatRoomId
-  }, [])
-
-  const setStreamingTargetChatRoomId = useCallback((chatRoomId: number | null) => {
-    streamingChatRoomIdRef.current = chatRoomId
-    setStreamingChatRoomId(chatRoomId)
   }, [])
 
   const isAscending = (list?: ChatRoomMessageData[]) => {
@@ -64,12 +60,12 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
   const handleChatResponse = useCallback(
     (chunk: string) => {
-      const targetChatRoomId = streamingChatRoomIdRef.current ?? activeChatRoomIdRef.current ?? activeChatRoom?.chatRoomId
-      if (!targetChatRoomId) return
+      const activeChatRoomId = activeChatRoomIdRef.current ?? activeChatRoom?.chatRoomId
+      if (!activeChatRoomId) return
 
       if (chunk.startsWith(TERMINATION_MESSAGE_START)) {
         setAwaitingResponse(false)
-        const queryKey = chatService.chatMessagesQuery(targetChatRoomId).queryKey
+        const queryKey = chatService.chatMessagesQuery(activeChatRoomId).queryKey
 
         const terminationMessage: ChatRoomMessageData = {
           messageId: Date.now(),
@@ -100,7 +96,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
         // 다른 스트리밍 관련 상태는 확실하게 초기화
         setStreamingMessage(null)
-        setStreamingTargetChatRoomId(null)
         return // 여기서 함수 실행 종료
       }
 
@@ -115,14 +110,14 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         return { ...baseMessage, content: (prev?.content || '') + chunk }
       })
     },
-    [activeChatRoom?.chatRoomId, queryClient, setStreamingTargetChatRoomId]
+    [activeChatRoom?.chatRoomId, queryClient]
   )
 
   const handleResponseId = useCallback(
     (messageIds: number[]) => {
-      const targetChatRoomId = streamingChatRoomIdRef.current ?? activeChatRoomIdRef.current ?? activeChatRoom?.chatRoomId
-      if (!targetChatRoomId) return
-      const queryKey = chatService.chatMessagesQuery(targetChatRoomId).queryKey
+      const activeChatRoomId = activeChatRoomIdRef.current ?? activeChatRoom?.chatRoomId
+      if (!activeChatRoomId) return
+      const queryKey = chatService.chatMessagesQuery(activeChatRoomId).queryKey
 
       const sanitizedIds = messageIds.filter((id) => Number.isFinite(id))
       const messageGroups = groupSentences(streamingMessage?.content ?? '', 3)
@@ -167,9 +162,8 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       }
       setSendingMessage(false)
       setAwaitingResponse(false)
-      setStreamingTargetChatRoomId(null)
     },
-    [activeChatRoom?.chatRoomId, queryClient, setStreamingTargetChatRoomId, streamingMessage]
+    [activeChatRoom?.chatRoomId, queryClient, streamingMessage]
   )
 
   const handleLevelFinished = useCallback(() => {
@@ -184,8 +178,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       setSendingMessage(false)
       setAwaitingResponse(false)
       setStreamingMessage(null)
-      setStreamingTargetChatRoomId(null)
-    }, [setStreamingTargetChatRoomId]),
+    }, []),
   })
 
   const sendMessageWithReconnect = useCallback(
@@ -195,15 +188,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         setAwaitingResponse(true)
         setStreamingMessage(null)
 
-        const chatRoomId = targetChatRoomId ?? activeChatRoom?.chatRoomId
-        if (!chatRoomId) {
-          setSendingMessage(false)
-          setAwaitingResponse(false)
-          setStreamingTargetChatRoomId(null)
-          return
-        }
-        setStreamingTargetChatRoomId(chatRoomId)
-
         // 1. 기존 SSE 연결 종료
         disconnect()
 
@@ -211,6 +195,12 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         await reconnect()
 
         // 3. 연결 완료 후 메시지 전송
+        const chatRoomId = targetChatRoomId ?? activeChatRoom?.chatRoomId
+        if (!chatRoomId) {
+          setSendingMessage(false)
+          setAwaitingResponse(false)
+          return
+        }
         activeChatRoomIdRef.current = chatRoomId
 
         sendMessage(
@@ -220,7 +210,6 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
               setSendingMessage(false)
               setAwaitingResponse(false)
               setStreamingMessage(null)
-              setStreamingTargetChatRoomId(null)
             },
           }
         )
@@ -229,18 +218,17 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         setSendingMessage(false) // 에러 발생 시 전송 상태 해제
         setAwaitingResponse(false)
         setStreamingMessage(null)
-        setStreamingTargetChatRoomId(null)
       }
     },
-    [activeChatRoom?.chatRoomId, disconnect, reconnect, sendMessage, setStreamingTargetChatRoomId]
+    [activeChatRoom?.chatRoomId, disconnect, reconnect, sendMessage]
   )
 
   return (
     <ChattingContext.Provider
       value={{
+        chattingModal,
         sendingMessage,
         streamingMessage,
-        streamingChatRoomId,
         awaitingResponse,
         sendMessageWithReconnect,
         setActiveChatRoomId,

@@ -1,19 +1,27 @@
-import { useLocation } from '@tanstack/react-router'
+import { useLocation, useNavigate } from '@tanstack/react-router'
 import { ChevronRightIcon } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
+import { useAuth } from '@/features/auth'
 import bridge from '@/shared/bridge'
+import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
 import { useIsFrozenRoute } from '@/shared/navigation/transition/route-phase-context'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import { Button } from '@/shared/ui'
 import { FixedLayerPortal } from '@/shared/ui/fixed-layer'
 
 export interface UseChattingModalReturn {
+  testRequiredModal: () => void
   chattingTutorialModal: () => React.ReactNode
   showChattingTutorial: boolean
 }
 
 export function useChattingModal(hasActiveChat?: boolean): UseChattingModalReturn {
+  const alertDialog = useAlertDialog()
+  const navigate = useNavigate()
+  const goBack = useGoBack()
   const { pathname } = useLocation()
+  const auth = useAuth()
   const isFrozenRoute = useIsFrozenRoute()
 
   const [showChattingTutorial, setShowChattingTutorial] = useState(false)
@@ -22,6 +30,11 @@ export function useChattingModal(hasActiveChat?: boolean): UseChattingModalRetur
     if (pathname !== '/chat') return
 
     const fetchChatSeen = async () => {
+      if (!auth.userInfo.loveTypeCategory) {
+        testRequiredModal()
+        return
+      }
+
       const seen = await bridge.getChatTutorialSeen()
       if (seen || hasActiveChat) {
         setShowChattingTutorial(false)
@@ -32,7 +45,34 @@ export function useChattingModal(hasActiveChat?: boolean): UseChattingModalRetur
     }
 
     fetchChatSeen()
-  }, [hasActiveChat, pathname])
+  }, [auth.userInfo.loveTypeCategory, hasActiveChat, pathname])
+
+  const testRequiredModal = () => {
+    alertDialog.open({
+      title: (
+        <>
+          모모와 대화를 시작하려면
+          <br /> 애착유형 검사가 필요해요!
+        </>
+      ),
+      description: (
+        <>
+          검사를 완료하면, 모모가 애착유형을 바탕으로
+          <br /> 상담을 도와 드려요.
+        </>
+      ),
+      cancelText: '다음에 하기',
+      confirmText: '검사하러 가기',
+      onCancel: () => {
+        alertDialog.close()
+        goBack()
+      },
+      onConfirm: () => {
+        alertDialog.close()
+        navigate({ to: '/attachment-test' })
+      },
+    })
+  }
 
   const chattingTutorialModal = () => {
     const highlightedText = 'body2-medium text-malmo-rasberry-400'
@@ -105,6 +145,7 @@ export function useChattingModal(hasActiveChat?: boolean): UseChattingModalRetur
   }
 
   return {
+    testRequiredModal,
     chattingTutorialModal,
     showChattingTutorial,
   }
