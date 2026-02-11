@@ -22,16 +22,24 @@ const publicRoutes = ['/login', '/intro', '/terms/privacy-policy']
 const onboardingRoutes = [
   '/onboarding/terms',
   '/onboarding/nickname',
-  '/onboarding/anniversary',
+  '/onboarding/relationship-status',
+  '/onboarding/mbti',
+  '/onboarding/partner-mbti',
   '/onboarding/my-code',
+  '/onboarding/anniversary',
   '/onboarding/partner-code',
   '/onboarding/complete',
 ]
 
 const coupleFlowRoutes = ['/onboarding/partner-code', '/onboarding/anniversary']
 
+function normalizePath(path: string) {
+  return path.replace(/\/$/, '')
+}
+
 function matchRoute(routes: string[], path: string) {
-  return routes.some((route) => match(route)(path))
+  const normalizedPath = normalizePath(path)
+  return routes.some((route) => match(normalizePath(route))(normalizedPath))
 }
 
 export const Route = createRootRouteWithContext<RouterContext>()({

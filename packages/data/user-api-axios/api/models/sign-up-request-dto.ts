@@ -19,5 +19,17 @@ import type { TermsDto } from './terms-dto'
 export interface SignUpRequestDto {
   terms?: Array<TermsDto>
   nickname: string
+  relationshipStatus?: SignUpRequestDtoRelationshipStatusEnum
+  personalityType?: string
+  otherPersonalityType?: string
   loveTypeId?: number
 }
+
+export const SignUpRequestDtoRelationshipStatusEnum = {
+  InRelationship: 'IN_RELATIONSHIP',
+  SeeingSomeone: 'SEEING_SOMEONE',
+  Breakup: 'BREAKUP',
+} as const
+
+export type SignUpRequestDtoRelationshipStatusEnum =
+  (typeof SignUpRequestDtoRelationshipStatusEnum)[keyof typeof SignUpRequestDtoRelationshipStatusEnum]
