@@ -124,7 +124,6 @@ export function ChatMessageList({
                     message={chat.content}
                     timestamp={formatTimestamp(chat.createdAt)}
                     bookmarkId={bookmarkId}
-                    showHeader={false}
                   />
                 ) : (
                   <MyChatBubble
