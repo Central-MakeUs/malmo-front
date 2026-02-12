@@ -443,7 +443,7 @@ export function MyChatBubble({
             'border border-red-300': status === 'failed',
           })}
         >
-          <p className="body2-regular break-words break-keep text-gray-800">{message}</p>
+          <p className="body2-regular break-words text-gray-800">{message}</p>
         </ActionableBubble>
       </div>
     </div>
