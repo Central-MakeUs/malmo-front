@@ -19,10 +19,10 @@ import type { TermsDto } from './terms-dto'
 export interface SignUpRequestDto {
   terms?: Array<TermsDto>
   nickname: string
+  loveTypeId?: number
   relationshipStatus?: SignUpRequestDtoRelationshipStatusEnum
   personalityType?: string
   otherPersonalityType?: string
-  loveTypeId?: number
 }
 
 export const SignUpRequestDtoRelationshipStatusEnum = {

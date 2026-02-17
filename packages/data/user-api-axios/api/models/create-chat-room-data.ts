@@ -31,6 +31,7 @@ export interface CreateChatRoomData {
 }
 
 export const CreateChatRoomDataChatRoomStateEnum = {
+  BeforeInit: 'BEFORE_INIT',
   Alive: 'ALIVE',
   Completed: 'COMPLETED',
   Deleted: 'DELETED',
