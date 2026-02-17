@@ -23,6 +23,10 @@ type AlertDialogOpenOptions = {
   confirmText?: string
   onConfirm?: () => void
   onCancel?: () => void
+  /**
+   * true일 경우, 오버레이(딤드) 클릭이나 ESC 키로 모달을 닫을 수 없습니다.
+   * 모달은 confirm/cancel 버튼을 통해서만 닫힙니다.
+   */
   preventClose?: boolean
   overlayLevel?: 1 | 2
 }

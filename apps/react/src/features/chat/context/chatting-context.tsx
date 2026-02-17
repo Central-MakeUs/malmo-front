@@ -64,7 +64,9 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
 
   const handleChatResponse = useCallback(
     (chunk: string) => {
-      const targetChatRoomId = streamingChatRoomIdRef.current ?? activeChatRoomIdRef.current ?? activeChatRoom?.chatRoomId
+      // 스트리밍 대상이 명시적으로 설정되지 않았으면 무시 (다른 채팅방 간섭 방지)
+      if (!streamingChatRoomIdRef.current) return
+      const targetChatRoomId = streamingChatRoomIdRef.current
       if (!targetChatRoomId) return
 
       if (chunk.startsWith(TERMINATION_MESSAGE_START)) {
@@ -115,12 +117,13 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
         return { ...baseMessage, content: (prev?.content || '') + chunk }
       })
     },
-    [activeChatRoom?.chatRoomId, queryClient, setStreamingTargetChatRoomId]
+    [queryClient, setStreamingTargetChatRoomId]
   )
 
   const handleResponseId = useCallback(
     (messageIds: number[]) => {
-      const targetChatRoomId = streamingChatRoomIdRef.current ?? activeChatRoomIdRef.current ?? activeChatRoom?.chatRoomId
+      if (!streamingChatRoomIdRef.current) return
+      const targetChatRoomId = streamingChatRoomIdRef.current
       if (!targetChatRoomId) return
       const queryKey = chatService.chatMessagesQuery(targetChatRoomId).queryKey
 
@@ -169,7 +172,7 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       setAwaitingResponse(false)
       setStreamingTargetChatRoomId(null)
     },
-    [activeChatRoom?.chatRoomId, queryClient, setStreamingTargetChatRoomId, streamingMessage]
+    [queryClient, setStreamingTargetChatRoomId, streamingMessage]
   )
 
   const handleLevelFinished = useCallback(() => {
