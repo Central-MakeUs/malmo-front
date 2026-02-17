@@ -1,4 +1,3 @@
-import { useBridge } from '@webview-bridge/react'
 import * as React from 'react'
 import { createContext, useState } from 'react'
 
@@ -24,6 +23,7 @@ type AlertDialogOpenOptions = {
   confirmText?: string
   onConfirm?: () => void
   onCancel?: () => void
+  preventClose?: boolean
   overlayLevel?: 1 | 2
 }
 
@@ -36,6 +36,7 @@ interface AlertDialogContextType {
   isOpen: boolean
   onConfirm?: () => void | Promise<void>
   onCancel?: () => void | Promise<void>
+  preventClose?: boolean
   open: (options: AlertDialogOpenOptions) => void
   close: () => void
 }
@@ -52,32 +53,25 @@ export function AlertDialogProvider({
   const [isOpen, setIsOpen] = useState(false)
   const [state, setState] = useState<AlertDialogOpenOptions>({ description: '' })
 
-  const isNativeOpen = useBridge(bridge.store, (store) => store.isModalOpen)
-
-  React.useEffect(() => {
-    if (isNativeOpen !== null && isNativeOpen !== undefined) {
-      setIsOpen(isNativeOpen)
-    }
-  }, [isNativeOpen])
-
   const open = (options: AlertDialogOpenOptions) => {
     setIsOpen(true)
     setState({ ...options })
 
     if (typeof bridge?.setModalOpen === 'function') {
-      bridge.setModalOpen(true)
+      void bridge.setModalOpen(true).catch(() => {})
     }
   }
 
   const close = () => {
     setIsOpen(false)
+    setState({ description: '' })
 
     if (typeof bridge?.setModalOpen === 'function') {
-      bridge.setModalOpen(false)
+      void bridge.setModalOpen(false).catch(() => {})
     }
   }
 
-  const { cancelText, confirmText, ...rest } = state
+  const { cancelText, confirmText, preventClose, ...rest } = state
 
   return (
     <AlertDialogContext.Provider
@@ -86,6 +80,7 @@ export function AlertDialogProvider({
         isOpen,
         cancelText,
         confirmText: confirmText ?? defaultConfirmText,
+        preventClose,
         open,
         close,
       }}
@@ -97,7 +92,8 @@ export function AlertDialogProvider({
 }
 
 export function GlobalAlertDialog() {
-  const { isOpen, title, description, image, cancelText, confirmText, onConfirm, onCancel, close } = useAlertDialog()
+  const { isOpen, title, description, image, cancelText, confirmText, onConfirm, onCancel, preventClose, close } =
+    useAlertDialog()
 
   const [isSubmitting, setIsSubmitting] = React.useState(false)
 
@@ -132,7 +128,7 @@ export function GlobalAlertDialog() {
   }, [isOpen])
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={isSubmitting ? undefined : close}>
+    <AlertDialog open={isOpen} onOpenChange={isSubmitting || preventClose ? undefined : close}>
       <AlertDialogContent>
         <div className="mb-5 flex justify-center">{image}</div>
         <AlertDialogHeader>

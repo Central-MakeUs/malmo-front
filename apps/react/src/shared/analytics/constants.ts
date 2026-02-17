@@ -59,6 +59,7 @@ export const BUTTON_NAMES = {
   START_NEW_CHAT: 'start_new_chat',
   CONTINUE_CHAT: 'continue_chat',
   GO_ATTACHMENT_TEST: 'go_attachment_test',
+  GO_REQUIRED_PROFILE_FLOW: 'go_required_profile_flow',
   VIEW_ATTACHMENT_CARD: 'view_attachment_card',
   NAV_HOME: 'nav_home',
   NAV_HISTORY: 'nav_history',
