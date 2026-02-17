@@ -40,12 +40,12 @@ function RelationshipStatusEditPage() {
       return data
     },
     onSuccess: async () => {
-      toast.success('연애 상태가 변경되었어요!')
       await refreshUserInfo()
       if (isRequiredProfileFlow) {
         navigate({ to: '/mbti', search: { requiredProfileFlow: true }, replace: true })
         return
       }
+      toast.success('연애 상태가 변경되었어요!')
       goBack()
     },
     onError: () => {
@@ -77,6 +77,7 @@ function RelationshipStatusEditPage() {
       submitText={isRequiredProfileFlow ? '다음' : '변경하기'}
       requireChangeForSubmit={!isRequiredProfileFlow}
       isSubmitting={updateMutation.isPending}
+      showBackButton={!isRequiredProfileFlow}
       onSubmit={handleSubmit}
     />
   )

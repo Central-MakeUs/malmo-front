@@ -30,12 +30,12 @@ function PartnerMbtiEditPage() {
       return data
     },
     onSuccess: async () => {
-      toast.success('상대 성향이 변경되었어요!')
       await refreshUserInfo()
       if (isRequiredProfileFlow) {
         navigate({ to: '/', replace: true })
         return
       }
+      toast.success('상대 성향이 변경되었어요!')
       goBack()
     },
     onError: () => {
@@ -51,6 +51,10 @@ function PartnerMbtiEditPage() {
     updateMutation.mutate({ otherPersonalityType: mbti })
   }
 
+  const handleBack = isRequiredProfileFlow
+    ? () => navigate({ to: '/mbti', search: { requiredProfileFlow: true }, replace: true })
+    : undefined
+
   return (
     <MbtiForm
       headerTitle="상대 성향"
@@ -62,10 +66,11 @@ function PartnerMbtiEditPage() {
         </>
       }
       initialValue={userInfo.otherPersonalityType}
-      submitText={isRequiredProfileFlow ? '완료하기' : '변경하기'}
+      submitText={isRequiredProfileFlow ? '시작하기' : '변경하기'}
       requireChangeForSubmit={!isRequiredProfileFlow}
       isSubmitting={updateMutation.isPending}
       onSubmit={handleSubmit}
+      onBack={handleBack}
     />
   )
 }

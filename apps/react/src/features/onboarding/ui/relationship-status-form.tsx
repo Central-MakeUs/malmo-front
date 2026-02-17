@@ -20,6 +20,7 @@ interface RelationshipStatusFormProps {
   submitText: string
   requireChangeForSubmit?: boolean
   isSubmitting?: boolean
+  showBackButton?: boolean
   onSubmit: (value: string) => void
   onBack?: (value: string | null) => void
 }
@@ -33,6 +34,7 @@ export function RelationshipStatusForm({
   submitText,
   requireChangeForSubmit = false,
   isSubmitting = false,
+  showBackButton = true,
   onSubmit,
   onBack,
 }: RelationshipStatusFormProps) {
@@ -52,7 +54,7 @@ export function RelationshipStatusForm({
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar title={headerTitle} onBackClick={onBack ? handleBack : undefined} />
+        <DetailHeaderBar title={headerTitle} showBackButton={showBackButton} onBackClick={onBack ? handleBack : undefined} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white">

@@ -30,12 +30,12 @@ function MbtiEditPage() {
       return data
     },
     onSuccess: async () => {
-      toast.success('내 성향이 변경되었어요!')
       await refreshUserInfo()
       if (isRequiredProfileFlow) {
         navigate({ to: '/partner-mbti', search: { requiredProfileFlow: true }, replace: true })
         return
       }
+      toast.success('내 성향이 변경되었어요!')
       goBack()
     },
     onError: () => {
@@ -50,6 +50,10 @@ function MbtiEditPage() {
     trackSave()
     updateMutation.mutate({ personalityType: mbti })
   }
+
+  const handleBack = isRequiredProfileFlow
+    ? () => navigate({ to: '/relationship-status', search: { requiredProfileFlow: true }, replace: true })
+    : undefined
 
   return (
     <MbtiForm
@@ -66,6 +70,7 @@ function MbtiEditPage() {
       requireChangeForSubmit={!isRequiredProfileFlow}
       isSubmitting={updateMutation.isPending}
       onSubmit={handleSubmit}
+      onBack={handleBack}
     />
   )
 }
