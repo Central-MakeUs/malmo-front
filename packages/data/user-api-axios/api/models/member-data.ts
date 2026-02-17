@@ -56,6 +56,21 @@ export interface MemberData {
    * 이메일
    */
   email?: string
+  /**
+   * 연애 상태
+   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   */
+  relationshipStatus?: MemberDataRelationshipStatusEnum
+  /**
+   * 내 MBTI 성향
+   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   */
+  personalityType?: string
+  /**
+   * 상대방 MBTI 성향
+   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   */
+  otherPersonalityType?: string
 }
 
 export const MemberDataMemberStateEnum = {
@@ -80,3 +95,12 @@ export const MemberDataLoveTypeCategoryEnum = {
 
 export type MemberDataLoveTypeCategoryEnum =
   (typeof MemberDataLoveTypeCategoryEnum)[keyof typeof MemberDataLoveTypeCategoryEnum]
+// TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+export const MemberDataRelationshipStatusEnum = {
+  InRelationship: 'IN_RELATIONSHIP',
+  SeeingSomeone: 'SEEING_SOMEONE',
+  Breakup: 'BREAKUP',
+} as const
+
+export type MemberDataRelationshipStatusEnum =
+  (typeof MemberDataRelationshipStatusEnum)[keyof typeof MemberDataRelationshipStatusEnum]
