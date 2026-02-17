@@ -38,6 +38,9 @@ interface OnboardingContextType {
   // 온보딩 데이터
   data: OnboardingData
 
+  // 온보딩 완료 여부(회원가입 API 성공 기준)
+  isOnboardingCompleted: boolean
+
   // 약관 동의 업데이트
   updateTermsAgreements: (agreements: Record<number, boolean>) => void
 
@@ -80,6 +83,7 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 // 컨텍스트 프로바이더 컴포넌트
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<OnboardingData>(defaultOnboardingData)
+  const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false)
 
   const signUpMutation = useMutation({
     ...signUpService.signUpMutation(),
@@ -143,6 +147,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
   // 온보딩 완료 처리
   const completeOnboarding = async () => {
+    if (isOnboardingCompleted) {
+      return true
+    }
+
     try {
       // 여기서 API 호출
       const requestBody: SignUpRequestDto = {
@@ -167,6 +175,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
       // 회원가입 API 호출
       await signUpMutation.mutateAsync(requestBody)
+      setIsOnboardingCompleted(true)
 
       return true
     } catch {
@@ -178,6 +187,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     <OnboardingContext.Provider
       value={{
         data,
+        isOnboardingCompleted,
         updateTermsAgreements,
         updateNickname,
         updateRelationshipStatus,
