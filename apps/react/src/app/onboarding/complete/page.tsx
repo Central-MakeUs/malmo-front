@@ -17,7 +17,7 @@ function ConnectCompletePage() {
 
   // 연애 상태에 따른 동적 메시지
   const getCompletionMessage = () => {
-    if (data.relationshipStatus === 'IN_RELATIONSHIP') {
+    if (data.relationshipStatus === 'IN_RELATIONSHIP' || data.relationshipStatus === 'SEEING_SOMEONE') {
       return {
         title: '커플 연결이 완료되었어요!',
         description: '이제 말모를 사용하러 가볼까요?',
