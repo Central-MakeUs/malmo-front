@@ -53,7 +53,8 @@ function PartnerMbtiEditPage() {
         </>
       }
       initialValue={userInfo.otherPersonalityType}
-      submitText="저장"
+      submitText="변경하기"
+      requireChangeForSubmit
       isSubmitting={updateMutation.isPending}
       onSubmit={handleSubmit}
     />

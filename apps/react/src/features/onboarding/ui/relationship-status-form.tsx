@@ -18,6 +18,7 @@ interface RelationshipStatusFormProps {
   options: RelationshipStatusOption[]
   initialValue?: string | null
   submitText: string
+  requireChangeForSubmit?: boolean
   isSubmitting?: boolean
   onSubmit: (value: string) => void
   onBack?: (value: string | null) => void
@@ -30,14 +31,17 @@ export function RelationshipStatusForm({
   options,
   initialValue = null,
   submitText,
+  requireChangeForSubmit = false,
   isSubmitting = false,
   onSubmit,
   onBack,
 }: RelationshipStatusFormProps) {
   const [selected, setSelected] = useState<string | null>(initialValue)
+  const isChanged = !!selected && selected !== initialValue
+  const canSubmit = !!selected && !isSubmitting && (!requireChangeForSubmit || isChanged)
 
   const handleSubmit = () => {
-    if (!selected || isSubmitting) return
+    if (!selected || !canSubmit) return
     onSubmit(selected)
   }
 
@@ -77,7 +81,7 @@ export function RelationshipStatusForm({
         </div>
 
         <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-          <Button text={submitText} onClick={handleSubmit} disabled={!selected || isSubmitting} />
+          <Button text={submitText} onClick={handleSubmit} disabled={!canSubmit} />
         </div>
       </Screen.Content>
     </Screen>

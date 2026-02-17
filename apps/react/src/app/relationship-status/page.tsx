@@ -65,7 +65,8 @@ function RelationshipStatusEditPage() {
       description="이후에 관계 정보가 바뀌면 변경할 수 있어요"
       options={RELATIONSHIP_OPTIONS}
       initialValue={(userInfo.relationshipStatus as RelationshipStatus | undefined) ?? null}
-      submitText="저장"
+      submitText="변경하기"
+      requireChangeForSubmit
       isSubmitting={updateMutation.isPending}
       onSubmit={handleSubmit}
     />

@@ -12,19 +12,12 @@ export const Route = createFileRoute('/my-page/profile/')({
   component: ProfileManagementPage,
 })
 
-const RELATIONSHIP_LABELS: Record<string, string> = {
-  IN_RELATIONSHIP: '연애 중',
-  SEEING_SOMEONE: '썸',
-  BREAKUP: '이별',
-}
-
 function ProfileManagementPage() {
   const navigate = useNavigate()
   const { userInfo } = useAuth()
 
   const myMbti = userInfo.personalityType?.toUpperCase()
   const partnerMbti = userInfo.otherPersonalityType?.toUpperCase()
-  const relationshipLabel = userInfo.relationshipStatus ? RELATIONSHIP_LABELS[userInfo.relationshipStatus] : undefined
 
   return (
       <Screen>
@@ -36,7 +29,6 @@ function ProfileManagementPage() {
         <div className="px-5 pt-8">
           <ProfileRow
             label="현재 연애 상태"
-            value={relationshipLabel}
             onClick={wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_RELATIONSHIP_STATUS, CATEGORIES.PROFILE, () =>
               navigate({ to: '/relationship-status' })
             )}
