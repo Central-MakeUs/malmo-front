@@ -1,5 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
+import z from 'zod'
 
 import {
   useAttachmentQuestions,
@@ -16,12 +17,18 @@ import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
+const searchSchema = z.object({
+  from: z.string().optional(),
+})
+
 export const Route = createFileRoute('/attachment-test/question/')({
   component: AttachmentTestQuestionPage,
+  validateSearch: searchSchema,
 })
 
 function AttachmentTestQuestionPage() {
   const [isGuideOpen, setIsGuideOpen] = useState(true)
+  const { from } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
   const {
     loading,
@@ -36,7 +43,7 @@ function AttachmentTestQuestionPage() {
     handleNext,
     handleSelectAnswer,
     setQuestionRef,
-  } = useAttachmentQuestions()
+  } = useAttachmentQuestions({ from })
 
   // 트래킹이 적용된 핸들러들
   const handleGoBackWithTracking = wrapWithTracking(BUTTON_NAMES.BACK_TEST, CATEGORIES.ATTACHMENT, handleGoBack)

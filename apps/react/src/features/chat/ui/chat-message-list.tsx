@@ -42,6 +42,7 @@ function AttachmentTestCta() {
     <div className="mt-3">
       <Link
         to="/attachment-test"
+        search={{ from: '/chat' }}
         className="block"
         onClick={wrapWithTracking(BUTTON_NAMES.GO_ATTACHMENT_TEST, CATEGORIES.CHAT, () => {})}
       >

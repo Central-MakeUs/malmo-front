@@ -59,7 +59,11 @@ export interface UseAttachmentQuestionsResult {
   setQuestionRef: (index: number) => (el: HTMLDivElement | null) => void
 }
 
-export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
+interface UseAttachmentQuestionsOptions {
+  from?: string
+}
+
+export function useAttachmentQuestions({ from }: UseAttachmentQuestionsOptions = {}): UseAttachmentQuestionsResult {
   const navigate = useNavigate()
   const goBack = useGoBack()
   const auth = useAuth()
@@ -78,7 +82,7 @@ export function useAttachmentQuestions(): UseAttachmentQuestionsResult {
 
       // 2초 후 결과 페이지로 이동
       setTimeout(() => {
-        navigate({ to: '/attachment-test/result/my', replace: true })
+        navigate({ to: '/attachment-test/result/my', search: { from }, replace: true })
       }, QUESTION_CONFIG.SUBMISSION_DELAY)
     },
     onError: (_error: any) => {
