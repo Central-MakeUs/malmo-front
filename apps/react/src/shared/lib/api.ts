@@ -39,15 +39,25 @@ const extractFeatureFromUrl = (url?: string): string => {
   return 'api'
 }
 
+const safeStringify = (value: unknown) => {
+  try {
+    return JSON.stringify(value, null, 2)
+  } catch {
+    return String(value)
+  }
+}
+
 export function initApi(): AxiosInstance {
   const apiInstance = axios.create(defaultOptions)
 
   apiInstance.interceptors.request.use(
     async (config) => {
-      console.log('API Request:', {
-        url: config.url,
-        payload: config.data,
-      })
+      console.log(
+        `API Request: ${safeStringify({
+          url: config.url,
+          payload: config.data,
+        })}`
+      )
 
       let accessToken: string | null = null
 
@@ -88,7 +98,7 @@ export function initApi(): AxiosInstance {
 
   apiInstance.interceptors.response.use(
     (response) => {
-      console.log('API Response:', response.data)
+      console.log(`API Response: ${safeStringify(response.data)}`)
       return response
     },
     async (error) => {
