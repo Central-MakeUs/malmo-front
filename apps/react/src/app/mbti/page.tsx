@@ -57,7 +57,7 @@ function MbtiEditPage() {
 
   return (
     <MbtiForm
-      headerTitle="내 성향"
+      headerTitle={isRequiredProfileFlow ? undefined : '내 성향'}
       title={
         <>
           나의 MBTI 성향은

@@ -63,7 +63,7 @@ function RelationshipStatusEditPage() {
 
   return (
     <RelationshipStatusForm
-      headerTitle="현재 연애 상태"
+      headerTitle={isRequiredProfileFlow ? undefined : '현재 연애 상태'}
       title={
         <>
           현재 연애 상태를

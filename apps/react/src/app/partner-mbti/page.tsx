@@ -57,7 +57,7 @@ function PartnerMbtiEditPage() {
 
   return (
     <MbtiForm
-      headerTitle="상대 성향"
+      headerTitle={isRequiredProfileFlow ? undefined : '상대 성향'}
       title={
         <>
           상대방 MBTI 성향은
