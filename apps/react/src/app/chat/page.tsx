@@ -1,7 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useLayoutEffect, useMemo, useState, useEffect } from 'react'
 import { z } from 'zod'
-import { useQueryClient } from '@tanstack/react-query'
 
 import { BookmarkSheet, useBookmarkSelection } from '@/features/bookmark'
 import { useChatting } from '@/features/chat/context/chatting-context'
@@ -16,8 +16,8 @@ import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useInfiniteScroll } from '@/shared/hooks/use-infinite-scroll'
 import { Screen } from '@/shared/layout/screen'
 import { useGoBack } from '@/shared/navigation/use-go-back'
-import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { queryKeys } from '@/shared/services/query-keys'
+import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
   chatId: z.number().optional(),
