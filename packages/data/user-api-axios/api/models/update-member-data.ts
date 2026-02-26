@@ -21,28 +21,7 @@ export interface UpdateMemberData {
    */
   nickname?: string
   /**
-   * 연애 상태
-   */
-  relationshipStatus?: UpdateMemberDataRelationshipStatusEnum
-  /**
-   * 본인 MBTI
-   */
-  personalityType?: string
-  /**
-   * 상대방 MBTI
-   */
-  otherPersonalityType?: string
-  /**
    * 이메일
    */
   email?: string
 }
-
-export const UpdateMemberDataRelationshipStatusEnum = {
-  InRelationship: 'IN_RELATIONSHIP',
-  SeeingSomeone: 'SEEING_SOMEONE',
-  Breakup: 'BREAKUP',
-} as const
-
-export type UpdateMemberDataRelationshipStatusEnum =
-  (typeof UpdateMemberDataRelationshipStatusEnum)[keyof typeof UpdateMemberDataRelationshipStatusEnum]

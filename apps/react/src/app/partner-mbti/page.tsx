@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { MbtiForm } from '@/features/onboarding/ui/mbti-form'
+import { requiredProfileFlowSearchSchema } from '@/features/profile/lib/required-profile-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useGoBack } from '@/shared/navigation/use-go-back'
@@ -12,12 +13,16 @@ import { toast } from '@/shared/ui/toast'
 import type { UpdateMemberRequestDto } from '@data/user-api-axios/api'
 
 export const Route = createFileRoute('/partner-mbti/')({
+  validateSearch: requiredProfileFlowSearchSchema,
   component: PartnerMbtiEditPage,
 })
 
 function PartnerMbtiEditPage() {
+  const navigate = useNavigate()
   const goBack = useGoBack()
   const { userInfo, refreshUserInfo } = useAuth()
+  const { requiredProfileFlow } = useSearch({ from: Route.id })
+  const isRequiredProfileFlow = requiredProfileFlow === true
 
   const updateMutation = useMutation({
     mutationFn: async (body: UpdateMemberRequestDto) => {
@@ -25,8 +30,12 @@ function PartnerMbtiEditPage() {
       return data
     },
     onSuccess: async () => {
-      toast.success('상대 성향이 변경되었어요!')
       await refreshUserInfo()
+      if (isRequiredProfileFlow) {
+        navigate({ to: '/', replace: true })
+        return
+      }
+      toast.success('상대 성향이 변경되었어요!')
       goBack()
     },
     onError: () => {
@@ -42,9 +51,13 @@ function PartnerMbtiEditPage() {
     updateMutation.mutate({ otherPersonalityType: mbti })
   }
 
+  const handleBack = isRequiredProfileFlow
+    ? () => navigate({ to: '/mbti', search: { requiredProfileFlow: true }, replace: true })
+    : undefined
+
   return (
     <MbtiForm
-      headerTitle="상대 성향"
+      headerTitle={isRequiredProfileFlow ? undefined : '상대 성향'}
       title={
         <>
           상대방 MBTI 성향은
@@ -53,9 +66,11 @@ function PartnerMbtiEditPage() {
         </>
       }
       initialValue={userInfo.otherPersonalityType}
-      submitText="저장"
+      submitText={isRequiredProfileFlow ? '시작하기' : '변경하기'}
+      requireChangeForSubmit={!isRequiredProfileFlow}
       isSubmitting={updateMutation.isPending}
       onSubmit={handleSubmit}
+      onBack={handleBack}
     />
   )
 }

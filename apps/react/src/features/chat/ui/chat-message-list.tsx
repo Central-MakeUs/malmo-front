@@ -1,10 +1,14 @@
 import { ChatRoomMessageData, ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
+import { Link } from '@tanstack/react-router'
+import { ChevronRight } from 'lucide-react'
 import React from 'react'
 
 import { ChatMessageTempStatus } from '@/features/chat/hooks/use-chat-queries'
 import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import { DateDivider } from '@/features/chat/ui/date-divider'
 import { formatTimestamp } from '@/features/chat/util/chat-format'
+import { wrapWithTracking } from '@/shared/analytics'
+import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { cn } from '@/shared/lib/cn'
 
 type ChatMessageListProps = {
@@ -26,6 +30,30 @@ const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean 
   </div>
 ))
 LoadingIndicator.displayName = 'LoadingIndicator'
+
+const ATTACHMENT_PROMPT_MESSAGE =
+  '잠깐! 애착유형 테스트를 하면, 더 정확한 상담이 가능해! 그대로 진행하면 바로 상담해줄게'
+
+const isAttachmentPromptMessage = (message?: ChatRoomMessageData | null) =>
+  message?.senderType === ChatRoomMessageDataSenderTypeEnum.System && message.content === ATTACHMENT_PROMPT_MESSAGE
+
+function AttachmentTestCta() {
+  return (
+    <div className="mt-3">
+      <Link
+        to="/attachment-test"
+        search={{ from: '/chat' }}
+        className="block"
+        onClick={wrapWithTracking(BUTTON_NAMES.GO_ATTACHMENT_TEST, CATEGORIES.CHAT, () => {})}
+      >
+        <div className="flex w-fit items-center justify-between rounded-[8px] border border-gray-iron-300 bg-white py-2 pr-3 pl-[18px]">
+          <span className="body3-semibold text-gray-iron-800">애착유형 테스트하러가기</span>
+          <ChevronRight className="h-4 w-4" />
+        </div>
+      </Link>
+    </div>
+  )
+}
 
 export function ChatMessageList({
   messages,
@@ -69,10 +97,12 @@ export function ChatMessageList({
               previousSender !== ChatRoomMessageDataSenderTypeEnum.Assistant
             const isContinuous = previousSender === chat.senderType
             const bookmarkId = chat.bookmarkId ?? null
+            const isAttachmentPrompt = isAttachmentPromptMessage(chat)
+            const isLastMessage = index === messages.length - 1
             return (
               <div
-                key={`${chat.messageId}-${index}`}
-                data-message-id={chat.messageId}
+                key={`${chat.messageId ?? 'temp'}-${chat.createdAt ?? index}`}
+                data-message-id={chat.messageId ?? undefined}
                 className={cn('mt-6', {
                   'mt-0': index === 0,
                   'mt-2': isContinuous,
@@ -88,6 +118,14 @@ export function ChatMessageList({
                     bookmarkId={bookmarkId}
                     showHeader={showHeader}
                   />
+                ) : chat.senderType === ChatRoomMessageDataSenderTypeEnum.System ? (
+                  <AiChatBubble
+                    messageId={chat.messageId}
+                    chatRoomId={resolvedChatRoomId}
+                    message={chat.content}
+                    timestamp={formatTimestamp(chat.createdAt)}
+                    bookmarkId={bookmarkId}
+                  />
                 ) : (
                   <MyChatBubble
                     messageId={chat.messageId}
@@ -98,6 +136,11 @@ export function ChatMessageList({
                     bookmarkId={bookmarkId}
                     onRetry={() => onRetry(chat.content!)}
                   />
+                )}
+                {isAttachmentPrompt && isLastMessage && (
+                  <div className="pl-[62px]">
+                    <AttachmentTestCta />
+                  </div>
                 )}
               </div>
             )

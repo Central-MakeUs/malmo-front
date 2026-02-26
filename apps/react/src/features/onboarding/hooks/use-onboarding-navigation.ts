@@ -20,7 +20,7 @@ const COUPLE_STEPS = [
   '/onboarding/complete',
 ] as const
 
-// 비커플(썸/이별) 전용 단계
+// 비커플(이별) 전용 단계
 const NON_COUPLE_STEPS = ['/onboarding/complete'] as const
 
 type OnboardingStep = (typeof BASE_STEPS)[number] | (typeof COUPLE_STEPS)[number] | (typeof NON_COUPLE_STEPS)[number]
@@ -30,13 +30,14 @@ export function useOnboardingNavigation() {
   const { location } = useRouterState()
   const { refreshUserInfo } = useAuth()
   const { data } = useOnboarding()
+  const isCoupleOnboardingFlow = ['IN_RELATIONSHIP', 'SEEING_SOMEONE'].includes(data.relationshipStatus ?? '')
 
   // 연애 상태에 따른 전체 스텝 계산
   const getOnboardingSteps = (): OnboardingStep[] => {
     const currentPath = location.pathname.replace(/\/$/, '')
     const isCoupleFlowPath = COUPLE_STEPS.includes(currentPath as (typeof COUPLE_STEPS)[number])
 
-    if (data.relationshipStatus === 'IN_RELATIONSHIP' || isCoupleFlowPath) {
+    if (isCoupleOnboardingFlow || isCoupleFlowPath) {
       return [...BASE_STEPS, ...COUPLE_STEPS]
     }
     return [...BASE_STEPS, ...NON_COUPLE_STEPS]
@@ -62,7 +63,7 @@ export function useOnboardingNavigation() {
 
     // 상대방 MBTI 페이지 이후 조건부 라우팅
     if (currentPath === '/onboarding/partner-mbti') {
-      if (data.relationshipStatus === 'IN_RELATIONSHIP') {
+      if (isCoupleOnboardingFlow) {
         navigate({ to: '/onboarding/my-code', replace: true })
       } else {
         navigate({ to: '/onboarding/complete', replace: true })
@@ -86,7 +87,7 @@ export function useOnboardingNavigation() {
 
     // 완료 페이지에서 뒤로가기 시 조건부 라우팅
     if (currentPath === '/onboarding/complete') {
-      if (data.relationshipStatus === 'IN_RELATIONSHIP') {
+      if (isCoupleOnboardingFlow) {
         navigate({ to: '/onboarding/anniversary', replace: true })
       } else {
         navigate({ to: '/onboarding/partner-mbti', replace: true })

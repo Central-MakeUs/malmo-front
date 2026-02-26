@@ -25,12 +25,14 @@ interface UserInfo {
 interface AttachmentResultContentProps {
   userInfo: UserInfo | null | undefined
   type: 'my' | 'partner'
+  isFromChat?: boolean
 }
 
-export function AttachmentResultContent({ userInfo, type }: AttachmentResultContentProps) {
+export function AttachmentResultContent({ userInfo, type, isFromChat = false }: AttachmentResultContentProps) {
   const navigate = useNavigate()
   const goBack = useGoBack()
   const isMyResult = type === 'my'
+  const ctaText = isFromChat ? '상담하러 가기' : '홈으로 이동하기'
 
   // 결과 데이터 확인
   if (!userInfo?.loveTypeCategory) {
@@ -145,7 +147,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
         {/* 바텀 버튼 */}
         <div className="px-5 pb-[calc(var(--safe-bottom)_+_20px)]">
           <Button
-            text="홈으로 이동하기"
+            text={ctaText}
             onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, handleClose)}
           />
         </div>

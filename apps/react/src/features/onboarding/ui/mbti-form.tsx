@@ -66,6 +66,7 @@ interface MbtiFormProps {
   headerTitle?: string
   initialValue?: string | null
   submitText: string
+  requireChangeForSubmit?: boolean
   isSubmitting?: boolean
   onSubmit: (mbti: string) => void
   onBack?: (mbti: string | null) => void
@@ -77,6 +78,7 @@ export function MbtiForm({
   headerTitle,
   initialValue = null,
   submitText,
+  requireChangeForSubmit = false,
   isSubmitting = false,
   onSubmit,
   onBack,
@@ -104,25 +106,29 @@ export function MbtiForm({
     }
   }
 
-  const [selections, setSelections] = useState<MbtiSelections>(parseExistingMbti())
+  const initialSelections = parseExistingMbti()
+  const [selections, setSelections] = useState<MbtiSelections>(initialSelections)
 
   const handleSelect = (key: keyof MbtiSelections, value: string) => {
     setSelections((prev) => ({ ...prev, [key]: value }))
   }
 
-  const isComplete = Object.values(selections).every((v) => v !== null)
-
-  const getMbtiString = (): string => {
-    return `${selections.energy}${selections.perception}${selections.judgment}${selections.lifestyle}`
+  const toMbtiString = (value: MbtiSelections): string | null => {
+    if (Object.values(value).some((v) => v === null)) return null
+    return `${value.energy}${value.perception}${value.judgment}${value.lifestyle}`
   }
+  const currentMbti = toMbtiString(selections)
+  const initialMbti = toMbtiString(initialSelections)
+  const isChanged = !!currentMbti && currentMbti !== initialMbti
+  const canSubmit = !!currentMbti && !isSubmitting && (!requireChangeForSubmit || isChanged)
 
   const handleSubmit = () => {
-    if (!isComplete || isSubmitting) return
-    onSubmit(getMbtiString())
+    if (!currentMbti || !canSubmit) return
+    onSubmit(currentMbti)
   }
 
   const handleBack = () => {
-    onBack?.(isComplete ? getMbtiString() : null)
+    onBack?.(currentMbti)
   }
 
   return (
@@ -168,7 +174,7 @@ export function MbtiForm({
         </div>
 
         <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-          <Button text={submitText} onClick={handleSubmit} disabled={!isComplete || isSubmitting} />
+          <Button text={submitText} onClick={handleSubmit} disabled={!canSubmit} />
         </div>
       </Screen.Content>
     </Screen>

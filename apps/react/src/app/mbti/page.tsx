@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { MbtiForm } from '@/features/onboarding/ui/mbti-form'
+import { requiredProfileFlowSearchSchema } from '@/features/profile/lib/required-profile-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useGoBack } from '@/shared/navigation/use-go-back'
@@ -12,12 +13,16 @@ import { toast } from '@/shared/ui/toast'
 import type { UpdateMemberRequestDto } from '@data/user-api-axios/api'
 
 export const Route = createFileRoute('/mbti/')({
+  validateSearch: requiredProfileFlowSearchSchema,
   component: MbtiEditPage,
 })
 
 function MbtiEditPage() {
+  const navigate = useNavigate()
   const goBack = useGoBack()
   const { userInfo, refreshUserInfo } = useAuth()
+  const { requiredProfileFlow } = useSearch({ from: Route.id })
+  const isRequiredProfileFlow = requiredProfileFlow === true
 
   const updateMutation = useMutation({
     mutationFn: async (body: UpdateMemberRequestDto) => {
@@ -25,8 +30,12 @@ function MbtiEditPage() {
       return data
     },
     onSuccess: async () => {
-      toast.success('내 성향이 변경되었어요!')
       await refreshUserInfo()
+      if (isRequiredProfileFlow) {
+        navigate({ to: '/partner-mbti', search: { requiredProfileFlow: true }, replace: true })
+        return
+      }
+      toast.success('내 성향이 변경되었어요!')
       goBack()
     },
     onError: () => {
@@ -42,9 +51,13 @@ function MbtiEditPage() {
     updateMutation.mutate({ personalityType: mbti })
   }
 
+  const handleBack = isRequiredProfileFlow
+    ? () => navigate({ to: '/relationship-status', search: { requiredProfileFlow: true }, replace: true })
+    : undefined
+
   return (
     <MbtiForm
-      headerTitle="내 성향"
+      headerTitle={isRequiredProfileFlow ? undefined : '내 성향'}
       title={
         <>
           나의 MBTI 성향은
@@ -53,9 +66,11 @@ function MbtiEditPage() {
         </>
       }
       initialValue={userInfo.personalityType}
-      submitText="저장"
+      submitText={isRequiredProfileFlow ? '다음' : '변경하기'}
+      requireChangeForSubmit={!isRequiredProfileFlow}
       isSubmitting={updateMutation.isPending}
       onSubmit={handleSubmit}
+      onBack={handleBack}
     />
   )
 }

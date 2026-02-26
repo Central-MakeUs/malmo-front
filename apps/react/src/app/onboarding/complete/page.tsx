@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 
 import onboardingEndImage from '@/assets/images/onboarding-end.png'
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
@@ -13,11 +14,12 @@ export const Route = createFileRoute('/onboarding/complete/')({
 
 function ConnectCompletePage() {
   const { goToHome } = useOnboardingNavigation()
-  const { data } = useOnboarding()
+  const { data, completeOnboarding, isOnboardingCompleted } = useOnboarding()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // 연애 상태에 따른 동적 메시지
   const getCompletionMessage = () => {
-    if (data.relationshipStatus === 'IN_RELATIONSHIP') {
+    if (data.relationshipStatus === 'IN_RELATIONSHIP' || data.relationshipStatus === 'SEEING_SOMEONE') {
       return {
         title: '커플 연결이 완료되었어요!',
         description: '이제 말모를 사용하러 가볼까요?',
@@ -31,9 +33,20 @@ function ConnectCompletePage() {
 
   const message = getCompletionMessage()
 
-  const handleNext = wrapWithTracking(BUTTON_NAMES.START_SERVICE, CATEGORIES.ONBOARDING, () => {
-    // 홈으로 이동
-    goToHome()
+  const handleNext = wrapWithTracking(BUTTON_NAMES.START_SERVICE, CATEGORIES.ONBOARDING, async () => {
+    if (isSubmitting) return
+
+    setIsSubmitting(true)
+    try {
+      if (!isOnboardingCompleted) {
+        const success = await completeOnboarding()
+        if (!success) return
+      }
+
+      await goToHome()
+    } finally {
+      setIsSubmitting(false)
+    }
   })
 
   return (
@@ -52,7 +65,7 @@ function ConnectCompletePage() {
 
       {/* 다음 버튼 */}
       <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-        <Button text="시작하기" onClick={handleNext} />
+        <Button text="시작하기" onClick={handleNext} disabled={isSubmitting} />
       </div>
     </div>
   )

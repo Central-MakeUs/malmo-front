@@ -18,7 +18,9 @@ interface RelationshipStatusFormProps {
   options: RelationshipStatusOption[]
   initialValue?: string | null
   submitText: string
+  requireChangeForSubmit?: boolean
   isSubmitting?: boolean
+  showBackButton?: boolean
   onSubmit: (value: string) => void
   onBack?: (value: string | null) => void
 }
@@ -30,14 +32,18 @@ export function RelationshipStatusForm({
   options,
   initialValue = null,
   submitText,
+  requireChangeForSubmit = false,
   isSubmitting = false,
+  showBackButton = true,
   onSubmit,
   onBack,
 }: RelationshipStatusFormProps) {
   const [selected, setSelected] = useState<string | null>(initialValue)
+  const isChanged = !!selected && selected !== initialValue
+  const canSubmit = !!selected && !isSubmitting && (!requireChangeForSubmit || isChanged)
 
   const handleSubmit = () => {
-    if (!selected || isSubmitting) return
+    if (!selected || !canSubmit) return
     onSubmit(selected)
   }
 
@@ -48,7 +54,7 @@ export function RelationshipStatusForm({
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar title={headerTitle} onBackClick={onBack ? handleBack : undefined} />
+        <DetailHeaderBar title={headerTitle} showBackButton={showBackButton} onBackClick={onBack ? handleBack : undefined} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white">
@@ -77,7 +83,7 @@ export function RelationshipStatusForm({
         </div>
 
         <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-          <Button text={submitText} onClick={handleSubmit} disabled={!selected || isSubmitting} />
+          <Button text={submitText} onClick={handleSubmit} disabled={!canSubmit} />
         </div>
       </Screen.Content>
     </Screen>
