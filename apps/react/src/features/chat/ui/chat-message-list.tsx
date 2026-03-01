@@ -101,7 +101,7 @@ export function ChatMessageList({
             const isLastMessage = index === messages.length - 1
             return (
               <div
-                key={`${chat.messageId ?? 'temp'}-${chat.createdAt ?? index}`}
+                key={`${chat.messageId ?? 'temp'}-${chat.createdAt ?? 'no-time'}-${index}`}
                 data-message-id={chat.messageId ?? undefined}
                 className={cn('mt-6', {
                   'mt-0': index === 0,

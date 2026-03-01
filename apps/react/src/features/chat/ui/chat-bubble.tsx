@@ -343,7 +343,14 @@ export function AiChatBubble(props: AiChatBubbleProps) {
   } = props
   const isBookmarked = bookmarkId != null
 
-  const messageGroups = useMemo(() => (isTyping ? [] : groupSentences(message, 3)), [isTyping, message])
+  const messageGroups = useMemo(() => {
+    if (isTyping) return []
+    const groups = groupSentences(message, 3)
+    if (groups.length > 0) return groups
+
+    const fallback = message.trim()
+    return fallback.length > 0 ? [fallback] : []
+  }, [isTyping, message])
 
   return (
     <div className="flex w-full items-start gap-3">
@@ -368,7 +375,7 @@ export function AiChatBubble(props: AiChatBubbleProps) {
         ) : (
           messageGroups.map((group, index) => (
             <div
-              key={index}
+              key={`${messageId ?? 'temp'}-${index}`}
               className={cn('flex flex-nowrap items-end gap-2', { 'mr-9': index < messageGroups.length - 1 })}
             >
               <ActionableBubble
