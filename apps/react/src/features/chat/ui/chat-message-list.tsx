@@ -105,7 +105,7 @@ export function ChatMessageList({
                 data-message-id={chat.messageId ?? undefined}
                 className={cn('mt-6', {
                   'mt-0': index === 0,
-                  'mt-2': isContinuous,
+                  'mt-5': isContinuous,
                 })}
               >
                 <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
@@ -149,7 +149,7 @@ export function ChatMessageList({
           {awaitingResponse && !streamingMessage && (
             <div
               className={cn('mt-6', {
-                'mt-2': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
+                'mt-5': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
               })}
             >
               <AiChatBubble isTyping />
@@ -159,7 +159,7 @@ export function ChatMessageList({
           {streamingMessage && (
             <div
               className={cn('mt-6', {
-                'mt-2': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
+                'mt-5': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
               })}
             >
               <AiChatBubble
