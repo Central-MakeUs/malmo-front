@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { BaseListSwaggerResponseChatRoomMessageData } from '@data/user-api-axios/api'
+import { InfiniteData, useMutation, useQueryClient } from '@tanstack/react-query'
 import { AlertTriangle, Bookmark, Copy } from 'lucide-react'
 import { type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
@@ -17,6 +18,7 @@ const MOVE_THRESHOLD = 8
 type MenuAlign = 'left' | 'right'
 type BubbleVariant = 'assistant' | 'user'
 type MenuPlacement = 'top' | 'bottom'
+type ChatMessagePages = InfiniteData<BaseListSwaggerResponseChatRoomMessageData>
 
 const findScrollContainer = (element: HTMLElement | null) => {
   let current = element?.parentElement ?? null
@@ -220,17 +222,17 @@ function ActionableBubble({
   }, [closeMenu, copyText])
 
   const updateMessageBookmarkId = useCallback(
-    (nextBookmarkId: number | null) => {
+    (nextBookmarkId?: number) => {
       if (messageId == null) return
-      const updateList = (oldData: any) => {
+      const updateList = (oldData: ChatMessagePages | undefined) => {
         if (!oldData?.pages) return oldData
         return {
           ...oldData,
-          pages: oldData.pages.map((page: any) => {
+          pages: oldData.pages.map((page) => {
             if (!page?.list) return page
             return {
               ...page,
-              list: page.list.map((item: any) => {
+              list: page.list.map((item) => {
                 if (item?.messageId !== messageId) return item
                 return {
                   ...item,
@@ -242,9 +244,9 @@ function ActionableBubble({
         }
       }
 
-      queryClient.setQueriesData({ queryKey: queryKeys.chat.messages() }, updateList)
+      queryClient.setQueriesData<ChatMessagePages>({ queryKey: queryKeys.chat.messages() }, updateList)
       if (chatRoomId != null) {
-        queryClient.setQueriesData({ queryKey: queryKeys.history.detail(chatRoomId) }, updateList)
+        queryClient.setQueriesData<ChatMessagePages>({ queryKey: queryKeys.history.detail(chatRoomId) }, updateList)
       }
     },
     [chatRoomId, messageId, queryClient]
@@ -259,7 +261,7 @@ function ActionableBubble({
     }
     try {
       const response = await createBookmark({ chatRoomId, messageId })
-      updateMessageBookmarkId(response?.bookmarkId ?? null)
+      updateMessageBookmarkId(response?.bookmarkId ?? undefined)
       await queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all })
     } finally {
       closeMenu()
@@ -282,7 +284,7 @@ function ActionableBubble({
 
     try {
       await deleteBookmarks({ chatRoomId, bookmarkIdList: [bookmarkId] })
-      updateMessageBookmarkId(null)
+      updateMessageBookmarkId(undefined)
       await queryClient.invalidateQueries({ queryKey: queryKeys.bookmark.all })
     } finally {
       closeMenu()
@@ -319,11 +321,32 @@ function ActionableBubble({
   )
 }
 
+interface MessageMetadataProps {
+  align: MenuAlign
+  isBookmarked: boolean
+  showTimestamp: boolean
+  timestamp?: string
+  timestampClassName: string
+}
+
+function MessageMetadata({ align, isBookmarked, showTimestamp, timestamp, timestampClassName }: MessageMetadataProps) {
+  const shouldShowMetadata = isBookmarked || (showTimestamp && !!timestamp)
+  if (!shouldShowMetadata) return null
+
+  return (
+    <div className={cn('flex flex-col', align === 'right' ? 'items-end' : 'items-start')}>
+      {isBookmarked && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
+      {showTimestamp && timestamp && <p className={timestampClassName}>{timestamp}</p>}
+    </div>
+  )
+}
+
 interface AiChatBubbleProps {
   messageId?: number
   chatRoomId?: number
   message?: string
   timestamp?: string
+  showTimestamp?: boolean
   senderName?: string
   isTyping?: boolean
   bookmarkId?: number | null
@@ -337,6 +360,7 @@ export function AiChatBubble(props: AiChatBubbleProps) {
     message = '',
     senderName = '모모',
     timestamp = '',
+    showTimestamp = true,
     isTyping = false,
     bookmarkId = null,
     showHeader = true,
@@ -384,11 +408,14 @@ export function AiChatBubble(props: AiChatBubbleProps) {
               >
                 <p className="body2-regular break-words text-gray-800">{group}</p>
               </ActionableBubble>
-              {index === messageGroups.length - 1 && timestamp && (
-                <div className="flex flex-col items-start">
-                  {isBookmarked && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
-                  <p className="label2-regular text-gray-600">{timestamp}</p>
-                </div>
+              {index === messageGroups.length - 1 && (
+                <MessageMetadata
+                  align="left"
+                  isBookmarked={isBookmarked}
+                  showTimestamp={showTimestamp}
+                  timestamp={timestamp}
+                  timestampClassName="label2-regular text-gray-600"
+                />
               )}
             </div>
           ))
@@ -403,6 +430,7 @@ interface MyChatBubbleProps {
   chatRoomId?: number
   message?: string
   timestamp: string
+  showTimestamp?: boolean
   bookmarkId?: number | null
   onRetry?: () => void
 }
@@ -412,6 +440,7 @@ export function MyChatBubble({
   chatRoomId,
   message = '',
   timestamp,
+  showTimestamp = true,
   bookmarkId = null,
   status = 'sent',
   onRetry,
@@ -428,10 +457,13 @@ export function MyChatBubble({
             </button>
           </div>
         )}
-        <div className="flex flex-shrink-0 flex-col items-end">
-          {isBookmarked && <Bookmark className="mb-1 h-3 w-3 text-gray-iron-700" fill="currentColor" />}
-          <p className="text-[11px] leading-[20px] text-gray-600">{timestamp}</p>
-        </div>
+        <MessageMetadata
+          align="right"
+          isBookmarked={isBookmarked}
+          showTimestamp={showTimestamp}
+          timestamp={timestamp}
+          timestampClassName="text-[11px] leading-[20px] text-gray-600"
+        />
         <ActionableBubble
           align="right"
           variant="user"
@@ -443,7 +475,7 @@ export function MyChatBubble({
             'border border-red-300': status === 'failed',
           })}
         >
-          <p className="body2-regular break-words break-keep text-gray-800">{message}</p>
+          <p className="body2-regular break-words text-gray-800">{message}</p>
         </ActionableBubble>
       </div>
     </div>

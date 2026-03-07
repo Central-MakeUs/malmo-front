@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 
 import onboardingEndImage from '@/assets/images/onboarding-end.png'
+import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
 import { useOnboardingNavigation } from '@/features/onboarding/hooks/use-onboarding-navigation'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
@@ -12,10 +14,39 @@ export const Route = createFileRoute('/onboarding/complete/')({
 
 function ConnectCompletePage() {
   const { goToHome } = useOnboardingNavigation()
+  const { data, completeOnboarding, isOnboardingCompleted } = useOnboarding()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleNext = wrapWithTracking(BUTTON_NAMES.START_SERVICE, CATEGORIES.ONBOARDING, () => {
-    // 홈으로 이동
-    goToHome()
+  // 연애 상태에 따른 동적 메시지
+  const getCompletionMessage = () => {
+    if (data.relationshipStatus === 'IN_RELATIONSHIP' || data.relationshipStatus === 'SEEING_SOMEONE') {
+      return {
+        title: '커플 연결이 완료되었어요!',
+        description: '이제 말모를 사용하러 가볼까요?',
+      }
+    }
+    return {
+      title: '가입이 완료되었어요!',
+      description: '말모와 함께 연애 상담을 시작해볼까요?',
+    }
+  }
+
+  const message = getCompletionMessage()
+
+  const handleNext = wrapWithTracking(BUTTON_NAMES.START_SERVICE, CATEGORIES.ONBOARDING, async () => {
+    if (isSubmitting) return
+
+    setIsSubmitting(true)
+    try {
+      if (!isOnboardingCompleted) {
+        const success = await completeOnboarding()
+        if (!success) return
+      }
+
+      await goToHome()
+    } finally {
+      setIsSubmitting(false)
+    }
   })
 
   return (
@@ -27,14 +58,14 @@ function ConnectCompletePage() {
 
         {/* 텍스트 영역 */}
         <div className="mt-[24px] flex flex-col items-center">
-          <h1 className="title2-bold text-gray-iron-950">커플 연결이 완료되었어요!</h1>
-          <p className="body2-medium mt-[4px] text-gray-iron-400">이제 말모를 사용하러 가볼까요?</p>
+          <h1 className="title2-bold text-gray-iron-950">{message.title}</h1>
+          <p className="body2-medium mt-[4px] text-gray-iron-400">{message.description}</p>
         </div>
       </div>
 
       {/* 다음 버튼 */}
       <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-        <Button text="시작하기" onClick={handleNext} />
+        <Button text="시작하기" onClick={handleNext} disabled={isSubmitting} />
       </div>
     </div>
   )

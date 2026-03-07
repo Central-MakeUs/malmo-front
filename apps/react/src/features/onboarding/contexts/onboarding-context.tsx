@@ -1,8 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 
-// import { useAuth } from '@/features/auth'
 import signUpService from '@/shared/services/sign-up.service'
+
+import type { SignUpRequestDto } from '@data/user-api-axios/api'
+
+// import { useAuth } from '@/features/auth'
+
+// 연애 상태 타입 정의
+export type RelationshipStatus = NonNullable<SignUpRequestDto['relationshipStatus']>
 
 // 온보딩 데이터 타입 정의
 interface OnboardingData {
@@ -11,6 +17,15 @@ interface OnboardingData {
 
   // 사용자 정보
   nickname: string
+
+  // 연애 상태
+  relationshipStatus: RelationshipStatus | null
+
+  // MBTI
+  personalityType: string | null
+
+  // 상대방 MBTI
+  otherPersonalityType: string | null
 
   // 기념일 정보
   anniversary: Date | null
@@ -23,11 +38,23 @@ interface OnboardingContextType {
   // 온보딩 데이터
   data: OnboardingData
 
+  // 온보딩 완료 여부(회원가입 API 성공 기준)
+  isOnboardingCompleted: boolean
+
   // 약관 동의 업데이트
   updateTermsAgreements: (agreements: Record<number, boolean>) => void
 
   // 닉네임 업데이트
   updateNickname: (nickname: string) => void
+
+  // 연애 상태 업데이트
+  updateRelationshipStatus: (status: RelationshipStatus) => void
+
+  // MBTI 업데이트
+  updatePersonalityType: (mbti: string) => void
+
+  // 상대방 MBTI 업데이트
+  updateOtherPersonalityType: (mbti: string) => void
 
   // 기념일 업데이트
   updateAnniversary: (date: Date) => void
@@ -43,6 +70,9 @@ interface OnboardingContextType {
 const defaultOnboardingData: OnboardingData = {
   termsAgreements: {},
   nickname: '',
+  relationshipStatus: null,
+  personalityType: null,
+  otherPersonalityType: null,
   anniversary: null,
   partnerCode: null,
 }
@@ -53,6 +83,7 @@ const OnboardingContext = createContext<OnboardingContextType | undefined>(undef
 // 컨텍스트 프로바이더 컴포넌트
 export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<OnboardingData>(defaultOnboardingData)
+  const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false)
 
   const signUpMutation = useMutation({
     ...signUpService.signUpMutation(),
@@ -74,6 +105,30 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }))
   }
 
+  // 연애 상태 업데이트
+  const updateRelationshipStatus = (status: RelationshipStatus) => {
+    setData((prev) => ({
+      ...prev,
+      relationshipStatus: status,
+    }))
+  }
+
+  // MBTI 업데이트
+  const updatePersonalityType = (mbti: string) => {
+    setData((prev) => ({
+      ...prev,
+      personalityType: mbti,
+    }))
+  }
+
+  // 상대방 MBTI 업데이트
+  const updateOtherPersonalityType = (mbti: string) => {
+    setData((prev) => ({
+      ...prev,
+      otherPersonalityType: mbti,
+    }))
+  }
+
   // 기념일 업데이트
   const updateAnniversary = (date: Date) => {
     setData((prev) => ({
@@ -92,9 +147,13 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
   // 온보딩 완료 처리
   const completeOnboarding = async () => {
+    if (isOnboardingCompleted) {
+      return true
+    }
+
     try {
       // 여기서 API 호출
-      const requestBody = {
+      const requestBody: SignUpRequestDto = {
         nickname: data.nickname,
         terms: Object.entries(data.termsAgreements).map(([termsId, isAgreed]) => ({
           termsId: Number(termsId),
@@ -102,8 +161,21 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         })),
       }
 
+      if (data.relationshipStatus) {
+        requestBody.relationshipStatus = data.relationshipStatus
+      }
+
+      if (data.personalityType) {
+        requestBody.personalityType = data.personalityType
+      }
+
+      if (data.otherPersonalityType) {
+        requestBody.otherPersonalityType = data.otherPersonalityType
+      }
+
       // 회원가입 API 호출
       await signUpMutation.mutateAsync(requestBody)
+      setIsOnboardingCompleted(true)
 
       return true
     } catch {
@@ -115,8 +187,12 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     <OnboardingContext.Provider
       value={{
         data,
+        isOnboardingCompleted,
         updateTermsAgreements,
         updateNickname,
+        updateRelationshipStatus,
+        updatePersonalityType,
+        updateOtherPersonalityType,
         updateAnniversary,
         updatePartnerCode,
         completeOnboarding,

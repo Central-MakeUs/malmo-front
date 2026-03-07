@@ -1,0 +1,31 @@
+name: Deploy React (Prod)
+
+on:
+  push:
+    branches:
+      - prod
+    paths:
+      - 'apps/react/**'
+      - 'packages/**'
+      - '.github/workflows/deploy-react-prod.yml'
+      - '.github/workflows/react-deploy-reusable.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/prod'
+    uses: ./.github/workflows/react-deploy-reusable.yml
+    with:
+      environment: prod
+      discord_embed_title: '🚀 운영(Prod) 배포 완료'
+      discord_embed_color: '8923138'
+    secrets:
+      vite_api_url: ${{ secrets.VITE_API_URL }}
+      s3_bucket_name: ${{ secrets.S3_BUCKET_NAME }}
+      cloudfront_distribution_id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      aws_region: ${{ secrets.AWS_REGION }}
+      vite_amplitude_api_key: ${{ secrets.VITE_AMPLITUDE_API_KEY }}
+      vite_sentry_dsn: ${{ secrets.VITE_SENTRY_DSN }}
+      discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}

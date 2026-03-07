@@ -10,6 +10,9 @@ const PAGE_MAPPING: Record<string, { name: PageName; category: Category }> = {
   '/partner-status': { name: PAGE_NAMES.PARTNER_STATUS, category: CATEGORIES.MAIN },
   '/onboarding/terms': { name: PAGE_NAMES.ONBOARDING_TERMS, category: CATEGORIES.ONBOARDING },
   '/onboarding/nickname': { name: PAGE_NAMES.ONBOARDING_NICKNAME, category: CATEGORIES.ONBOARDING },
+  '/onboarding/relationship-status': { name: PAGE_NAMES.ONBOARDING_RELATIONSHIP_STATUS, category: CATEGORIES.ONBOARDING },
+  '/onboarding/mbti': { name: PAGE_NAMES.ONBOARDING_MBTI, category: CATEGORIES.ONBOARDING },
+  '/onboarding/partner-mbti': { name: PAGE_NAMES.ONBOARDING_PARTNER_MBTI, category: CATEGORIES.ONBOARDING },
   '/onboarding/anniversary': { name: PAGE_NAMES.ONBOARDING_ANNIVERSARY, category: CATEGORIES.ONBOARDING },
   '/onboarding/my-code': { name: PAGE_NAMES.ONBOARDING_MY_CODE, category: CATEGORIES.ONBOARDING },
   '/onboarding/partner-code': { name: PAGE_NAMES.ONBOARDING_PARTNER_CODE, category: CATEGORIES.ONBOARDING },
@@ -27,6 +30,9 @@ const PAGE_MAPPING: Record<string, { name: PageName; category: Category }> = {
   '/my-page/profile': { name: PAGE_NAMES.MYPAGE_PROFILE, category: CATEGORIES.PROFILE },
   '/my-page/couple-management': { name: PAGE_NAMES.MYPAGE_COUPLE, category: CATEGORIES.PROFILE },
   '/my-page/account-settings': { name: PAGE_NAMES.MYPAGE_SETTINGS, category: CATEGORIES.PROFILE },
+  '/relationship-status': { name: PAGE_NAMES.PROFILE_RELATIONSHIP_STATUS, category: CATEGORIES.PROFILE },
+  '/mbti': { name: PAGE_NAMES.PROFILE_MBTI, category: CATEGORIES.PROFILE },
+  '/partner-mbti': { name: PAGE_NAMES.PROFILE_PARTNER_MBTI, category: CATEGORIES.PROFILE },
   '/terms/privacy-policy': { name: PAGE_NAMES.TERMS_PRIVACY, category: CATEGORIES.PROFILE },
 }
 

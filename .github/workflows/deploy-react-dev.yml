@@ -1,0 +1,33 @@
+name: Deploy React (Dev)
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'apps/react/**'
+      - 'packages/**'
+      - '.github/workflows/deploy-react-dev.yml'
+      - '.github/workflows/react-deploy-reusable.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+      (github.event_name == 'workflow_dispatch')
+    uses: ./.github/workflows/react-deploy-reusable.yml
+    with:
+      environment: dev
+      discord_embed_title: '🧪 테스트(Dev) 배포 완료'
+      discord_embed_color: '5763719'
+    secrets:
+      vite_api_url: ${{ secrets.TEST_VITE_API_URL }}
+      s3_bucket_name: ${{ secrets.TEST_S3_BUCKET_NAME }}
+      cloudfront_distribution_id: ${{ secrets.TEST_CLOUDFRONT_DISTRIBUTION_ID }}
+      aws_access_key_id: ${{ secrets.TEST_AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.TEST_AWS_SECRET_ACCESS_KEY }}
+      aws_region: ${{ secrets.AWS_REGION }}
+      vite_amplitude_api_key: ${{ secrets.VITE_AMPLITUDE_API_KEY }}
+      vite_sentry_dsn: ${{ secrets.VITE_SENTRY_DSN }}
+      discord_webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}

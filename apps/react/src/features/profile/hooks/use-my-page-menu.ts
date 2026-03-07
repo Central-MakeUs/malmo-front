@@ -24,6 +24,13 @@ export function useMyPageMenu(terms: Term[], handleShowTerms: (termsId: number) 
   const menuItems: MenuItem[] = [
     // 기본 메뉴
     {
+      label: '프로필 관리',
+      group: MenuGroup.BASIC,
+      onClick: wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_MANAGE, CATEGORIES.PROFILE, () =>
+        navigate({ to: '/my-page/profile' })
+      ),
+    },
+    {
       label: '애착유형 검사하기',
       group: MenuGroup.BASIC,
       onClick: wrapWithTracking(BUTTON_NAMES.GO_ATTACHMENT_TEST, CATEGORIES.PROFILE, () =>

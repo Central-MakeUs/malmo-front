@@ -61,8 +61,6 @@ export const SSEConnectionAPIApiAxiosParamCreator = function (configuration?: Co
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      localVarHeaderParameter['Accept'] = 'text/event-stream'
-
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }

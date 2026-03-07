@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 interface TitleSectionProps {
   title: ReactNode
-  description?: string
+  description?: ReactNode
 }
 
 export function TitleSection({ title, description }: TitleSectionProps) {

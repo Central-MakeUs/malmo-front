@@ -3,6 +3,7 @@ import {
   MemberDataMemberStateEnum,
   MemberDataLoveTypeCategoryEnum,
   MemberDataProviderEnum,
+  MemberDataRelationshipStatusEnum,
 } from '@data/user-api-axios/api'
 import { createContext, ReactNode, useCallback, useEffect, useState, use } from 'react'
 
@@ -21,6 +22,9 @@ export type UserInfo = {
   nickname?: string
   startLoveDate?: string
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
+  relationshipStatus?: MemberDataRelationshipStatusEnum
+  personalityType?: string
+  otherPersonalityType?: string
   anxietyRate?: number
   avoidanceRate?: number
   totalChatRoomCount?: number
@@ -50,6 +54,9 @@ const initialUserInfo: UserInfo = {
   nickname: undefined,
   startLoveDate: undefined,
   loveTypeCategory: undefined,
+  relationshipStatus: undefined,
+  personalityType: undefined,
+  otherPersonalityType: undefined,
   anxietyRate: undefined,
   avoidanceRate: undefined,
   totalChatRoomCount: undefined,
@@ -77,6 +84,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           nickname: memberInfo.data.data.nickname,
           startLoveDate: memberInfo.data.data.startLoveDate || undefined,
           loveTypeCategory: memberInfo.data.data.loveTypeCategory || undefined,
+          relationshipStatus: memberInfo.data.data.relationshipStatus || undefined,
+          personalityType: memberInfo.data.data.personalityType || undefined,
+          otherPersonalityType: memberInfo.data.data.otherPersonalityType || undefined,
           anxietyRate: memberInfo.data.data.anxietyRate || undefined,
           avoidanceRate: memberInfo.data.data.avoidanceRate || undefined,
           totalChatRoomCount: memberInfo.data.data.totalChatRoomCount || 0,

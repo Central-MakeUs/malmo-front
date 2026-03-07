@@ -20,4 +20,16 @@ export interface SignUpRequestDto {
   terms?: Array<TermsDto>
   nickname: string
   loveTypeId?: number
+  relationshipStatus?: SignUpRequestDtoRelationshipStatusEnum
+  personalityType?: string
+  otherPersonalityType?: string
 }
+
+export const SignUpRequestDtoRelationshipStatusEnum = {
+  InRelationship: 'IN_RELATIONSHIP',
+  SeeingSomeone: 'SEEING_SOMEONE',
+  Breakup: 'BREAKUP',
+} as const
+
+export type SignUpRequestDtoRelationshipStatusEnum =
+  (typeof SignUpRequestDtoRelationshipStatusEnum)[keyof typeof SignUpRequestDtoRelationshipStatusEnum]

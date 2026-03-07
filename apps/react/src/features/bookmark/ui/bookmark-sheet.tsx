@@ -71,7 +71,7 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
   const isSheetExpanded = isDeleteMode || isExpanded
   const expandedHeight = `calc(100vh - (var(--safe-top) + ${headerHeight}px))`
   const sheetStyle = {
-    height: isSheetExpanded ? expandedHeight : '50vh',
+    height: isSheetExpanded ? expandedHeight : '354px',
     transition: 'height 260ms cubic-bezier(0.22, 1, 0.36, 1)',
   }
 
@@ -111,28 +111,28 @@ export function BookmarkSheet({ isOpen, onOpenChange, chatRoomId, onSelectBookma
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetContent
         side="bottom"
-        className="rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden"
+        className="flex flex-col rounded-t-[20px] border-none p-0 [&>*:last-child]:hidden"
         style={sheetStyle}
       >
         <SheetTitle className="sr-only">북마크</SheetTitle>
 
-        <div className="flex px-5 py-3">
+        <div className="flex px-5">
           <button
             type="button"
             aria-label="시트 높이 조절"
             onPointerDown={handleDragStart}
             onPointerUp={handleDragEnd}
             onPointerCancel={handleDragEnd}
-            className="flex h-10 w-full items-center justify-center"
+            className="flex h-10 w-full items-start justify-center pt-2"
           >
-            <span className="h-1 w-10 rounded-full bg-gray-iron-200" />
+            <span className="h-1 w-11 rounded-full bg-gray-iron-200" />
           </button>
         </div>
 
-        <div className={cn('relative flex h-full flex-col px-5 pt-4 pb-6', { 'pb-0': isDeleteMode })}>
+        <div className={cn('relative flex h-full flex-col px-5 pb-6', { 'pb-0': isDeleteMode })}>
           <button
             type="button"
-            className="body2-medium absolute top-8 right-5 text-gray-iron-700"
+            className="body2-medium absolute top-1 right-5 text-gray-iron-700"
             onClick={() => {
               if (isDeleteMode) {
                 setIsDeleteMode(false)
