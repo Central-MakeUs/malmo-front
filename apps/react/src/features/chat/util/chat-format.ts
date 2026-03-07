@@ -23,6 +23,53 @@ export const formatTimestamp = (isoString?: string): string => {
   return `${hours}:${minutes}`
 }
 
+const getDateParts = (timestamp?: string) => {
+  if (!timestamp) return null
+
+  const date = new Date(timestamp)
+  if (Number.isNaN(date.getTime())) return null
+
+  return {
+    year: date.getFullYear(),
+    month: date.getMonth(),
+    day: date.getDate(),
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+  }
+}
+
+/**
+ * ISO 8601 형식의 날짜 문자열이 같은 날짜인지 확인합니다.
+ */
+export const isSameCalendarDay = (firstTimestamp?: string, secondTimestamp?: string): boolean => {
+  const firstDateParts = getDateParts(firstTimestamp)
+  const secondDateParts = getDateParts(secondTimestamp)
+  if (!firstDateParts || !secondDateParts) return false
+
+  return (
+    firstDateParts.year === secondDateParts.year &&
+    firstDateParts.month === secondDateParts.month &&
+    firstDateParts.day === secondDateParts.day
+  )
+}
+
+/**
+ * ISO 8601 형식의 날짜 문자열이 같은 분 단위 시각인지 확인합니다.
+ */
+export const isSameTimestampMinute = (firstTimestamp?: string, secondTimestamp?: string): boolean => {
+  const firstDateParts = getDateParts(firstTimestamp)
+  const secondDateParts = getDateParts(secondTimestamp)
+  if (!firstDateParts || !secondDateParts) return false
+
+  return (
+    firstDateParts.year === secondDateParts.year &&
+    firstDateParts.month === secondDateParts.month &&
+    firstDateParts.day === secondDateParts.day &&
+    firstDateParts.hour === secondDateParts.hour &&
+    firstDateParts.minute === secondDateParts.minute
+  )
+}
+
 /**
  * 텍스트를 문장 단위로 분리한 후, 지정된 개수만큼 묶어 배열로 반환합니다.
  */

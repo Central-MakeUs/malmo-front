@@ -1,4 +1,4 @@
-import { formatDate } from '../util/chat-format'
+import { formatDate, isSameCalendarDay } from '../util/chat-format'
 
 interface DateDividerProps {
   currentTimestamp?: string
@@ -15,10 +15,7 @@ export function DateDivider({ currentTimestamp, previousTimestamp }: DateDivider
     )
   }
 
-  const currentDate = new Date(currentTimestamp).toDateString()
-  const previousDate = new Date(previousTimestamp).toDateString()
-
-  if (currentDate !== previousDate) {
+  if (!isSameCalendarDay(currentTimestamp, previousTimestamp)) {
     return (
       <div className="mx-auto mb-5 w-fit rounded-[30px] bg-gray-100 px-[14px] py-[6px]">
         <p className="label1-medium font-medium text-gray-500">{formatDate(currentTimestamp)}</p>
