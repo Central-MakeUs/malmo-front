@@ -6,7 +6,7 @@ import React from 'react'
 import { ChatMessageTempStatus } from '@/features/chat/hooks/use-chat-queries'
 import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import { DateDivider } from '@/features/chat/ui/date-divider'
-import { formatTimestamp } from '@/features/chat/util/chat-format'
+import { formatTimestamp, isSameTimestampMinute } from '@/features/chat/util/chat-format'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { cn } from '@/shared/lib/cn'
@@ -36,6 +36,16 @@ const ATTACHMENT_PROMPT_MESSAGE =
 
 const isAttachmentPromptMessage = (message?: ChatRoomMessageData | null) =>
   message?.senderType === ChatRoomMessageDataSenderTypeEnum.System && message.content === ATTACHMENT_PROMPT_MESSAGE
+
+const shouldShowMessageTimestamp = (currentMessage: ChatRoomMessageData, nextMessage?: ChatRoomMessageData) => {
+  if (!currentMessage.createdAt) return false
+  if (!nextMessage?.createdAt) return true
+
+  return (
+    currentMessage.senderType !== nextMessage.senderType ||
+    !isSameTimestampMinute(currentMessage.createdAt, nextMessage.createdAt)
+  )
+}
 
 function AttachmentTestCta() {
   return (
@@ -92,10 +102,12 @@ export function ChatMessageList({
           {messages.map((chat, index) => {
             const previousTimestamp = index > 0 ? messages[index - 1]?.createdAt : undefined
             const previousSender = index > 0 ? messages[index - 1]?.senderType : undefined
+            const nextMessage = index < messages.length - 1 ? messages[index + 1] : undefined
             const showHeader =
               chat.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant &&
               previousSender !== ChatRoomMessageDataSenderTypeEnum.Assistant
             const isContinuous = previousSender === chat.senderType
+            const showTimestamp = shouldShowMessageTimestamp(chat, nextMessage)
             const bookmarkId = chat.bookmarkId ?? null
             const isAttachmentPrompt = isAttachmentPromptMessage(chat)
             const isLastMessage = index === messages.length - 1
@@ -115,6 +127,7 @@ export function ChatMessageList({
                     chatRoomId={resolvedChatRoomId}
                     message={chat.content}
                     timestamp={formatTimestamp(chat.createdAt)}
+                    showTimestamp={showTimestamp}
                     bookmarkId={bookmarkId}
                     showHeader={showHeader}
                   />
@@ -124,6 +137,7 @@ export function ChatMessageList({
                     chatRoomId={resolvedChatRoomId}
                     message={chat.content}
                     timestamp={formatTimestamp(chat.createdAt)}
+                    showTimestamp={showTimestamp}
                     bookmarkId={bookmarkId}
                   />
                 ) : (
@@ -132,6 +146,7 @@ export function ChatMessageList({
                     chatRoomId={resolvedChatRoomId}
                     message={chat.content}
                     timestamp={formatTimestamp(chat.createdAt)}
+                    showTimestamp={showTimestamp}
                     status={(chat as ChatRoomMessageData & ChatMessageTempStatus).status ?? 'sent'}
                     bookmarkId={bookmarkId}
                     onRetry={() => onRetry(chat.content!)}
