@@ -1,3 +1,4 @@
+// @deprecated 홈 화면 필수 입력 플로우에서 제거됨. 마이페이지 MBTI 수정 연동 여부 확인 후 삭제
 import { z } from 'zod'
 
 export const requiredProfileFlowSearchSchema = z.object({
