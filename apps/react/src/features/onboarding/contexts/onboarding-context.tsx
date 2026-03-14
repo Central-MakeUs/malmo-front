@@ -29,9 +29,6 @@ interface OnboardingData {
 
   // 기념일 정보
   anniversary: Date | null
-
-  // 커플 연결 정보
-  partnerCode: string | null
 }
 
 interface OnboardingContextType {
@@ -59,9 +56,6 @@ interface OnboardingContextType {
   // 기념일 업데이트
   updateAnniversary: (date: Date) => void
 
-  // 파트너 코드 업데이트
-  updatePartnerCode: (code: string) => void
-
   // 온보딩 완료 처리
   completeOnboarding: (overrides?: { relationshipStatus?: RelationshipStatus }) => Promise<boolean>
 }
@@ -74,7 +68,6 @@ const defaultOnboardingData: OnboardingData = {
   personalityType: null,
   otherPersonalityType: null,
   anniversary: null,
-  partnerCode: null,
 }
 
 // 컨텍스트 생성
@@ -137,14 +130,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
     }))
   }
 
-  // 파트너 코드 업데이트
-  const updatePartnerCode = (code: string) => {
-    setData((prev) => ({
-      ...prev,
-      partnerCode: code,
-    }))
-  }
-
   // 온보딩 완료 처리
   const completeOnboarding = async (overrides?: { relationshipStatus?: RelationshipStatus }) => {
     if (isOnboardingCompleted) {
@@ -195,7 +180,6 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         updatePersonalityType,
         updateOtherPersonalityType,
         updateAnniversary,
-        updatePartnerCode,
         completeOnboarding,
       }}
     >

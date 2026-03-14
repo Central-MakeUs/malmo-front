@@ -19,19 +19,7 @@ interface RouterContext {
 const publicRoutes = ['/login', '/intro', '/terms/privacy-policy']
 
 // 온보딩 경로
-const onboardingRoutes = [
-  '/onboarding/terms',
-  '/onboarding/nickname',
-  '/onboarding/relationship-status',
-  '/onboarding/mbti',
-  '/onboarding/partner-mbti',
-  '/onboarding/my-code',
-  '/onboarding/anniversary',
-  '/onboarding/partner-code',
-  '/onboarding/complete',
-]
-
-const coupleFlowRoutes = ['/onboarding/partner-code', '/onboarding/anniversary']
+const onboardingRoutes = ['/onboarding/terms', '/onboarding/nickname', '/onboarding/relationship-status']
 
 function normalizePath(path: string) {
   return path.replace(/\/$/, '')
@@ -51,9 +39,6 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     // --- 인증 기반 라우팅 규칙 ---
     const isOnLoginRoute = pathname === '/login'
     const isOnOnboardingRoute = matchRoute(onboardingRoutes, pathname)
-    const isCoupleFlowRoute = matchRoute(coupleFlowRoutes, pathname)
-    const search = (location.search ?? {}) as Record<string, unknown>
-    const isCoupleFlowAccess = isCoupleFlowRoute && (search?.coupleFlow === true || search?.coupleFlow === 'true')
 
     // 1. 인증된 사용자
     if (authenticated) {
@@ -66,7 +51,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         throw redirect({ to: '/onboarding/terms' })
       }
       // 규칙 3: 온보딩을 마쳤는데 온보딩 경로로 접근 시, 홈으로 리다이렉트
-      if (!needsOnboarding && isOnOnboardingRoute && !isCoupleFlowAccess) {
+      if (!needsOnboarding && isOnOnboardingRoute) {
         throw redirect({ to: '/' })
       }
       return // 모든 규칙 통과 시 접근 허용
