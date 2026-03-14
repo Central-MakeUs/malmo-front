@@ -1,3 +1,4 @@
+// @deprecated 온보딩 플로우에서 제거됨. 사용하지 않을 시 삭제
 import { createFileRoute } from '@tanstack/react-router'
 
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'

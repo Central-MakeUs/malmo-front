@@ -20,13 +20,17 @@ const RELATIONSHIP_OPTIONS: {
 ]
 
 function RelationshipStatusPage() {
-  const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
+  const { goToPreviousStep, completeAndGoHome } = useOnboardingNavigation()
   const { data, updateRelationshipStatus } = useOnboarding()
 
-  const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_RELATIONSHIP_STATUS, CATEGORIES.ONBOARDING, (value: string) => {
-    updateRelationshipStatus(value as RelationshipStatus)
-    goToNextStep()
-  })
+  const handleNext = wrapWithTracking(
+    BUTTON_NAMES.NEXT_RELATIONSHIP_STATUS,
+    CATEGORIES.ONBOARDING,
+    async (value: string) => {
+      updateRelationshipStatus(value as RelationshipStatus)
+      await completeAndGoHome(value as RelationshipStatus)
+    }
+  )
 
   const handleBack = wrapWithTracking(
     BUTTON_NAMES.BACK_RELATIONSHIP_STATUS,

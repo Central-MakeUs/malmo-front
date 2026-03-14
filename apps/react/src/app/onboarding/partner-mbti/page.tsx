@@ -1,3 +1,4 @@
+// @deprecated 온보딩 플로우에서 제거됨. 사용하지 않을 시 삭제
 import { createFileRoute } from '@tanstack/react-router'
 
 import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
@@ -19,16 +20,12 @@ function PartnerMbtiPage() {
     goToNextStep()
   })
 
-  const handleBack = wrapWithTracking(
-    BUTTON_NAMES.BACK_PARTNER_MBTI,
-    CATEGORIES.ONBOARDING,
-    (mbti: string | null) => {
-      if (mbti) {
-        updateOtherPersonalityType(mbti)
-      }
-      goToPreviousStep()
+  const handleBack = wrapWithTracking(BUTTON_NAMES.BACK_PARTNER_MBTI, CATEGORIES.ONBOARDING, (mbti: string | null) => {
+    if (mbti) {
+      updateOtherPersonalityType(mbti)
     }
-  )
+    goToPreviousStep()
+  })
 
   return (
     <MbtiForm

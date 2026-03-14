@@ -1,3 +1,4 @@
+// @deprecated 온보딩 플로우에서 제거됨. 사용하지 않을 시 삭제
 import { useMutation } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'

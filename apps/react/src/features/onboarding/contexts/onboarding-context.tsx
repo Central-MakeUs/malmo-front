@@ -63,7 +63,7 @@ interface OnboardingContextType {
   updatePartnerCode: (code: string) => void
 
   // 온보딩 완료 처리
-  completeOnboarding: () => Promise<boolean>
+  completeOnboarding: (overrides?: { relationshipStatus?: RelationshipStatus }) => Promise<boolean>
 }
 
 // 기본값 설정
@@ -146,7 +146,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   }
 
   // 온보딩 완료 처리
-  const completeOnboarding = async () => {
+  const completeOnboarding = async (overrides?: { relationshipStatus?: RelationshipStatus }) => {
     if (isOnboardingCompleted) {
       return true
     }
@@ -161,8 +161,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         })),
       }
 
-      if (data.relationshipStatus) {
-        requestBody.relationshipStatus = data.relationshipStatus
+      const effectiveRelationshipStatus = overrides?.relationshipStatus ?? data.relationshipStatus
+      if (effectiveRelationshipStatus) {
+        requestBody.relationshipStatus = effectiveRelationshipStatus
       }
 
       if (data.personalityType) {
