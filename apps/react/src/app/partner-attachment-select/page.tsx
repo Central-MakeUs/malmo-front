@@ -7,7 +7,6 @@ import { useAuth } from '@/features/auth'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
-import { cn } from '@/shared/lib/cn'
 import memberService from '@/shared/services/member.service'
 import { Button } from '@/shared/ui'
 import {
@@ -23,6 +22,7 @@ import {
 import { getChatEntryProgressBar } from '@/shared/ui/flow-progress-bar'
 import { getPersonalityStepDots } from '@/shared/ui/flow-step-dots'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { SelectableButton } from '@/shared/ui/selectable-button'
 import { toast } from '@/shared/ui/toast'
 
 import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
@@ -102,17 +102,15 @@ function PartnerAttachmentSelectPage() {
 
         <div className="mt-[68px] flex flex-col gap-3 px-5">
           {ATTACHMENT_OPTIONS.map((option) => (
-            <button
+            <SelectableButton
               key={option.value}
+              selected={false}
               onClick={() => handleSelect(option.value)}
               disabled={updateMutation.isPending}
-              className={cn(
-                'w-full rounded-[10px] border border-gray-neutral-300 py-4 text-center transition-all',
-                'body2-medium text-gray-iron-950'
-              )}
+              className="w-full"
             >
               {option.label}
-            </button>
+            </SelectableButton>
           ))}
 
           {flow !== 'partner-personality' && (

@@ -2,9 +2,9 @@ import { ReactNode, useState } from 'react'
 
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { Screen } from '@/shared/layout/screen'
-import { cn } from '@/shared/lib/cn'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { SelectableButton } from '@/shared/ui/selectable-button'
 
 interface RelationshipStatusOption {
   value: string
@@ -54,7 +54,11 @@ export function RelationshipStatusForm({
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar title={headerTitle} showBackButton={showBackButton} onBackClick={onBack ? handleBack : undefined} />
+        <DetailHeaderBar
+          title={headerTitle}
+          showBackButton={showBackButton}
+          onBackClick={onBack ? handleBack : undefined}
+        />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white">
@@ -62,23 +66,14 @@ export function RelationshipStatusForm({
 
         <div className="mt-[68px] space-y-2 px-5">
           {options.map((option) => (
-            <button
+            <SelectableButton
               key={option.value}
+              selected={selected === option.value}
               onClick={() => setSelected(option.value)}
-              className={cn(
-                'flex w-full items-center rounded-[10px] border px-5 py-4 text-left transition-all',
-                selected === option.value ? 'border-malmo-rasberry-500' : 'border-gray-neutral-300'
-              )}
+              className="w-full text-left"
             >
-              <p
-                className={cn(
-                  'body2-medium',
-                  selected === option.value ? 'text-malmo-rasberry-500' : 'text-gray-iron-500'
-                )}
-              >
-                {option.label}
-              </p>
-            </button>
+              {option.label}
+            </SelectableButton>
           ))}
         </div>
 
