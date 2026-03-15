@@ -71,6 +71,21 @@ export interface MemberData {
    * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
    */
   otherPersonalityType?: string
+  /**
+   * 내 MBTI (신규 필드)
+   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   */
+  mbti?: string
+  /**
+   * 상대방 MBTI (신규 필드)
+   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   */
+  partnerMbti?: string
+  /**
+   * 상대방 애착 유형 (UNKNOWN = "모르겠어요" 선택됨, undefined = 미입력)
+   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   */
+  partnerLoveTypeCategory?: MemberDataPartnerLoveTypeCategoryEnum
 }
 
 export const MemberDataMemberStateEnum = {
@@ -104,3 +119,14 @@ export const MemberDataRelationshipStatusEnum = {
 
 export type MemberDataRelationshipStatusEnum =
   (typeof MemberDataRelationshipStatusEnum)[keyof typeof MemberDataRelationshipStatusEnum]
+// TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+export const MemberDataPartnerLoveTypeCategoryEnum = {
+  StableType: 'STABLE_TYPE',
+  AnxietyType: 'ANXIETY_TYPE',
+  AvoidanceType: 'AVOIDANCE_TYPE',
+  ConfusionType: 'CONFUSION_TYPE',
+  Unknown: 'UNKNOWN',
+} as const
+
+export type MemberDataPartnerLoveTypeCategoryEnum =
+  (typeof MemberDataPartnerLoveTypeCategoryEnum)[keyof typeof MemberDataPartnerLoveTypeCategoryEnum]

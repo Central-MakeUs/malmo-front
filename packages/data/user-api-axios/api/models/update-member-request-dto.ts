@@ -17,7 +17,35 @@ export interface UpdateMemberRequestDto {
   relationshipStatus?: UpdateMemberRequestDtoRelationshipStatusEnum
   personalityType?: string
   otherPersonalityType?: string
+  loveTypeCategory?: UpdateMemberRequestDtoLoveTypeCategoryEnum
+  /**
+   * 상대방 애착 유형 (UNKNOWN = "모르겠어요" 선택됨)
+   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   */
+  otherLoveTypeCategory?: UpdateMemberRequestDtoOtherLoveTypeCategoryEnum | null
 }
+
+export const UpdateMemberRequestDtoLoveTypeCategoryEnum = {
+  StableType: 'STABLE_TYPE',
+  AnxietyType: 'ANXIETY_TYPE',
+  AvoidanceType: 'AVOIDANCE_TYPE',
+  ConfusionType: 'CONFUSION_TYPE',
+} as const
+
+export type UpdateMemberRequestDtoLoveTypeCategoryEnum =
+  (typeof UpdateMemberRequestDtoLoveTypeCategoryEnum)[keyof typeof UpdateMemberRequestDtoLoveTypeCategoryEnum]
+
+// TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+export const UpdateMemberRequestDtoOtherLoveTypeCategoryEnum = {
+  StableType: 'STABLE_TYPE',
+  AnxietyType: 'ANXIETY_TYPE',
+  AvoidanceType: 'AVOIDANCE_TYPE',
+  ConfusionType: 'CONFUSION_TYPE',
+  Unknown: 'UNKNOWN',
+} as const
+
+export type UpdateMemberRequestDtoOtherLoveTypeCategoryEnum =
+  (typeof UpdateMemberRequestDtoOtherLoveTypeCategoryEnum)[keyof typeof UpdateMemberRequestDtoOtherLoveTypeCategoryEnum]
 
 export const UpdateMemberRequestDtoRelationshipStatusEnum = {
   InRelationship: 'IN_RELATIONSHIP',

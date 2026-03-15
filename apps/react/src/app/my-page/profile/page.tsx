@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
+import { getAttachmentType } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
@@ -18,9 +19,11 @@ function ProfileManagementPage() {
 
   const myMbti = userInfo.personalityType?.toUpperCase()
   const partnerMbti = userInfo.otherPersonalityType?.toUpperCase()
+  const myAttachmentSubtype = getAttachmentType(userInfo.loveTypeCategory)?.subtype
+  const myBadgeText = myAttachmentSubtype ? `${myMbti ? myMbti + ' ' : ''}${myAttachmentSubtype}` : undefined
 
   return (
-      <Screen>
+    <Screen>
       <Screen.Header behavior="overlay">
         <DetailHeaderBar title="프로필 관리" />
       </Screen.Header>
@@ -35,16 +38,16 @@ function ProfileManagementPage() {
           />
           <ProfileRow
             label="내 성향"
-            badge={myMbti ? { text: myMbti, variant: 'completed' } : { text: '미입력', variant: 'default' }}
+            badge={myBadgeText ? { text: myBadgeText, variant: 'completed' } : undefined}
             onClick={wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_MBTI, CATEGORIES.PROFILE, () =>
-              navigate({ to: '/mbti' })
+              navigate({ to: '/mbti', search: { flow: 'my-personality' } })
             )}
           />
           <ProfileRow
             label="상대 성향"
             badge={partnerMbti ? { text: partnerMbti, variant: 'rasberry' } : { text: '미입력', variant: 'default' }}
             onClick={wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_PARTNER_MBTI, CATEGORIES.PROFILE, () =>
-              navigate({ to: '/partner-mbti' })
+              navigate({ to: '/partner-mbti', search: { flow: 'partner-personality' } })
             )}
           />
         </div>
