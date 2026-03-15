@@ -33,6 +33,7 @@ export const Route = createFileRoute('/partner-attachment-select/')({
 function PartnerAttachmentSelectPage() {
   const navigate = useNavigate()
   const { flow, chatId } = useSearch({ from: Route.id })
+  const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
   const pendingHasDataRef = useRef(false)
 
@@ -41,10 +42,10 @@ function PartnerAttachmentSelectPage() {
     errorMessage: '저장 중 오류가 발생했습니다',
   })
 
-  const handleSelect = (type: MemberDataLoveTypeCategoryEnum) => {
-    if (updateMutation.isPending) return
+  const handleConfirm = () => {
+    if (!selectedType || updateMutation.isPending) return
     pendingHasDataRef.current = true
-    updateMutation.mutate({ otherLoveTypeCategory: type })
+    updateMutation.mutate({ otherLoveTypeCategory: selectedType })
   }
 
   const handleDontKnow = () => {
@@ -68,9 +69,9 @@ function PartnerAttachmentSelectPage() {
         <TitleSection
           title={
             <>
-              상대의 성향이
+              상대의 애착유형을
               <br />
-              무엇인가요?
+              선택해주세요
             </>
           }
         />
@@ -79,49 +80,46 @@ function PartnerAttachmentSelectPage() {
           {ATTACHMENT_OPTIONS.map((option) => (
             <SelectableButton
               key={option.value}
-              selected={false}
-              onClick={() => handleSelect(option.value)}
+              selected={selectedType === option.value}
+              onClick={() => setSelectedType(option.value)}
               disabled={updateMutation.isPending}
-              className="w-full"
+              className="w-full py-5 text-left"
             >
               {option.label}
             </SelectableButton>
           ))}
 
-          {flow !== 'partner-personality' && (
-            <button
-              onClick={handleDontKnow}
-              disabled={updateMutation.isPending}
-              className="body2-medium w-full rounded-[10px] border border-gray-neutral-300 py-4 text-center text-gray-iron-500 transition-all"
-            >
-              상대의 애착유형을 모르겠어요
-            </button>
-          )}
+          <SelectableButton
+            onClick={handleDontKnow}
+            disabled={updateMutation.isPending}
+            className="body2-medium w-full rounded-[10px] border border-gray-neutral-300 py-5 text-left text-gray-iron-500 transition-all"
+            selected={false}
+          >
+            상대의 애착유형을 모르겠어요
+          </SelectableButton>
         </div>
 
         <FixedBottom>
-          <Button
-            text="건너뛰기"
-            type="secondary"
-            onClick={() => {
-              pendingHasDataRef.current = false
-              navigateAfterPartnerAttachment(navigate, flow, chatId, false)
-            }}
-          />
+          <Button text="프로필 완성!" onClick={handleConfirm} disabled={!selectedType || updateMutation.isPending} />
         </FixedBottom>
       </Screen.Content>
 
       <AlertDialog open={showDontKnowModal} onOpenChange={setShowDontKnowModal}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>상대의 성향을 모르시나요?</AlertDialogTitle>
+            <AlertDialogTitle>앗! 상대 정보는 AI가 추측할게요</AlertDialogTitle>
             <AlertDialogDescription>
-              상대의 성향을 모르는 경우 AI가 대화 중 상대의 성향을 분석할 예정이에요
+              상담에서 상대 정보를 자세히 입력할수록
+              <br />
+              정확한 추측이 가능해요
+              <br />
+              <br />
+              *성향 결과지는 상담 1회 진행 후 보여드려요
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>취소</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDontKnowConfirm}>확인</AlertDialogAction>
+            <AlertDialogCancel>돌아가기</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDontKnowConfirm}>완료하기</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -14,7 +14,7 @@ export const Route = createFileRoute('/partner-result-preview/')({
 
 function PartnerResultPreviewPage() {
   const navigate = useNavigate()
-  const { chatId } = useSearch({ from: Route.id })
+  const { flow, chatId } = useSearch({ from: Route.id })
 
   const handleContinue = () => {
     navigate({ to: '/chat', search: { chatId }, replace: true })
@@ -42,7 +42,7 @@ function PartnerResultPreviewPage() {
 
         <FixedBottom className="mt-0 flex flex-col gap-3">
           <Button text="결과지 보기" type="secondary" onClick={handleViewResult} />
-          <Button text="홈으로 가기" onClick={handleContinue} />
+          <Button text={flow === 'chat-entry' ? '프로필 이어서 완성하기' : '홈으로 가기'} onClick={handleContinue} />
         </FixedBottom>
       </Screen.Content>
     </Screen>
