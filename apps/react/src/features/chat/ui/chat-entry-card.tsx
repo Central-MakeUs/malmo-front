@@ -35,7 +35,7 @@ export function ChatEntryCard() {
       <h1 className="heading2-semibold text-gray-iron-950">연애 고민 상담</h1>
 
       {/* 연애고민상담 박스 */}
-      <div className="mt-3 rounded-[10px] bg-malmo-rasberry-25 px-4 pt-4 pb-[18px]">
+      <div className="mt-3 mb-4 rounded-[10px] bg-malmo-rasberry-25 px-4 pt-4 pb-[18px]">
         <div className="flex h-full flex-col justify-between">
           {/* 상단 컨텐츠 */}
           <div className="flex items-start justify-between">

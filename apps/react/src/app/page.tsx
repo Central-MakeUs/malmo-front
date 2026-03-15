@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import malmoLogo from '@/assets/images/malmo-logo-small.png'
 import { getAttachmentType, AttachmentTypeCards } from '@/features/attachment'
-import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
 import { useAuth } from '@/features/auth'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
@@ -11,6 +10,7 @@ import { usePartnerInfo } from '@/features/member'
 import { useAppNotifications } from '@/features/notification'
 import { Screen } from '@/shared/layout/screen'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
+import { BellNotificationIcon, KeyMessageBanner } from '@/shared/ui/key-message-banner'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -89,7 +89,12 @@ function HomePage() {
         <ChatEntryCard />
 
         {missingPersonalityCount > 0 && (
-          <AttachmentTestBanner missingCount={missingPersonalityCount} onClick={handleBannerClick} />
+          <KeyMessageBanner
+            icon={<BellNotificationIcon />}
+            subtitle={`아직 채우지 않은 성향 카드 ${missingPersonalityCount}건`}
+            title="완성하러 가기"
+            onClick={handleBannerClick}
+          />
         )}
 
         <RecentChatSection histories={histories} totalHistoryCount={totalHistoryCount} />
