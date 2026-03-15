@@ -1,17 +1,19 @@
 import { useMutation } from '@tanstack/react-query'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
-import { cn } from '@/shared/lib/cn'
 import memberService from '@/shared/services/member.service'
 import { Button } from '@/shared/ui'
 import { getChatEntryProgressBar } from '@/shared/ui/flow-progress-bar'
 import { getPersonalityStepDots } from '@/shared/ui/flow-step-dots'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+import { KeyMessageBanner } from '@/shared/ui/key-message-banner'
+import { SelectableButton } from '@/shared/ui/selectable-button'
 import { toast } from '@/shared/ui/toast'
 
 import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
@@ -25,6 +27,7 @@ function MyAttachmentSelectPage() {
   const navigate = useNavigate()
   const { flow, chatId } = useSearch({ from: Route.id })
   const { refreshUserInfo } = useAuth()
+  const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
 
   const updateMutation = useMutation({
     mutationFn: async (type: MemberDataLoveTypeCategoryEnum) => {
@@ -52,9 +55,9 @@ function MyAttachmentSelectPage() {
     }
   }
 
-  const handleSelect = (type: MemberDataLoveTypeCategoryEnum) => {
-    if (updateMutation.isPending) return
-    updateMutation.mutate(type)
+  const handleConfirm = () => {
+    if (!selectedType || updateMutation.isPending) return
+    updateMutation.mutate(selectedType)
   }
 
   const handleDontKnow = () => {
@@ -82,31 +85,26 @@ function MyAttachmentSelectPage() {
           }
         />
 
-        <div className="mt-[68px] flex flex-col gap-3 px-5">
-          {ATTACHMENT_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => handleSelect(option.value)}
-              disabled={updateMutation.isPending}
-              className={cn(
-                'w-full rounded-[10px] border border-gray-neutral-300 py-4 text-center transition-all',
-                'body2-medium text-gray-iron-950'
-              )}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="mt-6 flex flex-col gap-3 px-5">
+          <KeyMessageBanner title="내 애착유형을 모른다면? 테스트 GO" onClick={handleDontKnow} />
 
-          <button
-            onClick={handleDontKnow}
-            className="body2-medium w-full rounded-[10px] border border-gray-neutral-300 py-4 text-center text-gray-iron-500 transition-all"
-          >
-            내 애착유형을 모른다면? 테스트 GO
-          </button>
+          <div className="mt-3 flex flex-col gap-3">
+            {ATTACHMENT_OPTIONS.map((option) => (
+              <SelectableButton
+                key={option.value}
+                selected={selectedType === option.value}
+                onClick={() => setSelectedType(option.value)}
+                disabled={updateMutation.isPending}
+                className="w-full text-left"
+              >
+                {option.label}
+              </SelectableButton>
+            ))}
+          </div>
         </div>
 
         <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-          <Button text="건너뛰기" type="secondary" onClick={navigateToNext} />
+          <Button text="프로필 완성!" onClick={handleConfirm} disabled={!selectedType || updateMutation.isPending} />
         </div>
       </Screen.Content>
     </Screen>

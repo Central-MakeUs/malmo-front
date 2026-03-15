@@ -16,6 +16,7 @@ import { Route as ChatLayoutImport } from './app/chat/layout'
 import { Route as PageImport } from './app/page'
 import { Route as TutorialPageImport } from './app/tutorial/page'
 import { Route as RelationshipStatusPageImport } from './app/relationship-status/page'
+import { Route as PersonalityFlowLoadingPageImport } from './app/personality-flow-loading/page'
 import { Route as PartnerStatusPageImport } from './app/partner-status/page'
 import { Route as PartnerResultPreviewPageImport } from './app/partner-result-preview/page'
 import { Route as PartnerMbtiPageImport } from './app/partner-mbti/page'
@@ -74,6 +75,12 @@ const TutorialPageRoute = TutorialPageImport.update({
 const RelationshipStatusPageRoute = RelationshipStatusPageImport.update({
   id: '/relationship-status/',
   path: '/relationship-status/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PersonalityFlowLoadingPageRoute = PersonalityFlowLoadingPageImport.update({
+  id: '/personality-flow-loading/',
+  path: '/personality-flow-loading/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -361,6 +368,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartnerStatusPageImport
       parentRoute: typeof rootRoute
     }
+    '/personality-flow-loading/': {
+      id: '/personality-flow-loading/'
+      path: '/personality-flow-loading'
+      fullPath: '/personality-flow-loading'
+      preLoaderRoute: typeof PersonalityFlowLoadingPageImport
+      parentRoute: typeof rootRoute
+    }
     '/relationship-status/': {
       id: '/relationship-status/'
       path: '/relationship-status'
@@ -536,6 +550,7 @@ export interface FileRoutesByFullPath {
   '/partner-mbti': typeof PartnerMbtiPageRoute
   '/partner-result-preview': typeof PartnerResultPreviewPageRoute
   '/partner-status': typeof PartnerStatusPageRoute
+  '/personality-flow-loading': typeof PersonalityFlowLoadingPageRoute
   '/relationship-status': typeof RelationshipStatusPageRoute
   '/tutorial': typeof TutorialPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
@@ -571,6 +586,7 @@ export interface FileRoutesByTo {
   '/partner-mbti': typeof PartnerMbtiPageRoute
   '/partner-result-preview': typeof PartnerResultPreviewPageRoute
   '/partner-status': typeof PartnerStatusPageRoute
+  '/personality-flow-loading': typeof PersonalityFlowLoadingPageRoute
   '/relationship-status': typeof RelationshipStatusPageRoute
   '/tutorial': typeof TutorialPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
@@ -608,6 +624,7 @@ export interface FileRoutesById {
   '/partner-mbti/': typeof PartnerMbtiPageRoute
   '/partner-result-preview/': typeof PartnerResultPreviewPageRoute
   '/partner-status/': typeof PartnerStatusPageRoute
+  '/personality-flow-loading/': typeof PersonalityFlowLoadingPageRoute
   '/relationship-status/': typeof RelationshipStatusPageRoute
   '/tutorial/': typeof TutorialPageRoute
   '/attachment-test/question/': typeof AttachmentTestQuestionPageRoute
@@ -646,6 +663,7 @@ export interface FileRouteTypes {
     | '/partner-mbti'
     | '/partner-result-preview'
     | '/partner-status'
+    | '/personality-flow-loading'
     | '/relationship-status'
     | '/tutorial'
     | '/attachment-test/question'
@@ -680,6 +698,7 @@ export interface FileRouteTypes {
     | '/partner-mbti'
     | '/partner-result-preview'
     | '/partner-status'
+    | '/personality-flow-loading'
     | '/relationship-status'
     | '/tutorial'
     | '/attachment-test/question'
@@ -715,6 +734,7 @@ export interface FileRouteTypes {
     | '/partner-mbti/'
     | '/partner-result-preview/'
     | '/partner-status/'
+    | '/personality-flow-loading/'
     | '/relationship-status/'
     | '/tutorial/'
     | '/attachment-test/question/'
@@ -751,6 +771,7 @@ export interface RootRouteChildren {
   PartnerMbtiPageRoute: typeof PartnerMbtiPageRoute
   PartnerResultPreviewPageRoute: typeof PartnerResultPreviewPageRoute
   PartnerStatusPageRoute: typeof PartnerStatusPageRoute
+  PersonalityFlowLoadingPageRoute: typeof PersonalityFlowLoadingPageRoute
   RelationshipStatusPageRoute: typeof RelationshipStatusPageRoute
   TutorialPageRoute: typeof TutorialPageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
@@ -778,6 +799,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnerMbtiPageRoute: PartnerMbtiPageRoute,
   PartnerResultPreviewPageRoute: PartnerResultPreviewPageRoute,
   PartnerStatusPageRoute: PartnerStatusPageRoute,
+  PersonalityFlowLoadingPageRoute: PersonalityFlowLoadingPageRoute,
   RelationshipStatusPageRoute: RelationshipStatusPageRoute,
   TutorialPageRoute: TutorialPageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
@@ -812,6 +834,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/partner-mbti/",
         "/partner-result-preview/",
         "/partner-status/",
+        "/personality-flow-loading/",
         "/relationship-status/",
         "/tutorial/",
         "/attachment-test/question/",
@@ -884,6 +907,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/partner-status/": {
       "filePath": "partner-status/page.tsx"
+    },
+    "/personality-flow-loading/": {
+      "filePath": "personality-flow-loading/page.tsx"
     },
     "/relationship-status/": {
       "filePath": "relationship-status/page.tsx"
