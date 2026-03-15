@@ -1,13 +1,12 @@
-import { UpdateMemberRequestDtoRelationshipStatusEnum, type UpdateMemberRequestDto } from '@data/user-api-axios/api'
-import { useMutation } from '@tanstack/react-query'
+import { UpdateMemberRequestDtoRelationshipStatusEnum } from '@data/user-api-axios/api'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { RelationshipStatusForm } from '@/features/onboarding/ui/relationship-status-form'
+import { useMemberUpdateMutation } from '@/features/profile'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useGoBack } from '@/shared/navigation/use-go-back'
-import memberService from '@/shared/services/member.service'
 import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/relationship-status/')({
@@ -27,21 +26,14 @@ const RELATIONSHIP_OPTIONS: {
 
 function RelationshipStatusEditPage() {
   const goBack = useGoBack()
-  const { userInfo, refreshUserInfo } = useAuth()
+  const { userInfo } = useAuth()
 
-  const updateMutation = useMutation({
-    mutationFn: async (body: UpdateMemberRequestDto) => {
-      const { data } = await memberService.updateMember({ updateMemberRequestDto: body })
-      return data
-    },
-    onSuccess: async () => {
-      await refreshUserInfo()
+  const updateMutation = useMemberUpdateMutation({
+    onSuccess: () => {
       toast.success('연애 상태가 변경되었어요!')
       goBack()
     },
-    onError: () => {
-      toast.error('연애 상태 변경 중 오류가 발생했습니다')
-    },
+    errorMessage: '연애 상태 변경 중 오류가 발생했습니다',
   })
 
   const trackSave = wrapWithTracking(BUTTON_NAMES.SAVE_PROFILE_RELATIONSHIP_STATUS, CATEGORIES.PROFILE)

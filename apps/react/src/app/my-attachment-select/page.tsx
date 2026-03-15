@@ -1,20 +1,18 @@
-import { useMutation } from '@tanstack/react-query'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
-import { useAuth } from '@/features/auth'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
-import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { useMemberUpdateMutation } from '@/features/profile'
+import { navigateAfterMyAttachment, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
-import memberService from '@/shared/services/member.service'
 import { Button } from '@/shared/ui'
+import { FixedBottom } from '@/shared/ui/fixed-bottom'
 import { getChatEntryProgressBar } from '@/shared/ui/flow-progress-bar'
 import { getPersonalityStepDots } from '@/shared/ui/flow-step-dots'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { KeyMessageBanner } from '@/shared/ui/key-message-banner'
 import { SelectableButton } from '@/shared/ui/selectable-button'
-import { toast } from '@/shared/ui/toast'
 
 import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
@@ -26,45 +24,20 @@ export const Route = createFileRoute('/my-attachment-select/')({
 function MyAttachmentSelectPage() {
   const navigate = useNavigate()
   const { flow, chatId } = useSearch({ from: Route.id })
-  const { refreshUserInfo } = useAuth()
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
 
-  const updateMutation = useMutation({
-    mutationFn: async (type: MemberDataLoveTypeCategoryEnum) => {
-      const { data } = await memberService.updateMember({
-        updateMemberRequestDto: { loveTypeCategory: type },
-      })
-      return data
-    },
-    onSuccess: async () => {
-      await refreshUserInfo()
-      navigateToNext()
-    },
-    onError: () => {
-      toast.error('저장 중 오류가 발생했습니다')
-    },
+  const updateMutation = useMemberUpdateMutation({
+    onSuccess: () => navigateAfterMyAttachment(navigate, flow, chatId),
+    errorMessage: '저장 중 오류가 발생했습니다',
   })
-
-  const navigateToNext = () => {
-    if (flow === 'my-personality') {
-      navigate({ to: '/attachment-test/result/my', search: { from: 'my-page' } })
-    } else if (flow === 'chat-entry') {
-      navigate({ to: '/my-result-preview', search: { flow, chatId } })
-    } else {
-      navigate({ to: '/attachment-test/result/my' })
-    }
-  }
 
   const handleConfirm = () => {
     if (!selectedType || updateMutation.isPending) return
-    updateMutation.mutate(selectedType)
+    updateMutation.mutate({ loveTypeCategory: selectedType })
   }
 
   const handleDontKnow = () => {
-    navigate({
-      to: '/attachment-test',
-      search: { flow, chatId },
-    })
+    navigate({ to: '/attachment-test', search: { flow, chatId } })
   }
 
   return (
@@ -95,7 +68,7 @@ function MyAttachmentSelectPage() {
                 selected={selectedType === option.value}
                 onClick={() => setSelectedType(option.value)}
                 disabled={updateMutation.isPending}
-                className="w-full text-left"
+                className="w-full py-5 text-left"
               >
                 {option.label}
               </SelectableButton>
@@ -103,9 +76,9 @@ function MyAttachmentSelectPage() {
           </div>
         </div>
 
-        <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
+        <FixedBottom>
           <Button text="프로필 완성!" onClick={handleConfirm} disabled={!selectedType || updateMutation.isPending} />
-        </div>
+        </FixedBottom>
       </Screen.Content>
     </Screen>
   )

@@ -1,13 +1,11 @@
-import { useMutation } from '@tanstack/react-query'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
-import { useAuth } from '@/features/auth'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
-import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { useMemberUpdateMutation } from '@/features/profile'
+import { navigateAfterPartnerAttachment, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
-import memberService from '@/shared/services/member.service'
 import { Button } from '@/shared/ui'
 import {
   AlertDialog,
@@ -19,11 +17,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/alert-dialog'
+import { FixedBottom } from '@/shared/ui/fixed-bottom'
 import { getChatEntryProgressBar } from '@/shared/ui/flow-progress-bar'
 import { getPersonalityStepDots } from '@/shared/ui/flow-step-dots'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { SelectableButton } from '@/shared/ui/selectable-button'
-import { toast } from '@/shared/ui/toast'
 
 import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
@@ -35,42 +33,18 @@ export const Route = createFileRoute('/partner-attachment-select/')({
 function PartnerAttachmentSelectPage() {
   const navigate = useNavigate()
   const { flow, chatId } = useSearch({ from: Route.id })
-  const { refreshUserInfo } = useAuth()
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
+  const pendingHasDataRef = useRef(false)
 
-  const updateMutation = useMutation({
-    mutationFn: async (type: MemberDataLoveTypeCategoryEnum | null) => {
-      const { data } = await memberService.updateMember({
-        updateMemberRequestDto: { otherLoveTypeCategory: type },
-      })
-      return data
-    },
-    onSuccess: async (_data, type) => {
-      await refreshUserInfo()
-      navigateToNextAfterSelect(type !== null)
-    },
-    onError: () => {
-      toast.error('저장 중 오류가 발생했습니다')
-    },
+  const updateMutation = useMemberUpdateMutation({
+    onSuccess: () => navigateAfterPartnerAttachment(navigate, flow, chatId, pendingHasDataRef.current),
+    errorMessage: '저장 중 오류가 발생했습니다',
   })
-
-  const navigateToNextAfterSelect = (hasData: boolean) => {
-    if (flow === 'partner-personality') {
-      navigate({ to: '/attachment-test/result/partner' })
-    } else if (flow === 'chat-entry') {
-      if (hasData) {
-        navigate({ to: '/partner-result-preview', search: { flow, chatId } })
-      } else {
-        navigate({ to: '/chat', search: { chatId }, replace: true })
-      }
-    } else {
-      navigate({ to: '/attachment-test/result/partner' })
-    }
-  }
 
   const handleSelect = (type: MemberDataLoveTypeCategoryEnum) => {
     if (updateMutation.isPending) return
-    updateMutation.mutate(type)
+    pendingHasDataRef.current = true
+    updateMutation.mutate({ otherLoveTypeCategory: type })
   }
 
   const handleDontKnow = () => {
@@ -79,7 +53,8 @@ function PartnerAttachmentSelectPage() {
   }
 
   const handleDontKnowConfirm = () => {
-    updateMutation.mutate(null)
+    pendingHasDataRef.current = false
+    updateMutation.mutate({ otherLoveTypeCategory: null })
   }
 
   return (
@@ -124,9 +99,16 @@ function PartnerAttachmentSelectPage() {
           )}
         </div>
 
-        <div className="mt-auto mb-5 px-5 pb-[var(--safe-bottom)]">
-          <Button text="건너뛰기" type="secondary" onClick={() => navigateToNextAfterSelect(false)} />
-        </div>
+        <FixedBottom>
+          <Button
+            text="건너뛰기"
+            type="secondary"
+            onClick={() => {
+              pendingHasDataRef.current = false
+              navigateAfterPartnerAttachment(navigate, flow, chatId, false)
+            }}
+          />
+        </FixedBottom>
       </Screen.Content>
 
       <AlertDialog open={showDontKnowModal} onOpenChange={setShowDontKnowModal}>
