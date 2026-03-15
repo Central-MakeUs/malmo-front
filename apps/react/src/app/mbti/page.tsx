@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useAuth } from '@/features/auth'
 import { MbtiForm } from '@/features/onboarding/ui/mbti-form'
 import { useMemberUpdateMutation } from '@/features/profile'
-import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { navigateAfterMyMbti, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useGoBack } from '@/shared/navigation/use-go-back'
@@ -24,18 +24,11 @@ function MbtiEditPage() {
 
   const updateMutation = useMemberUpdateMutation({
     onSuccess: () => {
-      if (flow === 'my-personality') {
-        navigate({ to: '/my-attachment-select', search: { flow } })
-        return
+      const navigated = navigateAfterMyMbti(navigate, flow, chatId)
+      if (!navigated) {
+        toast.success('내 성향이 변경되었어요!')
+        goBack()
       }
-
-      if (flow === 'chat-entry') {
-        navigate({ to: '/my-attachment-select', search: { flow, chatId } })
-        return
-      }
-
-      toast.success('내 성향이 변경되었어요!')
-      goBack()
     },
     errorMessage: '내 성향 변경 중 오류가 발생했습니다',
   })
