@@ -20,7 +20,6 @@ export type UserInfo = {
   memberState: MemberState
   provider?: MemberDataProviderEnum
   nickname?: string
-  startLoveDate?: string
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
   relationshipStatus?: MemberDataRelationshipStatusEnum
   personalityType?: string
@@ -52,7 +51,6 @@ const initialUserInfo: UserInfo = {
   memberState: null,
   provider: undefined,
   nickname: undefined,
-  startLoveDate: undefined,
   loveTypeCategory: undefined,
   relationshipStatus: undefined,
   personalityType: undefined,
@@ -82,7 +80,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           memberState: memberInfo.data.data.memberState || null,
           provider: memberInfo.data.data.provider || undefined,
           nickname: memberInfo.data.data.nickname,
-          startLoveDate: memberInfo.data.data.startLoveDate || undefined,
           loveTypeCategory: memberInfo.data.data.loveTypeCategory || undefined,
           relationshipStatus: memberInfo.data.data.relationshipStatus || undefined,
           personalityType: memberInfo.data.data.personalityType || undefined,

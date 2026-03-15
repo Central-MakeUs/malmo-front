@@ -26,7 +26,7 @@ export function ChatEntryCard() {
       createdAt: new Date().toISOString(),
     })
 
-    navigate({ to: '/chat', search: { chatId: createdId } })
+    navigate({ to: '/mbti', search: { flow: 'chat-entry', chatId: createdId } })
   })
 
   return (

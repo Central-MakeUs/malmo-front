@@ -1,47 +1,43 @@
-// @deprecated 홈 화면 필수 입력 플로우에서 제거됨. 마이페이지 MBTI 수정 연동 여부 확인 후 삭제
-import { useMutation } from '@tanstack/react-query'
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { MbtiForm } from '@/features/onboarding/ui/mbti-form'
-import { requiredProfileFlowSearchSchema } from '@/features/profile/lib/required-profile-flow'
+import { useMemberUpdateMutation } from '@/features/profile'
+import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useGoBack } from '@/shared/navigation/use-go-back'
-import memberService from '@/shared/services/member.service'
+import { getChatEntryProgressBar } from '@/shared/ui/flow-progress-bar'
+import { getPersonalityStepDots } from '@/shared/ui/flow-step-dots'
 import { toast } from '@/shared/ui/toast'
 
-import type { UpdateMemberRequestDto } from '@data/user-api-axios/api'
-
 export const Route = createFileRoute('/mbti/')({
-  validateSearch: requiredProfileFlowSearchSchema,
+  validateSearch: personalityFlowSearchSchema,
   component: MbtiEditPage,
 })
 
 function MbtiEditPage() {
   const navigate = useNavigate()
   const goBack = useGoBack()
-  const { userInfo, refreshUserInfo } = useAuth()
-  const { requiredProfileFlow } = useSearch({ from: Route.id })
-  const isRequiredProfileFlow = requiredProfileFlow === true
+  const { userInfo } = useAuth()
+  const { flow, chatId } = useSearch({ from: Route.id })
 
-  const updateMutation = useMutation({
-    mutationFn: async (body: UpdateMemberRequestDto) => {
-      const { data } = await memberService.updateMember({ updateMemberRequestDto: body })
-      return data
-    },
-    onSuccess: async () => {
-      await refreshUserInfo()
-      if (isRequiredProfileFlow) {
-        navigate({ to: '/partner-mbti', search: { requiredProfileFlow: true }, replace: true })
+  const updateMutation = useMemberUpdateMutation({
+    onSuccess: () => {
+      if (flow === 'my-personality') {
+        navigate({ to: '/my-attachment-select', search: { flow } })
         return
       }
+
+      if (flow === 'chat-entry') {
+        navigate({ to: '/my-attachment-select', search: { flow, chatId } })
+        return
+      }
+
       toast.success('내 성향이 변경되었어요!')
       goBack()
     },
-    onError: () => {
-      toast.error('내 성향 변경 중 오류가 발생했습니다')
-    },
+    errorMessage: '내 성향 변경 중 오류가 발생했습니다',
   })
 
   const trackSave = wrapWithTracking(BUTTON_NAMES.SAVE_PROFILE_MBTI, CATEGORIES.PROFILE)
@@ -52,13 +48,13 @@ function MbtiEditPage() {
     updateMutation.mutate({ personalityType: mbti })
   }
 
-  const handleBack = isRequiredProfileFlow
-    ? () => navigate({ to: '/relationship-status', search: { requiredProfileFlow: true }, replace: true })
-    : undefined
+  const isFlowMode = !!flow
 
   return (
     <MbtiForm
-      headerTitle={isRequiredProfileFlow ? undefined : '내 성향'}
+      headerTitle={isFlowMode ? undefined : '내 성향'}
+      navCenter={getChatEntryProgressBar(flow === 'chat-entry', 1)}
+      contentTopSlot={getPersonalityStepDots(flow === 'my-personality', 1)}
       title={
         <>
           나의 MBTI 성향은
@@ -67,11 +63,11 @@ function MbtiEditPage() {
         </>
       }
       initialValue={userInfo.personalityType}
-      submitText={isRequiredProfileFlow ? '다음' : '변경하기'}
-      requireChangeForSubmit={!isRequiredProfileFlow}
+      submitText={isFlowMode ? '다음' : '변경하기'}
+      requireChangeForSubmit={!isFlowMode}
       isSubmitting={updateMutation.isPending}
       onSubmit={handleSubmit}
-      onBack={handleBack}
+      onBack={undefined}
     />
   )
 }

@@ -6,26 +6,6 @@ import { useOnboarding, type RelationshipStatus } from '@/features/onboarding/co
 // 온보딩 단계 (이용약관 → 닉네임 → 연애상태 → 홈)
 const STEPS = ['/onboarding/terms', '/onboarding/nickname', '/onboarding/relationship-status'] as const
 
-// @deprecated 사용하지 않을 시 제거
-const _DEPRECATED_BASE_STEPS = [
-  '/onboarding/terms',
-  '/onboarding/nickname',
-  '/onboarding/relationship-status',
-  '/onboarding/mbti',
-  '/onboarding/partner-mbti',
-] as const
-
-// @deprecated 사용하지 않을 시 제거
-const _DEPRECATED_COUPLE_STEPS = [
-  '/onboarding/my-code',
-  '/onboarding/partner-code',
-  '/onboarding/anniversary',
-  '/onboarding/complete',
-] as const
-
-// @deprecated 사용하지 않을 시 제거
-const _DEPRECATED_NON_COUPLE_STEPS = ['/onboarding/complete'] as const
-
 type OnboardingStep = (typeof STEPS)[number]
 
 export function useOnboardingNavigation() {
