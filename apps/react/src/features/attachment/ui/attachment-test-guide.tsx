@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import CheckIcon from '@/assets/icons/check.svg'
 import StarIcon from '@/assets/icons/star.svg'
+import bridge from '@/shared/bridge'
+import { useIsFrozenRoute } from '@/shared/navigation/transition/route-phase-context'
 import { Button } from '@/shared/ui'
 
 interface AttachmentTestGuideProps {
@@ -10,18 +13,25 @@ interface AttachmentTestGuideProps {
 }
 
 export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProps) {
+  const isFrozen = useIsFrozenRoute()
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     if (isOpen) {
       // 컴포넌트가 마운트된 후 애니메이션 시작
       setTimeout(() => setIsVisible(true), 10)
+      if (typeof bridge?.setModalOpen === 'function') {
+        void bridge.setModalOpen(true).catch(() => {})
+      }
     } else {
       setIsVisible(false)
+      if (typeof bridge?.setModalOpen === 'function') {
+        void bridge.setModalOpen(false).catch(() => {})
+      }
     }
   }, [isOpen])
 
-  if (!isOpen) return null
+  if (isFrozen || !isOpen) return null
 
   const guideItems = [
     '애착유형은 고정된 성격이 아닌 현재 관계 성향을 알려줘요',
@@ -29,7 +39,7 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
     '나와 비슷한 선택지를 가볍게 골라 주세요',
   ]
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end">
       {/* 배경 오버레이 */}
       <div
@@ -79,6 +89,7 @@ export function AttachmentTestGuide({ isOpen, onClose }: AttachmentTestGuideProp
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
