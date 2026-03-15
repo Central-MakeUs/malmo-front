@@ -25,14 +25,14 @@ interface UserInfo {
 interface AttachmentResultContentProps {
   userInfo: UserInfo | null | undefined
   type: 'my' | 'partner'
-  isFromChat?: boolean
+  from?: 'home' | 'chat' | 'my-page'
 }
 
-export function AttachmentResultContent({ userInfo, type, isFromChat = false }: AttachmentResultContentProps) {
+export function AttachmentResultContent({ userInfo, type, from }: AttachmentResultContentProps) {
   const navigate = useNavigate()
   const goBack = useGoBack()
   const isMyResult = type === 'my'
-  const ctaText = isFromChat ? '상담하러 가기' : '홈으로 이동하기'
+  const ctaText = from === 'chat' ? '상담하러 가기' : from === 'my-page' ? '마이페이지로 가기' : '홈으로 가기'
 
   // 결과 데이터 확인
   if (!userInfo?.loveTypeCategory) {
