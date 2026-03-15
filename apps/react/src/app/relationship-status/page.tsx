@@ -1,10 +1,9 @@
 import { UpdateMemberRequestDtoRelationshipStatusEnum, type UpdateMemberRequestDto } from '@data/user-api-axios/api'
 import { useMutation } from '@tanstack/react-query'
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { RelationshipStatusForm } from '@/features/onboarding/ui/relationship-status-form'
-import { requiredProfileFlowSearchSchema } from '@/features/profile/lib/required-profile-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useGoBack } from '@/shared/navigation/use-go-back'
@@ -12,7 +11,6 @@ import memberService from '@/shared/services/member.service'
 import { toast } from '@/shared/ui/toast'
 
 export const Route = createFileRoute('/relationship-status/')({
-  validateSearch: requiredProfileFlowSearchSchema,
   component: RelationshipStatusEditPage,
 })
 
@@ -28,11 +26,8 @@ const RELATIONSHIP_OPTIONS: {
 ]
 
 function RelationshipStatusEditPage() {
-  const navigate = useNavigate()
   const goBack = useGoBack()
   const { userInfo, refreshUserInfo } = useAuth()
-  const { requiredProfileFlow } = useSearch({ from: Route.id })
-  const isRequiredProfileFlow = requiredProfileFlow === true
 
   const updateMutation = useMutation({
     mutationFn: async (body: UpdateMemberRequestDto) => {
@@ -41,10 +36,6 @@ function RelationshipStatusEditPage() {
     },
     onSuccess: async () => {
       await refreshUserInfo()
-      if (isRequiredProfileFlow) {
-        navigate({ to: '/mbti', search: { requiredProfileFlow: true }, replace: true })
-        return
-      }
       toast.success('연애 상태가 변경되었어요!')
       goBack()
     },
@@ -63,7 +54,7 @@ function RelationshipStatusEditPage() {
 
   return (
     <RelationshipStatusForm
-      headerTitle={isRequiredProfileFlow ? undefined : '현재 연애 상태'}
+      headerTitle="현재 연애 상태"
       title={
         <>
           현재 연애 상태를
@@ -74,10 +65,10 @@ function RelationshipStatusEditPage() {
       description="이후에 관계 정보가 바뀌면 변경할 수 있어요"
       options={RELATIONSHIP_OPTIONS}
       initialValue={(userInfo.relationshipStatus as RelationshipStatus | undefined) ?? null}
-      submitText={isRequiredProfileFlow ? '다음' : '변경하기'}
-      requireChangeForSubmit={!isRequiredProfileFlow}
+      submitText="변경하기"
+      requireChangeForSubmit={true}
       isSubmitting={updateMutation.isPending}
-      showBackButton={!isRequiredProfileFlow}
+      showBackButton={true}
       onSubmit={handleSubmit}
     />
   )

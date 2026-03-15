@@ -7,6 +7,7 @@ import type { ReactNode } from 'react'
 
 interface DetailHeaderBarProps {
   title?: string
+  center?: ReactNode
   right?: ReactNode
   left?: ReactNode
   showBackButton?: boolean
@@ -16,6 +17,7 @@ interface DetailHeaderBarProps {
 
 export function DetailHeaderBar({
   title,
+  center,
   right,
   left,
   onBackClick,
@@ -39,7 +41,7 @@ export function DetailHeaderBar({
         className
       )}
     >
-      <div className="z-10 flex h-[30px] w-[30px] items-center justify-center">
+      <div className="z-10 flex h-[30px] w-[30px] shrink-0 items-center justify-center">
         {showBackButton && !left && (
           <button type="button" onClick={handleBackClick} className="p-1">
             <LucideChevronLeft className="h-[28px] w-[28px]" />
@@ -48,8 +50,12 @@ export function DetailHeaderBar({
         {left}
       </div>
 
-      {/* Title Area */}
-      {title && <h1 className="body1-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{title}</h1>}
+      {/* Center Area (takes priority over title) */}
+      {center ? (
+        <div className="flex flex-1 items-center px-2">{center}</div>
+      ) : (
+        title && <h1 className="body1-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{title}</h1>
+      )}
 
       {/* Right Area */}
       <div className="z-10">{right}</div>

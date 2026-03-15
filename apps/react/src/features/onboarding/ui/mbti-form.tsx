@@ -64,6 +64,8 @@ interface MbtiFormProps {
   title: ReactNode
   description?: ReactNode
   headerTitle?: string
+  navCenter?: ReactNode
+  contentTopSlot?: ReactNode
   initialValue?: string | null
   submitText: string
   requireChangeForSubmit?: boolean
@@ -76,6 +78,8 @@ export function MbtiForm({
   title,
   description,
   headerTitle,
+  navCenter,
+  contentTopSlot,
   initialValue = null,
   submitText,
   requireChangeForSubmit = false,
@@ -134,10 +138,11 @@ export function MbtiForm({
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar title={headerTitle} onBackClick={onBack ? handleBack : undefined} />
+        <DetailHeaderBar title={headerTitle} center={navCenter} onBackClick={onBack ? handleBack : undefined} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col overflow-y-auto bg-white">
+        {contentTopSlot}
         <TitleSection title={title} description={description} />
 
         <div className="mt-[68px] space-y-4 px-5">
@@ -159,9 +164,7 @@ export function MbtiForm({
                     <p
                       className={cn(
                         'body2-medium',
-                        selections[dimension.key] === option.value
-                          ? 'text-malmo-rasberry-500'
-                          : 'text-gray-iron-500'
+                        selections[dimension.key] === option.value ? 'text-malmo-rasberry-500' : 'text-gray-iron-500'
                       )}
                     >
                       {option.label}

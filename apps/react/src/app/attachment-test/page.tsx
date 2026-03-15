@@ -14,6 +14,8 @@ import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
   from: z.string().optional(),
+  flow: z.enum(['my-personality', 'partner-personality', 'chat-entry']).optional(),
+  chatId: z.number().optional(),
 })
 
 export const Route = createFileRoute('/attachment-test/')({
@@ -25,7 +27,7 @@ function AttachmentTestPage() {
   const navigate = useNavigate()
   const goBack = useGoBack()
   const { setStatusColor } = useTheme()
-  const { from } = useSearch({ from: Route.id })
+  const { from, flow, chatId } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
   const nickname = userInfo.nickname || '사용자'
 
@@ -38,7 +40,7 @@ function AttachmentTestPage() {
   }, [])
 
   const handleStartTest = wrapWithTracking(BUTTON_NAMES.START_TEST, CATEGORIES.ATTACHMENT, () =>
-    navigate({ to: '/attachment-test/question', search: { from }, replace: true })
+    navigate({ to: '/attachment-test/question', search: { from, flow, chatId }, replace: true })
   )
 
   return (

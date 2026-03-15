@@ -1,4 +1,4 @@
-import { createFileRoute, useSearch } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
 import z from 'zod'
 
@@ -19,6 +19,8 @@ import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
   from: z.string().optional(),
+  flow: z.enum(['my-personality', 'partner-personality', 'chat-entry']).optional(),
+  chatId: z.number().optional(),
 })
 
 export const Route = createFileRoute('/attachment-test/question/')({
@@ -28,8 +30,20 @@ export const Route = createFileRoute('/attachment-test/question/')({
 
 function AttachmentTestQuestionPage() {
   const [isGuideOpen, setIsGuideOpen] = useState(true)
-  const { from } = useSearch({ from: Route.id })
+  const { from, flow, chatId } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
+  const navigate = useNavigate()
+
+  const getOnComplete = () => {
+    if (flow === 'my-personality') {
+      return () => navigate({ to: '/attachment-test/result/my', replace: true })
+    }
+    if (flow === 'chat-entry') {
+      return () => navigate({ to: '/my-result-preview', search: { flow, chatId }, replace: true })
+    }
+    return undefined
+  }
+
   const {
     loading,
     error,
@@ -43,7 +57,7 @@ function AttachmentTestQuestionPage() {
     handleNext,
     handleSelectAnswer,
     setQuestionRef,
-  } = useAttachmentQuestions({ from })
+  } = useAttachmentQuestions({ from, onComplete: getOnComplete() })
 
   // 트래킹이 적용된 핸들러들
   const handleGoBackWithTracking = wrapWithTracking(BUTTON_NAMES.BACK_TEST, CATEGORIES.ATTACHMENT, handleGoBack)
@@ -56,7 +70,6 @@ function AttachmentTestQuestionPage() {
 
   const handleSelectAnswerWithTracking = wrapWithTracking(
     (_questionId: number, score: number) => {
-      // 선택한 옵션 번호에 따른 버튼 이름 결정 (1-5)
       const buttonNameMap = {
         1: BUTTON_NAMES.SELECT_OPTION_1,
         2: BUTTON_NAMES.SELECT_OPTION_2,
@@ -75,7 +88,6 @@ function AttachmentTestQuestionPage() {
     setIsGuideOpen(false)
   )
 
-  // 로딩 페이지 렌더링
   if (isSubmitting) {
     return <SubmissionLoading nickname={userInfo.nickname || '사용자'} />
   }

@@ -61,9 +61,13 @@ export interface UseAttachmentQuestionsResult {
 
 interface UseAttachmentQuestionsOptions {
   from?: string
+  onComplete?: () => void
 }
 
-export function useAttachmentQuestions({ from }: UseAttachmentQuestionsOptions = {}): UseAttachmentQuestionsResult {
+export function useAttachmentQuestions({
+  from,
+  onComplete,
+}: UseAttachmentQuestionsOptions = {}): UseAttachmentQuestionsResult {
   const navigate = useNavigate()
   const goBack = useGoBack()
   const auth = useAuth()
@@ -80,9 +84,13 @@ export function useAttachmentQuestions({ from }: UseAttachmentQuestionsOptions =
     onSuccess: async () => {
       await auth.refreshUserInfo()
 
-      // 2초 후 결과 페이지로 이동
+      // 2초 후 다음 페이지로 이동
       setTimeout(() => {
-        navigate({ to: '/attachment-test/result/my', search: { from }, replace: true })
+        if (onComplete) {
+          onComplete()
+        } else {
+          navigate({ to: '/attachment-test/result/my', search: { from }, replace: true })
+        }
       }, QUESTION_CONFIG.SUBMISSION_DELAY)
     },
     onError: (_error: any) => {
