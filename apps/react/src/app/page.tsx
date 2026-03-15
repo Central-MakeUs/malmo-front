@@ -42,9 +42,9 @@ function HomePage() {
   const handleBannerClick = () => {
     const myComplete = !!userInfo.personalityType && !!userInfo.loveTypeCategory
     if (!myComplete) {
-      navigate({ to: '/mbti', search: { flow: 'my-personality' } })
+      navigate({ to: '/personality-flow-loading', search: { flow: 'my-personality' } })
     } else {
-      navigate({ to: '/partner-mbti', search: { flow: 'partner-personality' } })
+      navigate({ to: '/personality-flow-loading', search: { flow: 'partner-personality' } })
     }
   }
 
