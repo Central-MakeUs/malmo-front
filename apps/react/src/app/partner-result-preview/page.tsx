@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
+import { FixedBottom } from '@/shared/ui/fixed-bottom'
 import { FlowProgressBar } from '@/shared/ui/flow-progress-bar'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -20,9 +21,7 @@ function PartnerResultPreviewPage() {
   }
 
   const handleViewResult = () => {
-    navigate({
-      to: '/attachment-test/result/partner',
-    })
+    navigate({ to: '/attachment-test/result/partner' })
   }
 
   return (
@@ -41,10 +40,10 @@ function PartnerResultPreviewPage() {
           <p className="body3-medium mt-3 text-gray-iron-500">결과지를 확인하거나 상담을 계속 진행해 보세요</p>
         </div>
 
-        <div className="mb-5 flex flex-col gap-3 px-5 pb-[var(--safe-bottom)]">
+        <FixedBottom className="mt-0 flex flex-col gap-3">
           <Button text="결과지 보기" type="secondary" onClick={handleViewResult} />
           <Button text="홈으로 가기" onClick={handleContinue} />
-        </div>
+        </FixedBottom>
       </Screen.Content>
     </Screen>
   )

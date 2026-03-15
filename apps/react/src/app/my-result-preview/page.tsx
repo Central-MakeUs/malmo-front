@@ -3,9 +3,10 @@ import { LucideCheck, LucideChevronRight } from 'lucide-react'
 
 import { getAttachmentType } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
-import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { navigateAfterMyResultPreview, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
+import { FixedBottom } from '@/shared/ui/fixed-bottom'
 import { FlowProgressBar } from '@/shared/ui/flow-progress-bar'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -21,13 +22,7 @@ function MyResultPreviewPage() {
 
   const attachmentData = getAttachmentType(userInfo.loveTypeCategory)
 
-  const handleContinue = () => {
-    if (flow !== 'chat-entry') {
-      navigate({ to: '/', replace: true })
-      return
-    }
-    navigate({ to: '/partner-mbti', search: { flow, chatId } })
-  }
+  const handleContinue = () => navigateAfterMyResultPreview(navigate, flow, chatId)
 
   const handleViewResult = () => {
     navigate({ to: '/attachment-test/result/my' })
@@ -70,9 +65,9 @@ function MyResultPreviewPage() {
           )}
         </div>
 
-        <div className="mb-5 px-5 pb-[var(--safe-bottom)]">
+        <FixedBottom className="mt-0">
           <Button text={flow === 'chat-entry' ? '프로필 이어서 완성하기' : '홈으로 가기'} onClick={handleContinue} />
-        </div>
+        </FixedBottom>
       </Screen.Content>
     </Screen>
   )
