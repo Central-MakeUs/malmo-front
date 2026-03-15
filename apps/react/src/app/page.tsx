@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import malmoLogo from '@/assets/images/malmo-logo-small.png'
 import { getAttachmentType, AttachmentTypeCards } from '@/features/attachment'
+import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
 import { useAuth } from '@/features/auth'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
@@ -33,6 +34,20 @@ function HomePage() {
   const myAttachmentType = myAttachmentData?.subtype
   const partnerAttachmentType = partnerAttachmentData?.subtype
 
+  // 배너 - 미완성 성향 카드 수
+  const missingPersonalityCount =
+    (!userInfo.loveTypeCategory ? 1 : 0) +
+    (!userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN' ? 1 : 0)
+
+  const handleBannerClick = () => {
+    const myComplete = !!userInfo.personalityType && !!userInfo.loveTypeCategory
+    if (!myComplete) {
+      navigate({ to: '/mbti', search: { flow: 'my-personality' } })
+    } else {
+      navigate({ to: '/partner-mbti', search: { flow: 'partner-personality' } })
+    }
+  }
+
   // 내 성향카드 클릭
   const handleMyCardClick = () => {
     const myComplete = !!userInfo.personalityType && !!userInfo.loveTypeCategory
@@ -49,8 +64,8 @@ function HomePage() {
 
   // 상대 성향카드 클릭
   const handlePartnerCardClick = () => {
-    // 상대 애착유형 저장 필드가 없으므로 otherPersonalityType으로 완료 여부 판단 (TODO: BE 필드 추가 후 개선)
-    const partnerComplete = !!userInfo.otherPersonalityType && !!partnerAttachmentData
+    const partnerComplete =
+      !!userInfo.partnerLoveTypeCategory && userInfo.partnerLoveTypeCategory !== 'UNKNOWN' && !!partnerAttachmentData
     if (partnerComplete) {
       navigate({ to: '/attachment-test/result/partner' })
       return
@@ -72,6 +87,10 @@ function HomePage() {
 
       <Screen.Content className="no-bounce-scroll has-bottom-nav flex-1 bg-white px-5">
         <ChatEntryCard />
+
+        {missingPersonalityCount > 0 && (
+          <AttachmentTestBanner missingCount={missingPersonalityCount} onClick={handleBannerClick} />
+        )}
 
         <RecentChatSection histories={histories} totalHistoryCount={totalHistoryCount} />
 

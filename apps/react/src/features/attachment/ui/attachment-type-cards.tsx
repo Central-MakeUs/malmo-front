@@ -1,5 +1,5 @@
-import { Link } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
+import { useState } from 'react'
 
 import MyMysteryMomo from '@/assets/icons/my-mystery.svg'
 import PartnerMysteryMomo from '@/assets/icons/partner-mystery.svg'
@@ -12,7 +12,9 @@ interface AttachmentTypeCardsProps {
   partnerAttachmentData: AttachmentTypeData | null
   myAttachmentType: string | undefined
   partnerAttachmentType: string | undefined
-  isPartnerConnected: boolean
+  isPartnerUnknown?: boolean
+  onMyCardClick: () => void
+  onPartnerCardClick: () => void
 }
 
 export function AttachmentTypeCards({
@@ -20,42 +22,59 @@ export function AttachmentTypeCards({
   partnerAttachmentData,
   myAttachmentType,
   partnerAttachmentType,
-  isPartnerConnected,
+  isPartnerUnknown = false,
+  onMyCardClick,
+  onPartnerCardClick,
 }: AttachmentTypeCardsProps) {
-  const safePartnerAttachmentData = isPartnerConnected ? partnerAttachmentData : null
-  const safePartnerAttachmentType = isPartnerConnected ? partnerAttachmentType : undefined
+  const [showTooltip, setShowTooltip] = useState(true)
+
+  const handlePartnerCardClick = () => {
+    if (showTooltip && isPartnerUnknown) {
+      setShowTooltip(false)
+    }
+    onPartnerCardClick()
+  }
+
+  const getPartnerBadgeText = () => {
+    if (partnerAttachmentType) return partnerAttachmentType
+    if (isPartnerUnknown) return 'AI 분석 예정'
+    return '입력 필요'
+  }
+
+  const getPartnerBadgeVariant = (): 'default' | 'required' | 'rasberry' => {
+    if (partnerAttachmentData) return 'default'
+    if (isPartnerUnknown) return 'rasberry'
+    return 'required'
+  }
 
   const cards = [
     {
-      title: '나의 애착유형',
+      title: '나의 성향',
       attachmentData: myAttachmentData,
       attachmentType: myAttachmentType,
-      badgeText: myAttachmentType || '검사 필요',
+      badgeText: myAttachmentType || '입력 필요',
+      badgeVariant: myAttachmentData ? ('default' as const) : ('required' as const),
       mysteryIcon: MyMysteryMomo,
-      navigationTo: myAttachmentData ? '/attachment-test/result/my' : '/attachment-test',
+      onClick: onMyCardClick,
     },
     {
-      title: '연인의 애착유형',
-      attachmentData: safePartnerAttachmentData,
-      attachmentType: safePartnerAttachmentType,
-      badgeText: safePartnerAttachmentType || (!isPartnerConnected ? '연동 필요' : '검사 필요'),
+      title: '상대의 성향',
+      attachmentData: partnerAttachmentData,
+      attachmentType: partnerAttachmentType,
+      badgeText: getPartnerBadgeText(),
+      badgeVariant: getPartnerBadgeVariant(),
       mysteryIcon: PartnerMysteryMomo,
-      navigationTo: safePartnerAttachmentData
-        ? '/attachment-test/result/partner'
-        : !isPartnerConnected
-          ? '/partner-status?type=not-connected'
-          : '/partner-status?type=not-tested',
+      onClick: handlePartnerCardClick,
     },
   ]
 
   return (
-    <div className="-mx-5 mt-9 h-[290px] bg-gray-neutral-100 px-5 pt-8">
-      <h2 className="heading2-semibold text-gray-iron-950">애착유형 카드</h2>
+    <div className="-mx-5 mt-9 bg-gray-neutral-100 px-5 pt-8 pb-8">
+      <h2 className="heading2-semibold text-gray-iron-950">연애 성향 카드</h2>
 
-      {/* 카드 컨테이너 */}
       <div className="mt-3 flex gap-[10px]">
-        {cards.map((card) => {
-          const CardContent = (
+        {cards.map((card) => (
+          <div key={card.title} className="flex-1" onClick={card.onClick}>
             <div className="h-[170px] cursor-pointer overflow-hidden rounded-[10px] bg-white">
               {/* 카드 헤더 */}
               <div className="flex h-10 items-center justify-between bg-gray-iron-700 pr-[10px] pl-4">
@@ -65,9 +84,8 @@ export function AttachmentTypeCards({
 
               {/* 카드 내용 */}
               <div className="relative h-[130px] p-[12px]">
-                {/* 상태 뱃지 */}
                 <Badge
-                  variant={card.attachmentData ? 'default' : 'required'}
+                  variant={card.badgeVariant}
                   className={
                     card.attachmentData
                       ? `${card.attachmentData.badgeBackgroundColor} ${card.attachmentData.badgeTextColor}`
@@ -77,7 +95,6 @@ export function AttachmentTypeCards({
                   {card.badgeText}
                 </Badge>
 
-                {/* 애착유형 캐릭터 이미지 */}
                 <div className="absolute right-0 bottom-0">
                   {card.attachmentData?.cardImage ? (
                     <img
@@ -91,15 +108,15 @@ export function AttachmentTypeCards({
                 </div>
               </div>
             </div>
-          )
-
-          return (
-            <div key={card.title} className="flex-1">
-              <Link to={card.navigationTo}>{CardContent}</Link>
-            </div>
-          )
-        })}
+          </div>
+        ))}
       </div>
+
+      {isPartnerUnknown && showTooltip && (
+        <div className="mt-3 rounded-[10px] bg-gray-iron-700 px-4 py-3">
+          <p className="body3-medium text-white">AI가 대화 중 상대의 성향을 분석할 예정이에요</p>
+        </div>
+      )}
     </div>
   )
 }
