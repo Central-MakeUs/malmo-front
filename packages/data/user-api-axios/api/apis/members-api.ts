@@ -32,6 +32,8 @@ import {
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base'
 // @ts-ignore
+import type { CreatePartnerProfileRequestDto } from '../models'
+// @ts-ignore
 import type { DeleteMemberSuccessResponse } from '../models'
 // @ts-ignore
 import type { GetInviteCodeSuccessResponse } from '../models'
@@ -39,6 +41,8 @@ import type { GetInviteCodeSuccessResponse } from '../models'
 import type { MemberInfoSuccessResponse } from '../models'
 // @ts-ignore
 import type { PartnerMemberInfoSuccessResponse } from '../models'
+// @ts-ignore
+import type { PartnerProfileSuccessResponse } from '../models'
 // @ts-ignore
 import type { RegisterLoveTypeRequestDto } from '../models'
 // @ts-ignore
@@ -54,6 +58,8 @@ import type { UpdateMemberTermsRequestDto } from '../models'
 // @ts-ignore
 import type { UpdateMemberTermsSuccessResponse } from '../models'
 // @ts-ignore
+import type { UpdatePartnerProfileRequestDto } from '../models'
+// @ts-ignore
 import type { UpdateStartLoveDateRequestDto } from '../models'
 // @ts-ignore
 import type { UpdateStartLoveDateSuccessResponse } from '../models'
@@ -62,6 +68,51 @@ import type { UpdateStartLoveDateSuccessResponse } from '../models'
  */
 export const MembersApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
+    /**
+     * 현재 로그인된 사용자가 상대방 MBTI와 애착 유형을 직접 입력합니다. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 최초 등록
+     * @param {CreatePartnerProfileRequestDto} createPartnerProfileRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createPartnerProfile: async (
+      createPartnerProfileRequestDto: CreatePartnerProfileRequestDto,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'createPartnerProfileRequestDto' is not null or undefined
+      assertParamExists('createPartnerProfile', 'createPartnerProfileRequestDto', createPartnerProfileRequestDto)
+      const localVarPath = `/members/partners`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        createPartnerProfileRequestDto,
+        localVarRequestOptions,
+        configuration
+      )
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
     /**
      * 현재 로그인된 사용자의 탈퇴를 처리합니다. JWT 토큰이 필요합니다.
      * @summary 사용자 탈퇴
@@ -127,9 +178,10 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       }
     },
     /**
-     * 현재 로그인된 사용자의 초대 코드를 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 현재 로그인된 사용자의 초대 코드를 조회합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 사용자 초대 코드 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getMemberInviteCode: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -159,9 +211,10 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       }
     },
     /**
-     * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 커플 상대 정보 조회
+     * [Deprecated] 현재 로그인된 멤버가 직접 입력한 상대 프로필을 조회합니다. 신규 클라이언트는 GET /members 응답의 partner 필드를 사용하세요. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getPartnerMemberInfo: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -322,10 +375,56 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       }
     },
     /**
-     * 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
+     * 현재 로그인된 사용자가 직접 입력한 상대 프로필을 수정합니다. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 수정
+     * @param {UpdatePartnerProfileRequestDto} updatePartnerProfileRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updatePartnerProfile: async (
+      updatePartnerProfileRequestDto: UpdatePartnerProfileRequestDto,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'updatePartnerProfileRequestDto' is not null or undefined
+      assertParamExists('updatePartnerProfile', 'updatePartnerProfileRequestDto', updatePartnerProfileRequestDto)
+      const localVarPath = `/members/partners`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      localVarHeaderParameter['Content-Type'] = 'application/json'
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+      localVarRequestOptions.data = serializeDataIfNeeded(
+        updatePartnerProfileRequestDto,
+        localVarRequestOptions,
+        configuration
+      )
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
+    /**
+     * [Deprecated] 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
      * @summary 연애 시작일 변경
      * @param {UpdateStartLoveDateRequestDto} updateStartLoveDateRequestDto
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     updateStartLoveDate: async (
@@ -376,6 +475,32 @@ export const MembersApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = MembersApiAxiosParamCreator(configuration)
   return {
     /**
+     * 현재 로그인된 사용자가 상대방 MBTI와 애착 유형을 직접 입력합니다. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 최초 등록
+     * @param {CreatePartnerProfileRequestDto} createPartnerProfileRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async createPartnerProfile(
+      createPartnerProfileRequestDto: CreatePartnerProfileRequestDto,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PartnerProfileSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.createPartnerProfile(
+        createPartnerProfileRequestDto,
+        options
+      )
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['MembersApi.createPartnerProfile']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
      * 현재 로그인된 사용자의 탈퇴를 처리합니다. JWT 토큰이 필요합니다.
      * @summary 사용자 탈퇴
      * @param {*} [options] Override http request option.
@@ -418,9 +543,10 @@ export const MembersApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 현재 로그인된 사용자의 초대 코드를 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 현재 로그인된 사용자의 초대 코드를 조회합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 사용자 초대 코드 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async getMemberInviteCode(
@@ -439,9 +565,10 @@ export const MembersApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 커플 상대 정보 조회
+     * [Deprecated] 현재 로그인된 멤버가 직접 입력한 상대 프로필을 조회합니다. 신규 클라이언트는 GET /members 응답의 partner 필드를 사용하세요. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async getPartnerMemberInfo(
@@ -529,10 +656,37 @@ export const MembersApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
+     * 현재 로그인된 사용자가 직접 입력한 상대 프로필을 수정합니다. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 수정
+     * @param {UpdatePartnerProfileRequestDto} updatePartnerProfileRequestDto
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async updatePartnerProfile(
+      updatePartnerProfileRequestDto: UpdatePartnerProfileRequestDto,
+      options?: RawAxiosRequestConfig
+    ): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<PartnerProfileSuccessResponse>> {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.updatePartnerProfile(
+        updatePartnerProfileRequestDto,
+        options
+      )
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['MembersApi.updatePartnerProfile']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
+    /**
+     * [Deprecated] 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
      * @summary 연애 시작일 변경
      * @param {UpdateStartLoveDateRequestDto} updateStartLoveDateRequestDto
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async updateStartLoveDate(
@@ -564,6 +718,21 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
   const localVarFp = MembersApiFp(configuration)
   return {
     /**
+     * 현재 로그인된 사용자가 상대방 MBTI와 애착 유형을 직접 입력합니다. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 최초 등록
+     * @param {MembersApiCreatePartnerProfileRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    createPartnerProfile(
+      requestParameters: MembersApiCreatePartnerProfileRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<PartnerProfileSuccessResponse> {
+      return localVarFp
+        .createPartnerProfile(requestParameters.createPartnerProfileRequestDto, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
      * 현재 로그인된 사용자의 탈퇴를 처리합니다. JWT 토큰이 필요합니다.
      * @summary 사용자 탈퇴
      * @param {*} [options] Override http request option.
@@ -582,18 +751,20 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
       return localVarFp.getMemberInfo(options).then((request) => request(axios, basePath))
     },
     /**
-     * 현재 로그인된 사용자의 초대 코드를 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 현재 로그인된 사용자의 초대 코드를 조회합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 사용자 초대 코드 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getMemberInviteCode(options?: RawAxiosRequestConfig): AxiosPromise<GetInviteCodeSuccessResponse> {
       return localVarFp.getMemberInviteCode(options).then((request) => request(axios, basePath))
     },
     /**
-     * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
-     * @summary 커플 상대 정보 조회
+     * [Deprecated] 현재 로그인된 멤버가 직접 입력한 상대 프로필을 조회합니다. 신규 클라이언트는 GET /members 응답의 partner 필드를 사용하세요. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getPartnerMemberInfo(options?: RawAxiosRequestConfig): AxiosPromise<PartnerMemberInfoSuccessResponse> {
@@ -645,10 +816,26 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
         .then((request) => request(axios, basePath))
     },
     /**
-     * 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
+     * 현재 로그인된 사용자가 직접 입력한 상대 프로필을 수정합니다. JWT 토큰이 필요합니다.
+     * @summary 상대 프로필 수정
+     * @param {MembersApiUpdatePartnerProfileRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    updatePartnerProfile(
+      requestParameters: MembersApiUpdatePartnerProfileRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<PartnerProfileSuccessResponse> {
+      return localVarFp
+        .updatePartnerProfile(requestParameters.updatePartnerProfileRequestDto, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
+     * [Deprecated] 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
      * @summary 연애 시작일 변경
      * @param {MembersApiUpdateStartLoveDateRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     updateStartLoveDate(
@@ -660,6 +847,13 @@ export const MembersApiFactory = function (configuration?: Configuration, basePa
         .then((request) => request(axios, basePath))
     },
   }
+}
+
+/**
+ * Request parameters for createPartnerProfile operation in MembersApi.
+ */
+export interface MembersApiCreatePartnerProfileRequest {
+  readonly createPartnerProfileRequestDto: CreatePartnerProfileRequestDto
 }
 
 /**
@@ -684,6 +878,13 @@ export interface MembersApiUpdateMemberTermsRequest {
 }
 
 /**
+ * Request parameters for updatePartnerProfile operation in MembersApi.
+ */
+export interface MembersApiUpdatePartnerProfileRequest {
+  readonly updatePartnerProfileRequestDto: UpdatePartnerProfileRequestDto
+}
+
+/**
  * Request parameters for updateStartLoveDate operation in MembersApi.
  */
 export interface MembersApiUpdateStartLoveDateRequest {
@@ -694,6 +895,22 @@ export interface MembersApiUpdateStartLoveDateRequest {
  * MembersApi - object-oriented interface
  */
 export class MembersApi extends BaseAPI {
+  /**
+   * 현재 로그인된 사용자가 상대방 MBTI와 애착 유형을 직접 입력합니다. JWT 토큰이 필요합니다.
+   * @summary 상대 프로필 최초 등록
+   * @param {MembersApiCreatePartnerProfileRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+  public createPartnerProfile(
+    requestParameters: MembersApiCreatePartnerProfileRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return MembersApiFp(this.configuration)
+      .createPartnerProfile(requestParameters.createPartnerProfileRequestDto, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
   /**
    * 현재 로그인된 사용자의 탈퇴를 처리합니다. JWT 토큰이 필요합니다.
    * @summary 사용자 탈퇴
@@ -719,9 +936,10 @@ export class MembersApi extends BaseAPI {
   }
 
   /**
-   * 현재 로그인된 사용자의 초대 코드를 조회합니다. JWT 토큰이 필요합니다.
+   * [Deprecated] 현재 로그인된 사용자의 초대 코드를 조회합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
    * @summary 사용자 초대 코드 조회
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public getMemberInviteCode(options?: RawAxiosRequestConfig) {
@@ -731,9 +949,10 @@ export class MembersApi extends BaseAPI {
   }
 
   /**
-   * 현재 로그인된 멤버의 파트너 정보를 조회합니다. JWT 토큰이 필요합니다.
-   * @summary 커플 상대 정보 조회
+   * [Deprecated] 현재 로그인된 멤버가 직접 입력한 상대 프로필을 조회합니다. 신규 클라이언트는 GET /members 응답의 partner 필드를 사용하세요. JWT 토큰이 필요합니다.
+   * @summary 상대 프로필 조회
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public getPartnerMemberInfo(options?: RawAxiosRequestConfig) {
@@ -782,10 +1001,27 @@ export class MembersApi extends BaseAPI {
   }
 
   /**
-   * 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
+   * 현재 로그인된 사용자가 직접 입력한 상대 프로필을 수정합니다. JWT 토큰이 필요합니다.
+   * @summary 상대 프로필 수정
+   * @param {MembersApiUpdatePartnerProfileRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+  public updatePartnerProfile(
+    requestParameters: MembersApiUpdatePartnerProfileRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return MembersApiFp(this.configuration)
+      .updatePartnerProfile(requestParameters.updatePartnerProfileRequestDto, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
+  /**
+   * [Deprecated] 커플로 연동된 사용자의 연애 시작일을 변경합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. 커플이 아닌 사용자는 사용할 수 없습니다. JWT 토큰이 필요합니다.
    * @summary 연애 시작일 변경
    * @param {MembersApiUpdateStartLoveDateRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public updateStartLoveDate(requestParameters: MembersApiUpdateStartLoveDateRequest, options?: RawAxiosRequestConfig) {

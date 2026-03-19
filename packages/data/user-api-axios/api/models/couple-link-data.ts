@@ -13,7 +13,7 @@
  */
 
 /**
- * 커플 연결 응답 데이터
+ * [Deprecated] 커플 연결 응답 데이터
  */
 export interface CoupleLinkData {
   /**

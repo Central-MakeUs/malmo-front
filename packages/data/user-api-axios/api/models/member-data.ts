@@ -58,32 +58,18 @@ export interface MemberData {
   email?: string
   /**
    * 연애 상태
-   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
    */
   relationshipStatus?: MemberDataRelationshipStatusEnum
   /**
-   * 내 MBTI 성향
-   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   * 내 MBTI
    */
   personalityType?: string
   /**
-   * 상대방 MBTI 성향
-   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   * 상대방 MBTI
    */
   otherPersonalityType?: string
   /**
-   * 내 MBTI (신규 필드)
-   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
-   */
-  mbti?: string
-  /**
-   * 상대방 MBTI (신규 필드)
-   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
-   */
-  partnerMbti?: string
-  /**
-   * 상대방 애착 유형 (UNKNOWN = "모르겠어요" 선택됨, undefined = 미입력)
-   * TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
+   * 상대방 애착 유형
    */
   partnerLoveTypeCategory?: MemberDataPartnerLoveTypeCategoryEnum
 }
@@ -110,7 +96,6 @@ export const MemberDataLoveTypeCategoryEnum = {
 
 export type MemberDataLoveTypeCategoryEnum =
   (typeof MemberDataLoveTypeCategoryEnum)[keyof typeof MemberDataLoveTypeCategoryEnum]
-// TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
 export const MemberDataRelationshipStatusEnum = {
   InRelationship: 'IN_RELATIONSHIP',
   SeeingSomeone: 'SEEING_SOMEONE',
@@ -119,7 +104,6 @@ export const MemberDataRelationshipStatusEnum = {
 
 export type MemberDataRelationshipStatusEnum =
   (typeof MemberDataRelationshipStatusEnum)[keyof typeof MemberDataRelationshipStatusEnum]
-// TODO: 백엔드 API 스키마 반영 후 코드 재생성 필요
 export const MemberDataPartnerLoveTypeCategoryEnum = {
   StableType: 'STABLE_TYPE',
   AnxietyType: 'ANXIETY_TYPE',

@@ -21,8 +21,6 @@ export interface SignUpRequestDto {
   nickname: string
   loveTypeId?: number
   relationshipStatus?: SignUpRequestDtoRelationshipStatusEnum
-  personalityType?: string
-  otherPersonalityType?: string
 }
 
 export const SignUpRequestDtoRelationshipStatusEnum = {

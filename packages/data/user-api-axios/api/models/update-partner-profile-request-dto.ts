@@ -12,25 +12,14 @@
  * Do not edit the class manually.
  */
 
-/**
- * [Deprecated] 상대 프로필 조회 응답 데이터
- */
-export interface PartnerMemberData {
-  /**
-   * 상대방 MBTI
-   */
+export interface UpdatePartnerProfileRequestDto {
   personalityType?: string
-  /**
-   * 상대방 애착 유형
-   */
-  loveTypeCategory?: PartnerMemberDataLoveTypeCategoryEnum
-  /**
-   * 애착 유형 설명
-   */
-  description?: string
+  personalityTypeProvided?: boolean
+  loveTypeCategory?: UpdatePartnerProfileRequestDtoLoveTypeCategoryEnum
+  loveTypeCategoryProvided?: boolean
 }
 
-export const PartnerMemberDataLoveTypeCategoryEnum = {
+export const UpdatePartnerProfileRequestDtoLoveTypeCategoryEnum = {
   StableType: 'STABLE_TYPE',
   AnxietyType: 'ANXIETY_TYPE',
   AvoidanceType: 'AVOIDANCE_TYPE',
@@ -38,5 +27,5 @@ export const PartnerMemberDataLoveTypeCategoryEnum = {
   Unknown: 'UNKNOWN',
 } as const
 
-export type PartnerMemberDataLoveTypeCategoryEnum =
-  (typeof PartnerMemberDataLoveTypeCategoryEnum)[keyof typeof PartnerMemberDataLoveTypeCategoryEnum]
+export type UpdatePartnerProfileRequestDtoLoveTypeCategoryEnum =
+  (typeof UpdatePartnerProfileRequestDtoLoveTypeCategoryEnum)[keyof typeof UpdatePartnerProfileRequestDtoLoveTypeCategoryEnum]

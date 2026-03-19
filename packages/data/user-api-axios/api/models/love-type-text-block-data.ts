@@ -13,8 +13,15 @@
  */
 
 /**
- * [Deprecated] 커플 연결 요청 DTO
+ * 제목 + 설명 텍스트 블록
  */
-export interface CoupleLinkRequestDto {
-  coupleCode: string
+export interface LoveTypeTextBlockData {
+  /**
+   * 제목
+   */
+  title?: string
+  /**
+   * 설명
+   */
+  description?: string
 }

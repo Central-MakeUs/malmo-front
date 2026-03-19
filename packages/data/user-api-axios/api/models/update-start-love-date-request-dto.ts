@@ -12,6 +12,9 @@
  * Do not edit the class manually.
  */
 
+/**
+ * [Deprecated] 연애 시작일 변경 요청 DTO
+ */
 export interface UpdateStartLoveDateRequestDto {
   startLoveDate: string
 }
