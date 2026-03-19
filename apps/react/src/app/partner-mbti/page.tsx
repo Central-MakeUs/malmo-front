@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { MbtiForm } from '@/features/onboarding/ui/mbti-form'
-import { useMemberUpdateMutation } from '@/features/profile'
+import { useUpsertPartnerProfileMutation } from '@/features/profile'
 import { navigateAfterPartnerMbti, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
@@ -22,7 +22,7 @@ function PartnerMbtiEditPage() {
   const { userInfo } = useAuth()
   const { flow, chatId } = useSearch({ from: Route.id })
 
-  const updateMutation = useMemberUpdateMutation({
+  const updateMutation = useUpsertPartnerProfileMutation({
     onSuccess: () => {
       const navigated = navigateAfterPartnerMbti(navigate, flow, chatId)
       if (!navigated) {
@@ -38,7 +38,7 @@ function PartnerMbtiEditPage() {
   const handleSubmit = (mbti: string) => {
     if (updateMutation.isPending) return
     trackSave()
-    updateMutation.mutate({ otherPersonalityType: mbti })
+    updateMutation.mutate({ personalityType: mbti })
   }
 
   const isFlowMode = !!flow

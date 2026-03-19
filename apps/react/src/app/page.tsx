@@ -12,6 +12,8 @@ import { Screen } from '@/shared/layout/screen'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { BellNotificationIcon, KeyMessageBanner } from '@/shared/ui/key-message-banner'
 
+import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
+
 export const Route = createFileRoute('/')({
   component: HomePage,
 })
@@ -30,7 +32,10 @@ function HomePage() {
 
   // 애착유형 데이터
   const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
-  const partnerAttachmentData = partnerInfo?.loveTypeCategory ? getAttachmentType(partnerInfo.loveTypeCategory) : null
+  const partnerAttachmentData =
+    partnerInfo?.loveTypeCategory && partnerInfo.loveTypeCategory !== 'UNKNOWN'
+      ? getAttachmentType(partnerInfo.loveTypeCategory as MemberDataLoveTypeCategoryEnum)
+      : null
   const myAttachmentType = myAttachmentData?.subtype
   const partnerAttachmentType = partnerAttachmentData?.subtype
 

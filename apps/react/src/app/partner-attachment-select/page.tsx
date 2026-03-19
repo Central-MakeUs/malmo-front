@@ -3,7 +3,7 @@ import { useRef, useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
-import { useMemberUpdateMutation } from '@/features/profile'
+import { useUpdatePartnerProfileMutation } from '@/features/profile'
 import { navigateAfterPartnerAttachment, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
@@ -37,7 +37,7 @@ function PartnerAttachmentSelectPage() {
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
   const pendingHasDataRef = useRef(false)
 
-  const updateMutation = useMemberUpdateMutation({
+  const updateMutation = useUpdatePartnerProfileMutation({
     onSuccess: () => navigateAfterPartnerAttachment(navigate, flow, chatId, pendingHasDataRef.current),
     errorMessage: '저장 중 오류가 발생했습니다',
   })
@@ -45,7 +45,7 @@ function PartnerAttachmentSelectPage() {
   const handleConfirm = () => {
     if (!selectedType || updateMutation.isPending) return
     pendingHasDataRef.current = true
-    updateMutation.mutate({ otherLoveTypeCategory: selectedType })
+    updateMutation.mutate({ loveTypeCategory: selectedType })
   }
 
   const handleDontKnow = () => {
@@ -55,7 +55,7 @@ function PartnerAttachmentSelectPage() {
 
   const handleDontKnowConfirm = () => {
     pendingHasDataRef.current = false
-    updateMutation.mutate({ otherLoveTypeCategory: null })
+    updateMutation.mutate({ loveTypeCategoryProvided: false })
   }
 
   return (

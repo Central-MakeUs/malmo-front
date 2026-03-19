@@ -33,10 +33,7 @@ import { Route as AttachmentTestPageImport } from './app/attachment-test/page'
 import { Route as TermsPrivacyPolicyPageImport } from './app/terms/privacy-policy/page'
 import { Route as OnboardingTermsPageImport } from './app/onboarding/terms/page'
 import { Route as OnboardingRelationshipStatusPageImport } from './app/onboarding/relationship-status/page'
-import { Route as OnboardingPartnerMbtiPageImport } from './app/onboarding/partner-mbti/page'
 import { Route as OnboardingNicknamePageImport } from './app/onboarding/nickname/page'
-import { Route as OnboardingMbtiPageImport } from './app/onboarding/mbti/page'
-import { Route as OnboardingCompletePageImport } from './app/onboarding/complete/page'
 import { Route as MyPageProfilePageImport } from './app/my-page/profile/page'
 import { Route as MyPageAccountSettingsPageImport } from './app/my-page/account-settings/page'
 import { Route as HistoryDeletePageImport } from './app/history/delete/page'
@@ -180,27 +177,9 @@ const OnboardingRelationshipStatusPageRoute = OnboardingRelationshipStatusPageIm
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
-const OnboardingPartnerMbtiPageRoute = OnboardingPartnerMbtiPageImport.update({
-  id: '/partner-mbti/',
-  path: '/partner-mbti/',
-  getParentRoute: () => OnboardingLayoutRoute,
-} as any)
-
 const OnboardingNicknamePageRoute = OnboardingNicknamePageImport.update({
   id: '/nickname/',
   path: '/nickname/',
-  getParentRoute: () => OnboardingLayoutRoute,
-} as any)
-
-const OnboardingMbtiPageRoute = OnboardingMbtiPageImport.update({
-  id: '/mbti/',
-  path: '/mbti/',
-  getParentRoute: () => OnboardingLayoutRoute,
-} as any)
-
-const OnboardingCompletePageRoute = OnboardingCompletePageImport.update({
-  id: '/complete/',
-  path: '/complete/',
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
@@ -431,32 +410,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyPageProfilePageImport
       parentRoute: typeof rootRoute
     }
-    '/onboarding/complete/': {
-      id: '/onboarding/complete/'
-      path: '/complete'
-      fullPath: '/onboarding/complete'
-      preLoaderRoute: typeof OnboardingCompletePageImport
-      parentRoute: typeof OnboardingLayoutImport
-    }
-    '/onboarding/mbti/': {
-      id: '/onboarding/mbti/'
-      path: '/mbti'
-      fullPath: '/onboarding/mbti'
-      preLoaderRoute: typeof OnboardingMbtiPageImport
-      parentRoute: typeof OnboardingLayoutImport
-    }
     '/onboarding/nickname/': {
       id: '/onboarding/nickname/'
       path: '/nickname'
       fullPath: '/onboarding/nickname'
       preLoaderRoute: typeof OnboardingNicknamePageImport
-      parentRoute: typeof OnboardingLayoutImport
-    }
-    '/onboarding/partner-mbti/': {
-      id: '/onboarding/partner-mbti/'
-      path: '/partner-mbti'
-      fullPath: '/onboarding/partner-mbti'
-      preLoaderRoute: typeof OnboardingPartnerMbtiPageImport
       parentRoute: typeof OnboardingLayoutImport
     }
     '/onboarding/relationship-status/': {
@@ -514,19 +472,13 @@ const ChatLayoutRouteChildren: ChatLayoutRouteChildren = {
 const ChatLayoutRouteWithChildren = ChatLayoutRoute._addFileChildren(ChatLayoutRouteChildren)
 
 interface OnboardingLayoutRouteChildren {
-  OnboardingCompletePageRoute: typeof OnboardingCompletePageRoute
-  OnboardingMbtiPageRoute: typeof OnboardingMbtiPageRoute
   OnboardingNicknamePageRoute: typeof OnboardingNicknamePageRoute
-  OnboardingPartnerMbtiPageRoute: typeof OnboardingPartnerMbtiPageRoute
   OnboardingRelationshipStatusPageRoute: typeof OnboardingRelationshipStatusPageRoute
   OnboardingTermsPageRoute: typeof OnboardingTermsPageRoute
 }
 
 const OnboardingLayoutRouteChildren: OnboardingLayoutRouteChildren = {
-  OnboardingCompletePageRoute: OnboardingCompletePageRoute,
-  OnboardingMbtiPageRoute: OnboardingMbtiPageRoute,
   OnboardingNicknamePageRoute: OnboardingNicknamePageRoute,
-  OnboardingPartnerMbtiPageRoute: OnboardingPartnerMbtiPageRoute,
   OnboardingRelationshipStatusPageRoute: OnboardingRelationshipStatusPageRoute,
   OnboardingTermsPageRoute: OnboardingTermsPageRoute,
 }
@@ -559,10 +511,7 @@ export interface FileRoutesByFullPath {
   '/history/delete': typeof HistoryDeletePageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
   '/my-page/profile': typeof MyPageProfilePageRoute
-  '/onboarding/complete': typeof OnboardingCompletePageRoute
-  '/onboarding/mbti': typeof OnboardingMbtiPageRoute
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
-  '/onboarding/partner-mbti': typeof OnboardingPartnerMbtiPageRoute
   '/onboarding/relationship-status': typeof OnboardingRelationshipStatusPageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
   '/terms/privacy-policy': typeof TermsPrivacyPolicyPageRoute
@@ -595,10 +544,7 @@ export interface FileRoutesByTo {
   '/history/delete': typeof HistoryDeletePageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
   '/my-page/profile': typeof MyPageProfilePageRoute
-  '/onboarding/complete': typeof OnboardingCompletePageRoute
-  '/onboarding/mbti': typeof OnboardingMbtiPageRoute
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
-  '/onboarding/partner-mbti': typeof OnboardingPartnerMbtiPageRoute
   '/onboarding/relationship-status': typeof OnboardingRelationshipStatusPageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
   '/terms/privacy-policy': typeof TermsPrivacyPolicyPageRoute
@@ -633,10 +579,7 @@ export interface FileRoutesById {
   '/history/delete/': typeof HistoryDeletePageRoute
   '/my-page/account-settings/': typeof MyPageAccountSettingsPageRoute
   '/my-page/profile/': typeof MyPageProfilePageRoute
-  '/onboarding/complete/': typeof OnboardingCompletePageRoute
-  '/onboarding/mbti/': typeof OnboardingMbtiPageRoute
   '/onboarding/nickname/': typeof OnboardingNicknamePageRoute
-  '/onboarding/partner-mbti/': typeof OnboardingPartnerMbtiPageRoute
   '/onboarding/relationship-status/': typeof OnboardingRelationshipStatusPageRoute
   '/onboarding/terms/': typeof OnboardingTermsPageRoute
   '/terms/privacy-policy/': typeof TermsPrivacyPolicyPageRoute
@@ -672,10 +615,7 @@ export interface FileRouteTypes {
     | '/history/delete'
     | '/my-page/account-settings'
     | '/my-page/profile'
-    | '/onboarding/complete'
-    | '/onboarding/mbti'
     | '/onboarding/nickname'
-    | '/onboarding/partner-mbti'
     | '/onboarding/relationship-status'
     | '/onboarding/terms'
     | '/terms/privacy-policy'
@@ -707,10 +647,7 @@ export interface FileRouteTypes {
     | '/history/delete'
     | '/my-page/account-settings'
     | '/my-page/profile'
-    | '/onboarding/complete'
-    | '/onboarding/mbti'
     | '/onboarding/nickname'
-    | '/onboarding/partner-mbti'
     | '/onboarding/relationship-status'
     | '/onboarding/terms'
     | '/terms/privacy-policy'
@@ -743,10 +680,7 @@ export interface FileRouteTypes {
     | '/history/delete/'
     | '/my-page/account-settings/'
     | '/my-page/profile/'
-    | '/onboarding/complete/'
-    | '/onboarding/mbti/'
     | '/onboarding/nickname/'
-    | '/onboarding/partner-mbti/'
     | '/onboarding/relationship-status/'
     | '/onboarding/terms/'
     | '/terms/privacy-policy/'
@@ -860,10 +794,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/onboarding": {
       "filePath": "onboarding/layout.tsx",
       "children": [
-        "/onboarding/complete/",
-        "/onboarding/mbti/",
         "/onboarding/nickname/",
-        "/onboarding/partner-mbti/",
         "/onboarding/relationship-status/",
         "/onboarding/terms/"
       ]
@@ -937,20 +868,8 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/my-page/profile/": {
       "filePath": "my-page/profile/page.tsx"
     },
-    "/onboarding/complete/": {
-      "filePath": "onboarding/complete/page.tsx",
-      "parent": "/onboarding"
-    },
-    "/onboarding/mbti/": {
-      "filePath": "onboarding/mbti/page.tsx",
-      "parent": "/onboarding"
-    },
     "/onboarding/nickname/": {
       "filePath": "onboarding/nickname/page.tsx",
-      "parent": "/onboarding"
-    },
-    "/onboarding/partner-mbti/": {
-      "filePath": "onboarding/partner-mbti/page.tsx",
       "parent": "/onboarding"
     },
     "/onboarding/relationship-status/": {
