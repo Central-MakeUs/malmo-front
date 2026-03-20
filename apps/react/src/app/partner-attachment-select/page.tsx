@@ -1,10 +1,10 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useUpdatePartnerProfileMutation } from '@/features/profile'
-import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import {
@@ -31,18 +31,12 @@ export const Route = createFileRoute('/partner-attachment-select/')({
 })
 
 function PartnerAttachmentSelectPage() {
-  const navigate = useNavigate()
-  const { flow, from } = useSearch({ from: Route.id })
+  const { flow, next } = usePersonalityFlow()
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
 
-  const onSuccess = () =>
-    from === 'profile'
-      ? navigate({ to: '/my-page/profile', replace: true })
-      : navigate({ to: '/partner-result-preview', replace: true })
-
   const updateMutation = useUpdatePartnerProfileMutation({
-    onSuccess,
+    onSuccess: () => next(),
     errorMessage: '저장 중 오류가 발생했습니다',
   })
 

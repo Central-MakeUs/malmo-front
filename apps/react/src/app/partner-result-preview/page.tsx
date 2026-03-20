@@ -3,7 +3,7 @@ import { LucideCheck, LucideChevronRight } from 'lucide-react'
 
 import { getAttachmentType } from '@/features/attachment'
 import { usePartnerInfo } from '@/features/member'
-import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { FixedBottom } from '@/shared/ui/fixed-bottom'
@@ -20,14 +20,11 @@ export const Route = createFileRoute('/partner-result-preview/')({
 function PartnerResultPreviewPage() {
   const navigate = useNavigate()
   const { data: partnerInfo } = usePartnerInfo()
+  const { next } = usePersonalityFlow()
 
   const attachmentData = partnerInfo?.loveTypeCategory
     ? getAttachmentType(partnerInfo.loveTypeCategory as MemberDataLoveTypeCategoryEnum)
     : null
-
-  const handleContinue = () => {
-    navigate({ to: '/', replace: true })
-  }
 
   const handleViewResult = () => {
     navigate({ to: '/attachment-test/result/partner' })
@@ -72,7 +69,7 @@ function PartnerResultPreviewPage() {
         </div>
 
         <FixedBottom className="mt-0">
-          <Button text="상담하러 가기" onClick={handleContinue} />
+          <Button text="상담하러 가기" onClick={next} />
         </FixedBottom>
       </Screen.Content>
     </Screen>

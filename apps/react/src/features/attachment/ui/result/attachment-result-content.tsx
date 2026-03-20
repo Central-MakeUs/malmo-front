@@ -8,10 +8,10 @@ import { ATTACHMENT_TYPE_DATA } from '@/features/attachment/models/attachment-da
 import { ResultAttitudeSection } from '@/features/attachment/ui/result/result-attitude-section'
 import { ResultDetailBox } from '@/features/attachment/ui/result/result-detail-box'
 import { ResultScoreBox } from '@/features/attachment/ui/result/result-score-box'
+import { usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
-import { useGoBack } from '@/shared/navigation/use-go-back'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
@@ -30,7 +30,7 @@ interface AttachmentResultContentProps {
 
 export function AttachmentResultContent({ userInfo, type, from }: AttachmentResultContentProps) {
   const navigate = useNavigate()
-  const goBack = useGoBack()
+  const { exit } = usePersonalityFlow()
   const isMyResult = type === 'my'
   const ctaText = from === 'chat' ? '상담하러 가기' : from === 'my-page' ? '마이페이지로 가기' : '홈으로 가기'
 
@@ -62,15 +62,11 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
           <p className="mb-4 text-red-500">애착 유형 데이터를 찾을 수 없습니다.</p>
           <Button
             text="홈으로 이동"
-            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, () => goBack())}
+            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, () => exit())}
           />
         </div>
       </div>
     )
-  }
-
-  const handleClose = () => {
-    goBack()
   }
 
   return (
@@ -79,7 +75,7 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
         <DetailHeaderBar
           showBackButton={false}
           right={
-            <button onClick={handleClose}>
+            <button onClick={exit}>
               <X className="h-6 w-6 text-gray-iron-950" />
             </button>
           }
@@ -148,7 +144,7 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
         <div className="px-5 pb-[calc(var(--safe-bottom)_+_20px)]">
           <Button
             text={ctaText}
-            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, handleClose)}
+            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, exit)}
           />
         </div>
       </Screen.Content>

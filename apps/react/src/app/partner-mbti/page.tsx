@@ -1,9 +1,9 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { MbtiForm } from '@/features/onboarding/ui/mbti-form'
 import { useUpsertPartnerProfileMutation } from '@/features/profile'
-import { navigateAfterPartnerMbti, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useGoBack } from '@/shared/navigation/use-go-back'
@@ -17,18 +17,18 @@ export const Route = createFileRoute('/partner-mbti/')({
 })
 
 function PartnerMbtiEditPage() {
-  const navigate = useNavigate()
   const goBack = useGoBack()
   const { userInfo } = useAuth()
-  const { flow, chatId, from } = useSearch({ from: Route.id })
+  const { flow, next } = usePersonalityFlow()
 
   const updateMutation = useUpsertPartnerProfileMutation({
     onSuccess: () => {
-      const navigated = navigateAfterPartnerMbti(navigate, flow, chatId, from)
-      if (!navigated) {
+      if (!flow) {
         toast.success('상대 성향이 변경되었어요!')
         goBack()
+        return
       }
+      next()
     },
     errorMessage: '상대 성향 변경 중 오류가 발생했습니다',
   })

@@ -13,12 +13,12 @@ export const Route = createFileRoute('/personality-flow-loading/')({
 
 function PersonalityFlowLoadingPage() {
   const navigate = useNavigate()
-  const { flow, chatId } = useSearch({ from: Route.id })
+  const { flow } = useSearch({ from: Route.id })
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (flow === 'chat-entry') {
-        navigate({ to: '/mbti', search: { flow, chatId }, replace: true })
+        navigate({ to: '/mbti', search: { flow }, replace: true })
       } else if (flow === 'partner-personality') {
         navigate({ to: '/partner-mbti', search: { flow }, replace: true })
       } else {

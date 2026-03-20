@@ -1,10 +1,10 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useMemberUpdateMutation } from '@/features/profile'
-import { navigateAfterMyAttachment, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { FixedBottom } from '@/shared/ui/fixed-bottom'
@@ -23,11 +23,11 @@ export const Route = createFileRoute('/my-attachment-select/')({
 
 function MyAttachmentSelectPage() {
   const navigate = useNavigate()
-  const { flow, chatId, from } = useSearch({ from: Route.id })
+  const { flow, from, next } = usePersonalityFlow()
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
 
   const updateMutation = useMemberUpdateMutation({
-    onSuccess: () => navigateAfterMyAttachment(navigate, flow, chatId, from),
+    onSuccess: () => next(),
     errorMessage: '저장 중 오류가 발생했습니다',
   })
 
@@ -37,7 +37,7 @@ function MyAttachmentSelectPage() {
   }
 
   const handleDontKnow = () => {
-    navigate({ to: '/attachment-test', search: { flow, chatId } })
+    navigate({ to: '/attachment-test', search: { flow, from } })
   }
 
   return (

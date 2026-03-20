@@ -1,9 +1,9 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { LucideCheck, LucideChevronRight } from 'lucide-react'
 
 import { getAttachmentType } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
-import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { FixedBottom } from '@/shared/ui/fixed-bottom'
@@ -17,17 +17,12 @@ export const Route = createFileRoute('/my-result-preview/')({
 
 function MyResultPreviewPage() {
   const navigate = useNavigate()
-  const { chatId } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
+  const { next } = usePersonalityFlow()
 
   const attachmentData = getAttachmentType(userInfo.loveTypeCategory)
 
-  const handleContinue = () => {
-    navigate({ to: '/partner-mbti', search: { flow: 'chat-entry', chatId } })
-  }
-
   const handleViewResult = () => {
-    // TODO - 내 결과 페이지에 chat-entry에서 넘어올 때 페이지 내부에서 분기처리
     navigate({ to: '/attachment-test/result/my' })
   }
 
@@ -70,7 +65,7 @@ function MyResultPreviewPage() {
         </div>
 
         <FixedBottom className="mt-0">
-          <Button text="계속하기" onClick={handleContinue} />
+          <Button text="계속하기" onClick={next} />
         </FixedBottom>
       </Screen.Content>
     </Screen>

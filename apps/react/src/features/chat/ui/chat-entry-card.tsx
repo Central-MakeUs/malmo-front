@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 
 import momoIdle from '@/assets/images/momo-home-idle.png'
+import { useAuth } from '@/features/auth'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import chatService from '@/shared/services/chat.service'
@@ -9,10 +10,19 @@ import chatService from '@/shared/services/chat.service'
 export function ChatEntryCard() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { userInfo } = useAuth()
   const { mutateAsync: createChatRoom, isPending } = useMutation(chatService.createChatRoomMutation())
 
   const handleChatClick = wrapWithTracking(BUTTON_NAMES.START_NEW_CHAT, CATEGORIES.MAIN, async () => {
     if (isPending) return
+
+    const hasUserPersonality = !!userInfo.personalityType && !!userInfo.loveTypeCategory
+    const hasPartnerPersonality = !!userInfo.otherPersonalityType && !!userInfo.partnerLoveTypeCategory
+
+    if (!hasUserPersonality || !hasPartnerPersonality) {
+      navigate({ to: '/personality-flow-loading', search: { flow: 'chat-entry' } })
+      return
+    }
 
     const created = await createChatRoom()
     const createdId = created?.chatRoomId
@@ -26,7 +36,7 @@ export function ChatEntryCard() {
       createdAt: new Date().toISOString(),
     })
 
-    navigate({ to: '/personality-flow-loading', search: { flow: 'chat-entry', chatId: createdId } })
+    navigate({ to: '/chat' })
   })
 
   return (

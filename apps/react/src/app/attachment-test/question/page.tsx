@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import z from 'zod'
 
@@ -11,6 +11,7 @@ import {
   QUESTION_CONFIG,
 } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
+import { usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
@@ -30,19 +31,8 @@ export const Route = createFileRoute('/attachment-test/question/')({
 
 function AttachmentTestQuestionPage() {
   const [isGuideOpen, setIsGuideOpen] = useState(true)
-  const { from, flow, chatId } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
-  const navigate = useNavigate()
-
-  const getOnComplete = () => {
-    if (flow === 'my-personality') {
-      return () => navigate({ to: '/attachment-test/result/my', replace: true })
-    }
-    if (flow === 'chat-entry') {
-      return () => navigate({ to: '/my-result-preview', search: { flow, chatId }, replace: true })
-    }
-    return undefined
-  }
+  const { from, flow, next } = usePersonalityFlow()
 
   const {
     loading,
@@ -57,7 +47,7 @@ function AttachmentTestQuestionPage() {
     handleNext,
     handleSelectAnswer,
     setQuestionRef,
-  } = useAttachmentQuestions({ from, onComplete: getOnComplete() })
+  } = useAttachmentQuestions({ from, onComplete: flow ? () => next() : undefined })
 
   // 트래킹이 적용된 핸들러들
   const handleGoBackWithTracking = wrapWithTracking(BUTTON_NAMES.BACK_TEST, CATEGORIES.ATTACHMENT, handleGoBack)
