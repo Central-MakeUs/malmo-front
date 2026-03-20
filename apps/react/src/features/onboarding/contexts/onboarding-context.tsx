@@ -1,11 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import React, { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, ReactNode } from 'react'
 
 import signUpService from '@/shared/services/sign-up.service'
 
 import type { SignUpRequestDto } from '@data/user-api-axios/api'
-
-// import { useAuth } from '@/features/auth'
 
 // 연애 상태 타입 정의
 export type RelationshipStatus = NonNullable<SignUpRequestDto['relationshipStatus']>
@@ -108,6 +106,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 
       // 회원가입 API 호출
       await signUpMutation.mutateAsync(requestBody)
+
       setIsOnboardingCompleted(true)
 
       return true

@@ -58,7 +58,7 @@ export interface LoveTypePersonalityTypeResultData {
   /**
    * 연애 가이드 목록
    */
-  datingGuides?: Array<string>
+  datingGuides?: Array<LoveTypeTextBlockData>
   /**
    * 잘 맞는 MBTI 목록
    */

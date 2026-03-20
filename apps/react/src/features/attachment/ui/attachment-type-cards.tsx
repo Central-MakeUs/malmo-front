@@ -3,13 +3,12 @@ import { useState } from 'react'
 
 import MyMysteryMomo from '@/assets/icons/my-mystery.svg'
 import PartnerMysteryMomo from '@/assets/icons/partner-mystery.svg'
+import type { LoveTypeCatalogItem } from '@/features/attachment/models/love-type-catalog'
 import { Badge } from '@/shared/ui'
 
-import type { AttachmentTypeData } from '../models/types'
-
 interface AttachmentTypeCardsProps {
-  myAttachmentData: AttachmentTypeData | null
-  partnerAttachmentData: AttachmentTypeData | null
+  myAttachmentData: LoveTypeCatalogItem | null
+  partnerAttachmentData: LoveTypeCatalogItem | null
   myAttachmentType: string | undefined
   partnerAttachmentType: string | undefined
   isPartnerUnknown?: boolean

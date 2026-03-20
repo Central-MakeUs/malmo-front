@@ -46,8 +46,8 @@ export const queryKeys = {
   loveType: {
     all: ['loveType'] as const,
     questions: () => [...queryKeys.loveType.all, 'questions'] as const,
-    result: (personalityType: string, lovetype: string) =>
-      [...queryKeys.loveType.all, 'result', personalityType, lovetype] as const,
+    detail: (personalityType: string, loveTypeCategory: string) =>
+      [...queryKeys.loveType.all, 'detail', personalityType, loveTypeCategory] as const,
   },
 
   // === Login 관련 ===

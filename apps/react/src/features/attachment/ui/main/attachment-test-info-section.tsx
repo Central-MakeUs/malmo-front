@@ -1,4 +1,5 @@
-import { ATTACHMENT_TEST_INFO } from '../../models/attachment-data'
+import { ATTACHMENT_TEST_INFO } from '@/features/attachment/models/love-type-catalog'
+
 import { InfoBox } from '../info-box'
 import { SectionHeader } from '../section-header'
 

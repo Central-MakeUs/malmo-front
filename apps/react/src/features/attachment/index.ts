@@ -1,11 +1,8 @@
 // 타입과 상수
-export * from './models/types'
-export * from './models/attachment-types'
-export * from './models/attachment-data'
+export * from './models/love-type-catalog'
 export * from './models/constants'
 
 export { useAttachmentQuestions } from './hooks/use-attachment-questions'
-export { getAttachmentType } from './lib/get-attachment-type'
 
 // 공용 컴포넌트
 export * from './ui/info-box'

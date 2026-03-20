@@ -89,6 +89,7 @@ export const BookmarksApiAxiosParamCreator = function (configuration?: Configura
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -141,6 +142,7 @@ export const BookmarksApiAxiosParamCreator = function (configuration?: Configura
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -198,6 +200,8 @@ export const BookmarksApiAxiosParamCreator = function (configuration?: Configura
         }
       }
 
+      localVarHeaderParameter['Accept'] = '*/*'
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
@@ -253,6 +257,8 @@ export const BookmarksApiAxiosParamCreator = function (configuration?: Configura
       if (sort !== undefined) {
         localVarQueryParameter['sort'] = sort
       }
+
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
