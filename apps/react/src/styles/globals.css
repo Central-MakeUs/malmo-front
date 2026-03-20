@@ -87,6 +87,7 @@
   --font-pretendard:
     'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
     'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-emoji-toss: 'Tossface';
   /* Font Weight */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
