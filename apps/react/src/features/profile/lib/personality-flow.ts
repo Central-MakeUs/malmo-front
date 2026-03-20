@@ -88,6 +88,10 @@ function navigateNext(navigate: NavigateFn, pathname: string, { flow, from }: Fl
 function navigateExit(navigate: NavigateFn, { from }: Pick<FlowParams, 'from'>) {
   if (from === 'profile' || from === 'my-page') {
     navigate({ to: '/my-page/profile', replace: true })
+  } else if (from === 'my-result-preview') {
+    navigate({ to: '/my-result-preview', replace: true })
+  } else if (from === 'partner-result-preview') {
+    navigate({ to: '/partner-result-preview', replace: true })
   } else {
     navigate({ to: '/', replace: true })
   }

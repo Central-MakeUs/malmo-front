@@ -23,7 +23,7 @@ function MyResultPreviewPage() {
   const attachmentData = getAttachmentType(userInfo.loveTypeCategory)
 
   const handleViewResult = () => {
-    navigate({ to: '/attachment-test/result/my' })
+    navigate({ to: '/attachment-test/result/my', search: { from: 'my-result-preview' }, replace: true })
   }
 
   return (

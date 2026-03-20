@@ -27,7 +27,7 @@ function PartnerResultPreviewPage() {
     : null
 
   const handleViewResult = () => {
-    navigate({ to: '/attachment-test/result/partner' })
+    navigate({ to: '/attachment-test/result/partner', search: { from: 'partner-result-preview' }, replace: true })
   }
 
   return (
