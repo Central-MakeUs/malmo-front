@@ -1,4 +1,3 @@
-import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Copy } from 'lucide-react'
@@ -33,7 +32,7 @@ function CoupleManagementPage() {
 
   // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
-  const isPartnerConnected = !!partnerInfo && partnerInfo.memberState === PartnerMemberDataMemberStateEnum.Alive
+  const isPartnerConnected = !!partnerInfo
 
   // 페이지 새로고침 함수
   const handleRefreshPage = async () => {

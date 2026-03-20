@@ -1,4 +1,3 @@
-import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { Pen } from 'lucide-react'
 
 import HeartIcon from '@/assets/icons/heart.svg'
@@ -20,7 +19,7 @@ interface ProfileSectionProps {
 export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
   // 커플 연동 상태
   const { data: partnerInfo } = usePartnerInfo()
-  const isPartnerConnected = !!partnerInfo && partnerInfo.memberState === PartnerMemberDataMemberStateEnum.Alive
+  const isPartnerConnected = !!partnerInfo
 
   const profileEdit = useProfileEdit()
 
@@ -33,8 +32,7 @@ export function ProfileSection({ nickname, dDay }: ProfileSectionProps) {
   )
 
   // 연인의 닉네임이 있으면 표시하고, 없으면 "연인" 표시
-  const partnerName = partnerInfo?.nickname || '연인'
-  const partnerDisplayText = withParticle(partnerName)
+  const partnerDisplayText = withParticle('연인')
 
   return (
     <>
