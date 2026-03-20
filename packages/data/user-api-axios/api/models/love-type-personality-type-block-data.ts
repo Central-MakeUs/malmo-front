@@ -13,8 +13,15 @@
  */
 
 /**
- * [Deprecated] 커플 연결 요청 DTO
+ * MBTI + 설명 블록
  */
-export interface CoupleLinkRequestDto {
-  coupleCode: string
+export interface LoveTypePersonalityTypeBlockData {
+  /**
+   * personalityType
+   */
+  personalityType?: string
+  /**
+   * 설명
+   */
+  description?: string
 }

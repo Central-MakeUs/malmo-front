@@ -32,6 +32,8 @@ import {
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base'
 // @ts-ignore
+import type { LoveTypePersonalityTypeResultSuccessResponse } from '../models'
+// @ts-ignore
 import type { LoveTypeQuestionCalculateSuccessResponse } from '../models'
 // @ts-ignore
 import type { LoveTypeQuestionSuccessResponse } from '../models'
@@ -44,6 +46,58 @@ import type { SwaggerErrorResponse } from '../models'
  */
 export const LoveTypesApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
+    /**
+     * MBTI와 애착 유형 조합에 해당하는 상세 결과를 조회합니다.
+     * @summary MBTI + 애착 유형 상세 결과 조회
+     * @param {string} personalityType
+     * @param {string} lovetype
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLoveTypePersonalityTypeResult: async (
+      personalityType: string,
+      lovetype: string,
+      options: RawAxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      // verify required parameter 'personalityType' is not null or undefined
+      assertParamExists('getLoveTypePersonalityTypeResult', 'personalityType', personalityType)
+      // verify required parameter 'lovetype' is not null or undefined
+      assertParamExists('getLoveTypePersonalityTypeResult', 'lovetype', lovetype)
+      const localVarPath = `/love-types/result`
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL)
+      let baseOptions
+      if (configuration) {
+        baseOptions = configuration.baseOptions
+      }
+
+      const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options }
+      const localVarHeaderParameter = {} as any
+      const localVarQueryParameter = {} as any
+
+      // authentication Bearer Authentication required
+      // http bearer authentication required
+      await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      if (personalityType !== undefined) {
+        localVarQueryParameter['personalityType'] = personalityType
+      }
+
+      if (lovetype !== undefined) {
+        localVarQueryParameter['lovetype'] = lovetype
+      }
+
+      localVarHeaderParameter['Accept'] = '*/*'
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter)
+      let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
+      localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      }
+    },
     /**
      * 애착 유형 검사의 질문을 조회합니다.
      * @summary 애착 유형 검사 질문 조회
@@ -66,6 +120,8 @@ export const LoveTypesApiAxiosParamCreator = function (configuration?: Configura
       // authentication Bearer Authentication required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -104,6 +160,8 @@ export const LoveTypesApiAxiosParamCreator = function (configuration?: Configura
       // authentication Bearer Authentication required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -144,6 +202,7 @@ export const LoveTypesApiAxiosParamCreator = function (configuration?: Configura
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -168,6 +227,37 @@ export const LoveTypesApiAxiosParamCreator = function (configuration?: Configura
 export const LoveTypesApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = LoveTypesApiAxiosParamCreator(configuration)
   return {
+    /**
+     * MBTI와 애착 유형 조합에 해당하는 상세 결과를 조회합니다.
+     * @summary MBTI + 애착 유형 상세 결과 조회
+     * @param {string} personalityType
+     * @param {string} lovetype
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getLoveTypePersonalityTypeResult(
+      personalityType: string,
+      lovetype: string,
+      options?: RawAxiosRequestConfig
+    ): Promise<
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoveTypePersonalityTypeResultSuccessResponse>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getLoveTypePersonalityTypeResult(
+        personalityType,
+        lovetype,
+        options
+      )
+      const localVarOperationServerIndex = configuration?.serverIndex ?? 0
+      const localVarOperationServerBasePath =
+        operationServerMap['LoveTypesApi.getLoveTypePersonalityTypeResult']?.[localVarOperationServerIndex]?.url
+      return (axios, basePath) =>
+        createRequestFunction(
+          localVarAxiosArgs,
+          globalAxios,
+          BASE_PATH,
+          configuration
+        )(axios, localVarOperationServerBasePath || basePath)
+    },
     /**
      * 애착 유형 검사의 질문을 조회합니다.
      * @summary 애착 유형 검사 질문 조회
@@ -245,6 +335,21 @@ export const LoveTypesApiFactory = function (configuration?: Configuration, base
   const localVarFp = LoveTypesApiFp(configuration)
   return {
     /**
+     * MBTI와 애착 유형 조합에 해당하는 상세 결과를 조회합니다.
+     * @summary MBTI + 애착 유형 상세 결과 조회
+     * @param {LoveTypesApiGetLoveTypePersonalityTypeResultRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getLoveTypePersonalityTypeResult(
+      requestParameters: LoveTypesApiGetLoveTypePersonalityTypeResultRequest,
+      options?: RawAxiosRequestConfig
+    ): AxiosPromise<LoveTypePersonalityTypeResultSuccessResponse> {
+      return localVarFp
+        .getLoveTypePersonalityTypeResult(requestParameters.personalityType, requestParameters.lovetype, options)
+        .then((request) => request(axios, basePath))
+    },
+    /**
      * 애착 유형 검사의 질문을 조회합니다.
      * @summary 애착 유형 검사 질문 조회
      * @param {*} [options] Override http request option.
@@ -287,6 +392,15 @@ export const LoveTypesApiFactory = function (configuration?: Configuration, base
 }
 
 /**
+ * Request parameters for getLoveTypePersonalityTypeResult operation in LoveTypesApi.
+ */
+export interface LoveTypesApiGetLoveTypePersonalityTypeResultRequest {
+  readonly personalityType: string
+
+  readonly lovetype: string
+}
+
+/**
  * Request parameters for getLoveTypeResult operation in LoveTypesApi.
  */
 export interface LoveTypesApiGetLoveTypeResultRequest {
@@ -304,6 +418,22 @@ export interface LoveTypesApiRegisterResultRequest {
  * LoveTypesApi - object-oriented interface
  */
 export class LoveTypesApi extends BaseAPI {
+  /**
+   * MBTI와 애착 유형 조합에 해당하는 상세 결과를 조회합니다.
+   * @summary MBTI + 애착 유형 상세 결과 조회
+   * @param {LoveTypesApiGetLoveTypePersonalityTypeResultRequest} requestParameters Request parameters.
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   */
+  public getLoveTypePersonalityTypeResult(
+    requestParameters: LoveTypesApiGetLoveTypePersonalityTypeResultRequest,
+    options?: RawAxiosRequestConfig
+  ) {
+    return LoveTypesApiFp(this.configuration)
+      .getLoveTypePersonalityTypeResult(requestParameters.personalityType, requestParameters.lovetype, options)
+      .then((request) => request(this.axios, this.basePath))
+  }
+
   /**
    * 애착 유형 검사의 질문을 조회합니다.
    * @summary 애착 유형 검사 질문 조회

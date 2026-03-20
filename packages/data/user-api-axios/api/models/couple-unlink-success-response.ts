@@ -17,7 +17,7 @@
 import type { CoupleUnlinkData } from './couple-unlink-data'
 
 /**
- * 커플 연결 끊기 성공 응답
+ * [Deprecated] 커플 연결 끊기 성공 응답
  */
 export interface CoupleUnlinkSuccessResponse {
   /**

@@ -21,7 +21,33 @@ export interface UpdateMemberData {
    */
   nickname?: string
   /**
-   * 이메일
+   * 연애 상태
    */
-  email?: string
+  relationshipStatus?: UpdateMemberDataRelationshipStatusEnum
+  /**
+   * 내 MBTI
+   */
+  personalityType?: string
+  /**
+   * 내 애착 유형
+   */
+  loveTypeCategory?: UpdateMemberDataLoveTypeCategoryEnum
 }
+
+export const UpdateMemberDataRelationshipStatusEnum = {
+  InRelationship: 'IN_RELATIONSHIP',
+  SeeingSomeone: 'SEEING_SOMEONE',
+  Breakup: 'BREAKUP',
+} as const
+
+export type UpdateMemberDataRelationshipStatusEnum =
+  (typeof UpdateMemberDataRelationshipStatusEnum)[keyof typeof UpdateMemberDataRelationshipStatusEnum]
+export const UpdateMemberDataLoveTypeCategoryEnum = {
+  StableType: 'STABLE_TYPE',
+  AnxietyType: 'ANXIETY_TYPE',
+  AvoidanceType: 'AVOIDANCE_TYPE',
+  ConfusionType: 'CONFUSION_TYPE',
+} as const
+
+export type UpdateMemberDataLoveTypeCategoryEnum =
+  (typeof UpdateMemberDataLoveTypeCategoryEnum)[keyof typeof UpdateMemberDataLoveTypeCategoryEnum]

@@ -13,7 +13,7 @@
  */
 
 /**
- * 초대 코드 응답 데이터
+ * [Deprecated] 초대 코드 응답 데이터
  */
 export interface InviteCodeResponseData {
   coupleCode?: string

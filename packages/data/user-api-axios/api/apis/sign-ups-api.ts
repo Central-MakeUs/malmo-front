@@ -43,7 +43,7 @@ import type { SwaggerErrorResponse } from '../models'
 export const SignUpsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
     /**
-     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. 연애 시작일은 커플 연동 시 자동으로 설정됩니다. JWT 토큰이 필요합니다.
+     * 인증된 사용자의 추가 정보와 연애 상태를 입력받아 회원가입을 완료합니다. MBTI 관련 정보는 회원가입 이후 프로필 수정에서 관리합니다. JWT 토큰이 필요합니다.
      * @summary 회원가입
      * @param {SignUpRequestDto} signUpRequestDto
      * @param {*} [options] Override http request option.
@@ -69,6 +69,7 @@ export const SignUpsApiAxiosParamCreator = function (configuration?: Configurati
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -90,7 +91,7 @@ export const SignUpsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = SignUpsApiAxiosParamCreator(configuration)
   return {
     /**
-     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. 연애 시작일은 커플 연동 시 자동으로 설정됩니다. JWT 토큰이 필요합니다.
+     * 인증된 사용자의 추가 정보와 연애 상태를 입력받아 회원가입을 완료합니다. MBTI 관련 정보는 회원가입 이후 프로필 수정에서 관리합니다. JWT 토큰이 필요합니다.
      * @summary 회원가입
      * @param {SignUpRequestDto} signUpRequestDto
      * @param {*} [options] Override http request option.
@@ -122,7 +123,7 @@ export const SignUpsApiFactory = function (configuration?: Configuration, basePa
   const localVarFp = SignUpsApiFp(configuration)
   return {
     /**
-     * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. 연애 시작일은 커플 연동 시 자동으로 설정됩니다. JWT 토큰이 필요합니다.
+     * 인증된 사용자의 추가 정보와 연애 상태를 입력받아 회원가입을 완료합니다. MBTI 관련 정보는 회원가입 이후 프로필 수정에서 관리합니다. JWT 토큰이 필요합니다.
      * @summary 회원가입
      * @param {SignUpsApiSignUpRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -149,7 +150,7 @@ export interface SignUpsApiSignUpRequest {
  */
 export class SignUpsApi extends BaseAPI {
   /**
-   * 인증된 사용자의 추가 정보를 입력받아 회원가입을 완료합니다. 연애 시작일은 커플 연동 시 자동으로 설정됩니다. JWT 토큰이 필요합니다.
+   * 인증된 사용자의 추가 정보와 연애 상태를 입력받아 회원가입을 완료합니다. MBTI 관련 정보는 회원가입 이후 프로필 수정에서 관리합니다. JWT 토큰이 필요합니다.
    * @summary 회원가입
    * @param {SignUpsApiSignUpRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
