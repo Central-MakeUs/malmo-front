@@ -32,7 +32,7 @@ export const groupSentences = (text: string, sentencesPerBubble: number = 3): st
 
   const sentenceSource = normalizedText.replace(/\n+/g, ' ')
   const sentences = sentenceSource.match(/[^.!?]+[.!?]*\s*/g) || [sentenceSource]
-  const trimmedSentences = sentences.map((s) => s.trim()).filter((s) => s.length > 0)
+  const trimmedSentences = sentences.map((s) => s.trim())
 
   if (trimmedSentences.length === 0) {
     return [sentenceSource].map((sentence) => sentence.trim()).filter((sentence) => sentence.length > 0)
@@ -41,10 +41,7 @@ export const groupSentences = (text: string, sentencesPerBubble: number = 3): st
   const bubbleSize = Math.max(1, sentencesPerBubble)
   const bubbles: string[] = []
   for (let i = 0; i < trimmedSentences.length; i += bubbleSize) {
-    const bubble = trimmedSentences.slice(i, i + bubbleSize).join(' ').trim()
-    if (bubble.length > 0) {
-      bubbles.push(bubble)
-    }
+    bubbles.push(trimmedSentences.slice(i, i + bubbleSize).join(' '))
   }
   return bubbles
 }
