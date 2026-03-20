@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useUpdatePartnerProfileMutation } from '@/features/profile'
-import { navigateAfterPartnerAttachment, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import {
@@ -32,19 +32,22 @@ export const Route = createFileRoute('/partner-attachment-select/')({
 
 function PartnerAttachmentSelectPage() {
   const navigate = useNavigate()
-  const { flow, chatId } = useSearch({ from: Route.id })
+  const { flow, from } = useSearch({ from: Route.id })
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
-  const pendingHasDataRef = useRef(false)
+
+  const onSuccess = () =>
+    from === 'profile'
+      ? navigate({ to: '/my-page/profile', replace: true })
+      : navigate({ to: '/partner-result-preview', replace: true })
 
   const updateMutation = useUpdatePartnerProfileMutation({
-    onSuccess: () => navigateAfterPartnerAttachment(navigate, flow, chatId, pendingHasDataRef.current),
+    onSuccess,
     errorMessage: '저장 중 오류가 발생했습니다',
   })
 
   const handleConfirm = () => {
     if (!selectedType || updateMutation.isPending) return
-    pendingHasDataRef.current = true
     updateMutation.mutate({ loveTypeCategory: selectedType })
   }
 
@@ -54,7 +57,6 @@ function PartnerAttachmentSelectPage() {
   }
 
   const handleDontKnowConfirm = () => {
-    pendingHasDataRef.current = false
     updateMutation.mutate({ loveTypeCategoryProvided: false })
   }
 
@@ -83,7 +85,7 @@ function PartnerAttachmentSelectPage() {
               selected={selectedType === option.value}
               onClick={() => setSelectedType(option.value)}
               disabled={updateMutation.isPending}
-              className="w-full py-5 text-left"
+              className="w-full text-left"
             >
               {option.label}
             </SelectableButton>

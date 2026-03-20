@@ -45,12 +45,8 @@ function HomePage() {
     (!userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN' ? 1 : 0)
 
   const handleBannerClick = () => {
-    const myComplete = !!userInfo.personalityType && !!userInfo.loveTypeCategory
-    if (!myComplete) {
-      navigate({ to: '/personality-flow-loading', search: { flow: 'my-personality' } })
-    } else {
-      navigate({ to: '/personality-flow-loading', search: { flow: 'partner-personality' } })
-    }
+    const flow = !userInfo.loveTypeCategory ? 'my-personality' : 'partner-personality'
+    navigate({ to: '/personality-flow-loading', search: { flow } })
   }
 
   // 내 성향카드 클릭
@@ -96,7 +92,11 @@ function HomePage() {
         {missingPersonalityCount > 0 && (
           <KeyMessageBanner
             icon={<BellNotificationIcon />}
-            subtitle={`아직 채우지 않은 성향 카드 ${missingPersonalityCount}건`}
+            subtitle={
+              <span className="body4-medium text-gray-iron-800">
+                아직 채우지 않은 성향카드는 <span className="text-malmo-rasberry-500">{missingPersonalityCount}건</span>
+              </span>
+            }
             title="완성하러 가기"
             onClick={handleBannerClick}
           />

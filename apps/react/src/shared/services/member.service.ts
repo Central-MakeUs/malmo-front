@@ -42,8 +42,10 @@ class MemberService extends MembersApi {
       },
       throwOnError: (error: any) => {
         // axios 에러와 일반 에러 구조 모두 고려
+        const status = error?.response?.status
         const errorCode = error?.response?.data?.code
-        return errorCode !== 40301
+        // 40301: 파트너 없음 (403), 400: 온보딩 직후 파트너 미연결 상태
+        return errorCode !== 40301 && status !== 400
       },
     }
   }

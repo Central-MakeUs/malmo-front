@@ -20,11 +20,11 @@ function PartnerMbtiEditPage() {
   const navigate = useNavigate()
   const goBack = useGoBack()
   const { userInfo } = useAuth()
-  const { flow, chatId } = useSearch({ from: Route.id })
+  const { flow, chatId, from } = useSearch({ from: Route.id })
 
   const updateMutation = useUpsertPartnerProfileMutation({
     onSuccess: () => {
-      const navigated = navigateAfterPartnerMbti(navigate, flow, chatId)
+      const navigated = navigateAfterPartnerMbti(navigate, flow, chatId, from)
       if (!navigated) {
         toast.success('상대 성향이 변경되었어요!')
         goBack()
@@ -50,7 +50,7 @@ function PartnerMbtiEditPage() {
       contentTopSlot={getPersonalityStepDots(flow === 'partner-personality', 1)}
       title={
         <>
-          상대방 MBTI 성향은
+          상대의 MBTI 성향은
           <br />
           무엇인가요?
         </>

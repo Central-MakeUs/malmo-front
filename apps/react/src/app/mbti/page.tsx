@@ -20,11 +20,11 @@ function MbtiEditPage() {
   const navigate = useNavigate()
   const goBack = useGoBack()
   const { userInfo } = useAuth()
-  const { flow, chatId } = useSearch({ from: Route.id })
+  const { flow, chatId, from } = useSearch({ from: Route.id })
 
   const updateMutation = useMemberUpdateMutation({
     onSuccess: () => {
-      const navigated = navigateAfterMyMbti(navigate, flow, chatId)
+      const navigated = navigateAfterMyMbti(navigate, flow, chatId, from)
       if (!navigated) {
         toast.success('내 성향이 변경되었어요!')
         goBack()

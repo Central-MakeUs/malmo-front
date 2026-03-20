@@ -155,7 +155,7 @@ export function MbtiForm({
                     key={option.value}
                     selected={selections[dimension.key] === option.value}
                     onClick={() => handleSelect(dimension.key, option.value)}
-                    className="flex-1"
+                    className="flex-1 py-3"
                   >
                     {option.label}
                   </SelectableButton>

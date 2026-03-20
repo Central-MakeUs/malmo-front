@@ -14,8 +14,7 @@ export function SelectableButton({ selected, onClick, children, className, disab
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'rounded-[10px] border px-5 py-4 text-center transition-all',
-        'body2-medium',
+        'body2-medium rounded-[10px] border px-5 py-5 text-center transition-all',
         selected ? 'border-malmo-rasberry-500 text-malmo-rasberry-500' : 'border-gray-neutral-300 text-gray-iron-500',
         className
       )}

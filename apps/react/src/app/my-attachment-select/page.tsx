@@ -23,11 +23,11 @@ export const Route = createFileRoute('/my-attachment-select/')({
 
 function MyAttachmentSelectPage() {
   const navigate = useNavigate()
-  const { flow, chatId } = useSearch({ from: Route.id })
+  const { flow, chatId, from } = useSearch({ from: Route.id })
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
 
   const updateMutation = useMemberUpdateMutation({
-    onSuccess: () => navigateAfterMyAttachment(navigate, flow, chatId),
+    onSuccess: () => navigateAfterMyAttachment(navigate, flow, chatId, from),
     errorMessage: '저장 중 오류가 발생했습니다',
   })
 
@@ -51,9 +51,9 @@ function MyAttachmentSelectPage() {
         <TitleSection
           title={
             <>
-              나의 애착 유형이
+              나의 애착유형을
               <br />
-              무엇인가요?
+              선택해주세요
             </>
           }
         />
@@ -68,7 +68,7 @@ function MyAttachmentSelectPage() {
                 selected={selectedType === option.value}
                 onClick={() => setSelectedType(option.value)}
                 disabled={updateMutation.isPending}
-                className="w-full py-5 text-left"
+                className="w-full text-left"
               >
                 {option.label}
               </SelectableButton>

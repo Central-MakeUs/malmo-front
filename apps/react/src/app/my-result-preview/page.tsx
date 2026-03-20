@@ -3,7 +3,7 @@ import { LucideCheck, LucideChevronRight } from 'lucide-react'
 
 import { getAttachmentType } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
-import { navigateAfterMyResultPreview, personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { FixedBottom } from '@/shared/ui/fixed-bottom'
@@ -17,46 +17,50 @@ export const Route = createFileRoute('/my-result-preview/')({
 
 function MyResultPreviewPage() {
   const navigate = useNavigate()
-  const { flow, chatId } = useSearch({ from: Route.id })
+  const { chatId } = useSearch({ from: Route.id })
   const { userInfo } = useAuth()
 
   const attachmentData = getAttachmentType(userInfo.loveTypeCategory)
 
-  const handleContinue = () => navigateAfterMyResultPreview(navigate, flow, chatId)
+  const handleContinue = () => {
+    navigate({ to: '/partner-mbti', search: { flow: 'chat-entry', chatId } })
+  }
 
   const handleViewResult = () => {
+    // TODO - 내 결과 페이지에 chat-entry에서 넘어올 때 페이지 내부에서 분기처리
     navigate({ to: '/attachment-test/result/my' })
   }
 
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar
-          center={flow === 'chat-entry' ? <FlowProgressBar step={3} total={5} highlightSteps={[3, 5]} /> : undefined}
-        />
+        <DetailHeaderBar center={<FlowProgressBar step={3} total={5} highlightSteps={[3, 5]} />} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white">
         <div className="flex flex-1 flex-col items-center justify-center px-5">
           {/* Checkmark circle */}
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-malmo-rasberry-500">
+          <div
+            className="flex h-14 w-14 items-center justify-center rounded-full"
+            style={{ background: 'linear-gradient(180deg, rgba(236, 70, 101, 1), rgba(247, 142, 162, 1))' }}
+          >
             <LucideCheck className="h-7 w-7 text-white" strokeWidth={2.5} />
           </div>
 
-          <h1 className="title2-bold mt-4 text-center text-gray-iron-950">내 성향 프로필을 완성했어요!</h1>
-          <p className="body3-medium mt-2 text-center text-gray-iron-500">연인의 프로필도 완성하러 가볼까요?</p>
+          <h1 className="title2-bold mt-5 text-center text-gray-iron-950">내 성향 프로필을 완성했어요!</h1>
+          <p className="body3-medium mt-1 text-center text-gray-iron-500">연인의 프로필도 완성하러 가볼까요?</p>
 
           {/* Result card */}
           {attachmentData && (
-            <div className="mt-8 w-full rounded-2xl border border-gray-neutral-200 p-5">
-              <p className="body3-medium text-malmo-orange-500">{userInfo.nickname}님은</p>
-              <h2 className="title2-bold mt-1 text-gray-iron-950">
+            <div className="mt-[60px] w-full rounded-2xl border border-gray-neutral-200 px-[22px] py-6">
+              <p className="heading2-bold text-malmo-orange-500">{userInfo.nickname}님은</p>
+              <h2 className="title1-bold mt-2 text-gray-iron-950">
                 {userInfo.personalityType} {attachmentData.subtype}
               </h2>
-              <p className="body3-medium mt-3 line-clamp-2 text-gray-iron-500">{attachmentData.description}</p>
+              <p className="body3-medium mt-1 line-clamp-2 text-gray-iron-500">{attachmentData.description}</p>
               <button
                 onClick={handleViewResult}
-                className="body3-medium mt-5 flex items-center gap-1 rounded-lg bg-gray-neutral-100 px-4 py-2 text-gray-iron-700"
+                className="body3-medium mt-8 flex items-center gap-1 rounded-[8px] bg-gray-neutral-200 px-[18px] py-2 text-gray-iron-800"
               >
                 내 결과 보러가기
                 <LucideChevronRight className="h-4 w-4" />
@@ -66,7 +70,7 @@ function MyResultPreviewPage() {
         </div>
 
         <FixedBottom className="mt-0">
-          <Button text={flow === 'chat-entry' ? '프로필 이어서 완성하기' : '홈으로 가기'} onClick={handleContinue} />
+          <Button text="계속하기" onClick={handleContinue} />
         </FixedBottom>
       </Screen.Content>
     </Screen>

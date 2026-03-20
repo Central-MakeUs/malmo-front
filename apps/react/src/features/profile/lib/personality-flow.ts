@@ -5,6 +5,7 @@ export type PersonalityFlow = 'my-personality' | 'partner-personality' | 'chat-e
 export const personalityFlowSearchSchema = z.object({
   flow: z.enum(['my-personality', 'partner-personality', 'chat-entry']).optional(),
   chatId: z.number().optional(),
+  from: z.literal('profile').optional(),
 })
 
 export type PersonalityFlowSearch = z.infer<typeof personalityFlowSearchSchema>
@@ -16,10 +17,11 @@ type NavigateFn = (opts: any) => void
 export function navigateAfterMyMbti(
   navigate: NavigateFn,
   flow: PersonalityFlow | undefined,
-  chatId: number | undefined
+  chatId: number | undefined,
+  from?: 'profile'
 ): boolean {
   if (flow === 'my-personality') {
-    navigate({ to: '/my-attachment-select', search: { flow } })
+    navigate({ to: '/my-attachment-select', search: { flow, ...(from && { from }) } })
     return true
   }
   if (flow === 'chat-entry') {
@@ -33,10 +35,11 @@ export function navigateAfterMyMbti(
 export function navigateAfterPartnerMbti(
   navigate: NavigateFn,
   flow: PersonalityFlow | undefined,
-  chatId: number | undefined
+  chatId: number | undefined,
+  from?: 'profile'
 ): boolean {
   if (flow === 'partner-personality') {
-    navigate({ to: '/partner-attachment-select', search: { flow } })
+    navigate({ to: '/partner-attachment-select', search: { flow, ...(from && { from }) } })
     return true
   }
   if (flow === 'chat-entry') {
@@ -50,8 +53,13 @@ export function navigateAfterPartnerMbti(
 export function navigateAfterMyAttachment(
   navigate: NavigateFn,
   flow: PersonalityFlow | undefined,
-  chatId: number | undefined
+  chatId: number | undefined,
+  from?: 'profile'
 ) {
+  if (from === 'profile') {
+    navigate({ to: '/my-page/profile', replace: true })
+    return
+  }
   if (flow === 'my-personality') {
     navigate({ to: '/attachment-test/result/my', search: { from: 'my-page' } })
     return

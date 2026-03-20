@@ -20,7 +20,11 @@ function ProfileManagementPage() {
   const myMbti = userInfo.personalityType?.toUpperCase()
   const partnerMbti = userInfo.otherPersonalityType?.toUpperCase()
   const myAttachmentSubtype = getAttachmentType(userInfo.loveTypeCategory)?.subtype
+  const partnerAttachmentSubtype = getAttachmentType(userInfo.partnerLoveTypeCategory)?.subtype
   const myBadgeText = myAttachmentSubtype ? `${myMbti ? myMbti + ' ' : ''}${myAttachmentSubtype}` : undefined
+  const partnerBadgeText = partnerAttachmentSubtype
+    ? `${partnerMbti ? partnerMbti + ' ' : ''}${partnerAttachmentSubtype}`
+    : undefined
 
   return (
     <Screen>
@@ -40,14 +44,18 @@ function ProfileManagementPage() {
             label="내 성향"
             badge={myBadgeText ? { text: myBadgeText, variant: 'completed' } : undefined}
             onClick={wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_MBTI, CATEGORIES.PROFILE, () =>
-              navigate({ to: '/mbti', search: { flow: 'my-personality' } })
+              navigate({ to: '/mbti', search: { flow: 'my-personality', from: 'profile' } })
             )}
           />
           <ProfileRow
             label="상대 성향"
-            badge={partnerMbti ? { text: partnerMbti, variant: 'rasberry' } : { text: '미입력', variant: 'default' }}
+            badge={
+              partnerBadgeText
+                ? { text: partnerBadgeText, variant: 'rasberry' }
+                : { text: '미입력', variant: 'default' }
+            }
             onClick={wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_PARTNER_MBTI, CATEGORIES.PROFILE, () =>
-              navigate({ to: '/partner-mbti', search: { flow: 'partner-personality' } })
+              navigate({ to: '/partner-mbti', search: { flow: 'partner-personality', from: 'profile' } })
             )}
           />
         </div>

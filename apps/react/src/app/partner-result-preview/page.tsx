@@ -1,11 +1,16 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { LucideCheck, LucideChevronRight } from 'lucide-react'
 
+import { getAttachmentType } from '@/features/attachment'
+import { usePartnerInfo } from '@/features/member'
 import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { FixedBottom } from '@/shared/ui/fixed-bottom'
 import { FlowProgressBar } from '@/shared/ui/flow-progress-bar'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
+
+import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
 export const Route = createFileRoute('/partner-result-preview/')({
   validateSearch: personalityFlowSearchSchema,
@@ -14,10 +19,14 @@ export const Route = createFileRoute('/partner-result-preview/')({
 
 function PartnerResultPreviewPage() {
   const navigate = useNavigate()
-  const { flow, chatId } = useSearch({ from: Route.id })
+  const { data: partnerInfo } = usePartnerInfo()
+
+  const attachmentData = partnerInfo?.loveTypeCategory
+    ? getAttachmentType(partnerInfo.loveTypeCategory as MemberDataLoveTypeCategoryEnum)
+    : null
 
   const handleContinue = () => {
-    navigate({ to: '/chat', search: { chatId }, replace: true })
+    navigate({ to: '/', replace: true })
   }
 
   const handleViewResult = () => {
@@ -31,18 +40,39 @@ function PartnerResultPreviewPage() {
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white">
-        <div className="flex flex-1 flex-col items-center justify-center px-5 text-center">
-          <h1 className="title2-bold text-gray-iron-950">
-            상대방의 성향
-            <br />
-            결과가 준비됐어요!
-          </h1>
-          <p className="body3-medium mt-3 text-gray-iron-500">결과지를 확인하거나 상담을 계속 진행해 보세요</p>
+        <div className="flex flex-1 flex-col items-center justify-center px-5">
+          {/* Checkmark circle */}
+          <div
+            className="flex h-9 w-9 items-center justify-center rounded-full"
+            style={{ background: 'linear-gradient(180deg, rgba(236, 70, 101, 1), rgba(247, 142, 162, 1))' }}
+          >
+            <LucideCheck className="h-6 w-6 text-white" strokeWidth={2.5} />
+          </div>
+
+          <h1 className="heading1-bold mt-5 text-center text-gray-iron-950">상대의 프로필까지 모두 완성했어요!</h1>
+          <p className="body2-medium mt-1 text-center text-gray-iron-500">이제 상담하러 가볼까요?</p>
+
+          {/* Result card */}
+          {attachmentData && (
+            <div className="mt-[60px] w-full rounded-2xl border border-gray-neutral-200 px-[22px] py-6">
+              <p className="heading2-bold text-malmo-orange-500">상대는</p>
+              <h2 className="title1-bold mt-2 text-gray-iron-950">
+                {partnerInfo?.personalityType} {attachmentData.subtype}
+              </h2>
+              <p className="body3-medium mt-1 line-clamp-2 text-gray-iron-500">{attachmentData.description}</p>
+              <button
+                onClick={handleViewResult}
+                className="body3-medium mt-8 flex items-center gap-1 rounded-[8px] bg-gray-neutral-200 px-[18px] py-2 text-gray-iron-800"
+              >
+                상대방 결과 보러가기
+                <LucideChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </div>
 
-        <FixedBottom className="mt-0 flex flex-col gap-3">
-          <Button text="결과지 보기" type="secondary" onClick={handleViewResult} />
-          <Button text={flow === 'chat-entry' ? '프로필 이어서 완성하기' : '홈으로 가기'} onClick={handleContinue} />
+        <FixedBottom className="mt-0">
+          <Button text="상담하러 가기" onClick={handleContinue} />
         </FixedBottom>
       </Screen.Content>
     </Screen>
