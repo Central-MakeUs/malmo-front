@@ -13,6 +13,7 @@ import { getPersonalityStepDots } from '@/shared/ui/flow-step-dots'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { KeyMessageBanner } from '@/shared/ui/key-message-banner'
 import { SelectableButton } from '@/shared/ui/selectable-button'
+import { toast } from '@/shared/ui/toast'
 
 import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
@@ -27,7 +28,10 @@ function MyAttachmentSelectPage() {
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
 
   const updateMutation = useMemberUpdateMutation({
-    onSuccess: () => next(),
+    onSuccess: () => {
+      if (from === 'profile') toast.success('내 성향이 변경되었어요!')
+      next()
+    },
     errorMessage: '저장 중 오류가 발생했습니다',
   })
 
