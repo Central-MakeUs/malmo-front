@@ -17,7 +17,7 @@
 import type { InviteCodeResponseData } from './invite-code-response-data'
 
 /**
- * 멤버 초대 코드 성공 응답
+ * [Deprecated] 멤버 초대 코드 성공 응답
  */
 export interface GetInviteCodeSuccessResponse {
   /**

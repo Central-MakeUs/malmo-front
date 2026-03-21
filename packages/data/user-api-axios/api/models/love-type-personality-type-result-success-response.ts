@@ -14,12 +14,12 @@
 
 // May contain unused imports in some cases
 // @ts-ignore
-import type { UpdateStartLoveDateData } from './update-start-love-date-data'
+import type { LoveTypePersonalityTypeResultData } from './love-type-personality-type-result-data'
 
 /**
- * [Deprecated] 연애 시작일 갱신 성공 응답
+ * MBTI + 애착유형 상세 결과 조회 성공 응답
  */
-export interface UpdateStartLoveDateSuccessResponse {
+export interface LoveTypePersonalityTypeResultSuccessResponse {
   /**
    * 요청 ID
    */
@@ -32,5 +32,5 @@ export interface UpdateStartLoveDateSuccessResponse {
    * 응답 메시지
    */
   message?: string
-  data?: UpdateStartLoveDateData
+  data?: LoveTypePersonalityTypeResultData
 }

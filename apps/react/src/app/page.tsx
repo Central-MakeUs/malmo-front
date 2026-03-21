@@ -1,4 +1,3 @@
-import { PartnerMemberDataMemberStateEnum } from '@data/user-api-axios/api'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
@@ -6,7 +5,7 @@ import HeartIcon from '@/assets/icons/heart.svg'
 import malmoLogo from '@/assets/images/malmo-logo-small.png'
 import momoHomeChattingImage from '@/assets/images/onboarding-end-2.png'
 import { AnniversaryEditSheet } from '@/features/anniversary'
-import { getAttachmentType } from '@/features/attachment'
+import { getLoveTypeCatalogItem } from '@/features/attachment/models/love-type-catalog'
 import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
 import { AttachmentTypeCards } from '@/features/attachment/ui/attachment-type-cards'
 import { useAuth } from '@/features/auth'
@@ -54,10 +53,10 @@ function HomePage() {
   const requiredProfileStartPath = getRequiredProfileFlowStartPath(userInfo)
 
   // 파트너 연동 상태 확인
-  const isPartnerConnected = !!partnerInfo && partnerInfo.memberState === PartnerMemberDataMemberStateEnum.Alive
+  const isPartnerConnected = !!partnerInfo
 
-  const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
-  const partnerAttachmentData = getAttachmentType(partnerInfo?.loveTypeCategory)
+  const myAttachmentData = getLoveTypeCatalogItem(userInfo.loveTypeCategory)
+  const partnerAttachmentData = getLoveTypeCatalogItem(partnerInfo?.loveTypeCategory)
 
   const myAttachmentType = myAttachmentData?.character
   const partnerAttachmentType = partnerAttachmentData?.character

@@ -1,12 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import z from 'zod'
 
 import { AttachmentResultContent } from '@/features/attachment/ui/result/attachment-result-content'
 import { useAuth } from '@/features/auth'
-
-const searchSchema = z.object({
-  from: z.string().optional(),
-})
 
 export const Route = createFileRoute('/attachment-test/result/my/')({
   beforeLoad: async ({ context }) => {
@@ -18,13 +13,9 @@ export const Route = createFileRoute('/attachment-test/result/my/')({
     }
   },
   component: MyAttachmentResultPage,
-  validateSearch: searchSchema,
 })
 
 function MyAttachmentResultPage() {
   const { userInfo } = useAuth()
-  const { from } = Route.useSearch()
-  const isFromChat = from === '/chat'
-
-  return <AttachmentResultContent userInfo={userInfo} type="my" isFromChat={isFromChat} />
+  return <AttachmentResultContent userInfo={userInfo} type="my" />
 }

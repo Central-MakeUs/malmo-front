@@ -49,10 +49,11 @@ import type { SwaggerErrorResponse } from '../models'
 export const QuestionsApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
     /**
-     * 커플 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 질문 답변 조회
      * @param {number} coupleQuestionId
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getAnswers: async (coupleQuestionId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -77,6 +78,8 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+      localVarHeaderParameter['Accept'] = '*/*'
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
@@ -87,10 +90,11 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       }
     },
     /**
-     * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 과거 질문 조회
      * @param {number} level
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getQuestion: async (level: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -112,6 +116,8 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+      localVarHeaderParameter['Accept'] = '*/*'
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
@@ -122,9 +128,10 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       }
     },
     /**
-     * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getTodayQuestion: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -144,6 +151,8 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+      localVarHeaderParameter['Accept'] = '*/*'
+
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
@@ -154,10 +163,11 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       }
     },
     /**
-     * 커플 오늘의 질문에 답변을 등록합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 답변 등록
      * @param {AnswerRequestDto} answerRequestDto
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     postAnswer: async (
@@ -183,6 +193,7 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -195,10 +206,11 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       }
     },
     /**
-     * 커플 오늘의 질문에 답변을 수정합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 답변 수정
      * @param {AnswerRequestDto} answerRequestDto
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     updateAnswer: async (
@@ -224,6 +236,7 @@ export const QuestionsApiAxiosParamCreator = function (configuration?: Configura
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
+      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -245,10 +258,11 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = QuestionsApiAxiosParamCreator(configuration)
   return {
     /**
-     * 커플 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 질문 답변 조회
      * @param {number} coupleQuestionId
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async getAnswers(
@@ -268,10 +282,11 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 과거 질문 조회
      * @param {number} level
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async getQuestion(
@@ -291,9 +306,10 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async getTodayQuestion(
@@ -312,10 +328,11 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 커플 오늘의 질문에 답변을 등록합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 답변 등록
      * @param {AnswerRequestDto} answerRequestDto
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async postAnswer(
@@ -335,10 +352,11 @@ export const QuestionsApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 커플 오늘의 질문에 답변을 수정합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 답변 수정
      * @param {AnswerRequestDto} answerRequestDto
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async updateAnswer(
@@ -367,10 +385,11 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
   const localVarFp = QuestionsApiFp(configuration)
   return {
     /**
-     * 커플 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 질문 답변 조회
      * @param {QuestionsApiGetAnswersRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getAnswers(
@@ -382,10 +401,11 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
         .then((request) => request(axios, basePath))
     },
     /**
-     * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 과거 질문 조회
      * @param {QuestionsApiGetQuestionRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getQuestion(
@@ -395,19 +415,21 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
       return localVarFp.getQuestion(requestParameters.level, options).then((request) => request(axios, basePath))
     },
     /**
-     * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 조회
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     getTodayQuestion(options?: RawAxiosRequestConfig): AxiosPromise<QuestionSuccessResponse> {
       return localVarFp.getTodayQuestion(options).then((request) => request(axios, basePath))
     },
     /**
-     * 커플 오늘의 질문에 답변을 등록합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 답변 등록
      * @param {QuestionsApiPostAnswerRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     postAnswer(
@@ -419,10 +441,11 @@ export const QuestionsApiFactory = function (configuration?: Configuration, base
         .then((request) => request(axios, basePath))
     },
     /**
-     * 커플 오늘의 질문에 답변을 수정합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
      * @summary 오늘의 질문 답변 수정
      * @param {QuestionsApiUpdateAnswerRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     updateAnswer(
@@ -469,10 +492,11 @@ export interface QuestionsApiUpdateAnswerRequest {
  */
 export class QuestionsApi extends BaseAPI {
   /**
-   * 커플 질문 답변을 조회합니다. JWT 토큰이 필요합니다.
+   * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
    * @summary 질문 답변 조회
    * @param {QuestionsApiGetAnswersRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public getAnswers(requestParameters: QuestionsApiGetAnswersRequest, options?: RawAxiosRequestConfig) {
@@ -482,10 +506,11 @@ export class QuestionsApi extends BaseAPI {
   }
 
   /**
-   * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
+   * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
    * @summary 과거 질문 조회
    * @param {QuestionsApiGetQuestionRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public getQuestion(requestParameters: QuestionsApiGetQuestionRequest, options?: RawAxiosRequestConfig) {
@@ -495,9 +520,10 @@ export class QuestionsApi extends BaseAPI {
   }
 
   /**
-   * 커플 오늘의 질문을 조회합니다. JWT 토큰이 필요합니다.
+   * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
    * @summary 오늘의 질문 조회
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public getTodayQuestion(options?: RawAxiosRequestConfig) {
@@ -507,10 +533,11 @@ export class QuestionsApi extends BaseAPI {
   }
 
   /**
-   * 커플 오늘의 질문에 답변을 등록합니다. JWT 토큰이 필요합니다.
+   * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
    * @summary 오늘의 질문 답변 등록
    * @param {QuestionsApiPostAnswerRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public postAnswer(requestParameters: QuestionsApiPostAnswerRequest, options?: RawAxiosRequestConfig) {
@@ -520,10 +547,11 @@ export class QuestionsApi extends BaseAPI {
   }
 
   /**
-   * 커플 오늘의 질문에 답변을 수정합니다. JWT 토큰이 필요합니다.
+   * [Deprecated] 오늘의 질문 기능은 제거 예정입니다. JWT 토큰이 필요합니다.
    * @summary 오늘의 질문 답변 수정
    * @param {QuestionsApiUpdateAnswerRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public updateAnswer(requestParameters: QuestionsApiUpdateAnswerRequest, options?: RawAxiosRequestConfig) {

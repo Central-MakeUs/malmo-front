@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 
+import memberService from '@/shared/services/member.service'
 import signUpService from '@/shared/services/sign-up.service'
 
 import type { SignUpRequestDto } from '@data/user-api-axios/api'
@@ -165,16 +166,25 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
         requestBody.relationshipStatus = data.relationshipStatus
       }
 
+      // 회원가입 API 호출
+      await signUpMutation.mutateAsync(requestBody)
+
       if (data.personalityType) {
-        requestBody.personalityType = data.personalityType
+        await memberService.updateMember({
+          updateMemberRequestDto: {
+            personalityType: data.personalityType,
+          },
+        })
       }
 
       if (data.otherPersonalityType) {
-        requestBody.otherPersonalityType = data.otherPersonalityType
+        await memberService.createPartnerProfile({
+          createPartnerProfileRequestDto: {
+            personalityType: data.otherPersonalityType,
+          },
+        })
       }
 
-      // 회원가입 API 호출
-      await signUpMutation.mutateAsync(requestBody)
       setIsOnboardingCompleted(true)
 
       return true

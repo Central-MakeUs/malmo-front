@@ -12,9 +12,25 @@
  * Do not edit the class manually.
  */
 
+// May contain unused imports in some cases
+// @ts-ignore
+import type { PartnerProfileData } from './partner-profile-data'
+
 /**
- * [Deprecated] 커플 연결 요청 DTO
+ * 상대 프로필 등록/수정 성공 응답
  */
-export interface CoupleLinkRequestDto {
-  coupleCode: string
+export interface PartnerProfileSuccessResponse {
+  /**
+   * 요청 ID
+   */
+  requestId?: string
+  /**
+   * 성공 여부
+   */
+  success?: boolean
+  /**
+   * 응답 메시지
+   */
+  message?: string
+  data?: PartnerProfileData
 }

@@ -10,7 +10,7 @@ import { useGoBack } from '@/shared/navigation/use-go-back'
 import memberService from '@/shared/services/member.service'
 import { toast } from '@/shared/ui/toast'
 
-import type { UpdateMemberRequestDto } from '@data/user-api-axios/api'
+import type { CreatePartnerProfileRequestDto, UpdatePartnerProfileRequestDto } from '@data/user-api-axios/api'
 
 export const Route = createFileRoute('/partner-mbti/')({
   validateSearch: requiredProfileFlowSearchSchema,
@@ -25,8 +25,20 @@ function PartnerMbtiEditPage() {
   const isRequiredProfileFlow = requiredProfileFlow === true
 
   const updateMutation = useMutation({
-    mutationFn: async (body: UpdateMemberRequestDto) => {
-      const { data } = await memberService.updateMember({ updateMemberRequestDto: body })
+    mutationFn: async (mbti: string) => {
+      if (userInfo.otherPersonalityType) {
+        const requestBody: UpdatePartnerProfileRequestDto = {
+          personalityType: mbti,
+          personalityTypeProvided: true,
+        }
+        const { data } = await memberService.updatePartnerProfile({ updatePartnerProfileRequestDto: requestBody })
+        return data
+      }
+
+      const requestBody: CreatePartnerProfileRequestDto = {
+        personalityType: mbti,
+      }
+      const { data } = await memberService.createPartnerProfile({ createPartnerProfileRequestDto: requestBody })
       return data
     },
     onSuccess: async () => {
@@ -48,7 +60,7 @@ function PartnerMbtiEditPage() {
   const handleSubmit = (mbti: string) => {
     if (updateMutation.isPending) return
     trackSave()
-    updateMutation.mutate({ otherPersonalityType: mbti })
+    updateMutation.mutate(mbti)
   }
 
   const handleBack = isRequiredProfileFlow

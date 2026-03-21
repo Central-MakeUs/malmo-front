@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import { useAuth } from '@/features/auth'
 import { PartnerCodeForm } from '@/features/couple'
-import { usePartnerInfo } from '@/features/member'
 import { wrapWithTracking, BUTTON_NAMES, CATEGORIES } from '@/shared/analytics'
 import coupleService from '@/shared/services/couple.service'
 import { queryKeys } from '@/shared/services/query-keys'
@@ -20,7 +19,6 @@ function CoupleManagementPartnerCode() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { refreshUserInfo } = useAuth()
-  const { data: partnerInfo, refetch: refetchPartnerInfo } = usePartnerInfo()
 
   const handlePrevious = wrapWithTracking(BUTTON_NAMES.BACK_PARTNER_CODE, CATEGORIES.ONBOARDING, () => {
     navigate({ to: '/my-page/couple-management', replace: true })
@@ -37,10 +35,9 @@ function CoupleManagementPartnerCode() {
 
     toast.success('커플 연결이 완료되었어요!')
 
-    await refreshUserInfo()
+    const refreshedUserInfo = await refreshUserInfo()
     queryClient.removeQueries({ queryKey: queryKeys.member.partnerInfo() })
-    const { data: updatedPartnerInfo } = await refetchPartnerInfo()
-    const hasAnniversary = updatedPartnerInfo?.isStartLoveDateUpdated ?? partnerInfo?.isStartLoveDateUpdated ?? false
+    const hasAnniversary = Boolean(refreshedUserInfo?.startLoveDate)
 
     if (hasAnniversary) {
       navigate({ to: '/my-page/couple-management', replace: true })

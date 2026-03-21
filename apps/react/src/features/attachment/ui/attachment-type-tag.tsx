@@ -1,10 +1,7 @@
+import type { AttachmentTypePreviewItem } from '@/features/attachment/models/love-type-catalog'
+
 interface AttachmentTypeTagProps {
-  type: {
-    name: string
-    description: string
-    bgColor: string
-    textColor: string
-  }
+  type: AttachmentTypePreviewItem
 }
 
 export function AttachmentTypeTag({ type }: AttachmentTypeTagProps) {

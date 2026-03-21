@@ -13,7 +13,7 @@
  */
 
 /**
- * 연애 시작일 갱신 응답 데이터
+ * [Deprecated] 연애 시작일 갱신 응답 데이터
  */
 export interface UpdateStartLoveDateData {
   /**
