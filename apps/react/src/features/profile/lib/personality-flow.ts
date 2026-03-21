@@ -79,17 +79,17 @@ function navigateNext(navigate: NavigateFn, pathname: string, { flow, from }: Fl
         replace: true,
       })
     } else if (flow === 'chat-entry') {
-      navigate({ to: '/my-result-preview', search: { flow }, replace: true })
+      navigate({ to: '/attachment-test/result/my', search: { from: 'my-result-preview', flow }, replace: true })
     }
     return
   }
 }
 
-function navigateExit(navigate: NavigateFn, { from }: Pick<FlowParams, 'from'>) {
+function navigateExit(navigate: NavigateFn, { from, flow }: Pick<FlowParams, 'from' | 'flow'>) {
   if (from === 'profile' || from === 'my-page') {
     navigate({ to: '/my-page/profile', replace: true })
   } else if (from === 'my-result-preview') {
-    navigate({ to: '/my-result-preview', replace: true })
+    navigate({ to: '/my-result-preview', search: { ...(flow && { flow }) }, replace: true })
   } else if (from === 'partner-result-preview') {
     navigate({ to: '/partner-result-preview', replace: true })
   } else {
@@ -107,7 +107,7 @@ export function usePersonalityFlow() {
   }
 
   const exit = () => {
-    navigateExit(navigate, { from: search.from })
+    navigateExit(navigate, { from: search.from, flow: search.flow })
   }
 
   return { flow: search.flow, from: search.from, next, exit }

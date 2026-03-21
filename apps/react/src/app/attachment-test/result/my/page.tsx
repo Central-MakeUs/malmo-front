@@ -6,6 +6,7 @@ import { useAuth } from '@/features/auth'
 
 const searchSchema = z.object({
   from: z.string().optional(),
+  flow: z.enum(['my-personality', 'partner-personality', 'chat-entry']).optional(),
 })
 
 export const Route = createFileRoute('/attachment-test/result/my/')({
@@ -24,7 +25,7 @@ export const Route = createFileRoute('/attachment-test/result/my/')({
 function MyAttachmentResultPage() {
   const { userInfo } = useAuth()
   const { from } = Route.useSearch()
-  const fromProp = from === 'my-page' ? 'my-page' : 'home'
+  const fromProp = from === 'my-result-preview' ? 'my-result-preview' : from === 'my-page' ? 'my-page' : 'home'
 
   return <AttachmentResultContent userInfo={userInfo} type="my" from={fromProp} />
 }

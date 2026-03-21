@@ -1,7 +1,7 @@
 import { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Puzzle, Zap } from 'lucide-react'
+import { Puzzle, X, Zap } from 'lucide-react'
 
 import { getLoveTypeCatalogItem } from '@/features/attachment/models/love-type-catalog'
 import type { AccentPalette } from '@/features/attachment/ui/result/attachment-result-sections'
@@ -34,7 +34,7 @@ interface UserInfo {
 interface AttachmentResultContentProps {
   userInfo: UserInfo | null | undefined
   type: 'my' | 'partner'
-  from?: 'home' | 'chat' | 'my-page'
+  from?: 'home' | 'chat' | 'my-page' | 'my-result-preview' | 'partner-result-preview'
 }
 interface ResultDisplayMeta {
   accentPalette: AccentPalette
@@ -111,8 +111,25 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
   const navigate = useNavigate()
   const { exit } = usePersonalityFlow()
   const isMyResult = type === 'my'
-  const ctaText = from === 'chat' ? '상담하러 가기' : from === 'my-page' ? '마이페이지로 가기' : '홈으로 가기'
+  const ctaText =
+    from === 'chat'
+      ? '상담하러 가기'
+      : from === 'my-page'
+        ? '마이페이지로 가기'
+        : from === 'my-result-preview'
+          ? '프로필 이어서 완성하기'
+          : from === 'partner-result-preview'
+            ? '홈으로 돌아가기'
+            : '홈으로 가기'
   const goBack = useGoBack()
+
+  const handleCta = () => {
+    if (from === 'partner-result-preview') {
+      navigate({ to: '/', replace: true })
+    } else {
+      exit()
+    }
+  }
 
   if (!userInfo?.loveTypeCategory) {
     return (
@@ -187,13 +204,32 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
   })
 
   const handleClose = () => {
-    goBack()
+    if (from === 'partner-result-preview') {
+      navigate({ to: '/', replace: true })
+    } else if (from === 'my-result-preview') {
+      exit()
+    } else {
+      goBack()
+    }
   }
+
+  const isCloseButton = from === 'my-result-preview' || from === 'partner-result-preview'
 
   return (
     <Screen>
       <Screen.Content className="no-bounce-scroll flex flex-col bg-gray-neutral-50">
-        <DetailHeaderBar className="bg-gray-neutral-50" onBackClick={handleClose} />
+        <DetailHeaderBar
+          className="bg-gray-neutral-50"
+          showBackButton={!isCloseButton}
+          onBackClick={isCloseButton ? undefined : handleClose}
+          right={
+            isCloseButton ? (
+              <button type="button" onClick={handleClose} className="p-1">
+                <X className="h-[28px] w-[28px]" />
+              </button>
+            ) : undefined
+          }
+        />
 
         <div className="px-4">
           <div className="relative">
@@ -271,7 +307,7 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
           <Button
             text={ctaText}
             className="h-[56px] rounded-[12px]"
-            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, exit)}
+            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, handleCta)}
           />
         </div>
       </Screen.Content>
