@@ -32,7 +32,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/my-result-preview', search: { flow } })
     } else if (from === 'profile') {
-      router.history.back()
+      navigate({ to: '/my-page/profile', replace: true })
     } else {
       navigate({ to: '/', replace: true })
     }
