@@ -11,7 +11,7 @@ export const personalityFlowSearchSchema = z.object({
 export type PersonalityFlowSearch = z.infer<typeof personalityFlowSearchSchema>
 
 type NavigateFn = ReturnType<typeof useNavigate>
-type RouterLike = { history: { back: () => void } }
+type RouterLike = { history: { back: () => void; go: (index: number) => void } }
 
 interface FlowParams {
   flow: PersonalityFlow | undefined
@@ -23,11 +23,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/my-attachment-select', search: { flow } })
     } else if (flow === 'my-personality') {
-      navigate({
-        to: '/my-attachment-select',
-        search: { flow, ...(from === 'profile' && { from }) },
-        ...(from === 'profile' && { replace: true }),
-      })
+      navigate({ to: '/my-attachment-select', search: { flow, ...(from === 'profile' && { from }) } })
     }
     return
   }
@@ -36,7 +32,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/my-result-preview', search: { flow } })
     } else if (from === 'profile') {
-      navigate({ to: '/my-page/profile', replace: true })
+      router.history.go(-2)
     } else {
       navigate({ to: '/attachment-test/result/my', replace: true })
     }
@@ -54,11 +50,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/partner-attachment-select', search: { flow } })
     } else if (flow === 'partner-personality') {
-      navigate({
-        to: '/partner-attachment-select',
-        search: { flow, ...(from === 'profile' && { from }) },
-        ...(from === 'profile' && { replace: true }),
-      })
+      navigate({ to: '/partner-attachment-select', search: { flow, ...(from === 'profile' && { from }) } })
     }
     return
   }
@@ -67,7 +59,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/partner-result-preview', search: { flow } })
     } else if (from === 'profile') {
-      navigate({ to: '/my-page/profile', replace: true })
+      router.history.go(-2)
     } else {
       navigate({ to: '/attachment-test/result/partner', replace: true })
     }
