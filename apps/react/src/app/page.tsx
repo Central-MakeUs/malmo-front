@@ -7,6 +7,7 @@ import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
 import { RecentChatSection } from '@/features/history/ui/recent-chat-section'
 import { useAppNotifications } from '@/features/notification'
+import { getMissingPersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
 import { BellNotificationIcon, KeyMessageBanner } from '@/shared/ui/key-message-banner'
@@ -42,10 +43,7 @@ function HomePage() {
     (!userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN' ? 1 : 0)
 
   const handleBannerClick = () => {
-    const myMissing = !userInfo.loveTypeCategory
-    const partnerMissing = !userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN'
-    const flow = myMissing && partnerMissing ? 'full-flow' : myMissing ? 'my-personality' : 'partner-personality'
-    navigate({ to: '/personality-flow-loading', search: { flow } })
+    navigate({ to: '/personality-flow-loading', search: { flow: getMissingPersonalityFlow(userInfo) } })
   }
 
   // 내 성향카드 클릭

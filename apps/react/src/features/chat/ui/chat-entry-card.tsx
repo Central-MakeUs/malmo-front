@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 
 import momoIdle from '@/assets/images/momo-home-idle.png'
 import { useAuth } from '@/features/auth'
+import { getMissingPersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import chatService from '@/shared/services/chat.service'
@@ -23,10 +24,7 @@ export function ChatEntryCard() {
       userInfo.partnerLoveTypeCategory !== 'UNKNOWN'
 
     if (!hasUserPersonality || !hasPartnerPersonality) {
-      const myMissing = !userInfo.loveTypeCategory
-      const partnerMissing = !userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN'
-      const flow = myMissing && partnerMissing ? 'full-flow' : myMissing ? 'my-personality' : 'partner-personality'
-      navigate({ to: '/personality-flow-loading', search: { flow } })
+      navigate({ to: '/personality-flow-loading', search: { flow: getMissingPersonalityFlow(userInfo) } })
       return
     }
 

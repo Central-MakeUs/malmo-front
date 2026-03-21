@@ -97,6 +97,15 @@ function navigateExit(navigate: NavigateFn, router: RouterLike, { from, flow }: 
   }
 }
 
+export function getMissingPersonalityFlow(userInfo: {
+  loveTypeCategory?: string | null
+  partnerLoveTypeCategory?: string | null
+}): PersonalityFlow {
+  const myMissing = !userInfo.loveTypeCategory
+  const partnerMissing = !userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN'
+  return myMissing && partnerMissing ? 'full-flow' : myMissing ? 'my-personality' : 'partner-personality'
+}
+
 export function usePersonalityFlow() {
   const navigate = useNavigate()
   const router = useRouter()
