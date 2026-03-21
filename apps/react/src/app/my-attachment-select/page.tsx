@@ -37,7 +37,7 @@ function MyAttachmentSelectPage() {
   }
 
   const handleDontKnow = () => {
-    navigate({ to: '/attachment-test', search: { flow, from }, replace: true })
+    navigate({ to: '/attachment-test', search: { flow, from } })
   }
 
   return (
