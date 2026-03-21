@@ -10,13 +10,12 @@ export const personalityFlowSearchSchema = z.object({
 
 export type PersonalityFlowSearch = z.infer<typeof personalityFlowSearchSchema>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type NavigateFn = (opts: any) => void
+type NavigateFn = ReturnType<typeof useNavigate>
 type RouterLike = { history: { back: () => void } }
 
 interface FlowParams {
   flow: PersonalityFlow | undefined
-  from: string | undefined
+  from: 'profile' | 'my-page' | 'my-result-preview' | 'partner-result-preview' | undefined
 }
 
 function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string, { flow, from }: FlowParams) {
@@ -24,7 +23,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/my-attachment-select', search: { flow }, replace: true })
     } else if (flow === 'my-personality') {
-      navigate({ to: '/my-attachment-select', search: { flow, ...(from && { from }) }, replace: true })
+      navigate({ to: '/my-attachment-select', search: { flow, ...(from === 'profile' && { from }) }, replace: true })
     }
     return
   }
@@ -51,7 +50,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/partner-attachment-select', search: { flow } })
     } else if (flow === 'partner-personality') {
-      navigate({ to: '/partner-attachment-select', search: { flow, ...(from && { from }) } })
+      navigate({ to: '/partner-attachment-select', search: { flow, ...(from === 'profile' && { from }) } })
     }
     return
   }

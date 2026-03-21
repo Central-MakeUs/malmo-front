@@ -35,10 +35,7 @@ function MyResultPreviewPage() {
       <Screen.Content className="flex flex-1 flex-col bg-white">
         <div className="flex flex-1 flex-col items-center justify-center px-5">
           {/* Checkmark circle */}
-          <div
-            className="flex h-14 w-14 items-center justify-center rounded-full"
-            style={{ background: 'linear-gradient(180deg, rgba(236, 70, 101, 1), rgba(247, 142, 162, 1))' }}
-          >
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-b from-malmo-rasberry-500 to-[#F78EA2]">
             <LucideCheck className="h-7 w-7 text-white" strokeWidth={2.5} />
           </div>
 

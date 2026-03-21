@@ -22,8 +22,8 @@ export function useUpsertPartnerProfileMutation({ onSuccess, errorMessage }: Opt
       try {
         const { data } = await memberService.createPartnerProfile({ createPartnerProfileRequestDto: body })
         return data
-      } catch (error: any) {
-        const code = error?.response?.data?.code
+      } catch (error: unknown) {
+        const code = (error as { response?: { data?: { code?: number } } })?.response?.data?.code
         if (code === 40017) {
           const { data } = await memberService.updatePartnerProfile({
             updatePartnerProfileRequestDto: body,

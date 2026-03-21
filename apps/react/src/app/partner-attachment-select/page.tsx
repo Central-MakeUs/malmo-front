@@ -36,34 +36,31 @@ function PartnerAttachmentSelectPage() {
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
 
-  const updateMutation = useUpdatePartnerProfileMutation({
-    onSuccess: () => next(),
-    errorMessage: '저장 중 오류가 발생했습니다',
-  })
-
-  const dontKnowMutation = useUpdatePartnerProfileMutation({
-    onSuccess: () => {
-      if (flow === 'full-flow') {
-        navigate({ to: '/', replace: true })
-      } else {
-        next()
-      }
-    },
-    errorMessage: '저장 중 오류가 발생했습니다',
-  })
+  const partnerMutation = useUpdatePartnerProfileMutation({ errorMessage: '저장 중 오류가 발생했습니다' })
 
   const handleConfirm = () => {
-    if (!selectedType || updateMutation.isPending) return
-    updateMutation.mutate({ loveTypeCategory: selectedType })
+    if (!selectedType || partnerMutation.isPending) return
+    partnerMutation.mutate({ loveTypeCategory: selectedType }, { onSuccess: () => next() })
   }
 
   const handleDontKnow = () => {
-    if (updateMutation.isPending || dontKnowMutation.isPending) return
+    if (partnerMutation.isPending) return
     setShowDontKnowModal(true)
   }
 
   const handleDontKnowConfirm = () => {
-    dontKnowMutation.mutate({ loveTypeCategory: 'UNKNOWN' })
+    partnerMutation.mutate(
+      { loveTypeCategory: 'UNKNOWN' },
+      {
+        onSuccess: () => {
+          if (flow === 'full-flow') {
+            navigate({ to: '/', replace: true })
+          } else {
+            next()
+          }
+        },
+      }
+    )
   }
 
   return (
@@ -90,7 +87,7 @@ function PartnerAttachmentSelectPage() {
               key={option.value}
               selected={selectedType === option.value}
               onClick={() => setSelectedType(option.value)}
-              disabled={updateMutation.isPending}
+              disabled={partnerMutation.isPending}
               className="w-full text-left"
             >
               {option.label}
@@ -99,8 +96,8 @@ function PartnerAttachmentSelectPage() {
 
           <SelectableButton
             onClick={handleDontKnow}
-            disabled={updateMutation.isPending}
-            className="body2-medium w-full rounded-[10px] border border-gray-neutral-300 py-5 text-left text-gray-iron-500 transition-all"
+            disabled={partnerMutation.isPending}
+            className="w-full text-left"
             selected={false}
           >
             상대의 애착유형을 모르겠어요
@@ -108,7 +105,7 @@ function PartnerAttachmentSelectPage() {
         </div>
 
         <FixedBottom>
-          <Button text="프로필 완성!" onClick={handleConfirm} disabled={!selectedType || updateMutation.isPending} />
+          <Button text="프로필 완성!" onClick={handleConfirm} disabled={!selectedType || partnerMutation.isPending} />
         </FixedBottom>
       </Screen.Content>
 

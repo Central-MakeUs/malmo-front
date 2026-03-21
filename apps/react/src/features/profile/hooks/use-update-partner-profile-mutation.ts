@@ -8,7 +8,7 @@ import { toast } from '@/shared/ui/toast'
 import type { UpdatePartnerProfileRequestDto } from '@data/user-api-axios/api'
 
 interface Options {
-  onSuccess: () => void | Promise<void>
+  onSuccess?: () => void | Promise<void>
   errorMessage?: string
 }
 
@@ -27,7 +27,7 @@ export function useUpdatePartnerProfileMutation({ onSuccess, errorMessage }: Opt
         refreshUserInfo(),
         queryClient.invalidateQueries({ queryKey: queryKeys.member.partnerInfo() }),
       ])
-      await onSuccess()
+      if (onSuccess) await onSuccess()
     },
     onError: () => {
       toast.error(errorMessage ?? '상대 프로필 수정 중 오류가 발생했습니다')
