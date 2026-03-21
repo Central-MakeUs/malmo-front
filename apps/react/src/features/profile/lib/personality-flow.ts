@@ -23,7 +23,11 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/my-attachment-select', search: { flow } })
     } else if (flow === 'my-personality') {
-      navigate({ to: '/my-attachment-select', search: { flow, ...(from === 'profile' && { from }) } })
+      navigate({
+        to: '/my-attachment-select',
+        search: { flow, ...(from === 'profile' && { from }) },
+        ...(from === 'profile' && { replace: true }),
+      })
     }
     return
   }
@@ -34,7 +38,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     } else if (from === 'profile') {
       navigate({ to: '/my-page/profile', replace: true })
     } else {
-      navigate({ to: '/', replace: true })
+      navigate({ to: '/attachment-test/result/my', replace: true })
     }
     return
   }
@@ -50,7 +54,11 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/partner-attachment-select', search: { flow } })
     } else if (flow === 'partner-personality') {
-      navigate({ to: '/partner-attachment-select', search: { flow, ...(from === 'profile' && { from }) } })
+      navigate({
+        to: '/partner-attachment-select',
+        search: { flow, ...(from === 'profile' && { from }) },
+        ...(from === 'profile' && { replace: true }),
+      })
     }
     return
   }
@@ -61,7 +69,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     } else if (from === 'profile') {
       navigate({ to: '/my-page/profile', replace: true })
     } else {
-      navigate({ to: '/', replace: true })
+      navigate({ to: '/attachment-test/result/partner', replace: true })
     }
     return
   }
