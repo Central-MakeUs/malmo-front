@@ -108,6 +108,8 @@ function HomePage() {
           partnerAttachmentData={partnerAttachmentData}
           myAttachmentType={myAttachmentType}
           partnerAttachmentType={partnerAttachmentType}
+          myMbti={userInfo.personalityType?.toUpperCase()}
+          partnerMbti={userInfo.otherPersonalityType?.toUpperCase()}
           onMyCardClick={handleMyCardClick}
           onPartnerCardClick={handlePartnerCardClick}
         />

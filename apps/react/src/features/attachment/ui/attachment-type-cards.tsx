@@ -11,6 +11,8 @@ interface AttachmentTypeCardsProps {
   partnerAttachmentData: LoveTypeCatalogItem | null
   myAttachmentType: string | undefined
   partnerAttachmentType: string | undefined
+  myMbti?: string
+  partnerMbti?: string
   isPartnerUnknown?: boolean
   onMyCardClick: () => void
   onPartnerCardClick: () => void
@@ -21,6 +23,8 @@ export function AttachmentTypeCards({
   partnerAttachmentData,
   myAttachmentType,
   partnerAttachmentType,
+  myMbti,
+  partnerMbti,
   isPartnerUnknown = false,
   onMyCardClick,
   onPartnerCardClick,
@@ -35,7 +39,7 @@ export function AttachmentTypeCards({
   }
 
   const getPartnerBadgeText = () => {
-    if (partnerAttachmentType) return partnerAttachmentType
+    if (partnerAttachmentType) return `${partnerMbti ? partnerMbti + ' ' : ''}${partnerAttachmentType}`
     if (isPartnerUnknown) return 'AI 분석 예정'
     return '입력 필요'
   }
@@ -51,7 +55,7 @@ export function AttachmentTypeCards({
       title: '나의 성향',
       attachmentData: myAttachmentData,
       attachmentType: myAttachmentType,
-      badgeText: myAttachmentType || '입력 필요',
+      badgeText: myAttachmentType ? `${myMbti ? myMbti + ' ' : ''}${myAttachmentType}` : '입력 필요',
       badgeVariant: myAttachmentData ? ('default' as const) : ('required' as const),
       mysteryIcon: MyMysteryMomo,
       onClick: onMyCardClick,
