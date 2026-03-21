@@ -66,9 +66,11 @@ function PartnerAttachmentSelectPage() {
         onSuccess: () => {
           if (flow === 'full-flow') {
             navigate({ to: '/', replace: true })
-          } else {
-            if (from === 'profile') toast.success('상대 성향이 변경되었어요!')
+          } else if (from === 'profile') {
+            toast.success('상대 성향이 변경되었어요!')
             next()
+          } else {
+            navigate({ to: '/', replace: true })
           }
         },
       }

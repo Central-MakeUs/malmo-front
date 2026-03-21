@@ -38,9 +38,7 @@ function HomePage() {
   const partnerAttachmentType = partnerAttachmentData?.subtype
 
   // 배너 - 미완성 성향 카드 수
-  const missingPersonalityCount =
-    (!userInfo.loveTypeCategory ? 1 : 0) +
-    (!userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN' ? 1 : 0)
+  const missingPersonalityCount = (!userInfo.loveTypeCategory ? 1 : 0) + (!userInfo.partnerLoveTypeCategory ? 1 : 0)
 
   const handleBannerClick = () => {
     navigate({ to: '/personality-flow-loading', search: { flow: getMissingPersonalityFlow(userInfo) } })

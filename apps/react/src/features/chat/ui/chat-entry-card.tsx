@@ -18,10 +18,7 @@ export function ChatEntryCard() {
     if (isPending) return
 
     const hasUserPersonality = !!userInfo.personalityType && !!userInfo.loveTypeCategory
-    const hasPartnerPersonality =
-      !!userInfo.otherPersonalityType &&
-      !!userInfo.partnerLoveTypeCategory &&
-      userInfo.partnerLoveTypeCategory !== 'UNKNOWN'
+    const hasPartnerPersonality = !!userInfo.otherPersonalityType && !!userInfo.partnerLoveTypeCategory
 
     if (!hasUserPersonality || !hasPartnerPersonality) {
       navigate({ to: '/personality-flow-loading', search: { flow: getMissingPersonalityFlow(userInfo) } })

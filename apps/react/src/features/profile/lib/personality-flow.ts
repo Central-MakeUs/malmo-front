@@ -102,7 +102,7 @@ export function getMissingPersonalityFlow(userInfo: {
   partnerLoveTypeCategory?: string | null
 }): PersonalityFlow {
   const myMissing = !userInfo.loveTypeCategory
-  const partnerMissing = !userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN'
+  const partnerMissing = !userInfo.partnerLoveTypeCategory
   return myMissing && partnerMissing ? 'full-flow' : myMissing ? 'my-personality' : 'partner-personality'
 }
 
