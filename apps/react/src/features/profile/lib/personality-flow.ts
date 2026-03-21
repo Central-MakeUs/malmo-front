@@ -21,9 +21,9 @@ interface FlowParams {
 function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string, { flow, from }: FlowParams) {
   if (pathname.startsWith('/mbti')) {
     if (flow === 'full-flow') {
-      navigate({ to: '/my-attachment-select', search: { flow }, replace: true })
+      navigate({ to: '/my-attachment-select', search: { flow } })
     } else if (flow === 'my-personality') {
-      navigate({ to: '/my-attachment-select', search: { flow, ...(from === 'profile' && { from }) }, replace: true })
+      navigate({ to: '/my-attachment-select', search: { flow, ...(from === 'profile' && { from }) } })
     }
     return
   }
