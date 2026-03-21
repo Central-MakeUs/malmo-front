@@ -1,6 +1,5 @@
-// 타입과 상수
-export * from './models/love-type-catalog'
 export * from './models/constants'
+export { getLoveTypeCatalogItem as getAttachmentType } from './models/love-type-catalog'
 
 export { useAttachmentQuestions } from './hooks/use-attachment-questions'
 

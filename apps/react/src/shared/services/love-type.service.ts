@@ -29,16 +29,6 @@ class LoveTypeService extends LoveTypesApi {
       },
     }
   }
-
-  loveTypePersonalityTypeResultQuery(personalityType: string, lovetype: string) {
-    return {
-      queryKey: queryKeys.loveType.result(personalityType, lovetype),
-      queryFn: async () => {
-        const response = await this.getLoveTypePersonalityTypeResult({ personalityType, lovetype })
-        return response.data
-      },
-    }
-  }
 }
 
 export default new LoveTypeService()

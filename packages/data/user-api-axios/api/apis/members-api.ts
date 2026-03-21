@@ -98,7 +98,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
-      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -137,8 +136,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      localVarHeaderParameter['Accept'] = '*/*'
-
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
@@ -170,8 +167,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       // authentication Bearer Authentication required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -206,8 +201,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
-      localVarHeaderParameter['Accept'] = '*/*'
-
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
       localVarRequestOptions.headers = { ...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers }
@@ -240,8 +233,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       // authentication Bearer Authentication required
       // http bearer authentication required
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -282,7 +273,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
-      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -328,7 +318,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
-      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -370,7 +359,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
-      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -416,7 +404,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
-      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}
@@ -463,7 +450,6 @@ export const MembersApiAxiosParamCreator = function (configuration?: Configurati
       await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
       localVarHeaderParameter['Content-Type'] = 'application/json'
-      localVarHeaderParameter['Accept'] = '*/*'
 
       setSearchParams(localVarUrlObj, localVarQueryParameter)
       let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {}

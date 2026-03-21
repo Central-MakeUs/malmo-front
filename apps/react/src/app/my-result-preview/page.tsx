@@ -52,7 +52,7 @@ function MyResultPreviewPage() {
               <h2 className="title1-bold mt-2 text-gray-iron-950">
                 {userInfo.personalityType} {attachmentData.subtype}
               </h2>
-              <p className="body3-medium mt-1 line-clamp-2 text-gray-iron-500">{attachmentData.description}</p>
+              <p className="body3-medium mt-1 line-clamp-2 text-gray-iron-500">{attachmentData.previewDescription}</p>
               <button
                 onClick={handleViewResult}
                 className="body3-medium mt-8 flex items-center gap-1 rounded-[8px] bg-gray-neutral-200 px-[18px] py-2 text-gray-iron-800"
