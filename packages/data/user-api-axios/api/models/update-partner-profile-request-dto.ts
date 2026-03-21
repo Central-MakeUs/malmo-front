@@ -14,9 +14,7 @@
 
 export interface UpdatePartnerProfileRequestDto {
   personalityType?: string
-  personalityTypeProvided?: boolean
   loveTypeCategory?: UpdatePartnerProfileRequestDtoLoveTypeCategoryEnum
-  loveTypeCategoryProvided?: boolean
 }
 
 export const UpdatePartnerProfileRequestDtoLoveTypeCategoryEnum = {

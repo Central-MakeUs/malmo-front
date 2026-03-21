@@ -37,13 +37,13 @@ function MyAttachmentSelectPage() {
   }
 
   const handleDontKnow = () => {
-    navigate({ to: '/attachment-test', search: { flow, from } })
+    navigate({ to: '/attachment-test', search: { flow, from }, replace: true })
   }
 
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar center={getChatEntryProgressBar(flow === 'chat-entry', 2)} />
+        <DetailHeaderBar center={getChatEntryProgressBar(flow === 'full-flow', 2)} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white">

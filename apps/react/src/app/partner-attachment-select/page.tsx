@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
@@ -32,11 +32,23 @@ export const Route = createFileRoute('/partner-attachment-select/')({
 
 function PartnerAttachmentSelectPage() {
   const { flow, next } = usePersonalityFlow()
+  const navigate = useNavigate()
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
 
   const updateMutation = useUpdatePartnerProfileMutation({
     onSuccess: () => next(),
+    errorMessage: '저장 중 오류가 발생했습니다',
+  })
+
+  const dontKnowMutation = useUpdatePartnerProfileMutation({
+    onSuccess: () => {
+      if (flow === 'full-flow') {
+        navigate({ to: '/', replace: true })
+      } else {
+        next()
+      }
+    },
     errorMessage: '저장 중 오류가 발생했습니다',
   })
 
@@ -46,18 +58,18 @@ function PartnerAttachmentSelectPage() {
   }
 
   const handleDontKnow = () => {
-    if (updateMutation.isPending) return
+    if (updateMutation.isPending || dontKnowMutation.isPending) return
     setShowDontKnowModal(true)
   }
 
   const handleDontKnowConfirm = () => {
-    updateMutation.mutate({ loveTypeCategoryProvided: false })
+    dontKnowMutation.mutate({ loveTypeCategory: 'UNKNOWN' })
   }
 
   return (
     <Screen>
       <Screen.Header behavior="overlay">
-        <DetailHeaderBar center={getChatEntryProgressBar(flow === 'chat-entry', 5)} />
+        <DetailHeaderBar center={getChatEntryProgressBar(flow === 'full-flow', 4)} />
       </Screen.Header>
 
       <Screen.Content className="flex flex-1 flex-col bg-white">

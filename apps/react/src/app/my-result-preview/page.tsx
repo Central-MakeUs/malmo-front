@@ -18,12 +18,12 @@ export const Route = createFileRoute('/my-result-preview/')({
 function MyResultPreviewPage() {
   const navigate = useNavigate()
   const { userInfo } = useAuth()
-  const { next } = usePersonalityFlow()
+  const { flow, next } = usePersonalityFlow()
 
   const attachmentData = getAttachmentType(userInfo.loveTypeCategory)
 
   const handleViewResult = () => {
-    navigate({ to: '/attachment-test/result/my', search: { from: 'my-result-preview' }, replace: true })
+    navigate({ to: '/attachment-test/result/my', search: { from: 'my-result-preview', flow }, replace: true })
   }
 
   return (

@@ -6,7 +6,6 @@ import { useAuth } from '@/features/auth'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
 import { RecentChatSection } from '@/features/history/ui/recent-chat-section'
-import { usePartnerInfo } from '@/features/member'
 import { useAppNotifications } from '@/features/notification'
 import { Screen } from '@/shared/layout/screen'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
@@ -24,8 +23,6 @@ function HomePage() {
 
   useAppNotifications()
 
-  const { data: partnerInfo } = usePartnerInfo()
-
   const { data: historyData } = useChatHistoryQuery({})
   const histories = historyData?.pages.flatMap((page) => page?.list ?? []) ?? []
   const totalHistoryCount = historyData?.pages[0]?.totalCount ?? histories.length
@@ -33,8 +30,8 @@ function HomePage() {
   // 애착유형 데이터
   const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
   const partnerAttachmentData =
-    partnerInfo?.loveTypeCategory && partnerInfo.loveTypeCategory !== 'UNKNOWN'
-      ? getAttachmentType(partnerInfo.loveTypeCategory as MemberDataLoveTypeCategoryEnum)
+    userInfo.partnerLoveTypeCategory && userInfo.partnerLoveTypeCategory !== 'UNKNOWN'
+      ? getAttachmentType(userInfo.partnerLoveTypeCategory as MemberDataLoveTypeCategoryEnum)
       : null
   const myAttachmentType = myAttachmentData?.subtype
   const partnerAttachmentType = partnerAttachmentData?.subtype
@@ -45,7 +42,9 @@ function HomePage() {
     (!userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN' ? 1 : 0)
 
   const handleBannerClick = () => {
-    const flow = !userInfo.loveTypeCategory ? 'my-personality' : 'partner-personality'
+    const myMissing = !userInfo.loveTypeCategory
+    const partnerMissing = !userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN'
+    const flow = myMissing && partnerMissing ? 'full-flow' : myMissing ? 'my-personality' : 'partner-personality'
     navigate({ to: '/personality-flow-loading', search: { flow } })
   }
 

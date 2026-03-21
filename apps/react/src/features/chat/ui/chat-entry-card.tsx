@@ -20,7 +20,7 @@ export function ChatEntryCard() {
     const hasPartnerPersonality = !!userInfo.otherPersonalityType && !!userInfo.partnerLoveTypeCategory
 
     if (!hasUserPersonality || !hasPartnerPersonality) {
-      navigate({ to: '/personality-flow-loading', search: { flow: 'chat-entry' } })
+      navigate({ to: '/personality-flow-loading', search: { flow: 'full-flow' } })
       return
     }
 

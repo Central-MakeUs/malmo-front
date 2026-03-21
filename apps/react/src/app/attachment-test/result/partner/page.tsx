@@ -2,7 +2,7 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
 import { z } from 'zod'
 
 import { AttachmentResultContent } from '@/features/attachment/ui/result/attachment-result-content'
-import { usePartnerInfo } from '@/features/member'
+import { useAuth } from '@/features/auth'
 
 const searchSchema = z.object({
   from: z.string().optional(),
@@ -22,9 +22,14 @@ export const Route = createFileRoute('/attachment-test/result/partner/')({
 })
 
 function PartnerAttachmentResultPage() {
-  const { data: partnerInfo } = usePartnerInfo()
+  const { userInfo } = useAuth()
   const { from } = Route.useSearch()
   const fromProp = from === 'partner-result-preview' ? 'partner-result-preview' : undefined
 
-  return <AttachmentResultContent userInfo={partnerInfo} type="partner" from={fromProp} />
+  const partnerData = {
+    loveTypeCategory: userInfo.partnerLoveTypeCategory,
+    personalityType: userInfo.otherPersonalityType,
+  }
+
+  return <AttachmentResultContent userInfo={partnerData} type="partner" from={fromProp} />
 }

@@ -46,7 +46,7 @@ function MbtiEditPage() {
   return (
     <MbtiForm
       headerTitle={isFlowMode ? undefined : '내 성향'}
-      navCenter={getChatEntryProgressBar(flow === 'chat-entry', 1)}
+      navCenter={getChatEntryProgressBar(flow === 'full-flow', 1)}
       contentTopSlot={getPersonalityStepDots(flow === 'my-personality', 1)}
       title={
         <>

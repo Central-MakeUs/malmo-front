@@ -46,7 +46,7 @@ function PartnerMbtiEditPage() {
   return (
     <MbtiForm
       headerTitle={isFlowMode ? undefined : '상대 성향'}
-      navCenter={getChatEntryProgressBar(flow === 'chat-entry', 4)}
+      navCenter={getChatEntryProgressBar(flow === 'full-flow', 3)}
       contentTopSlot={getPersonalityStepDots(flow === 'partner-personality', 1)}
       title={
         <>

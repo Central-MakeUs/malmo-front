@@ -54,7 +54,11 @@ export function DetailHeaderBar({
       {center ? (
         <div className="flex flex-1 items-center px-2">{center}</div>
       ) : (
-        title && <h1 className="body1-semibold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">{title}</h1>
+        title && (
+          <h1 className="body1-semibold absolute top-1/2 left-1/2 max-w-[60%] -translate-x-1/2 -translate-y-1/2 truncate">
+            {title}
+          </h1>
+        )
       )}
 
       {/* Right Area */}

@@ -2,15 +2,13 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { LucideCheck, LucideChevronRight } from 'lucide-react'
 
 import { getAttachmentType } from '@/features/attachment'
-import { usePartnerInfo } from '@/features/member'
+import { useAuth } from '@/features/auth'
 import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { Button } from '@/shared/ui'
 import { FixedBottom } from '@/shared/ui/fixed-bottom'
 import { FlowProgressBar } from '@/shared/ui/flow-progress-bar'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
-
-import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
 export const Route = createFileRoute('/partner-result-preview/')({
   validateSearch: personalityFlowSearchSchema,
@@ -19,12 +17,10 @@ export const Route = createFileRoute('/partner-result-preview/')({
 
 function PartnerResultPreviewPage() {
   const navigate = useNavigate()
-  const { data: partnerInfo } = usePartnerInfo()
+  const { userInfo } = useAuth()
   const { next } = usePersonalityFlow()
 
-  const attachmentData = partnerInfo?.loveTypeCategory
-    ? getAttachmentType(partnerInfo.loveTypeCategory as MemberDataLoveTypeCategoryEnum)
-    : null
+  const attachmentData = userInfo.partnerLoveTypeCategory ? getAttachmentType(userInfo.partnerLoveTypeCategory) : null
 
   const handleViewResult = () => {
     navigate({ to: '/attachment-test/result/partner', search: { from: 'partner-result-preview' }, replace: true })
@@ -54,7 +50,7 @@ function PartnerResultPreviewPage() {
             <div className="mt-[60px] w-full rounded-2xl border border-gray-neutral-200 px-[22px] py-6">
               <p className="heading2-bold text-malmo-orange-500">상대는</p>
               <h2 className="title1-bold mt-2 text-gray-iron-950">
-                {partnerInfo?.personalityType} {attachmentData.subtype}
+                {userInfo.otherPersonalityType} {attachmentData.subtype}
               </h2>
               <p className="body3-medium mt-1 line-clamp-2 text-gray-iron-500">{attachmentData.previewDescription}</p>
               <button

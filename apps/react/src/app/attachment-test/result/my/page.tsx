@@ -6,7 +6,7 @@ import { useAuth } from '@/features/auth'
 
 const searchSchema = z.object({
   from: z.string().optional(),
-  flow: z.enum(['my-personality', 'partner-personality', 'chat-entry']).optional(),
+  flow: z.enum(['my-personality', 'partner-personality', 'full-flow']).optional(),
 })
 
 export const Route = createFileRoute('/attachment-test/result/my/')({

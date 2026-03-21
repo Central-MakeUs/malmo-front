@@ -18,7 +18,6 @@ import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
-import { useGoBack } from '@/shared/navigation/use-go-back'
 import loveTypeService from '@/shared/services/love-type.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -121,8 +120,6 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
           : from === 'partner-result-preview'
             ? '홈으로 돌아가기'
             : '홈으로 가기'
-  const goBack = useGoBack()
-
   const handleCta = () => {
     if (from === 'partner-result-preview') {
       navigate({ to: '/', replace: true })
@@ -203,31 +200,16 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
     isWarmType,
   })
 
-  const handleClose = () => {
-    if (from === 'partner-result-preview') {
-      navigate({ to: '/', replace: true })
-    } else if (from === 'my-result-preview') {
-      exit()
-    } else {
-      goBack()
-    }
-  }
-
-  const isCloseButton = from === 'my-result-preview' || from === 'partner-result-preview'
-
   return (
     <Screen>
       <Screen.Content className="no-bounce-scroll flex flex-col bg-gray-neutral-50">
         <DetailHeaderBar
           className="bg-gray-neutral-50"
-          showBackButton={!isCloseButton}
-          onBackClick={isCloseButton ? undefined : handleClose}
+          showBackButton={false}
           right={
-            isCloseButton ? (
-              <button type="button" onClick={handleClose} className="p-1">
-                <X className="h-[28px] w-[28px]" />
-              </button>
-            ) : undefined
+            <button type="button" onClick={handleCta} className="p-1">
+              <X className="h-[28px] w-[28px]" />
+            </button>
           }
         />
 

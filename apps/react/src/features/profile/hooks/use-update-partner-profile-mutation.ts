@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { useAuth } from '@/features/auth'
 import memberService from '@/shared/services/member.service'
+import { queryKeys } from '@/shared/services/query-keys'
 import { toast } from '@/shared/ui/toast'
 
 import type { UpdatePartnerProfileRequestDto } from '@data/user-api-axios/api'
@@ -14,6 +15,7 @@ interface Options {
 /** 파트너 프로필 PATCH 전용 뮤테이션 훅 */
 export function useUpdatePartnerProfileMutation({ onSuccess, errorMessage }: Options) {
   const { refreshUserInfo } = useAuth()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (body: UpdatePartnerProfileRequestDto) => {
@@ -21,7 +23,10 @@ export function useUpdatePartnerProfileMutation({ onSuccess, errorMessage }: Opt
       return data
     },
     onSuccess: async () => {
-      await refreshUserInfo()
+      await Promise.all([
+        refreshUserInfo(),
+        queryClient.invalidateQueries({ queryKey: queryKeys.member.partnerInfo() }),
+      ])
       await onSuccess()
     },
     onError: () => {

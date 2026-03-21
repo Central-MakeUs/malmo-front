@@ -14,7 +14,7 @@ import { DetailHeaderBar } from '@/shared/ui/header-bar'
 
 const searchSchema = z.object({
   from: z.string().optional(),
-  flow: z.enum(['my-personality', 'partner-personality', 'chat-entry']).optional(),
+  flow: z.enum(['my-personality', 'partner-personality', 'full-flow']).optional(),
   chatId: z.number().optional(),
 })
 

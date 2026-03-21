@@ -1,7 +1,8 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { useAuth } from '@/features/auth'
 import memberService from '@/shared/services/member.service'
+import { queryKeys } from '@/shared/services/query-keys'
 import { toast } from '@/shared/ui/toast'
 
 import type { CreatePartnerProfileRequestDto } from '@data/user-api-axios/api'
@@ -14,6 +15,7 @@ interface Options {
 /** 파트너 프로필 POST 시도 → 40017(already exists)이면 PATCH로 fallback */
 export function useUpsertPartnerProfileMutation({ onSuccess, errorMessage }: Options) {
   const { refreshUserInfo } = useAuth()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (body: CreatePartnerProfileRequestDto) => {
@@ -32,7 +34,10 @@ export function useUpsertPartnerProfileMutation({ onSuccess, errorMessage }: Opt
       }
     },
     onSuccess: async () => {
-      await refreshUserInfo()
+      await Promise.all([
+        refreshUserInfo(),
+        queryClient.invalidateQueries({ queryKey: queryKeys.member.partnerInfo() }),
+      ])
       await onSuccess()
     },
     onError: () => {

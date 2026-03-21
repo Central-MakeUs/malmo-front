@@ -17,7 +17,7 @@ function PersonalityFlowLoadingPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (flow === 'chat-entry') {
+      if (flow === 'full-flow') {
         navigate({ to: '/mbti', search: { flow }, replace: true })
       } else if (flow === 'partner-personality') {
         navigate({ to: '/partner-mbti', search: { flow }, replace: true })

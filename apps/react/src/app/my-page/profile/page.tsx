@@ -47,13 +47,10 @@ function ProfileManagementPage() {
               navigate({ to: '/mbti', search: { flow: 'my-personality', from: 'profile' } })
             )}
           />
+
           <ProfileRow
             label="상대 성향"
-            badge={
-              partnerBadgeText
-                ? { text: partnerBadgeText, variant: 'rasberry' }
-                : { text: '미입력', variant: 'default' }
-            }
+            badge={partnerBadgeText ? { text: partnerBadgeText, variant: 'rasberry' } : null}
             onClick={wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_PARTNER_MBTI, CATEGORIES.PROFILE, () =>
               navigate({ to: '/partner-mbti', search: { flow: 'partner-personality', from: 'profile' } })
             )}
@@ -72,7 +69,7 @@ function ProfileRow({
 }: {
   label: string
   value?: string
-  badge?: { text: string; variant: 'default' | 'completed' | 'rasberry' }
+  badge?: { text: string; variant: 'default' | 'completed' | 'rasberry' } | null
   onClick: () => void
 }) {
   return (
