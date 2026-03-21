@@ -17,10 +17,16 @@ export function ChatEntryCard() {
     if (isPending) return
 
     const hasUserPersonality = !!userInfo.personalityType && !!userInfo.loveTypeCategory
-    const hasPartnerPersonality = !!userInfo.otherPersonalityType && !!userInfo.partnerLoveTypeCategory
+    const hasPartnerPersonality =
+      !!userInfo.otherPersonalityType &&
+      !!userInfo.partnerLoveTypeCategory &&
+      userInfo.partnerLoveTypeCategory !== 'UNKNOWN'
 
     if (!hasUserPersonality || !hasPartnerPersonality) {
-      navigate({ to: '/personality-flow-loading', search: { flow: 'full-flow' } })
+      const myMissing = !userInfo.loveTypeCategory
+      const partnerMissing = !userInfo.partnerLoveTypeCategory || userInfo.partnerLoveTypeCategory === 'UNKNOWN'
+      const flow = myMissing && partnerMissing ? 'full-flow' : myMissing ? 'my-personality' : 'partner-personality'
+      navigate({ to: '/personality-flow-loading', search: { flow } })
       return
     }
 
