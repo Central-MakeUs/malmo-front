@@ -127,43 +127,59 @@ export function ChattingProvider({ children }: { children: ReactNode }) {
       if (!targetChatRoomId) return
       const queryKey = chatService.chatMessagesQuery(targetChatRoomId).queryKey
 
-      const sanitizedIds = messageIds.filter((id) => Number.isFinite(id))
+      const sanitizedIds = Array.from(new Set(messageIds.filter((id) => Number.isFinite(id))))
+      if (!streamingMessage || sanitizedIds.length === 0) {
+        setSendingMessage(false)
+        setAwaitingResponse(false)
+        setStreamingTargetChatRoomId(null)
+        return
+      }
+
       const messageGroups = groupSentences(streamingMessage?.content ?? '', 3)
-      const canApply = !!streamingMessage && sanitizedIds.length > 0 && sanitizedIds.length === messageGroups.length
 
       let didCommit = false
-      if (canApply) {
-        queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
-          if (!oldData || !streamingMessage) return oldData
+      queryClient.setQueryData<InfiniteData<BaseListSwaggerResponseChatRoomMessageData>>(queryKey, (oldData) => {
+        if (!oldData || !streamingMessage) return oldData
 
-          const groupedMessages = messageGroups.map((content, index) => ({
+        const groupedContents =
+          messageGroups.length === sanitizedIds.length
+            ? messageGroups
+            : sanitizedIds.map((_, index) => messageGroups[index] ?? messageGroups[messageGroups.length - 1] ?? '')
+
+        const existingMessageIds = new Set(
+          oldData.pages.flatMap((page) => page.list?.map((message) => message.messageId).filter((id) => id != null) ?? [])
+        )
+
+        const groupedMessages = groupedContents
+          .map((content, index) => ({
             messageId: sanitizedIds[index]!,
             content,
             createdAt: streamingMessage.createdAt,
             senderType: ChatRoomMessageDataSenderTypeEnum.Assistant,
           }))
+          .filter((message) => !existingMessageIds.has(message.messageId))
 
-          const orderedMessages = isAscending(oldData.pages[0]?.list) ? groupedMessages : [...groupedMessages].reverse()
+        if (groupedMessages.length === 0) return oldData
 
-          const newData = {
-            ...oldData,
-            pages: oldData.pages.map((page, index) => {
-              const targetIndex = getTargetPageIndex(oldData.pages)
-              if (index === targetIndex) {
-                const newList = page.list
-                  ? isAscending(page.list)
-                    ? [...page.list, ...orderedMessages]
-                    : [...orderedMessages, ...page.list]
-                  : orderedMessages
-                return { ...page, list: newList }
-              }
+        const orderedMessages = isAscending(oldData.pages[0]?.list) ? groupedMessages : [...groupedMessages].reverse()
+
+        const targetIndex = getTargetPageIndex(oldData.pages)
+        const newData = {
+          ...oldData,
+          pages: oldData.pages.map((page, index) => {
+            if (index !== targetIndex) {
               return { ...page, list: [...(page.list || [])] }
-            }),
-          }
-          didCommit = true
-          return newData
-        })
-      }
+            }
+
+            const pageAscending = isAscending(page.list)
+            const pageMessages = page.list ? [...page.list] : []
+            const newList = pageAscending ? [...pageMessages, ...orderedMessages] : [...orderedMessages, ...pageMessages]
+            return { ...page, list: newList }
+          }),
+        }
+        didCommit = true
+        return newData
+      })
 
       if (didCommit) {
         setStreamingMessage(null)

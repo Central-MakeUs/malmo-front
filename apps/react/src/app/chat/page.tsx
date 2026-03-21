@@ -59,15 +59,19 @@ function RouteComponent() {
   const messages = useMemo(() => {
     if (!data) return []
     const allMessages = data.pages.flatMap((page) => page?.list ?? [])
-    return [...allMessages].sort((a, b) => {
-      const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0
-      const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0
-      if (aTime !== bTime) return aTime - bTime
-      const aId = a.messageId ?? 0
-      const bId = b.messageId ?? 0
-      return aId - bId
-    })
-  }, [data, chatId])
+    return allMessages
+      .map((message, arrivalIndex) => ({ message, arrivalIndex }))
+      .sort((a, b) => {
+        const aRawTime = a.message.createdAt ? new Date(a.message.createdAt).getTime() : 0
+        const bRawTime = b.message.createdAt ? new Date(b.message.createdAt).getTime() : 0
+        const aTime = Number.isFinite(aRawTime) ? aRawTime : 0
+        const bTime = Number.isFinite(bRawTime) ? bRawTime : 0
+        if (aTime !== bTime) return aTime - bTime
+        // createdAt 동률 시 API 수신 순서를 유지한다.
+        return a.arrivalIndex - b.arrivalIndex
+      })
+      .map(({ message }) => message)
+  }, [data])
 
   const isStreamingForThisChat = !!resolvedChatRoomId && streamingChatRoomId === resolvedChatRoomId
 
