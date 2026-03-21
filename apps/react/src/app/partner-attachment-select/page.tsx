@@ -22,6 +22,7 @@ import { getChatEntryProgressBar } from '@/shared/ui/flow-progress-bar'
 import { getPersonalityStepDots } from '@/shared/ui/flow-step-dots'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
 import { SelectableButton } from '@/shared/ui/selectable-button'
+import { toast } from '@/shared/ui/toast'
 
 import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
@@ -31,7 +32,7 @@ export const Route = createFileRoute('/partner-attachment-select/')({
 })
 
 function PartnerAttachmentSelectPage() {
-  const { flow, next } = usePersonalityFlow()
+  const { flow, from, next } = usePersonalityFlow()
   const navigate = useNavigate()
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
@@ -40,7 +41,17 @@ function PartnerAttachmentSelectPage() {
 
   const handleConfirm = () => {
     if (!selectedType || partnerMutation.isPending) return
-    partnerMutation.mutate({ loveTypeCategory: selectedType }, { onSuccess: () => next() })
+    partnerMutation.mutate(
+      {
+        loveTypeCategory: selectedType,
+      },
+      {
+        onSuccess: () => {
+          if (from === 'profile') toast.success('상대 성향이 변경되었어요!')
+          next()
+        },
+      }
+    )
   }
 
   const handleDontKnow = () => {
@@ -56,6 +67,7 @@ function PartnerAttachmentSelectPage() {
           if (flow === 'full-flow') {
             navigate({ to: '/', replace: true })
           } else {
+            if (from === 'profile') toast.success('상대 성향이 변경되었어요!')
             next()
           }
         },

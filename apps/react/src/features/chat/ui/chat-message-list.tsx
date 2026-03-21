@@ -55,9 +55,7 @@ export function ChatMessageList({
     <div className="flex flex-1 flex-col">
       <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto">
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
-          <p className="body3-medium text-center text-white">
-            연동 후에도 대화 내용은 상대에게 공유되지 않으니 안심하세요!
-          </p>
+          <p className="body3-medium text-center text-white">대화 내용은 암호화 되어 안전하게 저장하고 있어요!</p>
         </div>
 
         {isLoading && (
