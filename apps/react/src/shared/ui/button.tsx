@@ -5,7 +5,7 @@ interface ButtonProps {
   disabled?: boolean
   onClick: () => void
   className?: string
-  type?: 'primary' | 'secondary'
+  type?: 'primary' | 'secondary' | 'ghost'
 }
 
 export function Button({ text, disabled = false, onClick, className = '', type = 'primary' }: ButtonProps) {
@@ -17,6 +17,9 @@ export function Button({ text, disabled = false, onClick, className = '', type =
         'h-[54px] w-full rounded-[10px] bg-malmo-rasberry-500 font-semibold text-white',
         {
           'bg-gray-100 text-gray-iron-700': type === 'secondary',
+        },
+        {
+          'bg-transparent text-gray-iron-400': type === 'ghost',
         },
         {
           'cursor-not-allowed bg-gray-neutral-300': disabled,

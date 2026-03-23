@@ -35,12 +35,12 @@ function MyResultPreviewPage() {
       <Screen.Content className="flex flex-1 flex-col bg-white">
         <div className="flex flex-1 flex-col items-center justify-center px-5">
           {/* Checkmark circle */}
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-b from-malmo-rasberry-500 to-[#F78EA2]">
-            <LucideCheck className="h-7 w-7 text-white" strokeWidth={2.5} />
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-b from-malmo-rasberry-500 to-[#F78EA2]">
+            <LucideCheck className="h-[22px] w-[22px] text-white" strokeWidth={2.5} />
           </div>
 
-          <h1 className="title2-bold mt-5 text-center text-gray-iron-950">내 성향 프로필을 완성했어요!</h1>
-          <p className="body3-medium mt-1 text-center text-gray-iron-500">연인의 프로필도 완성하러 가볼까요?</p>
+          <h1 className="heading1-bold mt-5 text-center text-gray-iron-950">내 성향 프로필을 완성했어요!</h1>
+          <p className="body2-medium mt-1 text-center text-gray-iron-500">연인의 프로필도 완성하러 가볼까요?</p>
 
           {/* Result card */}
           {attachmentData && (
@@ -52,7 +52,7 @@ function MyResultPreviewPage() {
               <p className="body3-medium mt-1 line-clamp-2 text-gray-iron-500">{attachmentData.previewDescription}</p>
               <button
                 onClick={handleViewResult}
-                className="body3-medium mt-8 flex items-center gap-1 rounded-[8px] bg-gray-neutral-200 px-[18px] py-2 text-gray-iron-800"
+                className="body3-semibold mt-8 flex items-center gap-1 rounded-[8px] bg-gray-neutral-200 px-[18px] py-2 text-gray-iron-800"
               >
                 내 결과 보러가기
                 <LucideChevronRight className="h-4 w-4" />

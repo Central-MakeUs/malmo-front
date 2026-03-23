@@ -44,7 +44,10 @@ function ProfileManagementPage() {
             label="내 성향"
             badge={myBadgeText ? { text: myBadgeText, variant: 'completed' } : undefined}
             onClick={wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_MBTI, CATEGORIES.PROFILE, () =>
-              navigate({ to: '/mbti', search: { flow: 'my-personality', from: 'profile' } })
+              navigate({
+                to: '/mbti',
+                search: { flow: 'my-personality', from: userInfo.loveTypeCategory ? 'profile' : 'profile-result' },
+              })
             )}
           />
 
@@ -63,7 +66,6 @@ function ProfileManagementPage() {
 
 function ProfileRow({
   label,
-  value,
   badge,
   onClick,
 }: {
@@ -78,9 +80,8 @@ function ProfileRow({
       onClick={onClick}
       className="flex w-full items-center justify-between border-b border-gray-iron-100 py-6 text-left"
     >
-      <span className="body1-semibold text-gray-iron-950">{label}</span>
+      <span className="body1-medium text-gray-iron-950">{label}</span>
       <div className={cn('flex items-center gap-2')}>
-        {value && <span className="body3-medium text-gray-iron-500">{value}</span>}
         {badge && <Badge variant={badge.variant}>{badge.text}</Badge>}
       </div>
     </button>

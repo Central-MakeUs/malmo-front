@@ -1,10 +1,12 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { LucideCheck, LucideChevronRight } from 'lucide-react'
 
 import { getAttachmentType } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
-import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
+import chatService from '@/shared/services/chat.service'
 import { Button } from '@/shared/ui'
 import { FixedBottom } from '@/shared/ui/fixed-bottom'
 import { FlowProgressBar } from '@/shared/ui/flow-progress-bar'
@@ -17,13 +19,29 @@ export const Route = createFileRoute('/partner-result-preview/')({
 
 function PartnerResultPreviewPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { userInfo } = useAuth()
-  const { next } = usePersonalityFlow()
+  const { mutateAsync: createChatRoom, isPending } = useMutation(chatService.createChatRoomMutation())
 
   const attachmentData = userInfo.partnerLoveTypeCategory ? getAttachmentType(userInfo.partnerLoveTypeCategory) : null
 
   const handleViewResult = () => {
     navigate({ to: '/attachment-test/result/partner', search: { from: 'partner-result-preview' }, replace: true })
+  }
+
+  const handleStartChat = async () => {
+    if (isPending) return
+
+    const created = await createChatRoom()
+    const createdId = created?.chatRoomId
+    if (createdId) {
+      queryClient.setQueryData(chatService.chatRoomStatusQuery().queryKey, {
+        chatRoomId: createdId,
+        createdAt: new Date().toISOString(),
+      })
+    }
+
+    navigate({ to: '/chat', replace: true })
   }
 
   return (
@@ -64,8 +82,9 @@ function PartnerResultPreviewPage() {
           )}
         </div>
 
-        <FixedBottom className="mt-0">
-          <Button text="상담하러 가기" onClick={next} />
+        <FixedBottom className="mt-0 flex flex-col gap-3">
+          <Button text="상담하러 가기" onClick={handleStartChat} disabled={isPending} />
+          <Button text="돌아가기" type="ghost" onClick={() => navigate({ to: '/', replace: true })} />
         </FixedBottom>
       </Screen.Content>
     </Screen>

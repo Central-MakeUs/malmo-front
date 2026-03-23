@@ -5,7 +5,7 @@ export type PersonalityFlow = 'my-personality' | 'partner-personality' | 'full-f
 
 export const personalityFlowSearchSchema = z.object({
   flow: z.enum(['my-personality', 'partner-personality', 'full-flow']).optional(),
-  from: z.literal('profile').optional(),
+  from: z.enum(['profile', 'profile-result']).optional(),
 })
 
 export type PersonalityFlowSearch = z.infer<typeof personalityFlowSearchSchema>
@@ -15,7 +15,7 @@ type RouterLike = { history: { back: () => void; go: (index: number) => void } }
 
 interface FlowParams {
   flow: PersonalityFlow | undefined
-  from: 'profile' | 'my-page' | 'my-result-preview' | 'partner-result-preview' | undefined
+  from: 'profile' | 'profile-result' | 'my-page' | 'my-result-preview' | 'partner-result-preview' | undefined
 }
 
 function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string, { flow, from }: FlowParams) {
@@ -23,7 +23,10 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'full-flow') {
       navigate({ to: '/my-attachment-select', search: { flow } })
     } else if (flow === 'my-personality') {
-      navigate({ to: '/my-attachment-select', search: { flow, ...(from === 'profile' && { from }) } })
+      navigate({
+        to: '/my-attachment-select',
+        search: { flow, ...((from === 'profile' || from === 'profile-result') && { from }) },
+      })
     }
     return
   }
@@ -31,6 +34,8 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
   if (pathname.startsWith('/my-attachment-select')) {
     if (flow === 'full-flow') {
       navigate({ to: '/my-result-preview', search: { flow } })
+    } else if (from === 'profile-result') {
+      navigate({ to: '/attachment-test/result/my', search: { from: 'my-page' }, replace: true })
     } else if (from === 'profile') {
       router.history.go(-2)
     } else {
@@ -75,7 +80,7 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
     if (flow === 'my-personality') {
       navigate({
         to: '/attachment-test/result/my',
-        search: { from: from === 'profile' ? 'my-page' : undefined },
+        search: { from: from === 'profile' || from === 'profile-result' ? 'my-page' : undefined },
         replace: true,
       })
     } else if (flow === 'full-flow') {
@@ -86,8 +91,10 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
 }
 
 function navigateExit(navigate: NavigateFn, router: RouterLike, { from, flow }: Pick<FlowParams, 'from' | 'flow'>) {
-  if (from === 'profile' || from === 'my-page') {
+  if (from === 'profile' || from === 'profile-result') {
     router.history.back()
+  } else if (from === 'my-page') {
+    navigate({ to: '/my-page/profile', replace: true })
   } else if (from === 'my-result-preview') {
     navigate({ to: '/my-result-preview', search: { ...(flow && { flow }) }, replace: true })
   } else if (from === 'partner-result-preview') {

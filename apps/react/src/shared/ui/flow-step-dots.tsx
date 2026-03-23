@@ -1,3 +1,4 @@
+import StepsIcon from '@/assets/icons/steps.svg'
 import { cn } from '@/shared/lib/cn'
 
 interface FlowStepDotsProps {
@@ -7,14 +8,16 @@ interface FlowStepDotsProps {
 
 export function FlowStepDots({ step, total }: FlowStepDotsProps) {
   return (
-    <div className="flex items-center gap-[6px] px-5 pt-4 pb-1">
+    <div className="absolute flex items-center gap-[2px] px-5 pt-[8px]">
       {Array.from({ length: total }, (_, i) => (
-        <div
+        <StepsIcon
           key={i}
-          className={cn('h-[10px] w-[10px] rounded-full', i < step ? 'bg-malmo-rasberry-500' : 'bg-gray-neutral-300')}
+          width={15}
+          height={16}
+          className={cn(i < step ? 'text-malmo-rasberry-500' : 'text-gray-iron-200')}
         />
       ))}
-      <span className="body3-medium ml-1 text-gray-iron-950">{step}단계</span>
+      <span className="body3-medium ml-[6px] text-gray-iron-950">{step}단계</span>
     </div>
   )
 }

@@ -89,7 +89,7 @@ function HomePage() {
             icon={<BellNotificationIcon />}
             subtitle={
               <span className="body4-medium text-gray-iron-800">
-                아직 채우지 않은 성향카드는 <span className="text-malmo-rasberry-500">{missingPersonalityCount}건</span>
+                아직 채우지 않은 성향 카드 <span className="text-malmo-rasberry-500">{missingPersonalityCount}건</span>
               </span>
             }
             title="완성하러 가기"

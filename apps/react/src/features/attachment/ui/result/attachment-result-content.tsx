@@ -1,7 +1,7 @@
 import { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { Puzzle, X, Zap } from 'lucide-react'
+import { Puzzle, Zap } from 'lucide-react'
 
 import { getLoveTypeCatalogItem } from '@/features/attachment/models/love-type-catalog'
 import type { AccentPalette } from '@/features/attachment/ui/result/attachment-result-sections'
@@ -165,7 +165,7 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
 
   const isWarmType = loveTypeCatalogItem.isWarmType
   const personalityType = userInfo.personalityType?.toUpperCase() ?? ''
-  const displayName = userInfo.nickname || (isMyResult ? '사용자' : '연인')
+  const displayName = userInfo.nickname || (isMyResult ? '사용자' : '상대')
   const shouldFetchDetail = personalityType.length > 0
 
   const { data: detailData } = useQuery({
@@ -203,15 +203,7 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
   return (
     <Screen>
       <Screen.Content className="no-bounce-scroll flex flex-col bg-gray-neutral-50">
-        <DetailHeaderBar
-          className="bg-gray-neutral-50"
-          showBackButton={false}
-          right={
-            <button type="button" onClick={handleCta} className="p-1">
-              <X className="h-[28px] w-[28px]" />
-            </button>
-          }
-        />
+        <DetailHeaderBar className="bg-gray-neutral-50" showBackButton={true} onBackClick={handleCta} />
 
         <div className="px-4">
           <div className="relative">
@@ -230,7 +222,9 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
               <div className="absolute inset-x-0 bottom-0 h-[96px] bg-gradient-to-t from-white/12 to-transparent" />
 
               <div className="absolute top-[22px] right-[22px] left-[22px] z-10">
-                <p className={cn('heading2-bold', accentPalette.accentTextClass)}>{displayName}님은</p>
+                <p className={cn('heading2-bold', accentPalette.accentTextClass)}>
+                  {isMyResult ? `${displayName}님은` : '상대는'}
+                </p>
                 <h1 className="title1-bold mt-2 text-gray-iron-900">{titleText}</h1>
                 <p className="body3-medium mt-1 max-w-[230px] [word-break:keep-all] whitespace-pre-line text-gray-iron-900">
                   {summary}

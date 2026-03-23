@@ -49,7 +49,7 @@ export function FlowProgressBar({ step, total, highlightSteps }: FlowProgressBar
         })}
       </div>
       <span className="body3-medium shrink-0 text-gray-iron-500">
-        {step}/{total}
+        {step} / {total}
       </span>
     </div>
   )

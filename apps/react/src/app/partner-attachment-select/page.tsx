@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
+import { useAuth } from '@/features/auth'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useUpdatePartnerProfileMutation } from '@/features/profile'
 import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
@@ -32,18 +33,26 @@ export const Route = createFileRoute('/partner-attachment-select/')({
 })
 
 function PartnerAttachmentSelectPage() {
+  const { userInfo } = useAuth()
   const { flow, from, next } = usePersonalityFlow()
   const navigate = useNavigate()
-  const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
+  const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(
+    ATTACHMENT_OPTIONS.find((o) => o.value === userInfo?.partnerLoveTypeCategory)?.value ?? null
+  )
+  const [isDontKnow, setIsDontKnow] = useState(userInfo?.partnerLoveTypeCategory === 'UNKNOWN')
   const [showDontKnowModal, setShowDontKnowModal] = useState(false)
 
   const partnerMutation = useUpdatePartnerProfileMutation({ errorMessage: '저장 중 오류가 발생했습니다' })
 
   const handleConfirm = () => {
-    if (!selectedType || partnerMutation.isPending) return
+    if ((!selectedType && !isDontKnow) || partnerMutation.isPending) return
+    if (isDontKnow) {
+      setShowDontKnowModal(true)
+      return
+    }
     partnerMutation.mutate(
       {
-        loveTypeCategory: selectedType,
+        loveTypeCategory: selectedType!,
       },
       {
         onSuccess: () => {
@@ -56,7 +65,8 @@ function PartnerAttachmentSelectPage() {
 
   const handleDontKnow = () => {
     if (partnerMutation.isPending) return
-    setShowDontKnowModal(true)
+    setSelectedType(null)
+    setIsDontKnow(true)
   }
 
   const handleDontKnowConfirm = () => {
@@ -65,7 +75,7 @@ function PartnerAttachmentSelectPage() {
       {
         onSuccess: () => {
           if (flow === 'full-flow') {
-            navigate({ to: '/', replace: true })
+            navigate({ to: '/partner-result-preview', search: { flow }, replace: true })
           } else if (from === 'profile') {
             toast.success('상대 성향이 변경되었어요!')
             next()
@@ -100,7 +110,10 @@ function PartnerAttachmentSelectPage() {
             <SelectableButton
               key={option.value}
               selected={selectedType === option.value}
-              onClick={() => setSelectedType(option.value)}
+              onClick={() => {
+                setSelectedType(option.value)
+                setIsDontKnow(false)
+              }}
               disabled={partnerMutation.isPending}
               className="w-full text-left"
             >
@@ -112,14 +125,18 @@ function PartnerAttachmentSelectPage() {
             onClick={handleDontKnow}
             disabled={partnerMutation.isPending}
             className="w-full text-left"
-            selected={false}
+            selected={isDontKnow}
           >
             상대의 애착유형을 모르겠어요
           </SelectableButton>
         </div>
 
         <FixedBottom>
-          <Button text="프로필 완성!" onClick={handleConfirm} disabled={!selectedType || partnerMutation.isPending} />
+          <Button
+            text="프로필 완성!"
+            onClick={handleConfirm}
+            disabled={(!selectedType && !isDontKnow) || partnerMutation.isPending}
+          />
         </FixedBottom>
       </Screen.Content>
 

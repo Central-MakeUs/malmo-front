@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
+import { useAuth } from '@/features/auth'
 import { TitleSection } from '@/features/onboarding/ui/title-section'
 import { useMemberUpdateMutation } from '@/features/profile'
 import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
@@ -24,8 +25,11 @@ export const Route = createFileRoute('/my-attachment-select/')({
 
 function MyAttachmentSelectPage() {
   const navigate = useNavigate()
+  const { userInfo } = useAuth()
   const { flow, from, next } = usePersonalityFlow()
-  const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(null)
+  const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(
+    userInfo?.loveTypeCategory ?? null
+  )
 
   const updateMutation = useMemberUpdateMutation({
     onSuccess: () => {
@@ -61,10 +65,11 @@ function MyAttachmentSelectPage() {
             </>
           }
         />
-
-        <div className="mt-6 flex flex-col gap-3 px-5">
+        <div className="mt-4 px-5">
           <KeyMessageBanner title="내 애착유형을 모른다면? 테스트 GO" onClick={handleDontKnow} />
+        </div>
 
+        <div className="mt-10 flex flex-col gap-3 px-5">
           <div className="mt-3 flex flex-col gap-3">
             {ATTACHMENT_OPTIONS.map((option) => (
               <SelectableButton

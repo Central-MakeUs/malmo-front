@@ -24,7 +24,7 @@ function PersonalityFlowLoadingPage() {
       } else {
         navigate({ to: '/mbti', search: { flow: 'my-personality' }, replace: true })
       }
-    }, 1500)
+    }, 2000)
 
     return () => clearTimeout(timer)
   }, [])
@@ -37,7 +37,11 @@ function PersonalityFlowLoadingPage() {
           <div className="mt-6 text-center">
             <h1 className="heading1-bold text-gray-iron-950">성향 프로필 생성중...</h1>
             <p className="body2-medium mt-2 text-gray-iron-500">
-              나와 상대의 프로필을 완성하면
+              {flow === 'my-personality'
+                ? '나의 프로필을 완성하면'
+                : flow === 'partner-personality'
+                  ? '상대의 프로필을 완성하면'
+                  : '나와 상대의 프로필을 완성하면'}
               <br />
               연애 상담을 진행할 수 있어요!
             </p>
