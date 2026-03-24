@@ -41,7 +41,10 @@ function PartnerResultPreviewPage() {
       })
     }
 
-    navigate({ to: '/chat', replace: true })
+    // 현재 히스토리 엔트리 URL을 /로 변경 (라우터에 알리지 않고 브라우저 히스토리만 수정)
+    // 이렇게 하면 /chat 에서 back 시 / 로 돌아감 (플로우 단계들을 건너뜀)
+    window.history.replaceState(window.history.state, '', '/')
+    navigate({ to: '/chat' })
   }
 
   return (

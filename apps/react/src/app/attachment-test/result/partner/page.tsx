@@ -24,7 +24,8 @@ export const Route = createFileRoute('/attachment-test/result/partner/')({
 function PartnerAttachmentResultPage() {
   const { userInfo } = useAuth()
   const { from } = Route.useSearch()
-  const fromProp = from === 'partner-result-preview' ? 'partner-result-preview' : undefined
+  const fromProp =
+    from === 'partner-result-preview' ? 'partner-result-preview' : from === 'my-page' ? 'my-page' : undefined
 
   const partnerData = {
     loveTypeCategory: userInfo.partnerLoveTypeCategory,

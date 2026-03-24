@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { ATTACHMENT_OPTIONS } from '@/features/attachment'
@@ -36,6 +36,7 @@ function PartnerAttachmentSelectPage() {
   const { userInfo } = useAuth()
   const { flow, from, next } = usePersonalityFlow()
   const navigate = useNavigate()
+  const router = useRouter()
   const [selectedType, setSelectedType] = useState<MemberDataLoveTypeCategoryEnum | null>(
     ATTACHMENT_OPTIONS.find((o) => o.value === userInfo?.partnerLoveTypeCategory)?.value ?? null
   )
@@ -79,6 +80,9 @@ function PartnerAttachmentSelectPage() {
           } else if (from === 'profile') {
             toast.success('상대 성향이 변경되었어요!')
             next()
+          } else if (from === 'profile-result') {
+            toast.success('상대 성향이 설정되었어요!')
+            router.history.go(-2)
           } else {
             navigate({ to: '/', replace: true })
           }

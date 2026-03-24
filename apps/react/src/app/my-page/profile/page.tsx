@@ -55,7 +55,13 @@ function ProfileManagementPage() {
             label="상대 성향"
             badge={partnerBadgeText ? { text: partnerBadgeText, variant: 'rasberry' } : null}
             onClick={wrapWithTracking(BUTTON_NAMES.OPEN_PROFILE_PARTNER_MBTI, CATEGORIES.PROFILE, () =>
-              navigate({ to: '/partner-mbti', search: { flow: 'partner-personality', from: 'profile' } })
+              navigate({
+                to: '/partner-mbti',
+                search: {
+                  flow: 'partner-personality',
+                  from: userInfo.partnerLoveTypeCategory ? 'profile' : 'profile-result',
+                },
+              })
             )}
           />
         </div>

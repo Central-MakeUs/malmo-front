@@ -63,6 +63,8 @@ function navigateNext(navigate: NavigateFn, router: RouterLike, pathname: string
   if (pathname.startsWith('/partner-attachment-select')) {
     if (flow === 'full-flow') {
       navigate({ to: '/partner-result-preview', search: { flow } })
+    } else if (from === 'profile-result') {
+      navigate({ to: '/attachment-test/result/partner', search: { from: 'my-page' }, replace: true })
     } else if (from === 'profile') {
       router.history.go(-2)
     } else {
@@ -94,7 +96,7 @@ function navigateExit(navigate: NavigateFn, router: RouterLike, { from, flow }: 
   if (from === 'profile' || from === 'profile-result') {
     router.history.back()
   } else if (from === 'my-page') {
-    navigate({ to: '/my-page/profile', replace: true })
+    router.history.go(-2)
   } else if (from === 'my-result-preview') {
     navigate({ to: '/my-result-preview', search: { ...(flow && { flow }) }, replace: true })
   } else if (from === 'partner-result-preview') {
