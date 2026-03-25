@@ -2,6 +2,8 @@ import { Check } from 'lucide-react'
 import { useState } from 'react'
 
 import HeartIcon from '@/assets/icons/heart.svg'
+import MatchBestCardBackgroundImage from '@/assets/images/attachment-result/attachment-result-match-best-bg.png'
+import MatchWorstCardBackgroundImage from '@/assets/images/attachment-result/attachment-result-match-worst-bg.png'
 import { toAttachmentResultEmoji, toAttachmentResultLabel } from '@/features/attachment/models/result-label-map'
 import { cn } from '@/shared/lib/cn'
 
@@ -28,6 +30,7 @@ const FEATURE_CHART_GRADIENTS = [
   'linear-gradient(180deg, #E1D7FF 0%, #F0EBFF 100%)',
   'linear-gradient(180deg, #B0B6BF 0%, #C8CBD0 100%)',
 ] as const
+const FEATURE_CHART_UNSELECTED_GRADIENT = 'linear-gradient(180deg, #D2D6DB 0%, #E7EBEF 100%)'
 const FEATURE_BAR_TOP_COLORS = ['#EC4665', '#FF8400', '#7C59EA', '#3F3F46'] as const
 const FEATURE_LABEL_BG_CLASSES = [
   'bg-malmo-rasberry-500',
@@ -35,8 +38,6 @@ const FEATURE_LABEL_BG_CLASSES = [
   'bg-malmo-purple-500',
   'bg-gray-iron-700',
 ] as const
-const BEST_MATCH_CARD_BG = '#FDEDF0'
-const WORST_MATCH_CARD_BG = '#F3F4F6'
 const SECOND_GUIDE_CHECK_GRADIENT = 'linear-gradient(180deg, #9DA4AE 0%, #C8CFD8 100%)'
 
 function pickByIndex<T>(values: readonly T[], index: number): T {
@@ -78,9 +79,9 @@ export function ResultKeywordSection({ keywords }: { keywords: string[] }) {
           return (
             <div
               key={`${keyword}-${index}`}
-              className="inline-flex shrink-0 items-center gap-[3px] rounded-full bg-gray-iron-800 px-[9px] py-[3px]"
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-gray-iron-800 px-3 py-[3px]"
             >
-              <span className="body4-medium text-white">{label}</span>
+              <span className="body3-medium text-white">{label}</span>
               <span className="emoji-toss flex h-4 w-4 items-center justify-center text-[13px] leading-none">
                 {toAttachmentResultEmoji(keyword)}
               </span>
@@ -113,12 +114,12 @@ export function ResultFeatureSection({ title, tabs }: { title: string; tabs: Res
                 type="button"
                 onClick={() => setSelectedIndex(index)}
                 className={cn(
-                  'flex-1 rounded-[50px] px-[14px] py-[7px] text-center',
+                  'flex-1 rounded-[50px] px-[14px] py-[4px] text-center',
                   isSelected ? 'bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.08)]' : 'bg-transparent'
                 )}
               >
                 <span
-                  className={cn(isSelected ? 'body4-semibold text-gray-iron-800' : 'body4-medium text-gray-iron-800')}
+                  className={cn(isSelected ? 'body4-semibold text-gray-iron-800' : 'body4-medium text-gray-iron-400')}
                 >
                   {tab.label}
                 </span>
@@ -152,7 +153,7 @@ export function ResultFeatureSection({ title, tabs }: { title: string; tabs: Res
                   <div
                     className="h-full w-full transition-[background,border-radius]"
                     style={{
-                      background: isSelected ? selectedGradient : '#E5E7EB',
+                      background: isSelected ? selectedGradient : FEATURE_CHART_UNSELECTED_GRADIENT,
                       borderTopLeftRadius: isSelected ? '0px' : '8px',
                       borderTopRightRadius: isSelected ? '0px' : '8px',
                     }}
@@ -183,7 +184,7 @@ export function ResultFeatureSection({ title, tabs }: { title: string; tabs: Res
 
                 <div
                   className={cn(
-                    'mt-2 flex w-full items-center justify-center rounded-[8px] px-[7.5px] py-[1px] text-center',
+                    'mt-2 flex w-full items-center justify-center rounded-[4px] px-[7.5px] py-[1px] text-center',
                     isSelected ? `${selectedLabelBgClass} text-white` : 'bg-gray-neutral-100 text-gray-iron-500'
                   )}
                 >
@@ -244,9 +245,12 @@ export function ResultTextBlockSection({
                 </span>
                 <p className="body1-semibold text-gray-iron-900">{toAttachmentResultLabel(item.title)}</p>
               </div>
-              <p className="body2-regular mt-3 [word-break:keep-all] text-gray-iron-600">
-                {toAttachmentResultLabel(item.description)}
-              </p>
+              <div className="mt-3 flex gap-3">
+                <span className="w-[2px] shrink-0 self-stretch rounded-full bg-gray-neutral-200" aria-hidden />
+                <p className="body2-regular flex-1 [word-break:keep-all] text-gray-iron-600">
+                  {toAttachmentResultLabel(item.description)}
+                </p>
+              </div>
             </div>
           ))}
         </div>
@@ -307,10 +311,18 @@ export function ResultGuideSection({
 }
 
 function MatchCard({ item, tone }: { item: LoveTypePersonalityTypeBlockData; tone: 'best' | 'worst' }) {
-  const matchCardBackground = tone === 'best' ? BEST_MATCH_CARD_BG : WORST_MATCH_CARD_BG
+  const matchCardBackgroundImage = tone === 'best' ? MatchBestCardBackgroundImage : MatchWorstCardBackgroundImage
 
   return (
-    <div className="h-[182px] rounded-[16px] p-4" style={{ background: matchCardBackground }}>
+    <div
+      className="h-[182px] rounded-[16px] p-4"
+      style={{
+        backgroundImage: `url(${matchCardBackgroundImage})`,
+        backgroundSize: '100% 100%',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       <HeartIcon className={cn('h-5 w-5', tone === 'best' ? '[&_path]:fill-[#EC4665]' : '[&_path]:fill-[#4E5968]')} />
       <p className={cn('title2-bold mt-2', tone === 'best' ? 'text-malmo-rasberry-500' : 'text-gray-iron-800')}>
         {toAttachmentResultLabel(item.personalityType)}
@@ -340,7 +352,7 @@ export function ResultMatchSection({
       {bestMatches.length > 0 && (
         <>
           <div className="mt-8 flex justify-center">
-            <div className="rounded-full bg-malmo-rasberry-500 px-[14px] py-[1px]">
+            <div className="inline-flex items-center justify-center rounded-full bg-malmo-rasberry-500 px-[14px] py-[1px]">
               <span className="body3-semibold text-white">BEST</span>
             </div>
           </div>
@@ -356,7 +368,7 @@ export function ResultMatchSection({
       {worstMatches.length > 0 && (
         <>
           <div className="mt-6 flex justify-center">
-            <div className="rounded-full bg-gray-iron-700 px-[14px] py-[1px]">
+            <div className="inline-flex items-center justify-center rounded-full bg-gray-iron-700 px-[14px] py-[1px]">
               <span className="body3-semibold text-white">WORST</span>
             </div>
           </div>
