@@ -36,6 +36,7 @@ export interface HistoryLikeLocation {
 export type ParsedHistoryStateLike = {
   __TSR_index?: number
   skipTransition?: boolean
+  forceDirection?: 'back' | 'forward'
 }
 
 export interface TransitionMetadata {

@@ -98,9 +98,14 @@ function navigateExit(navigate: NavigateFn, router: RouterLike, { from, flow }: 
   } else if (from === 'my-page') {
     router.history.go(-2)
   } else if (from === 'my-result-preview') {
-    navigate({ to: '/my-result-preview', search: { ...(flow && { flow }) }, replace: true })
+    navigate({
+      to: '/my-result-preview',
+      search: { ...(flow && { flow }) },
+      replace: true,
+      state: { forceDirection: 'back' },
+    })
   } else if (from === 'partner-result-preview') {
-    navigate({ to: '/partner-result-preview', replace: true })
+    navigate({ to: '/partner-result-preview', replace: true, state: { forceDirection: 'back' } })
   } else {
     navigate({ to: '/', replace: true })
   }
