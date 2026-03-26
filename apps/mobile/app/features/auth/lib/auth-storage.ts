@@ -7,6 +7,7 @@ export class AuthStorage {
   private static readonly CHAT_TUTORIAL_KEY = 'chat_tutorial_seen'
   private static readonly QUESTION_HELP_KEY = 'question_help'
   private static readonly INTRO_SEEN_KEY = 'intro_seen'
+  private static readonly PERSONALITY_RENEWAL_MODAL_KEY = 'personality_renewal_modal_seen'
   private static readonly CURRENT_EMAIL_KEY = 'auth_current_email'
 
   // 이메일 정규화: 소문자 변환 및 앞뒤 공백 제거
@@ -217,6 +218,25 @@ export class AuthStorage {
       await this.setScopedItem(this.INTRO_SEEN_KEY, JSON.stringify(true))
     } catch (error) {
       console.error('소개 페이지 확인 상태 저장 중 오류 발생:', error)
+      throw error
+    }
+  }
+
+  static async getPersonalityRenewalModalSeen(): Promise<boolean> {
+    try {
+      const seen = await this.getScopedItem(this.PERSONALITY_RENEWAL_MODAL_KEY)
+      return seen ? JSON.parse(seen) : false
+    } catch (error) {
+      console.error('성향 리뉴얼 모달 확인 상태 조회 중 오류 발생:', error)
+      return false
+    }
+  }
+
+  static async setPersonalityRenewalModalSeen(): Promise<void> {
+    try {
+      await this.setScopedItem(this.PERSONALITY_RENEWAL_MODAL_KEY, JSON.stringify(true))
+    } catch (error) {
+      console.error('성향 리뉴얼 모달 확인 상태 저장 중 오류 발생:', error)
       throw error
     }
   }
