@@ -204,7 +204,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
               <img
                 src={loveTypeCatalogItem.resultImage}
                 alt={`${loveTypeCatalogItem.subtype} 결과 카드`}
-                className="absolute inset-0 h-full w-full object-cover object-top"
+                className="absolute inset-0 h-full w-full object-contain object-center"
               />
               <div className="absolute inset-x-0 top-0 h-[210px] bg-gradient-to-b from-white via-white/90 to-transparent" />
               <div className="absolute inset-x-0 bottom-0 h-[96px] bg-gradient-to-t from-white/12 to-transparent" />
