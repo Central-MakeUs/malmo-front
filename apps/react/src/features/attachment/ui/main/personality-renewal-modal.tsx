@@ -14,8 +14,9 @@ import {
 } from '@/shared/ui/alert-dialog'
 
 const UPDATE_DATE = new Date('2026-03-26T00:00:00')
-const SHOW_DURATION_DAYS = 7
+const SHOW_DURATION_DAYS = 14
 
+// 26일부터 14일간 노출
 function isWithinShowPeriod(): boolean {
   const now = new Date()
   const expiresAt = new Date(UPDATE_DATE)
@@ -47,10 +48,10 @@ export function PersonalityRenewalModal() {
       <AlertDialogContent>
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center text-gray-iron-400"
+          className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center text-gray-iron-950"
           aria-label="닫기"
         >
-          <X className="h-5 w-5" />
+          <X className="h-6 w-6" />
         </button>
 
         <div className="mb-5 flex justify-center">
