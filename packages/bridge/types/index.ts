@@ -33,5 +33,7 @@ export interface BridgeActions {
   setQuestionHelpFalse(): Promise<void>
   getIntroSeen(): Promise<boolean>
   setIntroSeen(): Promise<void>
+  getPersonalityRenewalModalSeen(): Promise<boolean>
+  setPersonalityRenewalModalSeen(): Promise<void>
   setModalOpen(isOpen: boolean): Promise<void>
 }
