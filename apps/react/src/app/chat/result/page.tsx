@@ -35,7 +35,6 @@ function RouteComponent() {
   const navigate = useNavigate()
   const goBack = useGoBack()
   const queryClient = useQueryClient()
-
   useEffect(() => {
     setStatusColor('#FDEDF0')
 

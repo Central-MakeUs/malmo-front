@@ -1,123 +1,101 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useEffect } from 'react'
 
-import HeartIcon from '@/assets/icons/heart.svg'
 import malmoLogo from '@/assets/images/malmo-logo-small.png'
-import momoHomeChattingImage from '@/assets/images/onboarding-end-2.png'
-import { AnniversaryEditSheet } from '@/features/anniversary'
-import { getLoveTypeCatalogItem } from '@/features/attachment/models/love-type-catalog'
-import { AttachmentTestBanner } from '@/features/attachment/ui/attachment-test-banner'
-import { AttachmentTypeCards } from '@/features/attachment/ui/attachment-type-cards'
+import { getAttachmentType, AttachmentTypeCards } from '@/features/attachment'
 import { useAuth } from '@/features/auth'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
 import { RecentChatSection } from '@/features/history/ui/recent-chat-section'
-import { usePartnerInfo } from '@/features/member'
 import { useAppNotifications } from '@/features/notification'
-import { useProfileEdit } from '@/features/profile'
-import {
-  getRequiredProfileFlowStartPath,
-  requiredProfileFlowSearchSchema,
-} from '@/features/profile/lib/required-profile-flow'
-import { wrapWithTracking } from '@/shared/analytics'
-import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
-import { useAlertDialog } from '@/shared/hooks/use-alert-dialog'
+import { getMissingPersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { Screen } from '@/shared/layout/screen'
 import { BottomNavigation } from '@/shared/ui/bottom-navigation'
-import { calculateDDay } from '@/shared/utils/date'
+import { BellNotificationIcon, KeyMessageBanner } from '@/shared/ui/key-message-banner'
+
+import type { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
 })
 
-// 모듈 스코프: 컴포넌트 리마운트에 영향받지 않음
-let hasOpenedRequiredProfileDialog = false
-
 function HomePage() {
-  const navigate = useNavigate()
   const { userInfo } = useAuth()
-  const { open: openAlertDialog, isOpen: isAlertDialogOpen } = useAlertDialog()
+  const navigate = useNavigate()
 
   useAppNotifications()
-
-  const { data: partnerInfo } = usePartnerInfo()
-  const profileEdit = useProfileEdit()
-
-  const dDay = calculateDDay(userInfo.startLoveDate)
 
   const { data: historyData } = useChatHistoryQuery({})
   const histories = historyData?.pages.flatMap((page) => page?.list ?? []) ?? []
   const totalHistoryCount = historyData?.pages[0]?.totalCount ?? histories.length
 
-  const hasAttachmentType = !!userInfo.loveTypeCategory
-  const requiredProfileStartPath = getRequiredProfileFlowStartPath(userInfo)
+  // 애착유형 데이터
+  const myAttachmentData = getAttachmentType(userInfo.loveTypeCategory)
+  const partnerAttachmentData =
+    userInfo.partnerLoveTypeCategory && userInfo.partnerLoveTypeCategory !== 'UNKNOWN'
+      ? getAttachmentType(userInfo.partnerLoveTypeCategory as MemberDataLoveTypeCategoryEnum)
+      : null
+  const myAttachmentType = myAttachmentData?.subtype
+  const partnerAttachmentType = partnerAttachmentData?.subtype
 
-  // 파트너 연동 상태 확인
-  const isPartnerConnected = !!partnerInfo
+  // 배너 - 미완성 성향 카드 수
+  const missingPersonalityCount = (!userInfo.loveTypeCategory ? 1 : 0) + (!userInfo.partnerLoveTypeCategory ? 1 : 0)
 
-  const myAttachmentData = getLoveTypeCatalogItem(userInfo.loveTypeCategory)
-  const partnerAttachmentData = getLoveTypeCatalogItem(partnerInfo?.loveTypeCategory)
+  const handleBannerClick = () => {
+    navigate({ to: '/personality-flow-loading', search: { flow: getMissingPersonalityFlow(userInfo) } })
+  }
 
-  const myAttachmentType = myAttachmentData?.character
-  const partnerAttachmentType = partnerAttachmentData?.character
-
-  // 기념일 시트 열기 핸들러
-  const handleAnniversaryEdit = wrapWithTracking(BUTTON_NAMES.OPEN_ANNIVERSARY_SHEET, CATEGORIES.PROFILE, () =>
-    profileEdit.openAnniversarySheet()
-  )
-  useEffect(() => {
-    if (!requiredProfileStartPath) {
-      hasOpenedRequiredProfileDialog = false
+  // 내 성향카드 클릭
+  const handleMyCardClick = () => {
+    const myComplete = !!userInfo.personalityType && !!userInfo.loveTypeCategory
+    if (myComplete) {
+      navigate({ to: '/attachment-test/result/my' })
       return
     }
+    if (!userInfo.personalityType) {
+      navigate({ to: '/mbti', search: { flow: 'my-personality' } })
+    } else {
+      navigate({ to: '/my-attachment-select', search: { flow: 'my-personality' } })
+    }
+  }
 
-    if (hasOpenedRequiredProfileDialog) return
-    if (isAlertDialogOpen) return
-
-    hasOpenedRequiredProfileDialog = true
-
-    openAlertDialog({
-      title: '모모의 연애 상담이 새로워졌어요',
-      description: (
-        <>
-          모모가 기억할 연애 정보를 입력하고
-          <br />
-          연애 상담을 시작해 보세요
-        </>
-      ),
-      image: (
-        <img src={momoHomeChattingImage} alt="연애 상담 정보 입력" className="h-[164px] w-[184px] object-contain" />
-      ),
-      confirmText: '정보 입력하러 가기',
-      onConfirm: wrapWithTracking(BUTTON_NAMES.GO_REQUIRED_PROFILE_FLOW, CATEGORIES.MAIN, () => {
-        const parsedSearch = requiredProfileFlowSearchSchema.parse({ requiredProfileFlow: true })
-        navigate({ to: requiredProfileStartPath, search: parsedSearch, replace: true })
-      }),
-      preventClose: true,
-    })
-  }, [isAlertDialogOpen, navigate, openAlertDialog, requiredProfileStartPath])
+  // 상대 성향카드 클릭
+  const handlePartnerCardClick = () => {
+    const partnerComplete =
+      !!userInfo.partnerLoveTypeCategory && userInfo.partnerLoveTypeCategory !== 'UNKNOWN' && !!partnerAttachmentData
+    if (partnerComplete) {
+      navigate({ to: '/attachment-test/result/partner' })
+      return
+    }
+    if (!userInfo.otherPersonalityType) {
+      navigate({ to: '/partner-mbti', search: { flow: 'partner-personality' } })
+    } else {
+      navigate({ to: '/partner-attachment-select', search: { flow: 'partner-personality' } })
+    }
+  }
 
   return (
     <Screen>
       <Screen.Header behavior="overlay" className="bg-white">
         <div className="pt-safe-top flex h-[60px] items-center justify-between px-5">
           <img src={malmoLogo} alt="말모 로고" className="h-8 w-[94px]" />
-          {isPartnerConnected && (
-            <div
-              className="flex h-8 items-center rounded-[30px] border border-gray-iron-200 px-4 py-[5px]"
-              onClick={handleAnniversaryEdit}
-            >
-              <HeartIcon className="h-4 w-4" />
-              <span className="body2-semibold ml-[9px] text-gray-iron-950">D+{dDay}</span>
-            </div>
-          )}
         </div>
       </Screen.Header>
 
       <Screen.Content className="no-bounce-scroll has-bottom-nav flex-1 bg-white px-5">
         <ChatEntryCard />
 
-        {!hasAttachmentType && <AttachmentTestBanner />}
+        {missingPersonalityCount > 0 && (
+          <KeyMessageBanner
+            icon={<BellNotificationIcon />}
+            subtitle={
+              <span className="body4-medium text-gray-iron-800">
+                아직 채우지 않은 성향 카드 <span className="text-malmo-rasberry-500">{missingPersonalityCount}건</span>
+              </span>
+            }
+            title="완성하러 가기"
+            onClick={handleBannerClick}
+          />
+        )}
 
         <RecentChatSection histories={histories} totalHistoryCount={totalHistoryCount} />
 
@@ -126,17 +104,14 @@ function HomePage() {
           partnerAttachmentData={partnerAttachmentData}
           myAttachmentType={myAttachmentType}
           partnerAttachmentType={partnerAttachmentType}
-          isPartnerConnected={isPartnerConnected}
+          myMbti={userInfo.personalityType?.toUpperCase()}
+          partnerMbti={userInfo.otherPersonalityType?.toUpperCase()}
+          onMyCardClick={handleMyCardClick}
+          onPartnerCardClick={handlePartnerCardClick}
         />
       </Screen.Content>
 
       <BottomNavigation />
-
-      <AnniversaryEditSheet
-        isOpen={profileEdit.isAnniversarySheetOpen}
-        onOpenChange={profileEdit.setAnniversarySheetOpen}
-        onSave={wrapWithTracking(BUTTON_NAMES.SAVE_ANNIVERSARY, CATEGORIES.PROFILE)}
-      />
     </Screen>
   )
 }

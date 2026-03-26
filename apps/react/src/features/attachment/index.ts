@@ -1,6 +1,5 @@
-// 타입과 상수
-export * from './models/love-type-catalog'
 export * from './models/constants'
+export { getLoveTypeCatalogItem as getAttachmentType } from './models/love-type-catalog'
 
 export { useAttachmentQuestions } from './hooks/use-attachment-questions'
 
@@ -23,3 +22,6 @@ export * from './ui/result/attachment-result-content'
 export * from './ui/main/attachment-test-intro'
 export * from './ui/main/attachment-test-info-section'
 export * from './ui/main/attachment-types-section'
+
+// 홈 카드 컴포넌트
+export * from './ui/attachment-type-cards'

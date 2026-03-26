@@ -20,13 +20,17 @@ const RELATIONSHIP_OPTIONS: {
 ]
 
 function RelationshipStatusPage() {
-  const { goToNextStep, goToPreviousStep } = useOnboardingNavigation()
+  const { goToPreviousStep, completeAndGoHome } = useOnboardingNavigation()
   const { data, updateRelationshipStatus } = useOnboarding()
 
-  const handleNext = wrapWithTracking(BUTTON_NAMES.NEXT_RELATIONSHIP_STATUS, CATEGORIES.ONBOARDING, (value: string) => {
-    updateRelationshipStatus(value as RelationshipStatus)
-    goToNextStep()
-  })
+  const handleNext = wrapWithTracking(
+    BUTTON_NAMES.NEXT_RELATIONSHIP_STATUS,
+    CATEGORIES.ONBOARDING,
+    async (value: string) => {
+      updateRelationshipStatus(value as RelationshipStatus)
+      await completeAndGoHome(value as RelationshipStatus)
+    }
+  )
 
   const handleBack = wrapWithTracking(
     BUTTON_NAMES.BACK_RELATIONSHIP_STATUS,
@@ -51,7 +55,7 @@ function RelationshipStatusPage() {
       description="이후에 관계 정보가 바뀌면 변경할 수 있어요"
       options={RELATIONSHIP_OPTIONS}
       initialValue={data.relationshipStatus}
-      submitText="다음"
+      submitText="시작하기"
       onSubmit={handleNext}
       onBack={handleBack}
     />

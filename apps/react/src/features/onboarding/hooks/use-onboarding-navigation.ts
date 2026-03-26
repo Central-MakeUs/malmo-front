@@ -1,49 +1,20 @@
 import { useNavigate, useRouterState } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
-import { useOnboarding } from '@/features/onboarding/contexts/onboarding-context'
+import { useOnboarding, type RelationshipStatus } from '@/features/onboarding/contexts/onboarding-context'
 
-// 기본 온보딩 단계 (모든 사용자 공통)
-const BASE_STEPS = [
-  '/onboarding/terms',
-  '/onboarding/nickname',
-  '/onboarding/relationship-status',
-  '/onboarding/mbti',
-  '/onboarding/partner-mbti',
-] as const
+// 온보딩 단계 (이용약관 → 닉네임 → 연애상태 → 홈)
+const STEPS = ['/onboarding/terms', '/onboarding/nickname', '/onboarding/relationship-status'] as const
 
-// 커플 전용 단계
-const COUPLE_STEPS = [
-  '/onboarding/my-code',
-  '/onboarding/partner-code',
-  '/onboarding/anniversary',
-  '/onboarding/complete',
-] as const
-
-// 비커플(이별) 전용 단계
-const NON_COUPLE_STEPS = ['/onboarding/complete'] as const
-
-type OnboardingStep = (typeof BASE_STEPS)[number] | (typeof COUPLE_STEPS)[number] | (typeof NON_COUPLE_STEPS)[number]
+type OnboardingStep = (typeof STEPS)[number]
 
 export function useOnboardingNavigation() {
   const navigate = useNavigate()
   const { location } = useRouterState()
   const { refreshUserInfo } = useAuth()
-  const { data } = useOnboarding()
-  const isCoupleOnboardingFlow = ['IN_RELATIONSHIP', 'SEEING_SOMEONE'].includes(data.relationshipStatus ?? '')
+  const { data, completeOnboarding } = useOnboarding()
 
-  // 연애 상태에 따른 전체 스텝 계산
-  const getOnboardingSteps = (): OnboardingStep[] => {
-    const currentPath = location.pathname.replace(/\/$/, '')
-    const isCoupleFlowPath = COUPLE_STEPS.includes(currentPath as (typeof COUPLE_STEPS)[number])
-
-    if (isCoupleOnboardingFlow || isCoupleFlowPath) {
-      return [...BASE_STEPS, ...COUPLE_STEPS]
-    }
-    return [...BASE_STEPS, ...NON_COUPLE_STEPS]
-  }
-
-  const ONBOARDING_STEPS = getOnboardingSteps()
+  const ONBOARDING_STEPS = [...STEPS]
 
   // 현재 경로에 따른 단계 인덱스 찾기
   const getCurrentStepIndex = (): number => {
@@ -59,18 +30,6 @@ export function useOnboardingNavigation() {
 
   // 다음 단계로 이동
   const goToNextStep = () => {
-    const currentPath = location.pathname.replace(/\/$/, '')
-
-    // 상대방 MBTI 페이지 이후 조건부 라우팅
-    if (currentPath === '/onboarding/partner-mbti') {
-      if (isCoupleOnboardingFlow) {
-        navigate({ to: '/onboarding/my-code', replace: true })
-      } else {
-        navigate({ to: '/onboarding/complete', replace: true })
-      }
-      return true
-    }
-
     const currentIndex = getCurrentStepIndex()
 
     if (currentIndex >= 0 && currentIndex < ONBOARDING_STEPS.length - 1) {
@@ -83,18 +42,6 @@ export function useOnboardingNavigation() {
 
   // 이전 단계로 이동
   const goToPreviousStep = () => {
-    const currentPath = location.pathname.replace(/\/$/, '')
-
-    // 완료 페이지에서 뒤로가기 시 조건부 라우팅
-    if (currentPath === '/onboarding/complete') {
-      if (isCoupleOnboardingFlow) {
-        navigate({ to: '/onboarding/anniversary', replace: true })
-      } else {
-        navigate({ to: '/onboarding/partner-mbti', replace: true })
-      }
-      return true
-    }
-
     const currentIndex = getCurrentStepIndex()
 
     if (currentIndex > 0) {
@@ -111,11 +58,18 @@ export function useOnboardingNavigation() {
     navigate({ to: '/', replace: true })
   }
 
+  // 온보딩 완료 후 홈으로 이동 (마지막 단계에서 호출, state 업데이트 전 값을 override로 전달)
+  const completeAndGoHome = async (relationshipStatus: RelationshipStatus) => {
+    const success = await completeOnboarding({ relationshipStatus })
+    if (success) await goToHome()
+  }
+
   return {
     goToNextStep,
     goToPreviousStep,
     goToStep,
     goToHome,
+    completeAndGoHome,
     currentStepIndex: getCurrentStepIndex(),
     totalSteps: ONBOARDING_STEPS.length,
     ONBOARDING_STEPS,

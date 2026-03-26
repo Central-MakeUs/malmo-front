@@ -13,11 +13,11 @@ import {
   ResultTextBlockSection,
   toFeatureTabs,
 } from '@/features/attachment/ui/result/attachment-result-sections'
+import { usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
-import { useGoBack } from '@/shared/navigation/use-go-back'
 import loveTypeService from '@/shared/services/love-type.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
@@ -33,8 +33,8 @@ interface UserInfo {
 interface AttachmentResultContentProps {
   userInfo: UserInfo | null | undefined
   type: 'my' | 'partner'
+  from?: 'home' | 'chat' | 'my-page' | 'my-result-preview' | 'partner-result-preview'
 }
-
 interface ResultDisplayMeta {
   accentPalette: AccentPalette
   titleText: string
@@ -106,11 +106,27 @@ function getResultDisplayMeta({
   }
 }
 
-export function AttachmentResultContent({ userInfo, type }: AttachmentResultContentProps) {
+export function AttachmentResultContent({ userInfo, type, from }: AttachmentResultContentProps) {
   const navigate = useNavigate()
-  const goBack = useGoBack()
+  const { exit } = usePersonalityFlow()
   const isMyResult = type === 'my'
-  const ctaText = '상담하러 가기'
+  const ctaText =
+    from === 'chat'
+      ? '상담하러 가기'
+      : from === 'my-page'
+        ? '마이페이지로 가기'
+        : from === 'my-result-preview'
+          ? '프로필 이어서 완성하기'
+          : from === 'partner-result-preview'
+            ? '홈으로 돌아가기'
+            : '홈으로 가기'
+  const handleCta = () => {
+    if (from === 'partner-result-preview') {
+      navigate({ to: '/', replace: true })
+    } else {
+      exit()
+    }
+  }
 
   if (!userInfo?.loveTypeCategory) {
     return (
@@ -140,7 +156,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
           <p className="mb-4 text-red-500">애착 유형 데이터를 찾을 수 없습니다.</p>
           <Button
             text="홈으로 이동"
-            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, () => goBack())}
+            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, () => exit())}
           />
         </div>
       </div>
@@ -149,7 +165,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
 
   const isWarmType = loveTypeCatalogItem.isWarmType
   const personalityType = userInfo.personalityType?.toUpperCase() ?? ''
-  const displayName = userInfo.nickname || (isMyResult ? '사용자' : '연인')
+  const displayName = userInfo.nickname || (isMyResult ? '사용자' : '상대')
   const shouldFetchDetail = personalityType.length > 0
 
   const { data: detailData } = useQuery({
@@ -184,14 +200,10 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
     isWarmType,
   })
 
-  const handleClose = () => {
-    goBack()
-  }
-
   return (
     <Screen>
       <Screen.Content className="no-bounce-scroll flex flex-col bg-gray-neutral-50">
-        <DetailHeaderBar className="bg-gray-neutral-50" />
+        <DetailHeaderBar className="bg-gray-neutral-50" showBackButton={true} onBackClick={handleCta} />
 
         <div className="px-4">
           <div className="relative">
@@ -210,7 +222,9 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
               <div className="absolute inset-x-0 bottom-0 h-[96px] bg-gradient-to-t from-white/12 to-transparent" />
 
               <div className="absolute top-[22px] right-[22px] left-[22px] z-10">
-                <p className={cn('heading2-bold', accentPalette.accentTextClass)}>{displayName}님은</p>
+                <p className={cn('heading2-bold', accentPalette.accentTextClass)}>
+                  {isMyResult ? `${displayName}님은` : '상대는'}
+                </p>
                 <h1 className="title1-bold mt-2 text-gray-iron-900">{titleText}</h1>
                 <p className="body3-medium mt-1 max-w-[230px] [word-break:keep-all] whitespace-pre-line text-gray-iron-900">
                   {summary}
@@ -269,7 +283,7 @@ export function AttachmentResultContent({ userInfo, type }: AttachmentResultCont
           <Button
             text={ctaText}
             className="h-[56px] rounded-[12px]"
-            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, handleClose)}
+            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, handleCta)}
           />
         </div>
       </Screen.Content>

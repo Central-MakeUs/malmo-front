@@ -5,6 +5,8 @@ import {
   UpdateMemberTermsRequestDto,
   UpdateStartLoveDateRequestDto,
   LoveTypeTestResult,
+  CreatePartnerProfileRequestDto,
+  UpdatePartnerProfileRequestDto,
 } from '@data/user-api-axios/api'
 
 import { queryKeys } from './query-keys'
@@ -40,8 +42,10 @@ class MemberService extends MembersApi {
       },
       throwOnError: (error: any) => {
         // axios 에러와 일반 에러 구조 모두 고려
+        const status = error?.response?.status
         const errorCode = error?.response?.data?.code
-        return errorCode !== 40301
+        // 40301: 파트너 없음 (403), 400: 온보딩 직후 파트너 미연결 상태
+        return errorCode !== 40301 && status !== 400
       },
     }
   }
@@ -99,6 +103,30 @@ class MemberService extends MembersApi {
       },
       onError: () => {
         toast.error('회원 탈퇴 중 오류가 발생했습니다')
+      },
+    }
+  }
+
+  createPartnerProfileMutation() {
+    return {
+      mutationFn: async (body: CreatePartnerProfileRequestDto) => {
+        const { data } = await this.createPartnerProfile({ createPartnerProfileRequestDto: body })
+        return data
+      },
+      onError: () => {
+        toast.error('상대 프로필 등록 중 오류가 발생했습니다')
+      },
+    }
+  }
+
+  updatePartnerProfileMutation() {
+    return {
+      mutationFn: async (body: UpdatePartnerProfileRequestDto) => {
+        const { data } = await this.updatePartnerProfile({ updatePartnerProfileRequestDto: body })
+        return data
+      },
+      onError: () => {
+        toast.error('상대 프로필 수정 중 오류가 발생했습니다')
       },
     }
   }

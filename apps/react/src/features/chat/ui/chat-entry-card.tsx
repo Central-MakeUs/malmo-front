@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 
 import momoIdle from '@/assets/images/momo-home-idle.png'
+import { useAuth } from '@/features/auth'
+import { getMissingPersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import chatService from '@/shared/services/chat.service'
@@ -9,10 +11,19 @@ import chatService from '@/shared/services/chat.service'
 export function ChatEntryCard() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { userInfo } = useAuth()
   const { mutateAsync: createChatRoom, isPending } = useMutation(chatService.createChatRoomMutation())
 
   const handleChatClick = wrapWithTracking(BUTTON_NAMES.START_NEW_CHAT, CATEGORIES.MAIN, async () => {
     if (isPending) return
+
+    const hasUserPersonality = !!userInfo.personalityType && !!userInfo.loveTypeCategory
+    const hasPartnerPersonality = !!userInfo.otherPersonalityType && !!userInfo.partnerLoveTypeCategory
+
+    if (!hasUserPersonality || !hasPartnerPersonality) {
+      navigate({ to: '/personality-flow-loading', search: { flow: getMissingPersonalityFlow(userInfo) } })
+      return
+    }
 
     const created = await createChatRoom()
     const createdId = created?.chatRoomId
@@ -26,7 +37,7 @@ export function ChatEntryCard() {
       createdAt: new Date().toISOString(),
     })
 
-    navigate({ to: '/chat', search: { chatId: createdId } })
+    navigate({ to: '/chat' })
   })
 
   return (
@@ -35,7 +46,7 @@ export function ChatEntryCard() {
       <h1 className="heading2-semibold text-gray-iron-950">연애 고민 상담</h1>
 
       {/* 연애고민상담 박스 */}
-      <div className="mt-3 rounded-[10px] bg-malmo-rasberry-25 px-4 pt-4 pb-[18px]">
+      <div className="mt-3 mb-4 rounded-[10px] bg-malmo-rasberry-25 px-4 pt-4 pb-[18px]">
         <div className="flex h-full flex-col justify-between">
           {/* 상단 컨텐츠 */}
           <div className="flex items-start justify-between">
