@@ -30,7 +30,7 @@ export function createRouter() {
     defaultStructuralSharing: true,
     defaultNotFoundComponent: () => <NotFound />,
     defaultErrorComponent: ({ error }) => (
-      <div className="main-scrollable app-safe flex h-screen w-full flex-col overflow-hidden bg-white">
+      <div className="main-scrollable flex h-screen w-full flex-col overflow-hidden bg-white">
         <main className="relative mx-auto flex min-h-0 w-full max-w-[600px] flex-1 flex-col">
           <RouterError error={error} />
         </main>

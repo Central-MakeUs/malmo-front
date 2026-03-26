@@ -106,7 +106,9 @@ export function initApi(): AxiosInstance {
       const { response } = error
 
       // API 에러 추적
-      if (response) {
+      // 40017: "이미 상대 프로필이 등록되어 있습니다" - POST→PATCH upsert 시 예상되는 응답이므로 에러 추적 제외
+      const isExpectedBusinessError = response?.data?.code === 40017
+      if (response && !isExpectedBusinessError) {
         const severity =
           response.status >= 500
             ? 'critical'

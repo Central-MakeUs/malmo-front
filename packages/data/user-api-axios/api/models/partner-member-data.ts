@@ -13,48 +13,29 @@
  */
 
 /**
- * 파트너 멤버 정보 응답 데이터
+ * [Deprecated] 상대 프로필 조회 응답 데이터
  */
 export interface PartnerMemberData {
   /**
-   * 멤버 상태
+   * 상대방 MBTI
    */
-  memberState?: PartnerMemberDataMemberStateEnum
+  personalityType?: string
   /**
-   * 애착 유형
+   * 상대방 애착 유형
    */
   loveTypeCategory?: PartnerMemberDataLoveTypeCategoryEnum
   /**
-   * 회피 비율
+   * 애착 유형 설명
    */
-  avoidanceRate?: number
-  /**
-   * 불안 비율
-   */
-  anxietyRate?: number
-  /**
-   * 닉네임
-   */
-  nickname?: string
-  /**
-   * 디데이 변경 이력 여부
-   */
-  isStartLoveDateUpdated?: boolean
+  description?: string
 }
 
-export const PartnerMemberDataMemberStateEnum = {
-  BeforeOnboarding: 'BEFORE_ONBOARDING',
-  Alive: 'ALIVE',
-  Deleted: 'DELETED',
-} as const
-
-export type PartnerMemberDataMemberStateEnum =
-  (typeof PartnerMemberDataMemberStateEnum)[keyof typeof PartnerMemberDataMemberStateEnum]
 export const PartnerMemberDataLoveTypeCategoryEnum = {
   StableType: 'STABLE_TYPE',
   AnxietyType: 'ANXIETY_TYPE',
   AvoidanceType: 'AVOIDANCE_TYPE',
   ConfusionType: 'CONFUSION_TYPE',
+  Unknown: 'UNKNOWN',
 } as const
 
 export type PartnerMemberDataLoveTypeCategoryEnum =

@@ -1,9 +1,9 @@
-import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { useAuth } from '@/features/auth'
 import { MbtiForm } from '@/features/onboarding/ui/mbti-form'
 import { useMemberUpdateMutation } from '@/features/profile'
-import { personalityFlowSearchSchema } from '@/features/profile/lib/personality-flow'
+import { personalityFlowSearchSchema, usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { useGoBack } from '@/shared/navigation/use-go-back'
@@ -17,25 +17,18 @@ export const Route = createFileRoute('/mbti/')({
 })
 
 function MbtiEditPage() {
-  const navigate = useNavigate()
   const goBack = useGoBack()
   const { userInfo } = useAuth()
-  const { flow, chatId } = useSearch({ from: Route.id })
+  const { flow, next } = usePersonalityFlow()
 
   const updateMutation = useMemberUpdateMutation({
     onSuccess: () => {
-      if (flow === 'my-personality') {
-        navigate({ to: '/my-attachment-select', search: { flow } })
+      if (!flow) {
+        toast.success('내 성향이 변경되었어요!')
+        goBack()
         return
       }
-
-      if (flow === 'chat-entry') {
-        navigate({ to: '/my-attachment-select', search: { flow, chatId } })
-        return
-      }
-
-      toast.success('내 성향이 변경되었어요!')
-      goBack()
+      next()
     },
     errorMessage: '내 성향 변경 중 오류가 발생했습니다',
   })
@@ -53,7 +46,7 @@ function MbtiEditPage() {
   return (
     <MbtiForm
       headerTitle={isFlowMode ? undefined : '내 성향'}
-      navCenter={getChatEntryProgressBar(flow === 'chat-entry', 1)}
+      navCenter={getChatEntryProgressBar(flow === 'full-flow', 1)}
       contentTopSlot={getPersonalityStepDots(flow === 'my-personality', 1)}
       title={
         <>

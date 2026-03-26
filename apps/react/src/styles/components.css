@@ -16,6 +16,12 @@
   .has-bottom-nav {
     padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom));
   }
+
+  .emoji-toss {
+    font-family: var(--font-emoji-toss);
+    line-height: 1;
+  }
+
   /* Title 1 - 28px/38px */
   .title1-bold {
     font-family: var(--font-pretendard);

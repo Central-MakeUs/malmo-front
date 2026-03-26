@@ -55,7 +55,7 @@ function RelationshipStatusPage() {
       description="이후에 관계 정보가 바뀌면 변경할 수 있어요"
       options={RELATIONSHIP_OPTIONS}
       initialValue={data.relationshipStatus}
-      submitText="다음"
+      submitText="시작하기"
       onSubmit={handleNext}
       onBack={handleBack}
     />

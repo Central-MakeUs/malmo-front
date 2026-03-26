@@ -28,6 +28,7 @@ export default function App() {
   const [isAuthReady, setIsAuthReady] = useState(false)
 
   const webviewUrl = process.env.EXPO_PUBLIC_LOCAL_URL
+  // const webviewUrl = process.env.EXPO_PUBLIC_WEB_VIEW_URL
   if (!webviewUrl) throw new Error('Webview URL is not set')
 
   useEffect(() => {

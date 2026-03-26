@@ -12,6 +12,9 @@
  * Do not edit the class manually.
  */
 
+/**
+ * [Deprecated] 커플 연결 요청 DTO
+ */
 export interface CoupleLinkRequestDto {
   coupleCode: string
 }

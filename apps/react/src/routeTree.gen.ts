@@ -16,6 +16,7 @@ import { Route as ChatLayoutImport } from './app/chat/layout'
 import { Route as PageImport } from './app/page'
 import { Route as TutorialPageImport } from './app/tutorial/page'
 import { Route as RelationshipStatusPageImport } from './app/relationship-status/page'
+import { Route as PersonalityFlowLoadingPageImport } from './app/personality-flow-loading/page'
 import { Route as PartnerStatusPageImport } from './app/partner-status/page'
 import { Route as PartnerResultPreviewPageImport } from './app/partner-result-preview/page'
 import { Route as PartnerMbtiPageImport } from './app/partner-mbti/page'
@@ -32,10 +33,7 @@ import { Route as AttachmentTestPageImport } from './app/attachment-test/page'
 import { Route as TermsPrivacyPolicyPageImport } from './app/terms/privacy-policy/page'
 import { Route as OnboardingTermsPageImport } from './app/onboarding/terms/page'
 import { Route as OnboardingRelationshipStatusPageImport } from './app/onboarding/relationship-status/page'
-import { Route as OnboardingPartnerMbtiPageImport } from './app/onboarding/partner-mbti/page'
 import { Route as OnboardingNicknamePageImport } from './app/onboarding/nickname/page'
-import { Route as OnboardingMbtiPageImport } from './app/onboarding/mbti/page'
-import { Route as OnboardingCompletePageImport } from './app/onboarding/complete/page'
 import { Route as MyPageProfilePageImport } from './app/my-page/profile/page'
 import { Route as MyPageAccountSettingsPageImport } from './app/my-page/account-settings/page'
 import { Route as HistoryDeletePageImport } from './app/history/delete/page'
@@ -74,6 +72,12 @@ const TutorialPageRoute = TutorialPageImport.update({
 const RelationshipStatusPageRoute = RelationshipStatusPageImport.update({
   id: '/relationship-status/',
   path: '/relationship-status/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const PersonalityFlowLoadingPageRoute = PersonalityFlowLoadingPageImport.update({
+  id: '/personality-flow-loading/',
+  path: '/personality-flow-loading/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -173,27 +177,9 @@ const OnboardingRelationshipStatusPageRoute = OnboardingRelationshipStatusPageIm
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
-const OnboardingPartnerMbtiPageRoute = OnboardingPartnerMbtiPageImport.update({
-  id: '/partner-mbti/',
-  path: '/partner-mbti/',
-  getParentRoute: () => OnboardingLayoutRoute,
-} as any)
-
 const OnboardingNicknamePageRoute = OnboardingNicknamePageImport.update({
   id: '/nickname/',
   path: '/nickname/',
-  getParentRoute: () => OnboardingLayoutRoute,
-} as any)
-
-const OnboardingMbtiPageRoute = OnboardingMbtiPageImport.update({
-  id: '/mbti/',
-  path: '/mbti/',
-  getParentRoute: () => OnboardingLayoutRoute,
-} as any)
-
-const OnboardingCompletePageRoute = OnboardingCompletePageImport.update({
-  id: '/complete/',
-  path: '/complete/',
   getParentRoute: () => OnboardingLayoutRoute,
 } as any)
 
@@ -361,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PartnerStatusPageImport
       parentRoute: typeof rootRoute
     }
+    '/personality-flow-loading/': {
+      id: '/personality-flow-loading/'
+      path: '/personality-flow-loading'
+      fullPath: '/personality-flow-loading'
+      preLoaderRoute: typeof PersonalityFlowLoadingPageImport
+      parentRoute: typeof rootRoute
+    }
     '/relationship-status/': {
       id: '/relationship-status/'
       path: '/relationship-status'
@@ -417,32 +410,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MyPageProfilePageImport
       parentRoute: typeof rootRoute
     }
-    '/onboarding/complete/': {
-      id: '/onboarding/complete/'
-      path: '/complete'
-      fullPath: '/onboarding/complete'
-      preLoaderRoute: typeof OnboardingCompletePageImport
-      parentRoute: typeof OnboardingLayoutImport
-    }
-    '/onboarding/mbti/': {
-      id: '/onboarding/mbti/'
-      path: '/mbti'
-      fullPath: '/onboarding/mbti'
-      preLoaderRoute: typeof OnboardingMbtiPageImport
-      parentRoute: typeof OnboardingLayoutImport
-    }
     '/onboarding/nickname/': {
       id: '/onboarding/nickname/'
       path: '/nickname'
       fullPath: '/onboarding/nickname'
       preLoaderRoute: typeof OnboardingNicknamePageImport
-      parentRoute: typeof OnboardingLayoutImport
-    }
-    '/onboarding/partner-mbti/': {
-      id: '/onboarding/partner-mbti/'
-      path: '/partner-mbti'
-      fullPath: '/onboarding/partner-mbti'
-      preLoaderRoute: typeof OnboardingPartnerMbtiPageImport
       parentRoute: typeof OnboardingLayoutImport
     }
     '/onboarding/relationship-status/': {
@@ -500,19 +472,13 @@ const ChatLayoutRouteChildren: ChatLayoutRouteChildren = {
 const ChatLayoutRouteWithChildren = ChatLayoutRoute._addFileChildren(ChatLayoutRouteChildren)
 
 interface OnboardingLayoutRouteChildren {
-  OnboardingCompletePageRoute: typeof OnboardingCompletePageRoute
-  OnboardingMbtiPageRoute: typeof OnboardingMbtiPageRoute
   OnboardingNicknamePageRoute: typeof OnboardingNicknamePageRoute
-  OnboardingPartnerMbtiPageRoute: typeof OnboardingPartnerMbtiPageRoute
   OnboardingRelationshipStatusPageRoute: typeof OnboardingRelationshipStatusPageRoute
   OnboardingTermsPageRoute: typeof OnboardingTermsPageRoute
 }
 
 const OnboardingLayoutRouteChildren: OnboardingLayoutRouteChildren = {
-  OnboardingCompletePageRoute: OnboardingCompletePageRoute,
-  OnboardingMbtiPageRoute: OnboardingMbtiPageRoute,
   OnboardingNicknamePageRoute: OnboardingNicknamePageRoute,
-  OnboardingPartnerMbtiPageRoute: OnboardingPartnerMbtiPageRoute,
   OnboardingRelationshipStatusPageRoute: OnboardingRelationshipStatusPageRoute,
   OnboardingTermsPageRoute: OnboardingTermsPageRoute,
 }
@@ -536,6 +502,7 @@ export interface FileRoutesByFullPath {
   '/partner-mbti': typeof PartnerMbtiPageRoute
   '/partner-result-preview': typeof PartnerResultPreviewPageRoute
   '/partner-status': typeof PartnerStatusPageRoute
+  '/personality-flow-loading': typeof PersonalityFlowLoadingPageRoute
   '/relationship-status': typeof RelationshipStatusPageRoute
   '/tutorial': typeof TutorialPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
@@ -544,10 +511,7 @@ export interface FileRoutesByFullPath {
   '/history/delete': typeof HistoryDeletePageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
   '/my-page/profile': typeof MyPageProfilePageRoute
-  '/onboarding/complete': typeof OnboardingCompletePageRoute
-  '/onboarding/mbti': typeof OnboardingMbtiPageRoute
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
-  '/onboarding/partner-mbti': typeof OnboardingPartnerMbtiPageRoute
   '/onboarding/relationship-status': typeof OnboardingRelationshipStatusPageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
   '/terms/privacy-policy': typeof TermsPrivacyPolicyPageRoute
@@ -571,6 +535,7 @@ export interface FileRoutesByTo {
   '/partner-mbti': typeof PartnerMbtiPageRoute
   '/partner-result-preview': typeof PartnerResultPreviewPageRoute
   '/partner-status': typeof PartnerStatusPageRoute
+  '/personality-flow-loading': typeof PersonalityFlowLoadingPageRoute
   '/relationship-status': typeof RelationshipStatusPageRoute
   '/tutorial': typeof TutorialPageRoute
   '/attachment-test/question': typeof AttachmentTestQuestionPageRoute
@@ -579,10 +544,7 @@ export interface FileRoutesByTo {
   '/history/delete': typeof HistoryDeletePageRoute
   '/my-page/account-settings': typeof MyPageAccountSettingsPageRoute
   '/my-page/profile': typeof MyPageProfilePageRoute
-  '/onboarding/complete': typeof OnboardingCompletePageRoute
-  '/onboarding/mbti': typeof OnboardingMbtiPageRoute
   '/onboarding/nickname': typeof OnboardingNicknamePageRoute
-  '/onboarding/partner-mbti': typeof OnboardingPartnerMbtiPageRoute
   '/onboarding/relationship-status': typeof OnboardingRelationshipStatusPageRoute
   '/onboarding/terms': typeof OnboardingTermsPageRoute
   '/terms/privacy-policy': typeof TermsPrivacyPolicyPageRoute
@@ -608,6 +570,7 @@ export interface FileRoutesById {
   '/partner-mbti/': typeof PartnerMbtiPageRoute
   '/partner-result-preview/': typeof PartnerResultPreviewPageRoute
   '/partner-status/': typeof PartnerStatusPageRoute
+  '/personality-flow-loading/': typeof PersonalityFlowLoadingPageRoute
   '/relationship-status/': typeof RelationshipStatusPageRoute
   '/tutorial/': typeof TutorialPageRoute
   '/attachment-test/question/': typeof AttachmentTestQuestionPageRoute
@@ -616,10 +579,7 @@ export interface FileRoutesById {
   '/history/delete/': typeof HistoryDeletePageRoute
   '/my-page/account-settings/': typeof MyPageAccountSettingsPageRoute
   '/my-page/profile/': typeof MyPageProfilePageRoute
-  '/onboarding/complete/': typeof OnboardingCompletePageRoute
-  '/onboarding/mbti/': typeof OnboardingMbtiPageRoute
   '/onboarding/nickname/': typeof OnboardingNicknamePageRoute
-  '/onboarding/partner-mbti/': typeof OnboardingPartnerMbtiPageRoute
   '/onboarding/relationship-status/': typeof OnboardingRelationshipStatusPageRoute
   '/onboarding/terms/': typeof OnboardingTermsPageRoute
   '/terms/privacy-policy/': typeof TermsPrivacyPolicyPageRoute
@@ -646,6 +606,7 @@ export interface FileRouteTypes {
     | '/partner-mbti'
     | '/partner-result-preview'
     | '/partner-status'
+    | '/personality-flow-loading'
     | '/relationship-status'
     | '/tutorial'
     | '/attachment-test/question'
@@ -654,10 +615,7 @@ export interface FileRouteTypes {
     | '/history/delete'
     | '/my-page/account-settings'
     | '/my-page/profile'
-    | '/onboarding/complete'
-    | '/onboarding/mbti'
     | '/onboarding/nickname'
-    | '/onboarding/partner-mbti'
     | '/onboarding/relationship-status'
     | '/onboarding/terms'
     | '/terms/privacy-policy'
@@ -680,6 +638,7 @@ export interface FileRouteTypes {
     | '/partner-mbti'
     | '/partner-result-preview'
     | '/partner-status'
+    | '/personality-flow-loading'
     | '/relationship-status'
     | '/tutorial'
     | '/attachment-test/question'
@@ -688,10 +647,7 @@ export interface FileRouteTypes {
     | '/history/delete'
     | '/my-page/account-settings'
     | '/my-page/profile'
-    | '/onboarding/complete'
-    | '/onboarding/mbti'
     | '/onboarding/nickname'
-    | '/onboarding/partner-mbti'
     | '/onboarding/relationship-status'
     | '/onboarding/terms'
     | '/terms/privacy-policy'
@@ -715,6 +671,7 @@ export interface FileRouteTypes {
     | '/partner-mbti/'
     | '/partner-result-preview/'
     | '/partner-status/'
+    | '/personality-flow-loading/'
     | '/relationship-status/'
     | '/tutorial/'
     | '/attachment-test/question/'
@@ -723,10 +680,7 @@ export interface FileRouteTypes {
     | '/history/delete/'
     | '/my-page/account-settings/'
     | '/my-page/profile/'
-    | '/onboarding/complete/'
-    | '/onboarding/mbti/'
     | '/onboarding/nickname/'
-    | '/onboarding/partner-mbti/'
     | '/onboarding/relationship-status/'
     | '/onboarding/terms/'
     | '/terms/privacy-policy/'
@@ -751,6 +705,7 @@ export interface RootRouteChildren {
   PartnerMbtiPageRoute: typeof PartnerMbtiPageRoute
   PartnerResultPreviewPageRoute: typeof PartnerResultPreviewPageRoute
   PartnerStatusPageRoute: typeof PartnerStatusPageRoute
+  PersonalityFlowLoadingPageRoute: typeof PersonalityFlowLoadingPageRoute
   RelationshipStatusPageRoute: typeof RelationshipStatusPageRoute
   TutorialPageRoute: typeof TutorialPageRoute
   AttachmentTestQuestionPageRoute: typeof AttachmentTestQuestionPageRoute
@@ -778,6 +733,7 @@ const rootRouteChildren: RootRouteChildren = {
   PartnerMbtiPageRoute: PartnerMbtiPageRoute,
   PartnerResultPreviewPageRoute: PartnerResultPreviewPageRoute,
   PartnerStatusPageRoute: PartnerStatusPageRoute,
+  PersonalityFlowLoadingPageRoute: PersonalityFlowLoadingPageRoute,
   RelationshipStatusPageRoute: RelationshipStatusPageRoute,
   TutorialPageRoute: TutorialPageRoute,
   AttachmentTestQuestionPageRoute: AttachmentTestQuestionPageRoute,
@@ -812,6 +768,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/partner-mbti/",
         "/partner-result-preview/",
         "/partner-status/",
+        "/personality-flow-loading/",
         "/relationship-status/",
         "/tutorial/",
         "/attachment-test/question/",
@@ -837,10 +794,7 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/onboarding": {
       "filePath": "onboarding/layout.tsx",
       "children": [
-        "/onboarding/complete/",
-        "/onboarding/mbti/",
         "/onboarding/nickname/",
-        "/onboarding/partner-mbti/",
         "/onboarding/relationship-status/",
         "/onboarding/terms/"
       ]
@@ -885,6 +839,9 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/partner-status/": {
       "filePath": "partner-status/page.tsx"
     },
+    "/personality-flow-loading/": {
+      "filePath": "personality-flow-loading/page.tsx"
+    },
     "/relationship-status/": {
       "filePath": "relationship-status/page.tsx"
     },
@@ -911,20 +868,8 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     "/my-page/profile/": {
       "filePath": "my-page/profile/page.tsx"
     },
-    "/onboarding/complete/": {
-      "filePath": "onboarding/complete/page.tsx",
-      "parent": "/onboarding"
-    },
-    "/onboarding/mbti/": {
-      "filePath": "onboarding/mbti/page.tsx",
-      "parent": "/onboarding"
-    },
     "/onboarding/nickname/": {
       "filePath": "onboarding/nickname/page.tsx",
-      "parent": "/onboarding"
-    },
-    "/onboarding/partner-mbti/": {
-      "filePath": "onboarding/partner-mbti/page.tsx",
       "parent": "/onboarding"
     },
     "/onboarding/relationship-status/": {
