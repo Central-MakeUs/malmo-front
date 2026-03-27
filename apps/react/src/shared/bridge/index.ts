@@ -19,6 +19,8 @@ export interface WebBridge extends BridgeStore<WebBridge> {
   openWebView(url: string): Promise<void>
   getIntroSeen(): Promise<boolean>
   setIntroSeen(): Promise<void>
+  getPersonalityRenewalModalSeen(): Promise<boolean>
+  setPersonalityRenewalModalSeen(): Promise<void>
   setModalOpen(isOpen: boolean): Promise<void>
   [key: string]: any
 }
@@ -49,6 +51,12 @@ export const bridge = linkBridge<WebBridge>({
     setIntroSeen: async () => {
       // 웹에서는 localStorage 사용
       localStorage.setItem('intro_seen', 'true')
+    },
+    getPersonalityRenewalModalSeen: async () => {
+      return localStorage.getItem('personality_renewal_modal_seen') === 'true'
+    },
+    setPersonalityRenewalModalSeen: async () => {
+      localStorage.setItem('personality_renewal_modal_seen', 'true')
     },
     setModalOpen: async () => {},
   },

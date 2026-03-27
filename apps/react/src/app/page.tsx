@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import malmoLogo from '@/assets/images/malmo-logo-small.png'
 import { getAttachmentType, AttachmentTypeCards } from '@/features/attachment'
+import { PersonalityRenewalModal } from '@/features/attachment/ui/main/personality-renewal-modal'
 import { useAuth } from '@/features/auth'
 import { ChatEntryCard } from '@/features/chat/ui/chat-entry-card'
 import { useChatHistoryQuery } from '@/features/history/hooks/use-chat-history-query'
@@ -75,6 +76,8 @@ function HomePage() {
 
   return (
     <Screen>
+      <PersonalityRenewalModal />
+
       <Screen.Header behavior="overlay" className="bg-white">
         <div className="pt-safe-top flex h-[60px] items-center justify-between px-5">
           <img src={malmoLogo} alt="말모 로고" className="h-8 w-[94px]" />
