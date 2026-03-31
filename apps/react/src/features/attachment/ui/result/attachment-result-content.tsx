@@ -2,7 +2,7 @@ import { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Puzzle, Zap } from 'lucide-react'
-import { useLayoutEffect, useRef, type CSSProperties } from 'react'
+import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 
 import { getLoveTypeCatalogItem } from '@/features/attachment/models/love-type-catalog'
 import type { AccentPalette } from '@/features/attachment/ui/result/attachment-result-sections'
@@ -48,6 +48,9 @@ interface ResultDisplayMeta {
 const STABLE_TYPE_FEATURE_EMOJIS = ['🤝', '💌', '💡', '🍀'] as const
 const NON_STABLE_TYPE_FEATURE_EMOJIS = ['☠️', '💦', '🕳️', '🌀'] as const
 const BEHAVIOR_PATTERN_EMOJIS = ['❤️', '🌟', '🤔', '💥'] as const
+const RESULT_HERO_HEIGHT = 400
+const RESULT_HERO_IMAGE_ASPECT_RATIO = 1029 / 1202
+const RESULT_HERO_TEXT_HORIZONTAL_PADDING = 32
 const RESULT_THEME: Record<
   'warm' | 'cool',
   {
@@ -109,6 +112,8 @@ export function AttachmentResultContent({ userInfo, type, from: _from }: Attachm
   const navigate = useNavigate()
   const goBack = useGoBack()
   const contentRef = useRef<HTMLDivElement>(null)
+  const heroSectionRef = useRef<HTMLElement>(null)
+  const [heroHorizontalInset, setHeroHorizontalInset] = useState(RESULT_HERO_TEXT_HORIZONTAL_PADDING)
   const isMyResult = type === 'my'
   const ctaText = '상담하러 가기'
 
@@ -122,6 +127,27 @@ export function AttachmentResultContent({ userInfo, type, from: _from }: Attachm
     })
 
     return () => cancelAnimationFrame(frame)
+  }, [])
+
+  useLayoutEffect(() => {
+    const element = heroSectionRef.current
+    if (!element) return
+
+    const updateInset = () => {
+      const containerWidth = element.clientWidth
+      const renderedImageWidth = Math.min(containerWidth, RESULT_HERO_HEIGHT * RESULT_HERO_IMAGE_ASPECT_RATIO)
+      const sideLetterbox = (containerWidth - renderedImageWidth) / 2
+      const nextInset = sideLetterbox + RESULT_HERO_TEXT_HORIZONTAL_PADDING
+
+      setHeroHorizontalInset((prev) => (Math.abs(prev - nextInset) < 0.5 ? prev : nextInset))
+    }
+
+    updateInset()
+
+    const resizeObserver = new ResizeObserver(updateInset)
+    resizeObserver.observe(element)
+
+    return () => resizeObserver.disconnect()
   }, [])
 
   if (!userInfo?.loveTypeCategory) {
@@ -207,14 +233,17 @@ export function AttachmentResultContent({ userInfo, type, from: _from }: Attachm
 
         <div className="px-4">
           <div className="relative">
-            <section className="relative h-[400px] w-full">
+            <section ref={heroSectionRef} className="relative h-[400px] w-full">
               <img
                 src={loveTypeCatalogItem.resultImage}
                 alt={`${loveTypeCatalogItem.subtype} 결과 카드`}
                 className="absolute inset-0 h-full w-full object-contain object-center"
               />
 
-              <div className="absolute top-[30px] right-[32px] left-[32px] z-10">
+              <div
+                className="absolute top-[30px] z-10"
+                style={{ left: `${heroHorizontalInset}px`, right: `${heroHorizontalInset}px` }}
+              >
                 <p className={cn('heading2-bold', accentPalette.accentTextClass)}>{displayName}님은</p>
                 <h1 className="title1-bold mt-2 text-gray-iron-900">{titleText}</h1>
                 <p className="body3-medium mt-1 max-w-[230px] [word-break:keep-all] whitespace-pre-line text-gray-iron-600">
