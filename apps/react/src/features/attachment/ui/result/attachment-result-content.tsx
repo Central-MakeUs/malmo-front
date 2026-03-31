@@ -2,6 +2,7 @@ import { MemberDataLoveTypeCategoryEnum } from '@data/user-api-axios/api'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Puzzle, Zap } from 'lucide-react'
+import { useLayoutEffect, useRef, type CSSProperties } from 'react'
 
 import { getLoveTypeCatalogItem } from '@/features/attachment/models/love-type-catalog'
 import type { AccentPalette } from '@/features/attachment/ui/result/attachment-result-sections'
@@ -13,16 +14,14 @@ import {
   ResultTextBlockSection,
   toFeatureTabs,
 } from '@/features/attachment/ui/result/attachment-result-sections'
-import { usePersonalityFlow } from '@/features/profile/lib/personality-flow'
 import { wrapWithTracking } from '@/shared/analytics'
 import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { Screen } from '@/shared/layout/screen'
 import { cn } from '@/shared/lib/cn'
+import { useGoBack } from '@/shared/navigation/use-go-back'
 import loveTypeService from '@/shared/services/love-type.service'
 import { Button } from '@/shared/ui'
 import { DetailHeaderBar } from '@/shared/ui/header-bar'
-
-import type { CSSProperties } from 'react'
 
 interface UserInfo {
   nickname?: string
@@ -106,27 +105,24 @@ function getResultDisplayMeta({
   }
 }
 
-export function AttachmentResultContent({ userInfo, type, from }: AttachmentResultContentProps) {
+export function AttachmentResultContent({ userInfo, type, from: _from }: AttachmentResultContentProps) {
   const navigate = useNavigate()
-  const { exit } = usePersonalityFlow()
+  const goBack = useGoBack()
+  const contentRef = useRef<HTMLDivElement>(null)
   const isMyResult = type === 'my'
-  const ctaText =
-    from === 'chat'
-      ? '상담하러 가기'
-      : from === 'my-page'
-        ? '마이페이지로 가기'
-        : from === 'my-result-preview'
-          ? '프로필 이어서 완성하기'
-          : from === 'partner-result-preview'
-            ? '홈으로 돌아가기'
-            : '홈으로 가기'
-  const handleCta = () => {
-    if (from === 'partner-result-preview') {
-      navigate({ to: '/', replace: true })
-    } else {
-      exit()
-    }
-  }
+  const ctaText = '상담하러 가기'
+
+  useLayoutEffect(() => {
+    const element = contentRef.current
+    if (!element) return
+
+    element.scrollTop = 0
+    const frame = requestAnimationFrame(() => {
+      element.scrollTop = 0
+    })
+
+    return () => cancelAnimationFrame(frame)
+  }, [])
 
   if (!userInfo?.loveTypeCategory) {
     return (
@@ -156,7 +152,7 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
           <p className="mb-4 text-red-500">애착 유형 데이터를 찾을 수 없습니다.</p>
           <Button
             text="홈으로 이동"
-            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, () => exit())}
+            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, () => goBack())}
           />
         </div>
       </div>
@@ -200,40 +196,35 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
     isWarmType,
   })
 
+  const handleClose = () => {
+    navigate({ to: '/chat' })
+  }
+
   return (
     <Screen>
-      <Screen.Content className="no-bounce-scroll flex flex-col bg-gray-neutral-50">
-        <DetailHeaderBar className="bg-gray-neutral-50" showBackButton={true} onBackClick={handleCta} />
+      <Screen.Content ref={contentRef} className="no-bounce-scroll flex flex-col bg-gray-neutral-100">
+        <DetailHeaderBar className="bg-gray-neutral-100" />
 
         <div className="px-4">
           <div className="relative">
-            <div
-              className="absolute inset-0 translate-x-[8px] translate-y-[8px] rounded-[28px]"
-              style={{ backgroundColor: accentPalette.accentMutedBg }}
-            />
-
-            <section className="relative h-[400px] overflow-hidden rounded-[28px] bg-white shadow-[0_8px_24px_0_rgba(19,19,22,0.06)]">
+            <section className="relative h-[400px] w-full">
               <img
                 src={loveTypeCatalogItem.resultImage}
                 alt={`${loveTypeCatalogItem.subtype} 결과 카드`}
                 className="absolute inset-0 h-full w-full object-contain object-center"
               />
-              <div className="absolute inset-x-0 top-0 h-[210px] bg-gradient-to-b from-white via-white/90 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 h-[96px] bg-gradient-to-t from-white/12 to-transparent" />
 
-              <div className="absolute top-[22px] right-[22px] left-[22px] z-10">
-                <p className={cn('heading2-bold', accentPalette.accentTextClass)}>
-                  {isMyResult ? `${displayName}님은` : '상대는'}
-                </p>
+              <div className="absolute top-[30px] right-[32px] left-[32px] z-10">
+                <p className={cn('heading2-bold', accentPalette.accentTextClass)}>{displayName}님은</p>
                 <h1 className="title1-bold mt-2 text-gray-iron-900">{titleText}</h1>
-                <p className="body3-medium mt-1 max-w-[230px] [word-break:keep-all] whitespace-pre-line text-gray-iron-900">
+                <p className="body3-medium mt-1 max-w-[230px] [word-break:keep-all] whitespace-pre-line text-gray-iron-600">
                   {summary}
                 </p>
               </div>
             </section>
           </div>
 
-          <div className="mt-6 space-y-6">
+          <div className="mt-[24px] space-y-[24px]">
             <ResultKeywordSection keywords={keywords} />
             <ResultFeatureSection
               title={resolvedPersonalityType ? `${resolvedPersonalityType} 특징` : '애착유형 특징'}
@@ -242,7 +233,7 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
           </div>
         </div>
 
-        <div className="mt-6 space-y-6 px-4">
+        <div className="mt-[24px] space-y-[24px] px-4">
           <ResultTextBlockSection
             title={behaviorTitle}
             accentPalette={accentPalette}
@@ -275,16 +266,18 @@ export function AttachmentResultContent({ userInfo, type, from }: AttachmentResu
           />
         </div>
 
-        <ResultGuideSection accentPalette={accentPalette} isWarmType={isWarmType} guides={datingGuides} />
+        <div className="mt-[40px] bg-white">
+          <ResultGuideSection accentPalette={accentPalette} isWarmType={isWarmType} guides={datingGuides} />
 
-        <ResultMatchSection title={matchTitle} bestMatches={bestMatches} worstMatches={worstMatches} />
+          <ResultMatchSection title={matchTitle} bestMatches={bestMatches} worstMatches={worstMatches} />
 
-        <div className="mt-[92px] px-5 pb-[calc(var(--safe-bottom)_+_20px)]">
-          <Button
-            text={ctaText}
-            className="h-[56px] rounded-[12px]"
-            onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, handleCta)}
-          />
+          <div className="mt-[92px] px-5 pb-[calc(var(--safe-bottom)_+_20px)]">
+            <Button
+              text={ctaText}
+              className="h-[56px] rounded-[12px]"
+              onClick={wrapWithTracking(BUTTON_NAMES.GO_HOME_FROM_RESULT, CATEGORIES.ATTACHMENT, handleClose)}
+            />
+          </div>
         </div>
       </Screen.Content>
     </Screen>
