@@ -69,7 +69,7 @@ export function toFeatureTabs(
 
 export function ResultKeywordSection({ keywords }: { keywords: string[] }) {
   return (
-    <section className="rounded-[24px] bg-white p-5">
+    <section className="rounded-[12px] bg-white p-5">
       <h2 className="heading2-bold text-gray-iron-800">나의 키워드</h2>
 
       <div className="mt-2 flex flex-nowrap gap-[3px] overflow-x-auto pb-[2px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -100,7 +100,7 @@ export function ResultFeatureSection({ title, tabs }: { title: string; tabs: Res
   const activeTab = tabs[selectedIndex]
 
   return (
-    <section className="rounded-[24px] bg-white px-5 pt-5 pb-6">
+    <section className="rounded-[12px] bg-white px-5 pt-5 pb-6">
       <h2 className="heading2-bold text-gray-iron-800">{title}</h2>
 
       <div className="mt-6 rounded-[18.5px] bg-gray-neutral-100 p-1">
@@ -114,7 +114,7 @@ export function ResultFeatureSection({ title, tabs }: { title: string; tabs: Res
                 type="button"
                 onClick={() => setSelectedIndex(index)}
                 className={cn(
-                  'flex-1 rounded-[50px] px-[14px] py-[4px] text-center',
+                  'flex flex-1 items-center justify-center rounded-[50px] px-[14px] py-[4px]',
                   isSelected ? 'bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.08)]' : 'bg-transparent'
                 )}
               >
@@ -154,8 +154,8 @@ export function ResultFeatureSection({ title, tabs }: { title: string; tabs: Res
                     className="h-full w-full transition-[background,border-radius]"
                     style={{
                       background: isSelected ? selectedGradient : FEATURE_CHART_UNSELECTED_GRADIENT,
-                      borderTopLeftRadius: isSelected ? '0px' : '8px',
-                      borderTopRightRadius: isSelected ? '0px' : '8px',
+                      borderTopLeftRadius: isSelected ? '0px' : '2px',
+                      borderTopRightRadius: isSelected ? '0px' : '2px',
                     }}
                   />
                 </div>
@@ -227,7 +227,7 @@ export function ResultTextBlockSection({
   if (!items.length) return null
 
   return (
-    <section className="overflow-hidden rounded-[24px] bg-white">
+    <section className="overflow-hidden rounded-[12px] bg-white">
       <div className={cn('relative h-[120px]', !headerStyle && accentPalette.accentSoftBgClass)} style={headerStyle}>
         <h2 className="heading2-bold absolute top-5 left-5 text-gray-iron-800">{title}</h2>
         <span className="absolute top-[43px] right-6 z-0 inline-flex h-[92px] w-[92px] items-center justify-center">
@@ -247,7 +247,7 @@ export function ResultTextBlockSection({
               </div>
               <div className="mt-3 flex gap-3">
                 <span className="w-[2px] shrink-0 self-stretch rounded-full bg-gray-neutral-200" aria-hidden />
-                <p className="body2-regular flex-1 [word-break:keep-all] text-gray-iron-600">
+                <p className="body2-reading-regular flex-1 [word-break:keep-all] text-gray-iron-600">
                   {toAttachmentResultLabel(item.description)}
                 </p>
               </div>
@@ -275,8 +275,8 @@ export function ResultGuideSection({
     : 'linear-gradient(180deg, #EC4665 0%, #F78EA2 100%)'
 
   return (
-    <section className="px-5 pt-12">
-      <h2 className="heading2-bold text-gray-iron-800">건강한 연애를 위한 가이드</h2>
+    <section className="bg-white px-5 pt-12">
+      <h2 className="heading2-bold text-center text-gray-iron-800">건강한 연애를 위한 가이드</h2>
 
       <div className="mt-6 grid gap-3">
         {guides.slice(0, 3).map((guide, index) => {
@@ -287,7 +287,7 @@ export function ResultGuideSection({
             <div
               key={`${title}-${index}`}
               className={cn(
-                'flex min-h-24 items-center rounded-[16px] px-5',
+                'flex h-24 items-center rounded-[16px] px-5',
                 index === 1 ? 'bg-gray-neutral-100' : accentPalette.accentSoftBgClass
               )}
             >
@@ -315,7 +315,7 @@ function MatchCard({ item, tone }: { item: LoveTypePersonalityTypeBlockData; ton
 
   return (
     <div
-      className="h-[182px] rounded-[16px] p-4"
+      className="h-[204px] rounded-[16px] px-5 pt-6 pb-4"
       style={{
         backgroundImage: `url(${matchCardBackgroundImage})`,
         backgroundSize: '100% 100%',
@@ -324,10 +324,10 @@ function MatchCard({ item, tone }: { item: LoveTypePersonalityTypeBlockData; ton
       }}
     >
       <HeartIcon className={cn('h-5 w-5', tone === 'best' ? '[&_path]:fill-[#EC4665]' : '[&_path]:fill-[#4E5968]')} />
-      <p className={cn('title2-bold mt-2', tone === 'best' ? 'text-malmo-rasberry-500' : 'text-gray-iron-800')}>
+      <p className={cn('heading2-bold mt-2', tone === 'best' ? 'text-malmo-rasberry-500' : 'text-gray-iron-800')}>
         {toAttachmentResultLabel(item.personalityType)}
       </p>
-      <p className="body3-regular mt-2 [word-break:keep-all] text-gray-iron-800">
+      <p className="body3-regular mt-4 [word-break:keep-all] text-gray-iron-800">
         {toAttachmentResultLabel(item.description)}
       </p>
     </div>
@@ -346,7 +346,7 @@ export function ResultMatchSection({
   if (!bestMatches.length && !worstMatches.length) return null
 
   return (
-    <section className="px-5 pt-[100px]">
+    <section className="bg-white px-5 pt-[100px]">
       <h2 className="heading2-bold text-center text-gray-iron-800">{title}</h2>
 
       {bestMatches.length > 0 && (
@@ -357,7 +357,7 @@ export function ResultMatchSection({
             </div>
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="mt-3 grid grid-cols-2 gap-[8px]">
             {bestMatches.slice(0, 2).map((item, index) => (
               <MatchCard key={`${item.personalityType || 'best'}-${index}`} item={item} tone="best" />
             ))}
@@ -373,7 +373,7 @@ export function ResultMatchSection({
             </div>
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-2">
+          <div className="mt-3 grid grid-cols-2 gap-[8px]">
             {worstMatches.slice(0, 2).map((item, index) => (
               <MatchCard key={`${item.personalityType || 'worst'}-${index}`} item={item} tone="worst" />
             ))}
