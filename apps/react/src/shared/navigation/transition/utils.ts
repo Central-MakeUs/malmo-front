@@ -44,6 +44,8 @@ const resolveDirection = (
     if (nextIndex > currentIndex) return 'forward'
   }
 
+  if (nextState?.forceDirection) return nextState.forceDirection
+
   return action === 'REPLACE' ? 'forward' : 'forward'
 }
 

@@ -2,6 +2,7 @@ import { SocialLoginType } from '@bridge/types'
 import {
   MemberDataMemberStateEnum,
   MemberDataLoveTypeCategoryEnum,
+  MemberDataPartnerLoveTypeCategoryEnum,
   MemberDataProviderEnum,
   MemberDataRelationshipStatusEnum,
 } from '@data/user-api-axios/api'
@@ -20,8 +21,8 @@ export type UserInfo = {
   memberState: MemberState
   provider?: MemberDataProviderEnum
   nickname?: string
-  startLoveDate?: string
   loveTypeCategory?: MemberDataLoveTypeCategoryEnum
+  partnerLoveTypeCategory?: MemberDataPartnerLoveTypeCategoryEnum
   relationshipStatus?: MemberDataRelationshipStatusEnum
   personalityType?: string
   otherPersonalityType?: string
@@ -52,8 +53,8 @@ const initialUserInfo: UserInfo = {
   memberState: null,
   provider: undefined,
   nickname: undefined,
-  startLoveDate: undefined,
   loveTypeCategory: undefined,
+  partnerLoveTypeCategory: undefined,
   relationshipStatus: undefined,
   personalityType: undefined,
   otherPersonalityType: undefined,
@@ -82,8 +83,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           memberState: memberInfo.data.data.memberState || null,
           provider: memberInfo.data.data.provider || undefined,
           nickname: memberInfo.data.data.nickname,
-          startLoveDate: memberInfo.data.data.startLoveDate || undefined,
           loveTypeCategory: memberInfo.data.data.loveTypeCategory || undefined,
+          partnerLoveTypeCategory: memberInfo.data.data.partnerLoveTypeCategory || undefined,
           relationshipStatus: memberInfo.data.data.relationshipStatus || undefined,
           personalityType: memberInfo.data.data.personalityType || undefined,
           otherPersonalityType: memberInfo.data.data.otherPersonalityType || undefined,

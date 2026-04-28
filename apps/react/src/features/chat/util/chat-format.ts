@@ -74,16 +74,21 @@ export const isSameTimestampMinute = (firstTimestamp?: string, secondTimestamp?:
  * 텍스트를 문장 단위로 분리한 후, 지정된 개수만큼 묶어 배열로 반환합니다.
  */
 export const groupSentences = (text: string, sentencesPerBubble: number = 3): string[] => {
-  const sentences = text.match(/[^.!?]+[.!?]*\s*/g) || [text]
-  const trimmedSentences = sentences.map((s) => s.trim()).filter((s) => s.length > 0)
+  const normalizedText = text.replace(/\r\n?/g, '\n').trim()
+  if (!normalizedText) return []
+
+  const sentenceSource = normalizedText.replace(/\n+/g, ' ')
+  const sentences = sentenceSource.match(/[^.!?]+[.!?]*\s*/g) || [sentenceSource]
+  const trimmedSentences = sentences.map((s) => s.trim())
 
   if (trimmedSentences.length === 0) {
-    return []
+    return [sentenceSource].map((sentence) => sentence.trim()).filter((sentence) => sentence.length > 0)
   }
 
+  const bubbleSize = Math.max(1, sentencesPerBubble)
   const bubbles: string[] = []
-  for (let i = 0; i < trimmedSentences.length; i += sentencesPerBubble) {
-    bubbles.push(trimmedSentences.slice(i, i + sentencesPerBubble).join(' '))
+  for (let i = 0; i < trimmedSentences.length; i += bubbleSize) {
+    bubbles.push(trimmedSentences.slice(i, i + bubbleSize).join(' '))
   }
   return bubbles
 }

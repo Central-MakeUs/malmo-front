@@ -64,7 +64,6 @@ export interface UserProperties {
   nickname?: string
   love_type_category?: string
   partner_connected?: boolean
-  anniversary_date?: string
   onboarding_completed?: boolean
   created_at?: string
   [key: string]: any

@@ -103,6 +103,14 @@ export const appBridge = bridge<AppBridgeState>(({ get, set }) => {
     async setIntroSeen(): Promise<void> {
       await AuthStorage.setIntroSeen()
     },
+
+    async getPersonalityRenewalModalSeen(): Promise<boolean> {
+      return await AuthStorage.getPersonalityRenewalModalSeen()
+    },
+
+    async setPersonalityRenewalModalSeen(): Promise<void> {
+      await AuthStorage.setPersonalityRenewalModalSeen()
+    },
   }
 
   return {
@@ -157,6 +165,16 @@ export const appSchema = postMessageSchema({
     },
   },
   setIntroSeen: {
+    validate: () => {
+      return {}
+    },
+  },
+  getPersonalityRenewalModalSeen: {
+    validate: () => {
+      return {}
+    },
+  },
+  setPersonalityRenewalModalSeen: {
     validate: () => {
       return {}
     },

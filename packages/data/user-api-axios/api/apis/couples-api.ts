@@ -45,10 +45,11 @@ import type { SwaggerErrorResponse } from '../models'
 export const CouplesApiAxiosParamCreator = function (configuration?: Configuration) {
   return {
     /**
-     * 커플 초대코드를 사용하여 커플을 연결합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 커플 초대코드를 사용하여 커플을 연결합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 커플 연결
      * @param {CoupleLinkRequestDto} coupleLinkRequestDto
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     linkCouple: async (
@@ -86,9 +87,10 @@ export const CouplesApiAxiosParamCreator = function (configuration?: Configurati
       }
     },
     /**
-     * 연결된 커플을 끊습니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 연결된 커플을 끊습니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 커플 연결 끊기
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     unlinkCouple: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
@@ -127,10 +129,11 @@ export const CouplesApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = CouplesApiAxiosParamCreator(configuration)
   return {
     /**
-     * 커플 초대코드를 사용하여 커플을 연결합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 커플 초대코드를 사용하여 커플을 연결합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 커플 연결
      * @param {CoupleLinkRequestDto} coupleLinkRequestDto
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async linkCouple(
@@ -150,9 +153,10 @@ export const CouplesApiFp = function (configuration?: Configuration) {
         )(axios, localVarOperationServerBasePath || basePath)
     },
     /**
-     * 연결된 커플을 끊습니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 연결된 커플을 끊습니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 커플 연결 끊기
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     async unlinkCouple(
@@ -180,10 +184,11 @@ export const CouplesApiFactory = function (configuration?: Configuration, basePa
   const localVarFp = CouplesApiFp(configuration)
   return {
     /**
-     * 커플 초대코드를 사용하여 커플을 연결합니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 커플 초대코드를 사용하여 커플을 연결합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 커플 연결
      * @param {CouplesApiLinkCoupleRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     linkCouple(
@@ -195,9 +200,10 @@ export const CouplesApiFactory = function (configuration?: Configuration, basePa
         .then((request) => request(axios, basePath))
     },
     /**
-     * 연결된 커플을 끊습니다. JWT 토큰이 필요합니다.
+     * [Deprecated] 연결된 커플을 끊습니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
      * @summary 커플 연결 끊기
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      */
     unlinkCouple(options?: RawAxiosRequestConfig): AxiosPromise<CoupleUnlinkSuccessResponse> {
@@ -218,10 +224,11 @@ export interface CouplesApiLinkCoupleRequest {
  */
 export class CouplesApi extends BaseAPI {
   /**
-   * 커플 초대코드를 사용하여 커플을 연결합니다. JWT 토큰이 필요합니다.
+   * [Deprecated] 커플 초대코드를 사용하여 커플을 연결합니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
    * @summary 커플 연결
    * @param {CouplesApiLinkCoupleRequest} requestParameters Request parameters.
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public linkCouple(requestParameters: CouplesApiLinkCoupleRequest, options?: RawAxiosRequestConfig) {
@@ -231,9 +238,10 @@ export class CouplesApi extends BaseAPI {
   }
 
   /**
-   * 연결된 커플을 끊습니다. JWT 토큰이 필요합니다.
+   * [Deprecated] 연결된 커플을 끊습니다. 커플 연동 기능은 제거 예정이며, 앞으로는 사용자가 커플 정보를 직접 입력하는 방식을 사용합니다. JWT 토큰이 필요합니다.
    * @summary 커플 연결 끊기
    * @param {*} [options] Override http request option.
+   * @deprecated
    * @throws {RequiredError}
    */
   public unlinkCouple(options?: RawAxiosRequestConfig) {

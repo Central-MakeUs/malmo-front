@@ -1,4 +1,5 @@
-import { ATTACHMENT_TYPE_PREVIEW } from '../../models/attachment-data'
+import { ATTACHMENT_TYPE_PREVIEW } from '@/features/attachment/models/love-type-catalog'
+
 import { AttachmentTypeTag } from '../attachment-type-tag'
 import { SectionHeader } from '../section-header'
 

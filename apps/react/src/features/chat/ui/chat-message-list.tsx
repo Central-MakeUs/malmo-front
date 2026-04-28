@@ -1,14 +1,10 @@
 import { ChatRoomMessageData, ChatRoomMessageDataSenderTypeEnum } from '@data/user-api-axios/api'
-import { Link } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
 import React from 'react'
 
 import { ChatMessageTempStatus } from '@/features/chat/hooks/use-chat-queries'
 import { AiChatBubble, MyChatBubble } from '@/features/chat/ui/chat-bubble'
 import { DateDivider } from '@/features/chat/ui/date-divider'
 import { formatTimestamp, isSameTimestampMinute } from '@/features/chat/util/chat-format'
-import { wrapWithTracking } from '@/shared/analytics'
-import { BUTTON_NAMES, CATEGORIES } from '@/shared/analytics/constants'
 import { cn } from '@/shared/lib/cn'
 
 type ChatMessageListProps = {
@@ -31,12 +27,6 @@ const LoadingIndicator = React.forwardRef<HTMLDivElement, { isFetching: boolean 
 ))
 LoadingIndicator.displayName = 'LoadingIndicator'
 
-const ATTACHMENT_PROMPT_MESSAGE =
-  '잠깐! 애착유형 테스트를 하면, 더 정확한 상담이 가능해! 그대로 진행하면 바로 상담해줄게'
-
-const isAttachmentPromptMessage = (message?: ChatRoomMessageData | null) =>
-  message?.senderType === ChatRoomMessageDataSenderTypeEnum.System && message.content === ATTACHMENT_PROMPT_MESSAGE
-
 const shouldShowMessageTimestamp = (currentMessage: ChatRoomMessageData, nextMessage?: ChatRoomMessageData) => {
   if (!currentMessage.createdAt) return false
   if (!nextMessage?.createdAt) return true
@@ -44,24 +34,6 @@ const shouldShowMessageTimestamp = (currentMessage: ChatRoomMessageData, nextMes
   return (
     currentMessage.senderType !== nextMessage.senderType ||
     !isSameTimestampMinute(currentMessage.createdAt, nextMessage.createdAt)
-  )
-}
-
-function AttachmentTestCta() {
-  return (
-    <div className="mt-3">
-      <Link
-        to="/attachment-test"
-        search={{ from: '/chat' }}
-        className="block"
-        onClick={wrapWithTracking(BUTTON_NAMES.GO_ATTACHMENT_TEST, CATEGORIES.CHAT, () => {})}
-      >
-        <div className="flex w-fit items-center justify-between rounded-[8px] border border-gray-iron-300 bg-white py-2 pr-3 pl-[18px]">
-          <span className="body3-semibold text-gray-iron-800">애착유형 테스트하러가기</span>
-          <ChevronRight className="h-4 w-4" />
-        </div>
-      </Link>
-    </div>
   )
 }
 
@@ -83,9 +55,7 @@ export function ChatMessageList({
     <div className="flex flex-1 flex-col">
       <section className="no-bounce-scroll flex flex-1 flex-col overflow-y-auto">
         <div className="bg-gray-iron-700 px-[20px] py-[9px]">
-          <p className="body3-medium text-center text-white">
-            연동 후에도 대화 내용은 상대에게 공유되지 않으니 안심하세요!
-          </p>
+          <p className="body3-medium text-center text-white">대화 내용은 암호화 되어 안전하게 저장하고 있어요!</p>
         </div>
 
         {isLoading && (
@@ -109,15 +79,13 @@ export function ChatMessageList({
             const isContinuous = previousSender === chat.senderType
             const showTimestamp = shouldShowMessageTimestamp(chat, nextMessage)
             const bookmarkId = chat.bookmarkId ?? null
-            const isAttachmentPrompt = isAttachmentPromptMessage(chat)
-            const isLastMessage = index === messages.length - 1
             return (
               <div
-                key={`${chat.messageId ?? 'temp'}-${chat.createdAt ?? index}`}
+                key={`${chat.messageId ?? 'temp'}-${chat.createdAt ?? 'no-time'}-${index}`}
                 data-message-id={chat.messageId ?? undefined}
                 className={cn('mt-6', {
                   'mt-0': index === 0,
-                  'mt-2': isContinuous,
+                  'mt-5': isContinuous,
                 })}
               >
                 <DateDivider currentTimestamp={chat.createdAt} previousTimestamp={previousTimestamp} />
@@ -152,11 +120,6 @@ export function ChatMessageList({
                     onRetry={() => onRetry(chat.content!)}
                   />
                 )}
-                {isAttachmentPrompt && isLastMessage && (
-                  <div className="pl-[62px]">
-                    <AttachmentTestCta />
-                  </div>
-                )}
               </div>
             )
           })}
@@ -164,7 +127,7 @@ export function ChatMessageList({
           {awaitingResponse && !streamingMessage && (
             <div
               className={cn('mt-6', {
-                'mt-2': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
+                'mt-5': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
               })}
             >
               <AiChatBubble isTyping />
@@ -174,7 +137,7 @@ export function ChatMessageList({
           {streamingMessage && (
             <div
               className={cn('mt-6', {
-                'mt-2': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
+                'mt-5': messages[messages.length - 1]?.senderType === ChatRoomMessageDataSenderTypeEnum.Assistant,
               })}
             >
               <AiChatBubble

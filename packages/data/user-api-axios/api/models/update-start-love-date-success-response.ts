@@ -17,7 +17,7 @@
 import type { UpdateStartLoveDateData } from './update-start-love-date-data'
 
 /**
- * 연애 시작일 갱신 성공 응답
+ * [Deprecated] 연애 시작일 갱신 성공 응답
  */
 export interface UpdateStartLoveDateSuccessResponse {
   /**

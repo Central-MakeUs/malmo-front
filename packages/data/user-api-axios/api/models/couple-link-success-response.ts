@@ -17,7 +17,7 @@
 import type { CoupleLinkData } from './couple-link-data'
 
 /**
- * 커플 연결 성공 응답
+ * [Deprecated] 커플 연결 성공 응답
  */
 export interface CoupleLinkSuccessResponse {
   /**
