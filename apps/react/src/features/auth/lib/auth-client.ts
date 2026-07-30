@@ -4,6 +4,18 @@ import { amplitude } from '@/shared/analytics'
 import bridge from '@/shared/bridge'
 import { isWebView } from '@/shared/utils/webview'
 
+import {
+  clearWebLoginQuery,
+  exchangeWebLoginTicket,
+  getWebAccessToken,
+  getWebLoginError,
+  getWebLoginTicket,
+  getWebRefreshToken,
+  refreshWebSession,
+  revokeWebSession,
+  startWebKakaoLogin,
+} from './web-session'
+
 // 인증 관련 기능을 제공하는 클라이언트
 class AuthClient {
   // 현재 인증 상태를 확인
@@ -28,7 +40,31 @@ class AuthClient {
 
         return { authenticated: false }
       } else {
-        // Todo
+        const ticket = getWebLoginTicket()
+        const loginError = getWebLoginError()
+
+        if (ticket || loginError) {
+          try {
+            if (loginError) {
+              throw new Error('카카오 로그인이 취소되었거나 실패했습니다.')
+            }
+            await exchangeWebLoginTicket(ticket!)
+          } finally {
+            clearWebLoginQuery()
+          }
+        }
+
+        const accessToken = getWebAccessToken()
+        if (accessToken) {
+          return { authenticated: true, accessToken }
+        }
+
+        if (getWebRefreshToken()) {
+          const refreshedAccessToken = await refreshWebSession()
+          return { authenticated: true, accessToken: refreshedAccessToken }
+        }
+
+        return { authenticated: false }
       }
     } catch {
       return { authenticated: false }
@@ -47,7 +83,8 @@ class AuthClient {
         throw error
       }
     } else {
-      throw new Error('웹 환경에서는 로그아웃이 지원되지 않습니다.')
+      await revokeWebSession()
+      return { success: true }
     }
   }
 
@@ -68,7 +105,13 @@ class AuthClient {
         throw error
       }
     } else {
-      throw new Error('웹 환경에서는 소셜 로그인이 지원되지 않습니다.')
+      if (type !== 'kakao') {
+        throw new Error('웹에서는 카카오 로그인을 이용해 주세요.')
+      }
+
+      const deviceId = amplitude.getDeviceId()
+      startWebKakaoLogin(deviceId)
+      return { success: false }
     }
   }
 }

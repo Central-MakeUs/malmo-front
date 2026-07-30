@@ -1,11 +1,12 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
+import { refreshWebSession } from '@/features/auth/lib/web-session'
+
 import { ErrorReporter } from '../analytics'
 import { bridge } from '../bridge'
+import { API_BASE_URL } from './api-base'
 import { isWebView } from '../utils/webview'
 
-const rawBaseUrl = import.meta.env.PROD ? import.meta.env.VITE_API_URL : '/api'
-const BASE_URL = rawBaseUrl.replace(/\/+$/, '')
 const AUTH_ROUTE = '/login'
 
 interface QueueItem {
@@ -15,7 +16,7 @@ interface QueueItem {
 }
 
 export const defaultOptions = {
-  baseURL: BASE_URL,
+  baseURL: API_BASE_URL,
   withCredentials: true,
   timeout: 200000,
 }
@@ -141,7 +142,7 @@ export function initApi(): AxiosInstance {
         })
       }
 
-      if (response?.status === 401 && isWebView() && !originalRequest._retry) {
+      if (response?.status === 401 && !originalRequest._retry) {
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject, config: originalRequest })
@@ -152,7 +153,9 @@ export function initApi(): AxiosInstance {
         isRefreshing = true
 
         try {
-          const { accessToken: newAccessToken } = await bridge.notifyTokenExpired()
+          const newAccessToken = isWebView()
+            ? (await bridge.notifyTokenExpired()).accessToken
+            : await refreshWebSession()
 
           if (!newAccessToken) {
             throw new Error('Webview bridge: Failed to receive a new token.')
