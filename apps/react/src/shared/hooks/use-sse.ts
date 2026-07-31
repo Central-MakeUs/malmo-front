@@ -1,7 +1,6 @@
 import { EventSourcePolyfill, NativeEventSource } from 'event-source-polyfill'
 import { useCallback, useEffect, useRef } from 'react'
 
-import { refreshWebSession } from '@/features/auth/lib/web-session'
 import bridge from '@/shared/bridge'
 import { isWebView } from '@/shared/utils/webview'
 
@@ -155,11 +154,9 @@ export const useSSE = (handlers: SSEEventHandlers, enabled: boolean = true): Use
 
   // 2. 토큰 갱신만 책임지는 별도 함수 생성
   const refreshToken = useCallback(async () => {
-    devLog('[SSE] Refreshing token')
+    devLog('[SSE] Refreshing token via bridge')
     if (isWebView()) {
       await bridge.notifyTokenExpired()
-    } else {
-      await refreshWebSession()
     }
   }, [])
 
