@@ -18,6 +18,7 @@ export default function LoginPage() {
   const router = useRouter() // 라우터 인스턴스 가져오기
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isIos, setIsIos] = useState(false)
+  const inWebView = isWebView()
 
   useEffect(() => {
     setIsIos(/iPhone|iPad|iPod/i.test(navigator.userAgent))
@@ -27,12 +28,10 @@ export default function LoginPage() {
     if (isSubmitting) return
     try {
       setIsSubmitting(true)
-      if (isWebView()) {
-        const result = await auth.socialLogin('kakao')
-        if (result.success) {
-          await router.invalidate()
-          router.navigate({ to: '/' })
-        }
+      const result = await auth.socialLogin('kakao')
+      if (result.success) {
+        await router.invalidate()
+        router.navigate({ to: '/' })
       }
     } finally {
       setIsSubmitting(false)
@@ -72,21 +71,17 @@ export default function LoginPage() {
 
       <div className="mt-auto mb-5 w-full px-5 pb-[var(--safe-bottom)]">
         {/* 카카오 로그인 버튼 */}
-        {isWebView() ? (
-          <button
-            onClick={handleKakaoLogin}
-            className="mb-3 flex h-[52px] w-full items-center justify-center rounded-[8px] bg-[#FEE500]"
-            disabled={isSubmitting}
-          >
-            <KakaoLogo className="mr-2" width={18} height={18} />
-            <span className="body1-semibold text-[#16181D]">{'카카오로 시작하기'}</span>
-          </button>
-        ) : (
-          <p className="body1-semibold mb-[100px] text-center text-gray-iron-950">이제 앱 스토어에서 만나보세요.</p>
-        )}
+        <button
+          onClick={handleKakaoLogin}
+          className="mb-3 flex h-[52px] w-full items-center justify-center rounded-[8px] bg-[#FEE500]"
+          disabled={isSubmitting}
+        >
+          <KakaoLogo className="mr-2" width={18} height={18} />
+          <span className="body1-semibold text-[#16181D]">{'카카오로 시작하기'}</span>
+        </button>
 
         {/* 애플 로그인 버튼 */}
-        {isIos && (
+        {isIos && inWebView && (
           <button
             onClick={handleAppleLogin}
             className="flex h-[52px] w-full items-center justify-center rounded-[8px] bg-black text-white"
